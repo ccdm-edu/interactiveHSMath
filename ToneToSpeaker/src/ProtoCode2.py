@@ -19,6 +19,7 @@ from tkinter.constants import HORIZONTAL
 import matplotlib.animation as animation
 from matplotlib import style
 import sounddevice as sd
+import soundfile as sf
 
 #DO add docstrings before each function and learn how to extract doc strings
 #learn the style guide for python as well
@@ -104,7 +105,7 @@ class ContextSensHelp(tk.Tk):
                 self.type = HelpType.AMP_ADJ_TYPE
                 
 
-#        elif (widgetNeedingHelp == freqAdjust):
+        elif (widgetNeedingHelp == freqAdjust):
             #print(' put up freq adjust help')
 #             if (self.topLevel != None) and (self.type != HelpType.FREQ_ADJ_TYPE):
 #                 #we have an old window up
@@ -116,6 +117,9 @@ class ContextSensHelp(tk.Tk):
 #                 msg.pack()
 #                 self.topLevel.protocol('WM_DELETE_WINDOW', self.removeWindow)
 #                 self.type = HelpType.FREQ_ADJ_TYPE
+            data,samplerate = sf.read("C:\Cathy\PythonDev\BalooPurrWavTest.wav")
+            sd.play(data,samplerate)
+            sd.wait()
         elif (widgetNeedingHelp == canvas.get_tk_widget()):
             #print(' put up canvas help')
             if (self.topLevel != None) and (self.type != HelpType.GRAPH_ADJ_TYPE):
@@ -158,7 +162,7 @@ def animate(i):
     sinPlot.set_ylabel("Amplitude*sin(2*pi*Frequency*time)")
     sinPlot.set_xlabel("time (ms)")
     sinPlot.grid()
-    sd.play(amplitude,samplerate=fsamp,loop=TRUE)
+    #sd.play(amplitude,samplerate=fsamp,loop=TRUE)
 
 def mouseLocation(event):
     csw.openWindow(event.widget)
