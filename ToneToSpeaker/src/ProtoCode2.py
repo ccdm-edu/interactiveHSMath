@@ -20,6 +20,7 @@ import matplotlib.animation as animation
 from matplotlib import style
 import sounddevice as sd
 import soundfile as sf
+from pygame import mixer
 
 #DO add docstrings before each function and learn how to extract doc strings
 #learn the style guide for python as well
@@ -117,9 +118,14 @@ class ContextSensHelp(tk.Tk):
 #                 msg.pack()
 #                 self.topLevel.protocol('WM_DELETE_WINDOW', self.removeWindow)
 #                 self.type = HelpType.FREQ_ADJ_TYPE
-            data,samplerate = sf.read("C:\Cathy\PythonDev\BalooPurrWavTest.wav")
-            sd.play(data,samplerate)
-            sd.wait()
+
+#             data,samplerate = sf.read("C:\Cathy\PythonDev\BalooPurrWavTest.wav")
+#             sd.play(data,samplerate)
+#             sd.wait()
+            mixer.init()
+            mixer.music.load('C:\Cathy\PythonDev\BalooPurr.mp3')
+            mixer.music.play()
+            
         elif (widgetNeedingHelp == canvas.get_tk_widget()):
             #print(' put up canvas help')
             if (self.topLevel != None) and (self.type != HelpType.GRAPH_ADJ_TYPE):
