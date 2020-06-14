@@ -3,44 +3,53 @@
 import tkinter as tk
 from tkinter import ttk
 import Pmw
+from pygame import mixer
+import TrigSettings as setting
 
-ENGLISH = 0
-SPANISH = 1
 
 class ContextSensHelpInitable:
     def __init__(self, englishBalloonText, listOfAudio):
         self.engBalloonText = englishBalloonText
         self.listOfAudio = listOfAudio
-        
-class Settings:
-    #should make this a singleton
-    def __init__(self):
-        self.language = ENGLISH
-        self.useBalloons = True
-        self.useAudioHelp = True
-    def __str__(self):
-        return("language is" + str(self.language) + "Balloon help is " + str(self.useBalloons) + "Audio help is" + str(self.useAudioHelp_)) 
-    def update(self, language, useBalloons, useAudioHelp, toneIsOff):
-        if language == ENGLISH or  language == SPANISH:
-            self.language = language
-            self.useBalloons = useBalloons
-            self.useAudioHelp = useAudioHelp
-        else:
-            #put up pop up box that user says"ok" to informing that only these two languages are supported
-            #kill the print stmt below
-            print("only English and Spanish currently supported")
             
-class ContextSensHelp(tk.Tk):
-    def __init__(self, root, initSettihgs, initables):
+class ContextSensHelp:
+    def weAreInBalloon(self):
+        print("Balloon activated")
+        
+    def __init__(self, currFrame, currWidget, currSettings, initables):
         self.englishBalloonText = initables.engBalloonText
         self.toneIsOff = True
-    #def mouseMotionToWidget(self):
-    """
-        This method provides sound, if so requested, to explain concepts
-    """
+        self.currContSensHelpVisualOn = currSettings.useBalloons
+        self.currContSensHelpAudioOn = currSettings.useAudioHelp
+        self.currWidget = currWidget
+        self.language = currSettings.language
+        self.listOfAudio = initables.listOfAudio
+        
+        self.balloon = Pmw.Balloon(currFrame)
+        #useless self.balloon.configure(activatecommand=self.weAreInBalloon)
+        #here we would do the translation as needed
+        self.balloon.bind(currWidget, self.englishBalloonText)
+
+        
     def settingUpdate(self, currSettings):
-        self.currContSensHelp = currSettings
+        self.currContSensHelpVisualOn = currSettings.useBalloons
+        self.currContSensHelpAudioOn = currSettings.useAudioHelp
+        self.language = currSettings.language
         
     def toneChange(self, toneIsOff):
         #put up msg box that when this is true, audio gets turned off
         self.toneIsOff = toneIsOff
+        
+    def audioHelp(self):
+        """
+        This method provides sound, if so requested, to explain concepts
+        """
+        if self.currContSensHelpAudioOn:
+            print(f"language is {self.language} new amp audio file is {self.listOfAudio[self.language]}")
+            mixer.init()
+            mixer.music.load(self.listOfAudio[self.language])
+            mixer.music.play()
+            
+    def __str__(self):
+        return 'Context Sens Help for widget ' + str(self.currWidget) 
+            
