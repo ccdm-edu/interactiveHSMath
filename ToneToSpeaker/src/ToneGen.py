@@ -52,8 +52,8 @@ class ToneGen:
                                           font=Font(family='Helvetica', size=36, weight='bold'))
         self.amplitudeAdjust.grid(row=1, column = 0)
         ampInits = csh.ContextSensHelpInitable("Amplitude changes loudness of tone, when played.", 
-                                               ["C:\Cathy\PythonDev\AudioHelp\Amp_csh1.mp3",
-                                               "C:\Cathy\PythonDev\AudioHelp\Amp_csh1.mp3"])
+                                               ["C:\Cathy\PythonDev\AudioHelp\Amp_csh1_eng.mp3",
+                                               "C:\Cathy\PythonDev\AudioHelp\Amp_csh1_esp.mp3"])
         self.amplitude_csh = csh.ContextSensHelp(self.currFrame, self.amplitudeAdjust, currSettings, ampInits)
         self.widgetToCSH[self.amplitudeAdjust] = self.amplitude_csh
 

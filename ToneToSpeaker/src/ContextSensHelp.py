@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk
 import Pmw
 from pygame import mixer
+import AbstractObserver as ao
 import TrigSettings as setting
 
 
@@ -12,7 +13,7 @@ class ContextSensHelpInitable:
         self.engBalloonText = englishBalloonText
         self.listOfAudio = listOfAudio
             
-class ContextSensHelp:
+class ContextSensHelp(ao.Observer):
     def weAreInBalloon(self):
         print("Balloon activated")
         
@@ -29,12 +30,18 @@ class ContextSensHelp:
         #useless self.balloon.configure(activatecommand=self.weAreInBalloon)
         #here we would do the translation as needed
         self.balloon.bind(currWidget, self.englishBalloonText)
+        #inform settings class that this object wishes to be notified of changes
+        currSettings.attach(self)
 
         
-    def settingUpdate(self, currSettings):
+    def update(self, currSettings):
         self.currContSensHelpVisualOn = currSettings.useBalloons
         self.currContSensHelpAudioOn = currSettings.useAudioHelp
         self.language = currSettings.language
+        if self.currContSensHelpVisualOn:
+            self.balloon.configure(state = 'balloon')
+        else:
+            self.balloon.configure(state = 'none')
         
     def toneChange(self, toneIsOff):
         #put up msg box that when this is true, audio gets turned off
