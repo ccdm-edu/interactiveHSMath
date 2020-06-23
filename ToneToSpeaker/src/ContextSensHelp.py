@@ -19,7 +19,7 @@ class ContextSensHelp(ao.Observer):
         
     def __init__(self, currFrame, currWidget, currSettings, initables):
         self.englishBalloonText = initables.engBalloonText
-        self.toneIsOff = True
+        self.toneIsOn = False
         self.currContSensHelpVisualOn = currSettings.useBalloons
         self.currContSensHelpAudioOn = currSettings.useAudioHelp
         self.currWidget = currWidget
@@ -43,15 +43,15 @@ class ContextSensHelp(ao.Observer):
         else:
             self.balloon.configure(state = 'none')
         
-    def toneChange(self, toneIsOff):
+    def toneChange(self, toneIsOn):
         #put up msg box that when this is true, audio gets turned off
-        self.toneIsOff = toneIsOff
+        self.toneIsOn = toneIsOn
         
     def audioHelp(self):
         """
         This method provides sound, if so requested, to explain concepts
         """
-        if self.currContSensHelpAudioOn:
+        if self.currContSensHelpAudioOn and self.toneIsOn == False:
             print(f"language is {self.language} new amp audio file is {self.listOfAudio[self.language]}")
             mixer.init()
             mixer.music.load(self.listOfAudio[self.language])

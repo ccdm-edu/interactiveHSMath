@@ -71,6 +71,7 @@ class PreferenceSelect:
 
 def helpPopUp():
     #NOTE, this has to know which tab is active and put up appropriate text
+    # DOO pull this under tab creation class
     topLevel = tk.Toplevel()
     activeTabNum = tabBook.index(tabBook.select())
     if activeTabNum == 0:
@@ -84,7 +85,31 @@ def helpPopUp():
         helpTxt.configure(state='disabled')
     elif activeTabNum == 1:
         topLevel.wm_title("Help on Next App")
+     
+class TabCreation:
+    def __init__(self):
+        global tabBook, currSettings
+        self.toneGenFrame = tk.Frame(tabBook)
+        tabBook.add(self.toneGenFrame ,text = "Tone Gen")
+        self.toneGenPage = tg.ToneGen(self.toneGenFrame,currSettings)
+    
+        self.nextAppFrame = tk.Frame(tabBook)
+        tabBook.add(self.nextAppFrame, text = "next thing")
+      
+    def userSelectsTab(self,event):
+        #event has event.widget.tab(event.widget.select(), 'text') to get tab text if wanted
+        self.currTabNum = tabBook.index(tabBook.select())
+        if self.currTabNum == 0:
+            #NEED TO DO BETTER HERE tying this to thetab and class
+            self.toneGenPage.doTabActions()
         
+        #elif activeTabNum == 1:    
+        else:
+            #put out an error here
+            print(f"Error, tab {self.currTabNum} not handled")
+            
+    def getFirstFrame(self):
+        return self.toneGenFrame
     
 def main():
     def preferencePopUp():
@@ -113,12 +138,16 @@ def main():
     
     #row 0 is used for tabs
     tabBook.grid(row = 1, column = 0, columnspan=50, rowspan=49, sticky = 'NESW')
-    toneGenFrame = tk.Frame(tabBook)
-    tabBook.add(toneGenFrame ,text = "Tone Gen")
-    toneGenPage = tg.ToneGen(toneGenFrame,currSettings)
     
-    nextAppFrame = tk.Frame(tabBook)
-    tabBook.add(nextAppFrame, text = "next thing")
+    #create and initialize all the objects on the pages
+    tabEx = TabCreation()
+
+    #pick where we want to start out the user, first page is best
+    tabBook.select(tabEx.getFirstFrame())
+    #allow user to traverse tabs with keyboard, not just mouse
+    tabBook.enable_traversal()
+    #bind user tab changes to program action and class selection
+    tabBook.bind("<<NotebookTabChanged>>", tabEx.userSelectsTab)
     
     root.mainloop()
     
