@@ -95,10 +95,17 @@ class TabCreation:
     
         self.nextAppFrame = tk.Frame(tabBook)
         tabBook.add(self.nextAppFrame, text = "next thing")
+        self.prevTabNum = 0
       
     def userSelectsTab(self,event):
         #event has event.widget.tab(event.widget.select(), 'text') to get tab text if wanted
         self.currTabNum = tabBook.index(tabBook.select())
+        
+        #entering new tab, kill activity on old tab.  DO A BETTER JOB HERE
+        if self.prevTabNum == 0:
+            self.toneGenPage.endTabActions()
+        self.prevTabNum = self.currTabNum
+            
         if self.currTabNum == 0:
             #NEED TO DO BETTER HERE tying this to thetab and class
             self.toneGenPage.doTabActions()

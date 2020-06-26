@@ -3,7 +3,11 @@ Created on Jun 11, 2020
 
 @author: CCDM
 '''
+#get rid of this
+import sys
 
+import threading
+import time
 import tkinter as tk
 from tkinter import ttk
 from tkinter.font import Font
@@ -13,13 +17,41 @@ import sounddevice as sd
 #--file imports
 import ContextSensHelp as csh
 import TrigSettings as setting
-     
+   
+              
+def runPlayTone(startStopTone, toneFreq, toneAmp): 
+    try:
+    #take the default output device and get the default sample rate
+    samplerate = sd.query_devices('output')['default_samplerate']
+    start_idx = 0
+    #adding a scale factor keeps us from overdriving the output speakers, which would produce distortion
+    SCALE_FACTOR = 0.01
+    #play tone while button is pushed, end when "unpushed"
+    def callback(outdata, frames, time, status):
+        if status:
+            print(f"current status is {status}")
+        nonlocal start_idx
+        t = (start_idx + np.arange(frames)) / samplerate
+        t = t.reshape(-1, 1)
+        outdata[:] = float(toneAmp()) * SCALE_FACTOR * np.sin(2 * np.pi * float(toneFreq()) * t)
+        start_idx += frames
+
+    with sd.OutputStream(channels=1, callback=callback, samplerate=samplerate):                
+        while startStopTone():
+            time.sleep(0.25)   
+    except KeyboardInterrupt:
+        exit()     
+            
 class ToneGen:
     def amplitudeChanged(self):
-        print(f"new amp is {self.currAmp.get()}")
+        self.toneAmp = self.currAmp.get()
+        #print(f"new amp is {self.currAmp.get()}")
+        print(f"new amp is {self.toneAmp}")
         
     def freqChanged(self):
-        print(f"new freq is {self.currFreq.get()}")
+        self.toneFreq = self.currFreq.get()
+        print(f"new frq is {self.toneFreq}")
+
     
     def mouseLocation(self,event):
         if event.widget in self.widgetToCSH:
@@ -54,11 +86,19 @@ class ToneGen:
         #update the context help status so it will/wont play audio help
         for widget_obj in self.widgetToCSH.keys():
             self.widgetToCSH[widget_obj].toneChange(self.toneIsOn)
-        
-          
+            
+        if self.toneIsOn: 
+            #launch tone thread
+            self.toneThread = threading.Thread(target = runPlayTone, 
+                                               args =(lambda : self.toneIsOn,lambda : self.toneFreq, lambda : self.toneAmp) ) 
+            self.toneThread.start() 
+        else:
+            #user stops tone, end the thread
+            self.toneThread.join()
         
     def __init__(self, currFrame, currSettings):
         #initialize text variables to put in tone button
+        self.currTabActive = False
         self.playToneText = ["Play\nTone", "Stop\nTone"]
         self.toneIsOn = False
         
@@ -71,12 +111,13 @@ class ToneGen:
         Set up tone amplitude access
         '''
         self.minAmp = 0
+        self.toneAmp = 20
         self.maxAmp = 100
         self.amplitudeLabel = tk.Label(self.currFrame,
                                        text=f"Amplitude\n({self.minAmp} - {self.maxAmp})",
                                        font=Font(family='Helvetica', size=15, weight='normal'))
         self.amplitudeLabel.grid(row=0, column = 0)
-        self.currAmp = tk.IntVar()
+        self.currAmp = tk.IntVar(value = self.toneAmp)
         #problem is that the amplitudeChanged doesnt hit if user types in new val and hits ret
         validate_amp_input = (self.currFrame.register(self.correct_amp_input), '%P')
         self.amplitudeAdjust = tk.Spinbox(self.currFrame, 
@@ -99,13 +140,14 @@ class ToneGen:
         Initialize:
         Set up tone frequency access
         '''
-        self.minFreq = 10
-        self.maxFreq = 10000
+        self.minFreq = 20
+        self.toneFreq = 277  # this is the "start" freq for spinbox
+        self.maxFreq = 20000
         self.freqLabel = tk.Label(self.currFrame,
                                        text=f"Frequency\n({self.minFreq} Hz - {self.maxFreq} Hz)",
                                        font=Font(family='Helvetica', size=15, weight='normal'))
         self.freqLabel.grid(row=0, column = 1)
-        self.currFreq = tk.IntVar()
+        self.currFreq = tk.IntVar(value = self.toneFreq)
         validate_freq_input = (self.currFrame.register(self.correct_freq_input), '%Q')
         self.freqAdjust = tk.Spinbox(self.currFrame, 
                                           from_=self.minFreq, 
@@ -128,28 +170,21 @@ class ToneGen:
         '''
         self.playOrStopButtonText = tk.StringVar()
         self.playOrStopButtonText.set(self.playToneText[self.toneIsOn])
-        self.playToneButton = tk.Button(self.currFrame, textvariable=self.playOrStopButtonText, command=self.playOrStopTone)
-        playInits = csh.ContextSensHelpInitable("Play the tone as setup (and turn off audio help)", 
-                                               ["C:\Cathy\PythonDev\AudioHelp\Freq_csh1_eng.mp3",
-                                               "C:\Cathy\PythonDev\AudioHelp\Freq_csh1_esp.mp3"])
+        self.playToneButton = tk.Button(self.currFrame, 
+                                        textvariable=self.playOrStopButtonText, 
+                                        command=self.playOrStopTone,
+                                        font=Font(family='Helvetica', size=15, weight='bold'))
+        playInits = csh.ContextSensHelpInitable("Play (or stop) the tone as setup by you (will turn off audio help)", 
+                                               ["C:\Cathy\PythonDev\AudioHelp\Play_StopButton_eng.mp3",
+                                               "C:\Cathy\PythonDev\AudioHelp\Play_StopButton_eng.mp3"])
         self.playButton_csh = csh.ContextSensHelp(self.currFrame, self.playToneButton, currSettings, playInits)
         self.widgetToCSH[self.playToneButton] = self.playButton_csh
         self.playToneButton.grid(row=1, column = 4)
         
+    def endTabActions(self):
+        self.currTabActive = False
+            
     def doTabActions(self):
-        print("executing the Tone gen actions")
-        samplerate = sd.query_devices('output')['default_samplerate']
-        print(sd.query_devices('output'))
-
-
-        
-
-    
-
-
-
-
-
-
+        self.currTabActive = True
 
 
