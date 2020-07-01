@@ -28,7 +28,6 @@ class TrigSettings(ao.Subject):
     """
 
     def attach(self, observer) -> None:
-        print("Subject: Attached an observer.")
         self._observers.append(observer)
 
     def detach(self, observer) -> None:
@@ -42,7 +41,6 @@ class TrigSettings(ao.Subject):
         """
         Trigger an update in each subscriber.
         """
-        print("Subject: Notifying observers...")
         for observer in self._observers:
             observer.update(self)
             

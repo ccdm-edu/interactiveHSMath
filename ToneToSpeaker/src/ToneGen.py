@@ -3,8 +3,7 @@ Created on Jun 11, 2020
 
 @author: CCDM
 '''
-#get rid of this
-import sys
+import logging
 
 import threading
 import time
@@ -19,16 +18,19 @@ import ContextSensHelp as csh
 import TrigSettings as setting
    
               
-def runPlayTone(startStopTone, toneFreq, toneAmp): 
-    try:
+def runPlayTone(startStopTone, toneFreq, toneAmp):
+    logging.info("Entered") 
     #take the default output device and get the default sample rate
     samplerate = sd.query_devices('output')['default_samplerate']
     start_idx = 0
     #adding a scale factor keeps us from overdriving the output speakers, which would produce distortion
     SCALE_FACTOR = 0.01
+    #if choose to do logging here, need to be thread safe
     #play tone while button is pushed, end when "unpushed"
     def callback(outdata, frames, time, status):
+        #MUST fill entire butter
         if status:
+            #look for underflow or overflow here
             print(f"current status is {status}")
         nonlocal start_idx
         t = (start_idx + np.arange(frames)) / samplerate
@@ -38,20 +40,24 @@ def runPlayTone(startStopTone, toneFreq, toneAmp):
 
     with sd.OutputStream(channels=1, callback=callback, samplerate=samplerate):                
         while startStopTone():
-            time.sleep(0.25)   
-    except KeyboardInterrupt:
-        exit()     
+            time.sleep(0.25)  
+    logging.info("Exited")
+
             
 class ToneGen:
+    
+    ### dont think all these are needed######################
     def amplitudeChanged(self):
         self.toneAmp = self.currAmp.get()
-        #print(f"new amp is {self.currAmp.get()}")
-        print(f"new amp is {self.toneAmp}")
         
     def freqChanged(self):
         self.toneFreq = self.currFreq.get()
-        print(f"new frq is {self.toneFreq}")
+        
+    def dcChanged(self):
+        self.toneDC = self.currDC.get()
 
+    def phaseChanged(self):
+        self.tonePhase = self.currPhase.get()
     
     def mouseLocation(self,event):
         if event.widget in self.widgetToCSH:
@@ -60,22 +66,47 @@ class ToneGen:
         #otherwise, do nothing
         
     def correct_amp_input(self, text):
+        logging.info("Entered")
         #if this returns false, value is not changed
         valid = False
         if text.isdigit():
             if (int(text) <= self.maxAmp and int(text) >= self.minAmp):
                 valid = True
+        logging.info("Exited")
         return valid   
          
     def correct_freq_input(self, text):
+        logging.info("Entered")
         #if this returns false, value is not changed
         valid = False
         if text.isdigit():
             if (int(text) <= self.maxFreq and int(text) >= self.minFreq):
                 valid = True
-        return valid    
+        logging.info("Exited")
+        return valid  
     
+    def correct_DC_input(self, text):  
+        logging.info("Entered")
+        #if this returns false, value is not changed
+        valid = False
+        if text.isdigit():
+            if (int(text) <= self.maxDC and int(text) >= self.minDC):
+                valid = True
+        logging.info("Exited")
+        return valid  
+ 
+    def correct_Phase_input(self, text):  
+        logging.info("Entered")
+        #if this returns false, value is not changed
+        valid = False
+        if text.isdigit():
+            if (int(text) <= self.maxPhase and int(text) >= self.minPhase):
+                valid = True
+        logging.info("Exited")
+        return valid  
+           
     def playOrStopTone(self): 
+        logging.info("Entered")
         #toggle the variable assoc with button 
         if self.toneIsOn:
             self.toneIsOn = False
@@ -90,13 +121,21 @@ class ToneGen:
         if self.toneIsOn: 
             #launch tone thread
             self.toneThread = threading.Thread(target = runPlayTone, 
-                                               args =(lambda : self.toneIsOn,lambda : self.toneFreq, lambda : self.toneAmp) ) 
+                                               args =(lambda : self.toneIsOn,
+                                                      lambda : self.toneFreq, 
+                                                      lambda : self.toneAmp) ) 
             self.toneThread.start() 
         else:
             #user stops tone, end the thread
             self.toneThread.join()
+        logging.info("Exited")
         
     def __init__(self, currFrame, currSettings):
+        """
+        Set up logging for ToneGen
+        """
+        logging.info("Entered")
+        
         #initialize text variables to put in tone button
         self.currTabActive = False
         self.playToneText = ["Play\nTone", "Stop\nTone"]
@@ -107,14 +146,15 @@ class ToneGen:
         #create a dictionary of context sens help associated with each such widget
         self.widgetToCSH = {}
         
-        '''Initialize:
+        '''
+        Initialize:
         Set up tone amplitude access
         '''
         self.minAmp = 0
         self.toneAmp = 20
         self.maxAmp = 100
         self.amplitudeLabel = tk.Label(self.currFrame,
-                                       text=f"Amplitude\n({self.minAmp} - {self.maxAmp})",
+                                       text=f"Amplitude\n({self.minAmp} mV - {self.maxAmp} mV)",
                                        font=Font(family='Helvetica', size=15, weight='normal'))
         self.amplitudeLabel.grid(row=0, column = 0)
         self.currAmp = tk.IntVar(value = self.toneAmp)
@@ -164,7 +204,65 @@ class ToneGen:
                                                "C:\Cathy\PythonDev\AudioHelp\Freq_csh1_esp.mp3"])
         self.freq_csh = csh.ContextSensHelp(self.currFrame, self.freqAdjust, currSettings, freqInits)
         self.widgetToCSH[self.freqAdjust] = self.freq_csh
-    
+
+        '''
+        Initialize:
+        Set up tone DC offset
+        '''
+        self.minDC = 0
+        self.toneDC = 0  # this is the "start" DC for spinbox
+        self.maxDC = self.maxAmp/2
+        self.dcLabel = tk.Label(self.currFrame,
+                                       text=f"DC Offset\n({self.minDC} mV - {self.maxDC} mV )",
+                                       font=Font(family='Helvetica', size=15, weight='normal'))
+        self.dcLabel.grid(row=0, column = 2)
+        self.currDC = tk.IntVar(value = self.toneDC)
+        validate_DC_input = (self.currFrame.register(self.correct_DC_input), '%Q')
+        self.dcAdjust = tk.Spinbox(self.currFrame, 
+                                          from_=self.minDC, 
+                                          to=self.maxDC, 
+                                          textvariable = self.currDC, 
+                                          validate = 'all',
+                                          validatecommand = validate_DC_input,
+                                          command=self.dcChanged, 
+                                          width=3,
+                                          font=Font(family='Helvetica', size=36, weight='bold'))
+        self.dcAdjust.grid(row=1, column = 2)
+        dcInits = csh.ContextSensHelpInitable("Constant offset on sine wave used to set min/max values of curve.", 
+                                               ["C:\Cathy\PythonDev\AudioHelp\DCoffset_eng.mp3",
+                                               "C:\Cathy\PythonDev\AudioHelp\DCOffset_csh1_esp.mp3"])
+        self.dc_csh = csh.ContextSensHelp(self.currFrame, self.dcAdjust, currSettings, dcInits)
+        self.widgetToCSH[self.dcAdjust] = self.dc_csh        
+        '''
+        Initialize:
+        Set up tone phase offset
+        '''
+        self.minPhase = 0
+        self.tonePhase = 0  # this is the "start" phase for spinbox
+        self.maxPhase = 360
+        DEG_SYM = u'\N{DEGREE SIGN}'
+        self.phaseLabel = tk.Label(self.currFrame,
+                                       text=f"Phase offset\n({self.minDC}{DEG_SYM} - {self.maxDC}{DEG_SYM} )",
+                                       font=Font(family='Helvetica', size=15, weight='normal'))
+        self.phaseLabel.grid(row=0, column = 3)
+        self.currPhase = tk.IntVar(value = self.tonePhase)
+        validate_Phase_input = (self.currFrame.register(self.correct_Phase_input), '%Q')
+        self.phaseAdjust = tk.Spinbox(self.currFrame, 
+                                          from_=self.minPhase, 
+                                          to=self.maxPhase, 
+                                          textvariable = self.currPhase, 
+                                          validate = 'all',
+                                          validatecommand = validate_Phase_input,
+                                          command=self.phaseChanged, 
+                                          width=3,
+                                          font=Font(family='Helvetica', size=36, weight='bold'))
+        self.phaseAdjust.grid(row=1, column = 3)
+        phaseInits = csh.ContextSensHelpInitable("Phase Adjust at time=0 sec.", 
+                                               ["C:\Cathy\PythonDev\AudioHelp\phase_change_eng.mp3",
+                                               "C:\Cathy\PythonDev\AudioHelp\phase.change_mp3"])
+        self.phase_csh = csh.ContextSensHelp(self.currFrame, self.phaseAdjust, currSettings, phaseInits)
+        self.widgetToCSH[self.phaseAdjust] = self.phase_csh         
+            
         '''
         Setup button to allow tone or turn it off
         '''
@@ -179,7 +277,9 @@ class ToneGen:
                                                "C:\Cathy\PythonDev\AudioHelp\Play_StopButton_eng.mp3"])
         self.playButton_csh = csh.ContextSensHelp(self.currFrame, self.playToneButton, currSettings, playInits)
         self.widgetToCSH[self.playToneButton] = self.playButton_csh
-        self.playToneButton.grid(row=1, column = 4)
+        self.playToneButton.grid(row=1, column = 4, padx = 10)
+        
+        logging.info("Exited")
         
     def endTabActions(self):
         self.currTabActive = False

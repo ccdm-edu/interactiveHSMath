@@ -4,6 +4,9 @@ Created on Jun 11, 2020
 @author: CCDM
 '''
 
+import logging
+import sys
+import os
 
 import tkinter as tk
 from tkinter import ttk
@@ -16,9 +19,11 @@ root = tk.Tk()
 tabBook = ttk.Notebook(root)
 currSettings = setting.TrigSettings()
 
+
 class PreferenceSelect:
     
     def __init__(self):
+        logging.info("Entered")
         global currSettings
         
         self.topLevel= tk.Toplevel()
@@ -58,18 +63,22 @@ class PreferenceSelect:
         saveButton.grid(row=4, column = 0)
         cancelButton = tk.Button(self.topLevel, text="Cancel", command=self.topLevel.destroy)
         cancelButton.grid(row=4, column = 1)
+        logging.info("Exited")
         
     def saveAndExit(self):
+        logging.info("Entered")
         global currSettings
         currSettings.update(self.langChoice.get(), 
                             self.useBalloonSelect.get(), 
                             self.useAudioSelect.get())
 
         self.topLevel.destroy()
+        logging.info("Exited")
                    
 
 
 def helpPopUp():
+    logging.info("Entered")
     #NOTE, this has to know which tab is active and put up appropriate text
     # DOO pull this under tab creation class
     topLevel = tk.Toplevel()
@@ -85,10 +94,12 @@ def helpPopUp():
         helpTxt.configure(state='disabled')
     elif activeTabNum == 1:
         topLevel.wm_title("Help on Next App")
+    logging.info("Exited")
      
 class TabCreation:
     def __init__(self):
         global tabBook, currSettings
+        logging.info("Entered")
         self.toneGenFrame = tk.Frame(tabBook)
         tabBook.add(self.toneGenFrame ,text = "Tone Gen")
         self.toneGenPage = tg.ToneGen(self.toneGenFrame,currSettings)
@@ -96,8 +107,10 @@ class TabCreation:
         self.nextAppFrame = tk.Frame(tabBook)
         tabBook.add(self.nextAppFrame, text = "next thing")
         self.prevTabNum = 0
+        logging.info("Exited")
       
     def userSelectsTab(self,event):
+        logging.info("Entered")
         #event has event.widget.tab(event.widget.select(), 'text') to get tab text if wanted
         self.currTabNum = tabBook.index(tabBook.select())
         
@@ -114,6 +127,7 @@ class TabCreation:
         else:
             #put out an error here
             print(f"Error, tab {self.currTabNum} not handled")
+        logging.info("Exited")
             
     def getFirstFrame(self):
         return self.toneGenFrame
@@ -122,6 +136,29 @@ def main():
     def preferencePopUp():
         prefSelect = PreferenceSelect()
     
+    """
+    Set up logging
+    """
+    baseLogDir = os.path.join("C:", os.sep, "PyDevLogs")
+    if not os.path.exists(baseLogDir):
+        os.makedirs(baseLogDir)
+    LOG_FILE = os.path.join(baseLogDir, "trigNotebookLog.log")
+    #write a new log file on each run
+    logging.basicConfig(format = '%(asctime)s %(module)s %(funcName)s %(lineno)d %(message)s',
+                        datefmt = '%m/%d/%Y %I:%M:%S %p',
+                        filemode = 'w',
+                        filename = LOG_FILE,
+                        level=logging.INFO)
+    console = logging.StreamHandler()
+    console.setLevel(logging.ERROR)
+    logging.getLogger('').addHandler(console)
+    
+    # Install exception handler
+    sys.excepthook = my_handler
+
+    """
+    Set up the root and basic GUI
+    """
     root.title("Interactive Trig")
     #root.geometry("+%d+%d" % (50, 50))
     root.geometry("700x700+50+50")
@@ -134,6 +171,7 @@ def main():
         root.columnconfigure(rows, weight=1)
         rows += 1
     
+    logging.info("Setting up menubar on the notebook")
     menubar = tk.Menu(root)
     settingMenu = tk.Menu(menubar)
     settingMenu.add_command(label="Preferences", command=preferencePopUp)
@@ -155,9 +193,15 @@ def main():
     tabBook.enable_traversal()
     #bind user tab changes to program action and class selection
     tabBook.bind("<<NotebookTabChanged>>", tabEx.userSelectsTab)
-    
+
+    logging.info("Setup done, entering root.mainloop waiting for user input")
     root.mainloop()
     
+    
+
+def my_handler(type, value, tb):
+    logging.exception("Uncaught exception: {0}".format(str(value)))
+
     
 if __name__ == '__main__':
     main()
