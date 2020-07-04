@@ -101,7 +101,7 @@ class TabCreation:
         global tabBook, currSettings
         logging.info("Entered")
         self.toneGenFrame = tk.Frame(tabBook)
-        tabBook.add(self.toneGenFrame ,text = "Tone Gen")
+        tabBook.add(self.toneGenFrame ,text = "Music\nNotes")
         self.toneGenPage = tg.ToneGen(self.toneGenFrame,currSettings)
     
         self.nextAppFrame = tk.Frame(tabBook)

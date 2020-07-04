@@ -13,6 +13,13 @@ from tkinter.font import Font
 import argparse
 import numpy as np
 import sounddevice as sd
+
+import matplotlib.pyplot as plot
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+import matplotlib.animation as animation
+from matplotlib import style
+
 #--file imports
 import ContextSensHelp as csh
 import TrigSettings as setting
@@ -23,8 +30,6 @@ def runPlayTone(startStopTone, toneFreq, toneAmp):
     #take the default output device and get the default sample rate
     samplerate = sd.query_devices('output')['default_samplerate']
     start_idx = 0
-    #adding a scale factor keeps us from overdriving the output speakers, which would produce distortion
-    SCALE_FACTOR = 0.01
     #if choose to do logging here, need to be thread safe
     #play tone while button is pushed, end when "unpushed"
     def callback(outdata, frames, time, status):
@@ -35,7 +40,7 @@ def runPlayTone(startStopTone, toneFreq, toneAmp):
         nonlocal start_idx
         t = (start_idx + np.arange(frames)) / samplerate
         t = t.reshape(-1, 1)
-        outdata[:] = float(toneAmp()) * SCALE_FACTOR * np.sin(2 * np.pi * float(toneFreq()) * t)
+        outdata[:] = float(toneAmp()) * ToneGen.SCALE_FACTOR * np.sin(2 * np.pi * float(toneFreq()) * t)
         start_idx += frames
 
     with sd.OutputStream(channels=1, callback=callback, samplerate=samplerate):                
@@ -45,6 +50,7 @@ def runPlayTone(startStopTone, toneFreq, toneAmp):
 
             
 class ToneGen:
+    SCALE_FACTOR = 0.01
     
     ### dont think all these are needed######################
     def amplitudeChanged(self):
@@ -64,46 +70,28 @@ class ToneGen:
             #print(f'should go off to correct csh for amp {self.widgetToCSH.get(event.widget)}')
             self.widgetToCSH[event.widget].audioHelp()
         #otherwise, do nothing
-        
-    def correct_amp_input(self, text):
+    
+    def correct_entry_input(self, text, minVal, maxVal):
         logging.info("Entered")
         #if this returns false, value is not changed
         valid = False
-        if text.isdigit():
-            if (int(text) <= self.maxAmp and int(text) >= self.minAmp):
+        if text.isdigit(): # or text == "":
+            if (int(text) <= maxVal and int(text) >= minVal):
                 valid = True
         logging.info("Exited")
         return valid   
+        
+    def correct_amp_input(self,text):
+        return self.correct_entry_input(text, self.minAmp, self.maxAmp)
          
     def correct_freq_input(self, text):
-        logging.info("Entered")
-        #if this returns false, value is not changed
-        valid = False
-        if text.isdigit():
-            if (int(text) <= self.maxFreq and int(text) >= self.minFreq):
-                valid = True
-        logging.info("Exited")
-        return valid  
+        return self.correct_entry_input(text, self.minFreq, self.maxFreq)
     
     def correct_DC_input(self, text):  
-        logging.info("Entered")
-        #if this returns false, value is not changed
-        valid = False
-        if text.isdigit():
-            if (int(text) <= self.maxDC and int(text) >= self.minDC):
-                valid = True
-        logging.info("Exited")
-        return valid  
+        return self.correct_entry_input(text, self.minDC, self.maxDC)  
  
     def correct_Phase_input(self, text):  
-        logging.info("Entered")
-        #if this returns false, value is not changed
-        valid = False
-        if text.isdigit():
-            if (int(text) <= self.maxPhase and int(text) >= self.minPhase):
-                valid = True
-        logging.info("Exited")
-        return valid  
+        return self.correct_entry_input(text, self.minPhase, self.maxPhase)
            
     def playOrStopTone(self): 
         logging.info("Entered")
@@ -154,14 +142,14 @@ class ToneGen:
         self.toneAmp = 20
         self.maxAmp = 100
         self.amplitudeLabel = tk.Label(self.currFrame,
-                                       text=f"Amplitude\n({self.minAmp} mV - {self.maxAmp} mV)",
+                                       text=f"Amplitude (mV)\n({self.minAmp} - {self.maxAmp})",
                                        font=Font(family='Helvetica', size=15, weight='normal'))
         self.amplitudeLabel.grid(row=0, column = 0)
         self.currAmp = tk.IntVar(value = self.toneAmp)
         #problem is that the amplitudeChanged doesnt hit if user types in new val and hits ret
         validate_amp_input = (self.currFrame.register(self.correct_amp_input), '%P')
         self.amplitudeAdjust = tk.Spinbox(self.currFrame, 
-                                          from_=self.minAmp, 
+                                          from_= self.minAmp, 
                                           to=self.maxAmp, 
                                           textvariable = self.currAmp, 
                                           validate = 'all',
@@ -184,11 +172,11 @@ class ToneGen:
         self.toneFreq = 277  # this is the "start" freq for spinbox
         self.maxFreq = 20000
         self.freqLabel = tk.Label(self.currFrame,
-                                       text=f"Frequency\n({self.minFreq} Hz - {self.maxFreq} Hz)",
+                                       text=f"Frequency (Hz)\n({self.minFreq} - {self.maxFreq})",
                                        font=Font(family='Helvetica', size=15, weight='normal'))
         self.freqLabel.grid(row=0, column = 1)
         self.currFreq = tk.IntVar(value = self.toneFreq)
-        validate_freq_input = (self.currFrame.register(self.correct_freq_input), '%Q')
+        validate_freq_input = (self.currFrame.register(self.correct_freq_input), '%P')
         self.freqAdjust = tk.Spinbox(self.currFrame, 
                                           from_=self.minFreq, 
                                           to=self.maxFreq, 
@@ -213,11 +201,11 @@ class ToneGen:
         self.toneDC = 0  # this is the "start" DC for spinbox
         self.maxDC = self.maxAmp/2
         self.dcLabel = tk.Label(self.currFrame,
-                                       text=f"DC Offset\n({self.minDC} mV - {self.maxDC} mV )",
+                                       text=f"DC Offset (mV)\n({self.minDC} - {self.maxDC})",
                                        font=Font(family='Helvetica', size=15, weight='normal'))
         self.dcLabel.grid(row=0, column = 2)
         self.currDC = tk.IntVar(value = self.toneDC)
-        validate_DC_input = (self.currFrame.register(self.correct_DC_input), '%Q')
+        validate_DC_input = (self.currFrame.register(self.correct_DC_input), '%P')
         self.dcAdjust = tk.Spinbox(self.currFrame, 
                                           from_=self.minDC, 
                                           to=self.maxDC, 
@@ -246,7 +234,7 @@ class ToneGen:
                                        font=Font(family='Helvetica', size=15, weight='normal'))
         self.phaseLabel.grid(row=0, column = 3)
         self.currPhase = tk.IntVar(value = self.tonePhase)
-        validate_Phase_input = (self.currFrame.register(self.correct_Phase_input), '%Q')
+        validate_Phase_input = (self.currFrame.register(self.correct_Phase_input), '%P')
         self.phaseAdjust = tk.Spinbox(self.currFrame, 
                                           from_=self.minPhase, 
                                           to=self.maxPhase, 
@@ -278,6 +266,34 @@ class ToneGen:
         self.playButton_csh = csh.ContextSensHelp(self.currFrame, self.playToneButton, currSettings, playInits)
         self.widgetToCSH[self.playToneButton] = self.playButton_csh
         self.playToneButton.grid(row=1, column = 4, padx = 10)
+        
+        '''
+        Add in the graph of trig function
+        '''
+        f = Figure(figsize=(5,5), dpi=100)
+        sinPlot = f.add_subplot(111)
+        # updates per second in animation
+        animationUpdateRate = 10
+        animationPeriod = 1/animationUpdateRate
+        FSAMP_DIV_TONE_FREQ = 10
+        fsamp = self.toneFreq * FSAMP_DIV_TONE_FREQ
+        maxNPeriods = np.trunc(self.toneFreq * (animationPeriod - 1/fsamp))
+        maxTimeNPeriods = maxNPeriods/self.toneFreq + 1/fsamp
+        time        = np.arange(0, maxTimeNPeriods, 1/fsamp);
+        # Amplitude of the sine wave is sine of a variable like time
+    #adding a scale factor keeps us from overdriving the output speakers, which would produce distortion
+        amplitude   = self.toneAmp * self.SCALE_FACTOR * np.sin(2.0 * np.pi * self.toneFreq * time)
+
+        #Plot a sine wave using time and amplitude obtained for the sine wave
+        #sinPlot.plot(time[:100], amplitude[:100])
+        sinPlot.plot(time, amplitude)
+        sinPlot.title.set_text("Real Time Sine plot")
+        sinPlot.set_ylabel("Amplitude*sin(2*pi*Frequency*time)")
+        sinPlot.set_xlabel("time (ms)")
+        sinPlot.grid()
+
+        canvas = FigureCanvasTkAgg(f, currFrame)
+        canvas.get_tk_widget().grid(row = 2, column = 0, columnspan = 5, pady = 20)
         
         logging.info("Exited")
         
