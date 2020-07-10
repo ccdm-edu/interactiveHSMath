@@ -23,13 +23,22 @@ from matplotlib import style
 #--file imports
 import ContextSensHelp as csh
 import TrigSettings as setting
-   
-              
-def runPlayTone(startStopTone, toneFreq, toneAmp):
+
+
+#want to use same method to plot for audio as graph
+def plotSine(outdata, sampleRate, numPts, freq, amp, phase, dcoffset, startTime):   
+    t = (startTime + np.arange(numPts)) / sampleRate
+    t = t.reshape(-1, 1) 
+    outdata[:] = ToneGen.SCALE_FACTOR * (float(amp) *np.sin(2 * np.pi * float(freq) * t + float(phase)) + dcoffset)
+
+         
+def runPlayTone(startStopTone, toneFreq, toneAmp, tonePhase):
     logging.info("Entered") 
     #take the default output device and get the default sample rate
-    samplerate = sd.query_devices('output')['default_samplerate']
+    sampleRate = sd.query_devices('output')['default_samplerate']
     start_idx = 0
+    currToneFreq = float(toneFreq())
+ 
     #if choose to do logging here, need to be thread safe
     #play tone while button is pushed, end when "unpushed"
     def callback(outdata, frames, time, status):
@@ -37,13 +46,13 @@ def runPlayTone(startStopTone, toneFreq, toneAmp):
         if status:
             #look for underflow or overflow here
             print(f"current status is {status}")
-        nonlocal start_idx
-        t = (start_idx + np.arange(frames)) / samplerate
-        t = t.reshape(-1, 1)
-        outdata[:] = float(toneAmp()) * ToneGen.SCALE_FACTOR * np.sin(2 * np.pi * float(toneFreq()) * t)
+        nonlocal start_idx, currToneFreq
+        #time will be a numpy.ndarray of [frames,1] in one particular run, frames was 1136
+        #will not send DC offset to speaker since this interface wants 0 offset
+        plotSine(outdata, sampleRate, frames, toneFreq(), toneAmp(), tonePhase(), 0, start_idx)
         start_idx += frames
 
-    with sd.OutputStream(channels=1, callback=callback, samplerate=samplerate):                
+    with sd.OutputStream(channels=1, callback=callback, samplerate = sampleRate):                
         while startStopTone():
             time.sleep(0.25)  
     logging.info("Exited")
@@ -111,12 +120,46 @@ class ToneGen:
             self.toneThread = threading.Thread(target = runPlayTone, 
                                                args =(lambda : self.toneIsOn,
                                                       lambda : self.toneFreq, 
-                                                      lambda : self.toneAmp) ) 
+                                                      lambda : self.toneAmp,
+                                                      lambda : self.tonePhase) ) 
             self.toneThread.start() 
         else:
             #user stops tone, end the thread
             self.toneThread.join()
         logging.info("Exited")
+        
+        
+    def animate(self, i): 
+        logging.info("Entered")
+        #print(f"entered animate with param {i}")
+        frames = 1000   
+        #no need to sample at speakers rate, just so it looks good on a plot and is >2*tone freq
+        FSAMP_DIV_TONE_FREQ = 100
+        sampleRate = self.toneFreq * FSAMP_DIV_TONE_FREQ
+        #shape outdata so it looks like same form as playing tone to speaker 
+        outdata = []
+        time = (self.initGraphPt + np.arange(frames)) / sampleRate
+        time = time.reshape(-1, 1) 
+        plotSine(outdata, 
+                  sampleRate, 
+                  frames, 
+                  self.toneFreq, 
+                  self.toneAmp, 
+                  self.tonePhase, 
+                  self.toneDC,
+                  self.initGraphPt)
+        self.initGraphPt += frames 
+
+        self.sinPlot.clear()
+        self.sinPlot.plot(time,outdata)
+        self.sinPlot.title.set_text(self.GRAPH_LABEL)
+        self.sinPlot.set_ylabel(self.GRAPH_X_LABEL)
+        self.sinPlot.set_xlabel(self.GRAPH_Y_LABEL)
+        self.sinPlot.grid()
+        logging.info("Exited")
+
+ 
+ 
         
     def __init__(self, currFrame, currSettings):
         """
@@ -133,6 +176,11 @@ class ToneGen:
         self.currFrame.bind_all('<Enter>', self.mouseLocation)
         #create a dictionary of context sens help associated with each such widget
         self.widgetToCSH = {}
+        self.initGraphPt = 0
+        #constants that never change
+        self.GRAPH_LABEL = "DCOffset + Amplitude*sin(2*pi*Frequency*time + phase)"
+        self.GRAPH_X_LABEL = "Voltage (mV)"
+        self.GRAPH_Y_LABEL = "Time (ms)"
         
         '''
         Initialize:
@@ -270,31 +318,32 @@ class ToneGen:
         '''
         Add in the graph of trig function
         '''
-        f = Figure(figsize=(5,5), dpi=100)
-        sinPlot = f.add_subplot(111)
-        # updates per second in animation
-        animationUpdateRate = 10
-        animationPeriod = 1/animationUpdateRate
-        FSAMP_DIV_TONE_FREQ = 10
-        fsamp = self.toneFreq * FSAMP_DIV_TONE_FREQ
-        maxNPeriods = np.trunc(self.toneFreq * (animationPeriod - 1/fsamp))
-        maxTimeNPeriods = maxNPeriods/self.toneFreq + 1/fsamp
-        time        = np.arange(0, maxTimeNPeriods, 1/fsamp);
-        # Amplitude of the sine wave is sine of a variable like time
-    #adding a scale factor keeps us from overdriving the output speakers, which would produce distortion
-        amplitude   = self.toneAmp * self.SCALE_FACTOR * np.sin(2.0 * np.pi * self.toneFreq * time)
 
-        #Plot a sine wave using time and amplitude obtained for the sine wave
-        #sinPlot.plot(time[:100], amplitude[:100])
-        sinPlot.plot(time, amplitude)
-        sinPlot.title.set_text("Real Time Sine plot")
-        sinPlot.set_ylabel("Amplitude*sin(2*pi*Frequency*time)")
-        sinPlot.set_xlabel("time (ms)")
-        sinPlot.grid()
+        self.figTone = Figure(figsize=(6,5), dpi=100)
+        #111 means 1x1 first subplot, self.sinPlot is an AxesSubplot
+        self.sinPlot = self.figTone.add_subplot(111)
 
-        canvas = FigureCanvasTkAgg(f, currFrame)
+         
+        self.sinPlot.title.set_text(self.GRAPH_LABEL)
+        self.sinPlot.set_ylabel(self.GRAPH_X_LABEL)
+        self.sinPlot.set_xlabel(self.GRAPH_Y_LABEL)
+        self.sinPlot.grid()
+ 
+        canvas = FigureCanvasTkAgg(self.figTone, currFrame)
+        self.graphWidget = canvas.get_tk_widget()
         canvas.get_tk_widget().grid(row = 2, column = 0, columnspan = 5, pady = 20)
         
+        graphInits = csh.ContextSensHelpInitable("Real Time pieces of tone selected.", 
+                                               ["C:\Cathy\PythonDev\AudioHelp\phase_change_eng.mp3",
+                                               "C:\Cathy\PythonDev\AudioHelp\phase.change_mp3"])
+        self.graph_csh = csh.ContextSensHelp(self.currFrame, self.graphWidget, currSettings, graphInits)
+        self.widgetToCSH[self.graphWidget] = self.graph_csh         
+        #not doing blit since we change x and y axis potentially every time and may add new background waveforms   
+        self.liveSine = animation.FuncAnimation(self.figTone, 
+                                                self.animate, 
+                                                interval = 100)
+        plot.show()
+
         logging.info("Exited")
         
     def endTabActions(self):
