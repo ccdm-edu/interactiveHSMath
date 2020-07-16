@@ -48,7 +48,7 @@ class TrigSettings(ao.Subject):
     def __init__(self):
         self.language = ENGLISH
         self.useBalloons = True
-        self.useAudioHelp = True
+        self.useAudioHelp = False  #later make this true
         
     def __str__(self):
         return("language is" + str(self.language) + 

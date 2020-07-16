@@ -14,6 +14,11 @@ import argparse
 import numpy as np
 import sounddevice as sd
 
+#depends on ffmpeg libraries being installed and in the PATH env
+#may need SoX libraries and updated path to use many of the methods like resample
+from pydub import AudioSegment
+import array as arr
+
 import matplotlib.pyplot as plot
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
@@ -29,7 +34,8 @@ import TrigSettings as setting
 def plotSine(outdata, sampleRate, numPts, freq, amp, phase, dcoffset, startTime):   
     t = (startTime + np.arange(numPts)) / sampleRate
     t = t.reshape(-1, 1) 
-    outdata[:] = ToneGen.SCALE_FACTOR * (float(amp) *np.sin(2 * np.pi * float(freq) * t + float(phase)) + dcoffset)
+    phaseRad = float(phase) * np.pi / 180.0
+    outdata[:] = ToneGen.SCALE_FACTOR * (float(amp) *np.sin(2 * np.pi * float(freq) * t + phaseRad) + dcoffset)
 
          
 def runPlayTone(startStopTone, toneFreq, toneAmp, tonePhase):
@@ -131,14 +137,15 @@ class ToneGen:
         
     def animate(self, i): 
         logging.info("Entered")
-        #print(f"entered animate with param {i}")
         frames = 1000   
         #no need to sample at speakers rate, just so it looks good on a plot and is >2*tone freq
-        FSAMP_DIV_TONE_FREQ = 100
-        sampleRate = self.toneFreq * FSAMP_DIV_TONE_FREQ
+        #FSAMP_DIV_TONE_FREQ = 100
+        #sampleRate = self.toneFreq * FSAMP_DIV_TONE_FREQ]
+        sampleRate = 20000
         #shape outdata so it looks like same form as playing tone to speaker 
         outdata = []
-        time = (self.initGraphPt + np.arange(frames)) / sampleRate
+        #always restart graph from 0 time every "animation" sec so easier to compare and see changes
+        time = (np.arange(frames)) / sampleRate
         time = time.reshape(-1, 1) 
         plotSine(outdata, 
                   sampleRate, 
@@ -147,18 +154,19 @@ class ToneGen:
                   self.toneAmp, 
                   self.tonePhase, 
                   self.toneDC,
-                  self.initGraphPt)
-        self.initGraphPt += frames 
+                  0)
 
         self.sinPlot.clear()
-        self.sinPlot.plot(time,outdata)
+        
+        #rescale to users plot, for ease of viewing
+        externalNote = [i * ToneGen.SCALE_FACTOR * self.toneAmp  for i in self.mono_mp3]
+
+        self.sinPlot.plot(time,outdata, 'b-', time, externalNote[:1000], 'r--')
         self.sinPlot.title.set_text(self.GRAPH_LABEL)
         self.sinPlot.set_ylabel(self.GRAPH_X_LABEL)
         self.sinPlot.set_xlabel(self.GRAPH_Y_LABEL)
         self.sinPlot.grid()
         logging.info("Exited")
-
- 
  
         
     def __init__(self, currFrame, currSettings):
@@ -176,9 +184,9 @@ class ToneGen:
         self.currFrame.bind_all('<Enter>', self.mouseLocation)
         #create a dictionary of context sens help associated with each such widget
         self.widgetToCSH = {}
-        self.initGraphPt = 0
+
         #constants that never change
-        self.GRAPH_LABEL = "DCOffset + Amplitude*sin(2*pi*Frequency*time + phase)"
+        self.GRAPH_LABEL = "DCOffset + Amplitude*sin(2*pi*Frequency*time + PhaseOffset)"
         self.GRAPH_X_LABEL = "Voltage (mV)"
         self.GRAPH_Y_LABEL = "Time (ms)"
         
@@ -278,7 +286,7 @@ class ToneGen:
         self.maxPhase = 360
         DEG_SYM = u'\N{DEGREE SIGN}'
         self.phaseLabel = tk.Label(self.currFrame,
-                                       text=f"Phase offset\n({self.minDC}{DEG_SYM} - {self.maxDC}{DEG_SYM} )",
+                                       text=f"Phase offset\n({self.minPhase}{DEG_SYM} - {self.maxPhase}{DEG_SYM} )",
                                        font=Font(family='Helvetica', size=15, weight='normal'))
         self.phaseLabel.grid(row=0, column = 3)
         self.currPhase = tk.IntVar(value = self.tonePhase)
@@ -323,7 +331,6 @@ class ToneGen:
         #111 means 1x1 first subplot, self.sinPlot is an AxesSubplot
         self.sinPlot = self.figTone.add_subplot(111)
 
-         
         self.sinPlot.title.set_text(self.GRAPH_LABEL)
         self.sinPlot.set_ylabel(self.GRAPH_X_LABEL)
         self.sinPlot.set_xlabel(self.GRAPH_Y_LABEL)
@@ -343,7 +350,25 @@ class ToneGen:
                                                 self.animate, 
                                                 interval = 100)
         plot.show()
+        
+        
+        
+        #####
+        ## code to read in and manipulate mp3 narrowband data
+        #####
+        #play around with reading a mp3 file, careful with filenames, python does not like embedded \t or \number
+        #or \a
+        sound = AudioSegment.from_mp3("C:\Cathy\PythonDev\practiceTones\cnst500SpeakerTone.mp3")
+        #slice operator overloaded to work with millisec
+        resampSound = sound[1000:2000].set_frame_rate(20000).split_to_mono()
+        maxOfResampSound = resampSound[0].max
 
+        #will produce array.array of signed short (2 byte int)
+        pyArrayOfMp3 = resampSound[0].get_array_of_samples()
+        #normalize array to +/-1
+        self.mono_mp3 = [i/maxOfResampSound for i in pyArrayOfMp3]
+
+        
         logging.info("Exited")
         
     def endTabActions(self):
