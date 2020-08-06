@@ -161,7 +161,10 @@ class ToneGen:
         #rescale to users plot, for ease of viewing
         externalNote = [i * ToneGen.SCALE_FACTOR * self.toneAmp  for i in self.mono_mp3]
 
-        self.sinPlot.plot(time,outdata, 'b-', time, externalNote[:1000], 'r--')
+        #self.sinPlot.plot(time,outdata, 'b-', time, externalNote[:1000], 'r--')
+        max_pt = 250
+        self.sinPlot.plot(time[:max_pt],outdata[:max_pt],'b-',time[:max_pt], externalNote[:max_pt], 'r--')
+
         self.sinPlot.title.set_text(self.GRAPH_LABEL)
         self.sinPlot.set_ylabel(self.GRAPH_X_LABEL)
         self.sinPlot.set_xlabel(self.GRAPH_Y_LABEL)
@@ -358,7 +361,8 @@ class ToneGen:
         #####
         #play around with reading a mp3 file, careful with filenames, python does not like embedded \t or \number
         #or \a
-        sound = AudioSegment.from_mp3("C:\Cathy\PythonDev\practiceTones\cnst500SpeakerTone.mp3")
+        #sound = AudioSegment.from_mp3("C:\Cathy\PythonDev\practiceTones\cnst500SpeakerTone.mp3")
+        sound = AudioSegment.from_mp3("C:\Cathy\PythonDev\practiceTones\BDM_trumpet_lowC.mp3")
         #slice operator overloaded to work with millisec
         resampSound = sound[1000:2000].set_frame_rate(20000).split_to_mono()
         maxOfResampSound = resampSound[0].max
