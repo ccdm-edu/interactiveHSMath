@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+{% load static %} <!--  another difference from django 2 to 3.1 -->
+
+<html>
+<head>
+	<title>Rango</title>
+	<meta charset="ISO-8859-1">
+</head>
+<body>
+	<h1>Rango says...</h1>
+	<div>
+		Hey there partner!<br />
+		<strong>{{ boldmessage }}</strong><br />
+	</div>
+	<div>
+		<a href="/Rango/about/">About</a><br />
+		<img src="{% static 'images/AngelKitty.jpg' %}"
+			alt = "picture of angel kitty" /> <!-- New Line  -->
+	</div>
+
+</body>
+</html>
