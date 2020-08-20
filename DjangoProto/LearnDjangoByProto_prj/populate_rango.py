@@ -36,7 +36,7 @@ def populate():
             'Other Frameworks': [{'pages' : other_pages}, {'views': 32}, {'likes':16}] 
             }
     #iterating through .items means cat is the key and cat_data is the value of 
-    #the cats dictionary
+    #the cats dictionary item
     for cat, cat_data in cats.items():
         c = add_cat(cat, cat_data[1]['views'], cat_data[2]['likes'])
         for p in cat_data[0]['pages']:
