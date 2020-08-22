@@ -9,11 +9,13 @@ def index(request):
     #order by likes and take top 5. The -likes says sort in descending order, likes is 
     #ascending order
     category_list = Category.objects.order_by('-likes')[:5]
+    page_list = Page.objects.order_by('-views')[:5]
     context_dict = {'boldmessage': 'Crunchy, creamy, cookie, candy, cupcake, broccoli!', 
                     'greetingmsg': 'Hey there partner!',
                     'chooseURL': '<a href="/Rango/about/">About</a><br />',
                     'current_angel_kitty': '../static/images/AngelKitty.jpg',
-                    'categories': category_list
+                    'categories': category_list,
+                    'pages': page_list,
                     }
     return render(request, 'Rango/index.html', context=context_dict)
 
