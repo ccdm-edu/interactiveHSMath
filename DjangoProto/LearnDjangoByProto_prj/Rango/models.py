@@ -4,9 +4,12 @@ from django.utils import timezone
 from datetime import datetime
 from django.template.defaultfilters import slugify
 
+#MAX_LEN_NAME = 128
+
 # Create your models here.
 class Category(models.Model):
-    name = models.CharField(max_length = 128, unique = True)
+    MAX_LEN_NAME = 128
+    name = models.CharField(max_length=MAX_LEN_NAME, unique = True)
     status = BooleanField(default = False)
     # use editable=False and it won't show up as a field in the admin page   
     created_at = DateTimeField(default=datetime.now())
@@ -14,6 +17,8 @@ class Category(models.Model):
     likes = models.IntegerField(default=0)
     #careful if there is a default on slug, may need to wait until fully populated
     #before adding this field
+    #perhaps another solution is slug= AutoSlugField(populate_from='name', unique=True) and then from autoslug import AutoSlugField
+    #then maynot need to do the save stuff with slugify...
     slug = models.SlugField(unique=True)
     
     def save(self, *args, **kwargs):
@@ -30,9 +35,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
 class Page(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    title = models.CharField(max_length=128)
+    title = models.CharField(max_length = Category.MAX_LEN_NAME)
     url = models.URLField()
     views = models.IntegerField(default=0)
     

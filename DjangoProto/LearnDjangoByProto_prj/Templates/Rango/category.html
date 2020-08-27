@@ -19,6 +19,10 @@
 			{% else %}
 			<strong>No pages currently in category.</strong>
 			{% endif %}
+			<!-- dont want to go to a category if the category does not exist -->
+			<br><a href="/Rango/category/{{ category.slug}}/add_page/">Add a Shiny New Page-y</a>
+			<br>
+				
 		{% else %}
 			The specified category does not exist.
 		{% endif %}
