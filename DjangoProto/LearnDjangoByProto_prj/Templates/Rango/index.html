@@ -1,13 +1,13 @@
-<!DOCTYPE html>
+{% extends 'Rango/base.html' %}
 
 {% load static %} <!--  another difference from django 2 to 3.1 -->
 
-<html>
-<head>
-	<title>Rango</title>
-	<meta charset="ISO-8859-1">
-</head>
-<body>
+{%block title_block %}
+	{{ page_tab_header }}
+{% endblock %}
+
+
+{% block body_block %}
 	<h1>Rango says...</h1>
 	<div>
 		{{ greetingmsg }}<br />
@@ -24,7 +24,7 @@
 			<ul>
 			{% for category in categories %}
 				<li> 
-				<a href="/Rango/category/{{ category.slug }}/">{{ category.name }}</a>
+				<a href = "{% url 'Rango:show_category' category.slug %}">{{ category.name }}</a>
 				</li>
 			{% endfor %}
 			</ul>
@@ -50,10 +50,9 @@
 
 	<div>
 		<img src="{{ current_angel_kitty }}" alt = "picture of angel kitty" />
-		<br><a href="/Rango/add_category/">Add a Shiny New Category</a>
-		<br>
-		{{ chooseURL | safe }}
-	</div>
 
-</body>
-</html>
+	</div>
+{% endblock %}
+
+
+

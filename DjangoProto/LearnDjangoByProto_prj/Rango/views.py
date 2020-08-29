@@ -15,8 +15,8 @@ def index(request):
     page_list = Page.objects.order_by('-views')[:5]
     context_dict = {'boldmessage': 'Crunchy, creamy, cookie, candy, cupcake, broccoli!', 
                     'greetingmsg': 'Hey there partner!',
-                    'chooseURL': '<a href="/Rango/about/">About</a><br />',
                     'current_angel_kitty': '../static/images/AngelKitty.jpg',
+                    'page_tab_header': 'Index',
                     'categories': category_list,
                     'pages': page_list,
                     }
@@ -27,8 +27,8 @@ def about(request):
 #    return HttpResponse(http_resp)
     context_dict = {'boldmessage': 'Cat Coder did this page', 
                     'greetingmsg': 'This is the ABOUT page',
-                    'chooseURL': '<a href="/Rango/">Home</a><br />',
                     'current_angel_kitty': '../../media/Mowgli.jpg',
+                    'page_tab_header': 'About',
                     }
     return render(request, 'Rango/index.html', context=context_dict)
 
