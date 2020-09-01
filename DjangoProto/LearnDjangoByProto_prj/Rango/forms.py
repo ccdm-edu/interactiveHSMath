@@ -1,5 +1,6 @@
 from django import forms
-from Rango.models import Page, Category
+from Rango.models import Page, Category, UserProfile
+from django.contrib.auth.models import User
 
 #######################
 # NOTE, this file must be called forms.py for Django interface
@@ -55,4 +56,16 @@ class PageForm(forms.ModelForm):
             cleaned_data['url'] = url
             print(f'url is now {url}')
         return cleaned_data
+    
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+    
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password', )
+        
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('website', 'picture',)
     

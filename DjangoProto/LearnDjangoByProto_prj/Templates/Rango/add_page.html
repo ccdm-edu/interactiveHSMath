@@ -7,6 +7,7 @@
 {% block body_block %}
 	<h1>Add a Page</h1>
 	<div>
+		{% if user.is_authenticated %}
 		<form id="page_form" method = "post" action="{% url 'Rango:add_page' category.slug %}">
 			{% csrf_token %}
 			{% for hidden in form.hidden_fields%}
@@ -20,5 +21,8 @@
 			{% endfor %}
 			<input type="submit" name="submit" value="Add Page" />
 		</form>
+		{% else %}
+			You are not authorized to add pages
+		{% endif %}
 	</div>
 {% endblock %}

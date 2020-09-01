@@ -1,5 +1,5 @@
 from django.contrib import admin
-from Rango.models import Category, Page
+from Rango.models import Category, Page, UserProfile
 from django.contrib.admin.templatetags.admin_modify import prepopulated_fields_js
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -11,3 +11,4 @@ class PageAdmin(admin.ModelAdmin):
     
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Page, PageAdmin)
+admin.site.register(UserProfile)
