@@ -20,7 +20,10 @@
 		{% endif %}
 	</div>
 	
-	<p>Visits: {{ visits }} </p>
+	{% if not index_page %}
+		<!-- only counts visits to about page -->
+		<p>Visits: {{ visits }} </p>
+	{% endif %}
 	
 	<!--  
 	ul is an unordered html list, template cmds go in {percentsign  percentsign} and 
