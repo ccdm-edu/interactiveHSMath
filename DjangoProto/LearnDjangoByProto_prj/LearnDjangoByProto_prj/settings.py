@@ -35,6 +35,16 @@ DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = []
 
+# if true, users can register
+REGISTRATION_OPEN = True
+#if true, the user will be automatically logged in after registering
+REGISTRATION_AUTO_LOGIN = True
+#The url that django redirects users to aftger logging in
+LOGIN_REDIRECT_URL = "Rango:index"
+# the page users are directed to if they are not logged in
+#This was set in a previous chapter.  The registration package uses this,too.
+LOGIN_URL = 'auth_login'
+
 
 # Application definition
 
@@ -46,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Rango',
+    'registration',
 ]
 
 MIDDLEWARE = [

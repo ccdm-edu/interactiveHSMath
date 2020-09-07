@@ -23,14 +23,15 @@
 		</div>
 		<hr />
 		<div>
+			<!-- cant put comments within a statement below -->
 			<ul>
 				{% if user.is_authenticated %}
 					<li> <a href="{%url 'Rango:restricted' %}">Restricted Page</a></li>
-					<li> <a href="{%url 'Rango:logout' %}">Log out</a></li>
+					<li> <a href="{% url 'auth_logout' %}?next={% url 'Rango:index' %}">Log out</a></li>
 					<li> <a href="{%url 'Rango:add_category' %}">Add a New Category</a></li>
 				{% else %}
-					<li><a href="{% url 'Rango:register' %}">Sign up</a></li>
-					<li><a href="{% url 'Rango:login' %}">Log in</a></li>
+					<li><a href="{% url 'registration_register' %}">Sign up</a></li>
+					<li><a href="{% url 'auth_login' %}">Log in</a></li>
 				{% endif %}
 				<li><a href="{%url 'Rango:about' %}">About</a></li>
 				<li><a href="{%url 'Rango:index' %}">Index</a></li>
