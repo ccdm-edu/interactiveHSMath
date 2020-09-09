@@ -27,6 +27,7 @@
 			<ul>
 				{% if user.is_authenticated %}
 					<li> <a href="{%url 'Rango:restricted' %}">Restricted Page</a></li>
+					<li> <a href="{%url 'auth_password_change' %}">Change Password</a></li>
 					<li> <a href="{% url 'auth_logout' %}?next={% url 'Rango:index' %}">Log out</a></li>
 					<li> <a href="{%url 'Rango:add_category' %}">Add a New Category</a></li>
 				{% else %}
