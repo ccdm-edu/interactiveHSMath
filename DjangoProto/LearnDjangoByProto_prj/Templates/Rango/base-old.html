@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% load static %} <!--  another difference from django 2 to 3.1 -->
+{% load rango_template_tags %}
+<html>
+	<head>
+	<!--  This title goes up on the browser tab -->
+		<title>
+		Rango -
+		{% block title_block %}
+		   How to Taaaango with Djaaaaango!
+		{% endblock %}
+		</title>
+	</head>
+	<body>
+		<div>
+		{% block body_block %}
+		{% endblock %}
+		</div>
+		<div>
+			{% block sidebar_block %}
+				{% get_category_list  category%}
+			{% endblock %}
+		</div>
+		<hr />
+		<div>
+			<!-- cant put comments within a statement below -->
+			<ul>
+				{% if user.is_authenticated %}
+					<li> <a href="{%url 'Rango:restricted' %}">Restricted Page</a></li>
+					<li> <a href="{%url 'auth_password_change' %}">Change Password</a></li>
+					<li> <a href="{% url 'auth_logout' %}?next={% url 'Rango:index' %}">Log out</a></li>
+					<li> <a href="{%url 'Rango:add_category' %}">Add a New Category</a></li>
+				{% else %}
+					<li><a href="{% url 'registration_register' %}">Sign up</a></li>
+					<li><a href="{% url 'auth_login' %}">Log in</a></li>
+				{% endif %}
+				<li><a href="{%url 'Rango:about' %}">About</a></li>
+				<li><a href="{%url 'Rango:index' %}">Index</a></li>
+			</ul>
+		</div>
+
+	</body>
+</html>

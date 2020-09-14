@@ -57,9 +57,11 @@ INSTALLED_APPS = [
     'Rango',
     'registration',  # should be immediately above contrib.admin
     'django.contrib.admin',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -92,6 +94,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'LearnDjangoByProto_prj.wsgi.application'
 
+# for debug only
+INTERNAL_IPS = [
+    '127.0.0.1',
+    ]
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
