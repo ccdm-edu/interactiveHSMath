@@ -9,7 +9,6 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
     <link rel="icon" href="{% static 'images/favicon.ico' %}">
-    <link href="{%static 'css/album.css' %}" rel="stylesheet">
     <title>
         Rango - {% block title_block %}How to Tango with Django!{% endblock %}
     </title>
@@ -20,11 +19,13 @@
     
     <!-- Custom styles for this template -->
     <link href="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css" rel="stylesheet">
+    <!-- want to override things here -->
+    <link href="{%static 'css/protoTst.css' %}" rel="stylesheet">
     </head>
     
     <body>
         <header>
-            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark p-0">
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary p-0">
                 <a class="navbar-brand p-2" href="{% url 'Rango:index' %}">Rango</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>

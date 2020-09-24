@@ -24,7 +24,6 @@ def index(request):
     # move to server side cookies
     #numVisits = int(request.session['visits'])
     context_dict = {'boldmessage': 'Crunchy, creamy, cookie, candy, cupcake, broccoli!', 
-                    'greetingmsg': 'Hey there partner!',
                     'current_angel_kitty': '../static/images/AngelKitty.jpg',
                     'page_tab_header': 'Index',
                     'categories': category_list,

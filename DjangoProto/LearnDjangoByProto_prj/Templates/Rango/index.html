@@ -14,10 +14,12 @@
 			<div>
 				<h2 class="h2">
 				<!--  apparently we get user object "for free" via django-->
-				{% if user.is_authenticated %}
-					Howdy there {{ user.username }}, Hows it goin'?
-				{% else %}
-					Hey there partner!
+				{% if index_page %}
+					{% if user.is_authenticated %}
+						<p class="regUser">Howdy there {{ user.username }}, Hows it goin'?</p>
+					{% else %}
+						Hey there partner!
+					{% endif %}
 				{% endif %}
 				</h2>
 				{{ greetingmsg }}<br />
@@ -84,10 +86,17 @@
 		</div>
 	{% endif %}
 
-	<div>
-		<img src="{{ current_angel_kitty }}" alt = "picture of angel kitty" />
-
+	<div class="tooltip">Here are my beloved Angel Kitties
+		<span class="tooltiptext">kitty</span>
 	</div>
+	
+	<div class="angelKitties">
+		<img src="{{ current_angel_kitty }}" alt = "picture of angel kitty" width="400" height="400" />
+		Here are my beloved Angel Kitties
+		<p class="catTalk">I love to eat MEAT!</p>
+	</div>
+	
+
 {% endblock %}
 
 

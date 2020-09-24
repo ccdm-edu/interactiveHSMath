@@ -1,5 +1,7 @@
 <ul class="nav flex-column">
 {% if categories %}
+	<!-- for whatever reason, i can't change style of header here. Not css, not inline -->
+	<h1> All Categories </h1>
 	{% for c in categories %}
 		{% if c == current_category %}
 			<li class="nav-item">
