@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from Rango.bing_search import run_query
 
 def index(request):
     #order by likes and take top 5. The -likes says sort in descending order, likes is 
@@ -296,6 +297,15 @@ def restricted(request):
 #     logout(request)
 #     #Take the user back to the homepage.
 #     return redirect(reverse('Rango:index'))
+
+def search(request):
+    result_list = []
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            # Run our Bing function to get the results list
+            result_list = run_query(query)
+    return render(request,'Rango/search.html', {'result_list':result_list })
             
     
     
