@@ -300,12 +300,13 @@ def restricted(request):
 
 def search(request):
     result_list = []
+    query = ''
     if request.method == 'POST':
         query = request.POST['query'].strip()
         if query:
             # Run our Bing function to get the results list
             result_list = run_query(query)
-    return render(request,'Rango/search.html', {'result_list':result_list })
+    return render(request,'Rango/search.html', {'query': query, 'result_list':result_list })
             
     
     
