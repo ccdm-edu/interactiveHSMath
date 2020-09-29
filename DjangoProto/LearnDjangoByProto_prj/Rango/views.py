@@ -121,8 +121,8 @@ def show_category(request, category_name_slug):
         #dont do anything
         # cuz the template will display a 'no category' message for us
         context_dict['category'] = None
-        context_dict['pages'] = None
-        
+        context_dict['pages'] = None 
+    # WSGIRequest: GET '/Rango/category/category_name_slug/
     #go forth and render the response and return to client
     return render(request, 'Rango/category.html', context=context_dict)
 
@@ -139,7 +139,6 @@ def add_category(request):
             form.save(commit=True)
             # Now that the category is saved, we could confirm this.
             # For now, just redirect the user back to the index view
-            
             return redirect(f'/Rango/')
         else:
             # the supplied form has errors
@@ -289,6 +288,7 @@ def restricted(request):
     context_dict = {'boldmessage': 'Since you are logged in, you can go for it', 
                     'page_tab_header': 'Restricted',
                     }
+    # request = WSGIRequest: GET '/Rango/restricted/
     return render(request, 'Rango/restricted.html', context=context_dict)
 
 # @login_required
@@ -306,10 +306,33 @@ def search(request):
         if query:
             # Run our Bing function to get the results list
             result_list = run_query(query)
+    # request is WSGIRequest: GET '/Rango/search/
     return render(request,'Rango/search.html', {'query': query, 'result_list':result_list })
+
+def goto_url(request):
+    page_id = None
+    if request.method == 'GET':
+        print(f'this is the get url (raw):  {request.GET}')
+        page_id = request.GET.get('page_id')
+        req_page = None
+        try:
+            req_page = Page.objects.get(id = page_id)
+            if req_page:
+                req_page.views = req_page.views + 1
+                req_page.save()
+                # send user off to page they wanted, now that we tracked their behavior
+                return redirect(request.GET)
+            else:
+                print(f'Page with page_id = {page_id} not found')
+                return redirect(f'/Rango/')
+        except Page.MultipleObjectsReturned:
+            print(f'database error, multiple pages found with same page id={page_id}')
+            return redirect(f'/Rango/')
+    else:
+        #should never happen
+        return redirect(f'/Rango/')
             
-    
-    
+
             
     
 
