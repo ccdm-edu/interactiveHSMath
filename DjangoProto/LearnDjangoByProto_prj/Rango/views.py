@@ -101,11 +101,16 @@ def visitor_cookie_handler(request):
     
 def show_category(request, category_name_slug):
     context_dict = {}
+    result_list = []
+    query = ''
     try:
         #Can we find a category name slug with the given name?
         #If we can't, the .get() method raises a DoesNotExist exception
         #The .get() method returns one model instance or raises an exception
         category = Category.objects.get(slug=category_name_slug)
+        #My own extra credit, update the views on this category
+        category.views += 1
+        category.save()
         
         #Retrieve all of the associated pages
         #The filter() will return a list of page objects or an empty list
@@ -116,12 +121,23 @@ def show_category(request, category_name_slug):
         # We also add the category object from the database to context dict
         #we'll use this in the template to verify that the category exists
         context_dict['category'] = category
+        
+        #put in search results'
+        if request.method == 'POST':
+            query = request.POST['query'].strip()
+            if query:
+                # Run our Bing function to get the results list
+                result_list = run_query(query)
+
     except Category.DoesNotExist:
         #we get here if we didn't find the specified category
         #dont do anything
         # cuz the template will display a 'no category' message for us
         context_dict['category'] = None
         context_dict['pages'] = None 
+        
+    context_dict['query'] = query
+    context_dict['result_list'] = result_list
     # WSGIRequest: GET '/Rango/category/category_name_slug/
     #go forth and render the response and return to client
     return render(request, 'Rango/category.html', context=context_dict)
@@ -309,19 +325,19 @@ def search(request):
     # request is WSGIRequest: GET '/Rango/search/
     return render(request,'Rango/search.html', {'query': query, 'result_list':result_list })
 
+
 def goto_url(request):
     page_id = None
     if request.method == 'GET':
-        print(f'this is the get url (raw):  {request.GET}')
         page_id = request.GET.get('page_id')
         req_page = None
         try:
             req_page = Page.objects.get(id = page_id)
             if req_page:
-                req_page.views = req_page.views + 1
+                req_page.views += 1
                 req_page.save()
                 # send user off to page they wanted, now that we tracked their behavior
-                return redirect(request.GET)
+                return redirect(req_page.url)
             else:
                 print(f'Page with page_id = {page_id} not found')
                 return redirect(f'/Rango/')

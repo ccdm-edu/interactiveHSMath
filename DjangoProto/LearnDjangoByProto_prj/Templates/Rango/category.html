@@ -11,13 +11,21 @@
 
 {% block body_block %}
 	{% if category %}
-		<h1>{{ category.name }} </h1>
+		{% if category.views == 1 %}
+			<h1>{{ category.name }} has 1 view</h1>
+		{% else %}
+			<h1>{{ category.name }} has {{ category.views }} views</h1>
+		{% endif %}
 		{% if pages %}
 		<ul>
 			{% for page in pages %}
-			<!--<li><a href="{{ page.url }}">{{ page.title }}</a></li> -->
-			<!--  NOTE, this is how you pass page id into http request -->
-			<li><a href="{% url 'Rango:goto' %}?page_id={{ page.id }}">{{ page.title }}</a></li>
+				<!--<li><a href="{{ page.url }}">{{ page.title }}</a></li> -->
+				<!--  NOTE, this is how you pass page id into http request -->
+				{% if page.views == 1 %}
+					<li><a href="{% url 'Rango:goto' %}?page_id={{ page.id }}">{{ page.title }}</a> has 1 view</li>
+				{% else %}
+					<li><a href="{% url 'Rango:goto' %}?page_id={{ page.id }}">{{ page.title }}</a> has {{ page.views }} views</li>
+				{% endif %}
 			{% endfor %}
 		</ul>
 		{% else %}
@@ -25,6 +33,51 @@
 		{% endif %}
 		{% if user.is_authenticated %}
 			<a href="{% url 'Rango:add_page' category.slug %}">Add Page</a><br />	
+
+		
+		    <!--  PUT in search capability -->
+			<div>
+			 <form class="form-inline"
+				  id="user-form"
+				  method="post"
+				  action="{% url 'Rango:show_category' category.slug %}">  
+				  
+				 {% csrf_token %}
+				 
+				 <div class="form-group">
+				 	<input class="form-control"
+				 			type="text"
+				 			size="50"
+				 			name="query"
+				 			id="query"
+				 			value = "{{ query }}" >
+				 </div>
+				 <button class="btn btn-primary"
+				 		type="submit"
+				 		name="submit">Search</button>
+			</form>
+			</div>
+		
+			<div>
+				{% if result_list %}
+					<h2>Results</h2>	
+					
+					<div class="list-group" >
+						{%for result in result_list %}
+							<div class="list-group-item">
+								<h3 class="list-group-item-heading">
+									<a href="{{ result.link }}">
+										{{ result.title|safe|escape }}
+									</a>
+								</h3>
+								<p class="list-group-item-text">
+									{{ result.summary|safe|escape }}
+								</p>
+							</div>
+						{% endfor %}
+					</div>
+					{% endif %}
+			</div>
 		{% endif %}	
 	{% else %}
 		The specified category does not exist.
