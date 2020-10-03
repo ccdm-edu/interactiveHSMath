@@ -19,12 +19,24 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import include
 from Rango import views
+from registration.backends.simple.views import RegistrationView
+from django.urls import reverse
 
+#do this class based view to override the django-registratino-redux
+class MyRegistrationView(RegistrationView):
+    def get_success_url(self, user):
+        return reverse('Rango:register_profile')
+
+#IT is SOOOOO important to add the / at end of all urls here, will keep you from going to right place
 urlpatterns = [
     path('', views.index, name='index'),
     path('Rango/', include('Rango.urls')),
     # The above maps any URLs starting with rango/ to be handled by rango.
     path('admin/', admin.site.urls),
+    #to do a redirect, this MUST be before accounts.  It overrides the existing registration_register URL
+    # mapping, provided to us in the standard, out of the box django-registration-redux urls.py and replaces
+    #the url we jump to with a mapping to our new class based view
+    path('accounts/register/', MyRegistrationView.as_view(), name='registration_register'),
     path('accounts/', include('registration.backends.simple.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

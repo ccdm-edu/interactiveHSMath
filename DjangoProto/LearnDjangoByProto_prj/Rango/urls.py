@@ -1,7 +1,9 @@
 from django.urls import path
 from Rango import views
 
+
 app_name = 'Rango'
+
 
 #item from first parameter is passed to method in second parameter
 urlpatterns = [
@@ -20,6 +22,7 @@ urlpatterns = [
     # path('logout/', views.user_logout, name='logout'),
     path('search/', views.search, name='search'),
     path('goto/', views.goto_url, name = 'goto'),
+    path('register_profile/', views.register_profile, name='register_profile'),
     
     
 ]

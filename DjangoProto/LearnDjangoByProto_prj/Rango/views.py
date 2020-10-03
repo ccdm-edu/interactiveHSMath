@@ -325,7 +325,7 @@ def search(request):
     # request is WSGIRequest: GET '/Rango/search/
     return render(request,'Rango/search.html', {'query': query, 'result_list':result_list })
 
-
+# here we track users clicks on urls in the website
 def goto_url(request):
     page_id = None
     if request.method == 'GET':
@@ -340,13 +340,63 @@ def goto_url(request):
                 return redirect(req_page.url)
             else:
                 print(f'Page with page_id = {page_id} not found')
-                return redirect(f'/Rango/')
+                return redirect(reverse('Rango:index'))
         except Page.MultipleObjectsReturned:
             print(f'database error, multiple pages found with same page id={page_id}')
-            return redirect(f'/Rango/')
+            return redirect(reverse('Rango:index'))
     else:
         #should never happen
-        return redirect(f'/Rango/')
+        return redirect(reverse('Rango:index'))
+ 
+#using the login_required decorator means user must already be logged in   
+@login_required
+def register_profile(request):
+    # A boolean value for telling the template
+    # whether the registration was sucessful.  
+    # set to false initially.  Cod changes value to True when 
+    # registration succeeds.  NOT SURE WE NEED THIS anymore
+    registered = False
+    
+    # we come here with blank form for user to fill in OR because user has filled out and we post to DB
+    form = UserProfileForm()
+     
+    #If its a HTTP POST, we're interested in processing form data.
+    if request.method == 'POST':
+        # Attempt to grab info from the raw form information.
+        form = UserProfileForm(request.POST, request.FILES)
+         
+        # if the two forms are valid...
+        if form.is_valid():
+
+            # Now sort out the UserProfile instance
+            # Since we need to set the user attribute ourselves
+            # we set commit=False.  This delays saving the model
+            # until we are ready to avoid integrity problems
+            user_profile = form.save(commit=False)
+            user_profile.user = request.user
+             
+            #Did the user provide a profile picture?  if so we need to get it from the input form and 
+            # put it in the UserProfile model.
+            #if 'picture' in request.FILES:
+            #    user_profile.picture = request.FILES['picture']
+                 
+            #Now we save the UserProvile model instance
+            user_profile.save()
+             
+            # Update our variable to indicate that the template 
+            # registration was successful
+            registered = True
+            return redirect(reverse('Rango:index'))
+        else:
+            # Invalid form or forms - mistakes or something else?
+            #print problems to the terminal
+            print(form.errors)
+        
+     
+    #Render the template depending on the context.
+    return render(request,
+                  'Rango/profile_registration.html',
+                  context = {'form': form})
             
 
             
