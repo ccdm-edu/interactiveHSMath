@@ -16,7 +16,7 @@
 		<!--need the entype as shown below since people will be uploading images, not just ascii  -->
 		<form method="post"
 			  action="{% url 'Rango:register_profile' %}"
-			  entype="multipart/form-data">
+			  enctype="multipart/form-data">
 			  {% csrf_token %}
 			  {{ form.as_p }}
 			  <input type="submit" value="Create Profile" />
