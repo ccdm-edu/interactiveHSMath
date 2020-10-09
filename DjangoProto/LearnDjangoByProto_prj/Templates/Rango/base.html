@@ -41,6 +41,8 @@
                         <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}?next=/Rango/">Logout</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'Rango:add_category' %}">Add Category</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'auth_password_change' %}">Change Password</a></li>
+                        <!--  this means there is a param to profile view and this param needs to be in the url.py as well -->
+						<li class="nav-item"><a class="nav-link" href="{% url 'Rango:profile' user.username%}">Show Profile</a></li>
                         {% else %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'registration_register' %}">Register Here</a></li>
                         <li class="nav-item "><a class="nav-link" href="{% url 'auth_login' %}">Login</a></li>

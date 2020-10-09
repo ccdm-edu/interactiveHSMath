@@ -23,6 +23,6 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('goto/', views.goto_url, name = 'goto'),
     path('register_profile/', views.register_profile, name='register_profile'),
-    
+    path('profile/<username>', views.profile, name="profile"),
     
 ]

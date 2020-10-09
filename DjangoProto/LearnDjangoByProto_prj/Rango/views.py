@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from Rango.models import Category
-from Rango.models import Page
+from Rango.models import Page, UserProfile
 from tkinter.constants import PAGES
 from unicodedata import category
 from Rango.forms import  CategoryForm, PageForm, UserForm, UserProfileForm
@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from Rango.bing_search import run_query
+from django.contrib.auth.models import User
 
 def index(request):
     #order by likes and take top 5. The -likes says sort in descending order, likes is 
@@ -351,11 +352,6 @@ def goto_url(request):
 #using the login_required decorator means user must already be logged in   
 @login_required
 def register_profile(request):
-    # A boolean value for telling the template
-    # whether the registration was sucessful.  
-    # set to false initially.  Cod changes value to True when 
-    # registration succeeds.  NOT SURE WE NEED THIS anymore
-    registered = False
     
     # we come here with blank form for user to fill in OR because user has filled out and we post to DB
     form = UserProfileForm()
@@ -364,6 +360,7 @@ def register_profile(request):
     if request.method == 'POST':
         # Attempt to grab info from the raw form information.
         form = UserProfileForm(request.POST, request.FILES)
+        print(f"the image filename is {request.FILES}")
          
         # if the two forms are valid...
         if form.is_valid():
@@ -382,10 +379,8 @@ def register_profile(request):
                  
             #Now we save the UserProvile model instance
             user_profile.save()
-             
-            # Update our variable to indicate that the template 
+
             # registration was successful
-            registered = True
             return redirect(reverse('Rango:index'))
         else:
             # Invalid form or forms - mistakes or something else?
@@ -398,7 +393,47 @@ def register_profile(request):
                   'Rango/profile_registration.html',
                   context = {'form': form})
             
-
-            
+@login_required
+def profile(request, username):
     
+    if request.method == 'POST':
+        print(f"we made it into post method")
+        # Attempt to grab info from the raw form information.
+        # Note that we make use of both UserForm and UserProfileForm.
+        form = UserProfileForm(request.POST)
+         
+        # if the two forms are valid...
+        if form.is_valid():
+            print(f"form is valid woo hoo")
+            # Now sort out the UserProfile instance
+            # Since we need to set the user attribute ourselves
+            # we set commit=False.  This delays saving the model
+            # until we are ready to avoid integrity problems
+            profile = form.save(commit=False)
+            profile.user = request.user
+            userProfile = profile.user
+             
+            #Did the user provide a profile picture?  if so we need to get it from the input form and 
+            # put it in the UserProfile model.
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+                 
+            #Now we save the UserProvile model instance
+            profile.save()
+
+    else:
+        # easier than a try/except block where we have except on DoesNotExist
+        # dont use request.user here, use the User object because the former isn't filled in
+        curr_user = User.objects.get(username=username)
+        #userProfile = get_object_or_404(UserProfile, user=request.user)
+        userProfile = UserProfile.objects.get_or_create(user=curr_user)[0]
+        form = UserProfileForm({'website': userProfile.website,
+                               'picture': userProfile.picture})
+    
+    #THIS is not correct but ok for now
+    context_dict = {'form': form, 'selected_user': curr_user, 'user_profile':userProfile}    
+    return render(request,
+                  'Rango/profile.html',
+                  context = context_dict)       
+
 
