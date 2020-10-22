@@ -1,0 +1,41 @@
+{% extends 'Rango/base.html' %}
+{% load static %} <!--  another difference from django 2 to 3.1 -->
+
+<!--  YOU cant add another head tag set here, has to be up in the base -->
+{% block title_block %}
+	Rango Profiles
+{% endblock %}
+
+{% block body_block %}
+<div class="jumbotron p-4">
+	<div class="containter">
+		{% if user.is_authenticated %}
+		<!--  really we should never get here unless user logged in and authenticated -->
+			<h1 class="jumbotron-heading"> Hi {{ user.username }}, Wanna meet your Rango tribe? </h1>
+		{% endif %}
+	</div>	
+</div>
+
+
+{% if all_users %}
+	<h1> All Users </h1>
+	{% for u in all_users %}
+		{% if u == user %}
+			<a class="nav-link active" href="{% url 'Rango:profile' u.username %}">
+				<span data-feather="users"></span> {{ u.username }} <span id="blinking">    Its YOU!</span>
+			</a>
+		{% else %}
+			<a class="nav-link" href="{% url 'Rango:profile' u.username %}">
+			<span data-feather="users"></span> {{ u.username }}
+			</a>
+		{% endif %}
+	{% endfor %}
+{% else %}
+	<li class="nav-item">ERROR:  There are no users present.</li>
+{% endif %}
+
+{% endblock %}
+
+
+				  
+				

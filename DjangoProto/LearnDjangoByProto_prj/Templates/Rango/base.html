@@ -21,6 +21,22 @@
     <link href="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css" rel="stylesheet">
     <!-- want to override things here -->
     <link href="{%static 'css/protoTst.css' %}" rel="stylesheet">
+
+	<!-- apparently putting this in css file wasn't a high enough specificity rating to make it work-->
+	<!--  AND, style blocks dont like comments in the middle -->
+	<style>
+	span#blinking {
+	    animation:blinkingText 1.2s infinite;
+	}
+	@keyframes blinkingText{
+	    0%{     color: #000;    }
+	    49%{    color: #000; }
+	    60%{    color: transparent; }
+	    99%{    color:transparent;  }
+	    100%{   color: #000;    }
+	}
+	</style>
+
     </head>
     
     <body>
@@ -42,7 +58,8 @@
                         <li class="nav-item"><a class="nav-link" href="{% url 'Rango:add_category' %}">Add Category</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'auth_password_change' %}">Change Password</a></li>
                         <!--  this means there is a param to profile view and this param needs to be in the url.py as well -->
-						<li class="nav-item"><a class="nav-link" href="{% url 'Rango:profile' user.username%}">Show Profile</a></li>
+						<li class="nav-item"><a class="nav-link" href="{% url 'Rango:profile' user.username %}">Show Profile</a></li>
+						<li class="nav-item"><a class="nav-link" href="{% url 'Rango:users_profiles' %}">Show Users</a></li>
                         {% else %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'registration_register' %}">Register Here</a></li>
                         <li class="nav-item "><a class="nav-link" href="{% url 'auth_login' %}">Login</a></li>

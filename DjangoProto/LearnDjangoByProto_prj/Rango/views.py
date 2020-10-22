@@ -12,6 +12,8 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from Rango.bing_search import run_query
 from django.contrib.auth.models import User
+from django.utils.decorators import method_decorator
+from django.views import View
 
 def index(request):
     #order by likes and take top 5. The -likes says sort in descending order, likes is 
@@ -393,47 +395,67 @@ def register_profile(request):
                   'Rango/profile_registration.html',
                   context = {'form': form})
             
-@login_required
-def profile(request, username):
-    
-    if request.method == 'POST':
-        print(f"we made it into post method")
-        # Attempt to grab info from the raw form information.
-        # Note that we make use of both UserForm and UserProfileForm.
-        form = UserProfileForm(request.POST)
-         
-        # if the two forms are valid...
-        if form.is_valid():
-            print(f"form is valid woo hoo")
-            # Now sort out the UserProfile instance
-            # Since we need to set the user attribute ourselves
-            # we set commit=False.  This delays saving the model
-            # until we are ready to avoid integrity problems
-            profile = form.save(commit=False)
-            profile.user = request.user
-            userProfile = profile.user
-             
-            #Did the user provide a profile picture?  if so we need to get it from the input form and 
-            # put it in the UserProfile model.
-            if 'picture' in request.FILES:
-                profile.picture = request.FILES['picture']
-                 
-            #Now we save the UserProvile model instance
-            profile.save()
+# @login_required
+# def profile(request, username):
+#     
 
-    else:
-        # easier than a try/except block where we have except on DoesNotExist
-        # dont use request.user here, use the User object because the former isn't filled in
-        curr_user = User.objects.get(username=username)
-        #userProfile = get_object_or_404(UserProfile, user=request.user)
-        userProfile = UserProfile.objects.get_or_create(user=curr_user)[0]
+#         # easier than a try/except block where we have except on DoesNotExist
+#         # dont use request.user here, use the User object because the former isn't filled in
+#         curr_user = User.objects.get(username=username)
+#         #userProfile = get_object_or_404(UserProfile, user=request.user)
+#         userProfile = UserProfile.objects.get_or_create(user=curr_user)[0]
+#         form = UserProfileForm({'website': userProfile.website,
+#                                'picture': userProfile.picture})
+#     
+#     #THIS is not correct but ok for now
+#     context_dict = {'form': form, 'selected_user': curr_user, 'user_profile':userProfile}    
+#     return render(request,
+#                   'Rango/profile.html',
+#                   context = context_dict)       
+
+class ProfileView(View):
+    def getUserDetails(self, username):
+        sel_user = get_object_or_404(User, username=username)
+        userProfile = UserProfile.objects.get_or_create(user=sel_user)[0]
         form = UserProfileForm({'website': userProfile.website,
                                'picture': userProfile.picture})
-    
-    #THIS is not correct but ok for now
-    context_dict = {'form': form, 'selected_user': curr_user, 'user_profile':userProfile}    
-    return render(request,
+        return(sel_user, userProfile, form)
+        
+    # username variable comes form the link that sent us here.  View uses models and fires off a html doc
+    # ensure username shows up in the urls.py list since there will be a different page for each user.
+    @method_decorator(login_required)
+    def get(self, request, username):
+        (sel_user, userProfile, form) = self.getUserDetails(username)
+        context_dict = {'form': form, 'selected_user': sel_user, 'user_profile':userProfile}   
+        return render(request,
                   'Rango/profile.html',
-                  context = context_dict)       
+                  context = context_dict)     
+        
+    @method_decorator(login_required)
+    def post(self, request, username):
+        (sel_user, userProfile, form) = self.getUserDetails(username)
+        # Now sort out the UserProfile instance
+        # we have user attribute so dont need to wait to save.  Take new stuff and put in old form instance
+        form = UserProfileForm(request.POST, request.FILES, instance=userProfile)
+        if form.is_valid():
+            form.save(commit=True)
+            # not clear on why this works, if there is no param, you have to do a reverse ??
+            return redirect('Rango:profile', sel_user.username)
+        else:
+            #not sure how to test this with an incorrect form???
+            print(form.errors)
+            
+        
+        context_dict = {'form': form, 'selected_user': sel_user, 'user_profile':userProfile}    
+        return render(request,
+                  'Rango/profile.html',
+                  context = context_dict) 
 
-
+#using the login_required decorator means user must already be logged in   
+@login_required
+def users_profiles(request):
+    all_users = User.objects.all()
+    context_dict = {'all_users':all_users}
+    return render(request, 
+                  'Rango/users_profiles.html',
+                  context=context_dict)

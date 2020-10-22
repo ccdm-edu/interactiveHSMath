@@ -22,7 +22,8 @@ from Rango import views
 from registration.backends.simple.views import RegistrationView
 from django.urls import reverse
 
-#do this class based view to override the django-registratino-redux
+#do this class based view to override the django-registratino-redux.  To do class based view, typically
+# you don't have to do this but we are overriding something we don't have direct access to
 class MyRegistrationView(RegistrationView):
     def get_success_url(self, user):
         return reverse('Rango:register_profile')
