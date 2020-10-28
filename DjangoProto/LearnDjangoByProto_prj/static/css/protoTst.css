@@ -38,14 +38,31 @@ div:hover p {
   display: block;
 }
 
-.blinking{
-    animation:blinkingText 1.2s infinite;
+/*this tooltip stuff didn't work if i only used class=, I had to up the specificity to id but I didn't have to put
+in the head of base.html */
+
+div#tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
 }
-@keyframes blinkingText{
-    0%{     color: #000;    }
-    49%{    color: #000; }
-    60%{    color: transparent; }
-    99%{    color:transparent;  }
-    100%{   color: #000;    }
+
+div#tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
 }
+
+div#tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
 

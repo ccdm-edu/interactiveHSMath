@@ -22,15 +22,19 @@ from Rango import views
 from registration.backends.simple.views import RegistrationView
 from django.urls import reverse
 
-#do this class based view to override the django-registratino-redux.  To do class based view, typically
+#do this class based view to override the django-registratino-redux class RegistrationView.  To do class based view, typically
 # you don't have to do this but we are overriding something we don't have direct access to
 class MyRegistrationView(RegistrationView):
+    def disallowed_url(self,user):
+        print(f"Failure here")
+        return reverse('Rango:index')
     def get_success_url(self, user):
+        print(f'we finished registration successfully, now off to profile')
         return reverse('Rango:register_profile')
 
 #IT is SOOOOO important to add the / at end of all urls here, will keep you from going to right place
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.IndexView.as_view(), name='index'),
     path('Rango/', include('Rango.urls')),
     # The above maps any URLs starting with rango/ to be handled by rango.
     path('admin/', admin.site.urls),

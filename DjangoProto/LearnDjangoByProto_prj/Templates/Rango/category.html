@@ -20,7 +20,8 @@
 		<ul>
 			{% for page in pages %}
 				<!--<li><a href="{{ page.url }}">{{ page.title }}</a></li> -->
-				<!--  NOTE, this is how you pass page id into http request -->
+				<!--  NOTE, this is how you pass page id into http request ??? but goto_url view doesn't use it in param
+				list, it is used as a dictionary item in the .get() call for page_id item-->
 				{% if page.views == 1 %}
 					<li><a href="{% url 'Rango:goto' %}?page_id={{ page.id }}">{{ page.title }}</a> has 1 view</li>
 				{% else %}

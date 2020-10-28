@@ -50,11 +50,11 @@ class PageForm(forms.ModelForm):
         print(f'url cleaned data initially is {url}')
         
         #if url is not empty and doesn't start with 'http://', 
-        # then prepend 'http://'
-        if url and not url.startswith('http://'):
-            url = f'http://{url}'
-            cleaned_data['url'] = url
-            print(f'url is now {url}')
+        # then prepend 'http://'  CANT DO THIS, most sites now are https...
+#         if url and not (url.startswith('http://') or :
+#             url = f'http://{url}'
+#             cleaned_data['url'] = url
+#             print(f'url is now {url}')
         return cleaned_data
     
 class UserForm(forms.ModelForm):
