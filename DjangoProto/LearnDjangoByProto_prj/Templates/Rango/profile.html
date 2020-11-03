@@ -1,0 +1,47 @@
+{% extends 'Rango/base.html' %}
+{% load static %} <!--  another difference from django 2 to 3.1 -->
+
+{% block title_block %}
+	Profile
+{% endblock %}
+
+{% block body_block %}
+<div class="jumbotron p-4">
+	<div class="containter">
+		{% if user.is_authenticated %}
+		<!--  really we should never get here unless user logged in and authenticated -->
+			<h1 class="jumbotron-heading"> Rango profile of {{ selected_user.username }} </h1>
+		{% endif %}
+	</div>	
+</div>
+
+<div class="container">
+	<div class="row">
+		<img src="{{ MEDIA_URL }}{{ user_profile.picture }}"
+			width="300"
+			height="300"
+			onerror="this.onerror=null;this.src='/static/images/defaultUser.jpg';"
+			alt="{{ selected_user.username }}'s profile image" />
+		<br />
+		<div>
+			{% if selected_user == user %}
+				<!-- Post method used to keep sensitive info on forms from showing up as a url -->
+				<form enctype="multipart/form-data"
+					  action="."
+					  method="post">
+					  {% csrf_token %}
+					  {{ form.as_p }}
+					  <input type="submit" value="Update" />
+				</form>
+			{% else %}
+				<strong>Website: </strong>
+				<a href="{{ user_profile.website }}">{{ user_profile.website }}</a>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+				  
+				  

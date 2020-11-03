@@ -418,60 +418,19 @@ class GoToURLView(View):
     
 
 #using the login_required decorator means user must already be logged in   
-# class RegisterProfileView(View):
-#     @method_decorator(login_required)
-#     def get(self, request):
-#         # we come here with blank form for user to fill in OR because user has filled out and we post to DB
-#         form = UserProfileForm()
-#         #Render the template depending on the context.
-#         return render(request,
-#                   'Rango/profile_registration.html',
-#                   context = {'form': form})
-#         
-#     @method_decorator(login_required)
-#     def post(self, request):
-# 
-#         # Attempt to grab info from the raw form information.
-#         form = UserProfileForm(request.POST, request.FILES)
-#         print(f"the image filename is {request.FILES}")
-#          
-#         # if the two forms are valid...
-#         if form.is_valid():
-# 
-#             # Now sort out the UserProfile instance
-#             # Since we need to set the user attribute ourselves
-#             # we set commit=False.  This delays saving the model
-#             # until we are ready to avoid integrity problems
-#             user_profile = form.save(commit=False)
-#             user_profile.user = request.user
-#              
-#             #Did the user provide a profile picture?  if so we need to get it from the input form and 
-#             # put it in the UserProfile model.
-#             #if 'picture' in request.FILES:
-#             #    user_profile.picture = request.FILES['picture']
-#                  
-#             #Now we save the UserProvile model instance
-#             user_profile.save()
-# 
-#             # registration was successful
-#             return redirect(reverse('Rango:index'))
-#         else:
-#             # Invalid form or forms - mistakes or something else?
-#             #print problems to the terminal
-#             print(form.errors)
-#         
-#             #Render the template depending on the context.
-#         return render(request,
-#                   'Rango/profile_registration.html',
-#                   context = {'form': form})
-@login_required
-def register_profile(request):
-     
-    # we come here with blank form for user to fill in OR because user has filled out and we post to DB
-    form = UserProfileForm()
-      
-    #If its a HTTP POST, we're interested in processing form data.
-    if request.method == 'POST':
+class RegisterProfileView(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        # we come here with blank form for user to fill in OR because user has filled out and we post to DB
+        form = UserProfileForm()
+        #Render the template depending on the context.
+        return render(request,
+                  'Rango/profile_registration.html',
+                  context = {'form': form})
+         
+    @method_decorator(login_required)
+    def post(self, request):
+ 
         # Attempt to grab info from the raw form information.
         form = UserProfileForm(request.POST, request.FILES)
         print(f"the image filename is {request.FILES}")
@@ -501,11 +460,52 @@ def register_profile(request):
             #print problems to the terminal
             print(form.errors)
          
-      
-    #Render the template depending on the context.
-    return render(request,
+            #Render the template depending on the context.
+        return render(request,
                   'Rango/profile_registration.html',
                   context = {'form': form})
+# @login_required
+# def register_profile(request):
+#      
+#     # we come here with blank form for user to fill in OR because user has filled out and we post to DB
+#     form = UserProfileForm()
+#       
+#     #If its a HTTP POST, we're interested in processing form data.
+#     if request.method == 'POST':
+#         # Attempt to grab info from the raw form information.
+#         form = UserProfileForm(request.POST, request.FILES)
+#         print(f"the image filename is {request.FILES}")
+#           
+#         # if the two forms are valid...
+#         if form.is_valid():
+#  
+#             # Now sort out the UserProfile instance
+#             # Since we need to set the user attribute ourselves
+#             # we set commit=False.  This delays saving the model
+#             # until we are ready to avoid integrity problems
+#             user_profile = form.save(commit=False)
+#             user_profile.user = request.user
+#               
+#             #Did the user provide a profile picture?  if so we need to get it from the input form and 
+#             # put it in the UserProfile model.
+#             #if 'picture' in request.FILES:
+#             #    user_profile.picture = request.FILES['picture']
+#                   
+#             #Now we save the UserProvile model instance
+#             user_profile.save()
+#  
+#             # registration was successful
+#             return redirect(reverse('Rango:index'))
+#         else:
+#             # Invalid form or forms - mistakes or something else?
+#             #print problems to the terminal
+#             print(form.errors)
+#          
+#       
+#     #Render the template depending on the context.
+#     return render(request,
+#                   'Rango/profile_registration.html',
+#                   context = {'form': form})
              
 # @login_required
 # def profile(request, username):
@@ -527,6 +527,7 @@ def register_profile(request):
 
 class ProfileView(View):
     def getUserDetails(self, username):
+        # django.contrib.auth.User is an instance from database
         sel_user = get_object_or_404(User, username=username)
         userProfile = UserProfile.objects.get_or_create(user=sel_user)[0]
         form = UserProfileForm({'website': userProfile.website,
@@ -548,6 +549,7 @@ class ProfileView(View):
         (sel_user, userProfile, form) = self.getUserDetails(username)
         # Now sort out the UserProfile instance
         # we have user attribute so dont need to wait to save.  Take new stuff and put in old form instance
+        #this is an update rather than a new save
         form = UserProfileForm(request.POST, request.FILES, instance=userProfile)
         if form.is_valid():
             form.save(commit=True)
@@ -564,10 +566,21 @@ class ProfileView(View):
                   context = context_dict) 
 
 #using the login_required decorator means user must already be logged in   
-@login_required
-def users_profiles(request):
-    all_users = User.objects.all()
-    context_dict = {'all_users':all_users}
-    return render(request, 
+#@login_required
+# def users_profiles(request):
+#     all_users = User.objects.all()
+#     context_dict = {'all_users':all_users}
+#     return render(request, 
+#                   'Rango/users_profiles.html',
+#                   context=context_dict)
+
+class UsersProfileView(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        #another way to do this is to UserProfile.objects.all and then you have to dereference to user then to username
+        all_users = UserProfile.objects.all()
+        context_dict = {'all_users':all_users}
+        return render(request, 
                   'Rango/users_profiles.html',
                   context=context_dict)
+        

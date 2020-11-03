@@ -16,17 +16,24 @@
 	</div>	
 </div>
 
+ <!-- <span data-feather="users"></span> -->
 
 {% if all_users %}
 	<h1> All Users </h1>
 	{% for u in all_users %}
-		{% if u == user %}
-			<a class="nav-link active" href="{% url 'Rango:profile' u.username %}">
-				<span data-feather="users"></span> {{ u.username }} <span id="blinking">    Its YOU!</span>
+		{% if u.user == user %}
+			<a class="nav-link active" href="{% url 'Rango:profile' u.user.username %}">
+				 <img src="{{ MEDIA_URL }}{{ u.picture }}" 
+				 width="32" height="32" style="float:left" 
+				 onerror="this.onerror=null;this.src='/static/images/defaultUser.jpg';"
+				 alt="User picture"/>
+				 {{ u.user.username }} <span id="blinking">    Its YOU!</span>
 			</a>
 		{% else %}
-			<a class="nav-link" href="{% url 'Rango:profile' u.username %}">
-			<span data-feather="users"></span> {{ u.username }}
+			<a class="nav-link" href="{% url 'Rango:profile' u.user.username %}">
+				<img src="{{ MEDIA_URL }}{{ u.picture }}" 
+				width="32" height="32" style="float:left" 
+				onerror="this.onerror=null;this.src='/static/images/defaultUser.jpg';" alt="User picture';"/>{{ u.user.username }}
 			</a>
 		{% endif %}
 	{% endfor %}

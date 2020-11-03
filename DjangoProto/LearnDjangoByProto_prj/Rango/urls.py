@@ -21,11 +21,11 @@ urlpatterns = [
     # path('logout/', views.user_logout, name='logout'),
     #path('search/', views.search, name='search'),
     path('goto/', views.GoToURLView.as_view(), name = 'goto'),
-#    path('register_profile/', views.RegisterProfileView.as_view(), name='register_profile'),
-    path('register_profile/', views.register_profile, name='register_profile'),
+    path('register_profile/', views.RegisterProfileView.as_view(), name='register_profile'),
+    #path('register_profile/', views.register_profile, name='register_profile'),
     # this is the old school way to do it
     #path('profile/<username>/', views.profile, name="profile"),
     # this way assumes a get() and post() method in View
     path('profile/<username>/', views.ProfileView.as_view(), name="profile"),
-    path('users_profiles/', views.users_profiles, name="users_profiles"),
+    path('users_profiles/', views.UsersProfileView.as_view(), name="users_profiles"),
 ]

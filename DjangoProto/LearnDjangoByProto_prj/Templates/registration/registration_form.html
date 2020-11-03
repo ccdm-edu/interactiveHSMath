@@ -3,7 +3,7 @@
 {% block title_block %}
 	Register
 {% endblock %}
-
+<!--  This forms width depends on the widest text given below, probably should make warning below have carriage rets... -->
 {% block body_block %}
 	<div class="jumbotron p-4">
 		<div class="container">
@@ -27,10 +27,12 @@
 		</span>
 		</p>
 		<p class="required"><label class="required" for="id_email">
-			E-mail:</label>
+			E-mail (not verified):</label>
 		<input class="form-control" id="id_email" name="email"
 			type="email" />
 		</p>
+		<strong>CAREFUL here, if you choose a password that isn't "strong" enough or you don't confirm properly,
+		 you will get this blank form again without telling you where you "failed"</strong>
 		<p class="required"><label class="required" for="id_password1">
 			Password:</label>
 		<input class="form-control" id="id_password1" name="password1"
