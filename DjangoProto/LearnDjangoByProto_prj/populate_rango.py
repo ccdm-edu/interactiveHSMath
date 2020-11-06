@@ -33,6 +33,12 @@ def populate():
     
     cats = {'Python': [{'pages': python_pages}, {'views': 128}, {'likes':64}],
             'Django': [{'pages': django_pages},  {'views': 64}, {'likes':32}],
+            'Pascal': [{'pages': []},  {'views': 0}, {'likes':0}],
+            'Perl': [{'pages': []},  {'views': 0}, {'likes':0}],
+            'PHP': [{'pages': []},  {'views': 0}, {'likes':0}],
+            'Prolog': [{'pages': []},  {'views': 0}, {'likes':0}],
+            'PostScript': [{'pages': []},  {'views': 0}, {'likes':0}],
+            'Programming': [{'pages': []},  {'views': 0}, {'likes':0}],
             'Other Frameworks': [{'pages' : other_pages}, {'views': 32}, {'likes':16}] 
             }
     #iterating through .items means cat is the key and cat_data is the value of 

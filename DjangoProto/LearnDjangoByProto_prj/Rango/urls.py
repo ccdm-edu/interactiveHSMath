@@ -28,4 +28,8 @@ urlpatterns = [
     # this way assumes a get() and post() method in View
     path('profile/<username>/', views.ProfileView.as_view(), name="profile"),
     path('users_profiles/', views.UsersProfileView.as_view(), name="users_profiles"),
+    path('like_category/', views.LikeCategoryView.as_view(), name='like_category'),
+    path('suggest/', views.CategorySuggestionView.as_view(), name='suggest'),
+    
+    
 ]

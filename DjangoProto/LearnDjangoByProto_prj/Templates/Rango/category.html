@@ -10,12 +10,29 @@
 
 
 {% block body_block %}
+
 	{% if category %}
-		{% if category.views == 1 %}
-			<h1>{{ category.name }} has 1 view</h1>
-		{% else %}
-			<h1>{{ category.name }} has {{ category.views }} views</h1>
-		{% endif %}
+		<div class="jumbotron p-4">
+			<div class="container">
+				{% if category.views == 1 %}
+					<h1>{{ category.name }} has 1 view</h1>
+				{% else %}
+					<h1>{{ category.name }} has {{ category.views }} views</h1>
+				{% endif %}
+				<div>
+					<strong id="like_count">{{ category.likes }}</strong> likes
+					{% if user.is_authenticated %}
+						<button id="like_btn"
+								data-categoryid="{{ category.id }}"
+								class="btn btn-primary btn-sm"
+								type="button">
+							<span data-feather="thumbs-up"></span>
+							Like Category
+						</button>
+					{% endif %}
+				</div>
+			</div>
+		</div>
 		{% if pages %}
 		<ul>
 			{% for page in pages %}
@@ -36,7 +53,9 @@
 			<a href="{% url 'Rango:add_page' category.slug %}">Add Page</a><br />	
 
 		
-		    <!--  PUT in search capability -->
+		    <!--  PUT in search capability.  NOTE, microsoft azure has taken 
+		    away my free search bing privleges and disables this unless i give
+		    them a credit card upgrade.  Not happening...-->
 			<div>
 			 <form class="form-inline"
 				  id="user-form"
@@ -45,7 +64,7 @@
 				  
 				 {% csrf_token %}
 				 
-				 <div class="form-group">
+<!-- 			 <div class="form-group">
 				 	<input class="form-control"
 				 			type="text"
 				 			size="50"
@@ -56,6 +75,7 @@
 				 <button class="btn btn-primary"
 				 		type="submit"
 				 		name="submit">Search</button>
+-->
 			</form>
 			</div>
 		

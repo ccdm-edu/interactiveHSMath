@@ -583,4 +583,47 @@ class UsersProfileView(View):
         return render(request, 
                   'Rango/users_profiles.html',
                   context=context_dict)
+
+class LikeCategoryView(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        category_id = request.GET['category_id']
         
+        try:
+            category = Category.objects.get(id=int(category_id))
+        except Category.DoesNotExist:
+            return HttpResponse(-1)
+        except ValueError:
+            return HttpResponse(-1)
+        
+        category.likes = category.likes + 1
+        category.save()
+        
+        return HttpResponse(category.likes)
+    
+def get_category_list(max_results=0, starts_with=''):
+    category_list = []
+    
+    if starts_with:
+        category_list = Category.objects.filter(name__istartswith=starts_with)
+    
+    if max_results > 0:
+        if len(category_list) > max_results:
+            category_list = category_list[:max_results]
+            
+    return category_list
+
+class CategorySuggestionView(View):
+    def get(self,request):
+        if 'suggestion' in request.GET:
+            suggestion = request.GET['suggestion']
+        else:
+            suggestion = ''
+        #print(f'the sugggestion is {suggestion}')
+        # can test by going to http://127.0.0.1:8000/Rango/suggest/?suggestion=pro
+        category_list = get_category_list(max_results=9, starts_with=suggestion)
+        
+        if len(category_list) == 0:
+            category_list = Category.objects.order_by('-likes')
+        
+        return render(request, 'Rango/categories.html', {'categories': category_list})
