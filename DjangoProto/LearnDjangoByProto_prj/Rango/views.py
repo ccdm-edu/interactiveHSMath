@@ -14,6 +14,7 @@ from Rango.bing_search import run_query
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.views import View
+from django.utils import timezone
 
 
 class IndexView(View):
@@ -139,6 +140,13 @@ class ShowCategoryView(View):
         context_dict['category'] = category
         context_dict['query'] = query
         context_dict['result_list'] = result_list
+        
+        
+        for page in pages:
+            print(f"page title is {page.title} and last visit was {page.last_visit}")
+            
+            
+            
         # WSGIRequest: GET '/Rango/category/category_name_slug/
         #go forth and render the response and return to client
         return render(request, 'Rango/category.html', context=context_dict)
@@ -261,6 +269,7 @@ class AddPageView(View):
                 page = form.save(commit=False)
                 page.category = category
                 page.views = 0
+                page.last_view = timezone.now()
                 page.save()
             # Now that the category is saved, we could confirm this.
             # For now, just redirect the user back to the index view
@@ -406,6 +415,7 @@ class GoToURLView(View):
             req_page = Page.objects.get(id = page_id)
             if req_page:
                 req_page.views += 1
+                req_page.last_visit = timezone.now()
                 req_page.save()
                 # send user off to page they wanted, now that we tracked their behavior
                 return redirect(req_page.url)

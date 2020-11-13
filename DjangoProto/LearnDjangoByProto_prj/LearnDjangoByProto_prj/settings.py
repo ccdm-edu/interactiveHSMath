@@ -141,6 +141,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+DATETIME_FORMAT='N j, Y, P'
 
 
 # Static files (CSS, JavaScript, Images)

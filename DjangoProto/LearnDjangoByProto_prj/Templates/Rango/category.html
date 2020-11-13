@@ -40,9 +40,9 @@
 				<!--  NOTE, this is how you pass page id into http request ??? but goto_url view doesn't use it in param
 				list, it is used as a dictionary item in the .get() call for page_id item-->
 				{% if page.views == 1 %}
-					<li><a href="{% url 'Rango:goto' %}?page_id={{ page.id }}">{{ page.title }}</a> has 1 view</li>
+					<li><a href="{% url 'Rango:goto' %}?page_id={{ page.id }}">{{ page.title }}</a> has 1 view, last viewed on {{ page.last_visit }} UTC</li>
 				{% else %}
-					<li><a href="{% url 'Rango:goto' %}?page_id={{ page.id }}">{{ page.title }}</a> has {{ page.views }} views</li>
+					<li><a href="{% url 'Rango:goto' %}?page_id={{ page.id }}">{{ page.title }}</a> has {{ page.views }} views, last viewed on {{ page.last_visit }} UTC</li>
 				{% endif %}
 			{% endfor %}
 		</ul>
@@ -64,6 +64,7 @@
 				  
 				 {% csrf_token %}
 				 
+				 <!-- Microsoft disabled my bing azure account so this is gone now -->
 <!-- 			 <div class="form-group">
 				 	<input class="form-control"
 				 			type="text"
@@ -79,6 +80,7 @@
 			</form>
 			</div>
 		
+			<!--  this was part of search, to display results, will never be used now -->
 			<div>
 				{% if result_list %}
 					<h2>Results</h2>	

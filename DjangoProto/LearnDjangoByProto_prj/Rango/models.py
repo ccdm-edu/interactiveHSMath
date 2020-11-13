@@ -13,7 +13,7 @@ class Category(models.Model):
     name = models.CharField(max_length=MAX_LEN_NAME, unique = True)
     status = BooleanField(default = False)
     # use editable=False and it won't show up as a field in the admin page   
-    created_at = DateTimeField(default=datetime.now())
+    created_at = DateTimeField(default=timezone.now)
     views = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
     #careful if there is a default on slug, may need to wait until fully populated
@@ -25,6 +25,9 @@ class Category(models.Model):
     def save(self, *args, **kwargs):
         self.created_at = timezone.now()
         self.slug = slugify(self.name)
+        # i don't know why it won't let me do this "force positive) when initialized
+        self.views = max(0,self.views)
+        self.likes = max(0,self.likes)
         return super(Category, self).save(*args, **kwargs)
     
     def setStatusTrue(self):
@@ -42,6 +45,7 @@ class Page(models.Model):
     title = models.CharField(max_length = Category.MAX_LEN_NAME)
     url = models.URLField()
     views = models.IntegerField(default=0)
+    last_visit = models.DateTimeField(default=timezone.now)
     
     def __str__(self):
         return self.title
