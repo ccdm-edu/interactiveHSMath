@@ -18,6 +18,55 @@
 	</button>
 	<p>This is some text for a JQuery effect, hover and it changes to 
        red and when you leave, it goes blue</p>
-    <div id="msg">Hello!, This is modifying html with JQuery...</div>
+       
+    <div id="msg"> Hello!, Below we will try slider inputs <br>
+    <table width="100%">
+		<tbody>
+			<tr>
+				<td align="center">
+					<div style="display: inline-block; overflow-x: auto; border: 1px solid black;">
+						<table border="0">
+							<tbody>
+								<tr>
+									<th colspan='3'>Sine Wave (tone) Parameters</th>
+								</tr>	
+								<tr>		
+									<td align="left">
+										Frequency: <span id="currFreq">000</span> Hz
+									</td>
+									<td align="left">
+										Amplitude: <span id="currAmp">000</span>
+									</td>
+									<td align="left">
+										Phase: <span id="currPhase">000</span> degrees
+									</td>
+								</tr>
+								<tr>
+									<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz  -->
+									<td>
+										<input id="in-range-freq" type="range" oninput=ToneHandler.ChangeFreq() step="1" value="2000" min="100" max="10000">
+									</td>
+									<td>
+										<input id="in-range-amp" oninput=ToneHandler.ChangeAmp() type="range" step="1" value="10" min="1" max="100">
+									</td>
+									<td>
+										<input id="in-range-phase" oninput=ToneHandler.ChangePhase() type="range" step="1" value="0" min="0" max="360">
+									</td>
+									
+								</tr>
+								<tr>
+									<input type="button" id="start-stop-button" onclick="ToneHandler.StartStopTone()" value="Start Tone">
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+ 	</div>
+    <br>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.73/Tone.js"></script>
+    <script src="{% static "js/TrigAudio.js" %}" crossorigin="anonymous"></script>
 {% endblock %}
 
