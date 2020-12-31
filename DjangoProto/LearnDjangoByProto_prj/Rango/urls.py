@@ -4,7 +4,8 @@ from Rango import views
 
 app_name = 'Rango'
 
-#item from first parameter is passed to method in second parameter
+#First parameter is the path and the second parameter is what will be called for that path.  the name is for 
+# avoiding hardcoding {%url 'Rango:name' %}
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('about/', views.AboutView.as_view(), name='about'),
@@ -30,6 +31,9 @@ urlpatterns = [
     path('users_profiles/', views.UsersProfileView.as_view(), name="users_profiles"),
     path('like_category/', views.LikeCategoryView.as_view(), name='like_category'),
     path('suggest/', views.CategorySuggestionView.as_view(), name='suggest'),
-    
+    #name is used in the django template url Rango:name, the first argument is the html page or path
+    path('chkUsrIsRobot/', views.ChkUsrIsRobotView.as_view(), name='check_user_is_robot'),
+
+
     
 ]

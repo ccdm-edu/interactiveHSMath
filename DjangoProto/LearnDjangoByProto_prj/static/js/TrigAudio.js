@@ -78,6 +78,7 @@ class ToneHandler {
  
 }
 
+
 //purpose is to fill in labels for initial settings, not used thereafter
 var myTone = new ToneHandler;
 

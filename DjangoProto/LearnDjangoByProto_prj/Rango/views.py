@@ -15,7 +15,10 @@ from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.utils import timezone
-
+from django.conf import settings
+import urllib.request
+import json
+import time
 
 class IndexView(View):
     def get(self, request):
@@ -637,3 +640,37 @@ class CategorySuggestionView(View):
             category_list = Category.objects.order_by('-likes')
         
         return render(request, 'Rango/categories.html', {'categories': category_list})
+
+class ChkUsrIsRobotView(View):
+    
+    def get(self,request):
+        return render(request, 'Rango/chkUsrIsRobot.html', {'status': 'Untested'})
+    
+    def post(self, request):
+        secret_key = settings.RECAPTCHA_SECRET_KEY
+        payload = {
+            'response': self.request.POST.get('g-recaptcha-response'),
+            'secret': secret_key}
+        data = urllib.parse.urlencode(payload).encode()
+        req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
+        
+        response = urllib.request.urlopen(req)
+        result = json.loads(response.read().decode())
+        
+        #JS passes back text string, not a bool
+        passChallengeTest = self.request.POST.get('math_test')
+        passHoneypotTest = self.request.POST.get('js_honey')
+        
+        print(f'resulting recaptcha is {result}')
+        print(f'math challenge test pass = {passChallengeTest}')
+        print(f'honeypot bot test pass = {passHoneypotTest}')
+
+        #for now, just use challenge test and honeypot test, will assimilate recaptcha v3 as time goes on and
+        #it learns the site usage
+        if (passChallengeTest=='true' and passHoneypotTest=='true'):
+            #return render(request, 'registration/registration_form.html')
+            return redirect(reverse('registration_register'))
+        else:
+            #return HttpResponse('You did not pass the robot test, you will have x more chances')
+            return render(request, 'Rango/chkUsrIsRobot.html', {'status': 'Fail'})
+        

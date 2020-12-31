@@ -37,7 +37,10 @@
 	}
 	
 	</style>
-
+	<!--  THIS MAKES THE RECAPTCHA LOGO ON ALL PAGES -->
+	<!--  this is for dev server 127.0.0.1 site key -->
+	<script src='https://www.google.com/recaptcha/api.js?render=6LcXoQ8aAAAAAFWEjH47SCbbrcT2ooody-kWuU_L'></script>
+	<!--  this is for pythonanywhere deployment site key -->
     </head>
     
     <body>
@@ -63,7 +66,7 @@
 						<li class="nav-item"><a class="nav-link" href="{% url 'Rango:profile' user.username %}">Show Profile</a></li>
 						<li class="nav-item"><a class="nav-link" href="{% url 'Rango:users_profiles' %}">Show Users</a></li>
                         {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'registration_register' %}">Register Here</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'Rango:check_user_is_robot' %}">Register Here</a></li>
                         <li class="nav-item "><a class="nav-link" href="{% url 'auth_login' %}">Login</a></li>
                         {% endif %}
                     </ul>
