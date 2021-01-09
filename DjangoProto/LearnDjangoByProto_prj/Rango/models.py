@@ -60,3 +60,21 @@ class UserProfile(models.Model):
     
     def __str__(self):
         return self.user.username
+
+class BotChkResults(models.Model):
+    pass_honeypot = models.BooleanField(default=False)
+    pass_mathtest = models.BooleanField(default=False)
+    RECAPTCHA_V3_QUARTILES = (
+        ('1Q', 'Definitely_robot'),
+        ('2Q', 'Maybe_robot'),
+        ('3Q', 'Maybe_human'),
+        ('4Q', 'Definitely_human'))
+    recaptcha_v3_quartile = models.CharField(max_length=2, choices=RECAPTCHA_V3_QUARTILES)
+    count = models.IntegerField(default = 0)
+    
+    class Meta:
+        #its already plural
+        verbose_name_plural = 'BotChkResults'
+    
+    def __str__(self):
+        return f"pass_honeypot={self.pass_honeypot}, pass_math={self.pass_mathtest}, recaptcha_v3={self.recaptcha_v3_quartile}, count = {self.count}"

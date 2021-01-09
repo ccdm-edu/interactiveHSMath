@@ -13,24 +13,16 @@
 			<h1 class="jumbotron-heading">Rango says "This here's the git-yurself-registered page"</h1>
 			<div>
 				<h2 class="h2">
-				<!--  apparently we get user object "for free" via django, should never get here if registered... CLEAN THIS UP-->
-					{% if user.is_authenticated %}
-						<p class="regUser">Howdy there {{ user.username }}, You're already registered...?</p>
-					{% else %}
-						Gotta check if you are YOU or a robot!
-					{% endif %}
+					Gotta check if you are YOU or a robot!
 				</h2>
 			</div>
 		</div>
 	</div>
 	{% if status == 'Fail' %}
-		<strong> You have FAILED the robot test. </strong> 
-	{% endif %}
-	
-	<div>
-		{% if user.is_authenticated %}
-			<a href="{% url 'Rango:index' %}">Home</a>
-		{% else %}
+		<strong> You have FAILED the robot test. You cannot register.  You can close and restart the page.</strong> 
+	{% else %}
+		<!-- you get one chance to get it right before being locked out -->
+		<div>
 			<h2 id="test-results-and-countdown"></h2>
 			<label for="test1">What are the two roots of (x + 2.3)(x - 3.4) = 0?<br>
 							   Can be in any order, separated by comma, no spaces</label>
@@ -54,9 +46,9 @@
   				<input type="hidden" name="js_honey" id="check_box_tst">
   				<button type="submit">Submit</button>
   			</form>
-
-		{% endif %}
-	</div>
+		</div>
+	{% endif %}
+	
 	<script src="{% static "js/jquery-331min.js" %}" crossorigin="anonymous"></script>
     <script src="{% static "js/ChkUser.js" %}" crossorigin="anonymous"></script>
 

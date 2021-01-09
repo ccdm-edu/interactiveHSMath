@@ -645,6 +645,30 @@ class ChkUsrIsRobotView(View):
     
     def get(self,request):
         return render(request, 'Rango/chkUsrIsRobot.html', {'status': 'Untested'})
+
+    def convert_results_to_model_params(self, test1_str, test2_str, raw_result):
+        test1_bool = False
+        if test1_str.lower() == 'true':
+            test1_bool = True
+        test2_bool = False
+        if test2_str.lower() == 'true':
+            test2_bool = True
+        # need to test the Google return item and ensure its valid.  If not, not sure what to do, throw exception?
+        #action must match ChkUser.js
+        if (raw_result['success'] and raw_result['action'] == 'chkUserRobot'):
+            if (raw_result['score'] < 0.25):
+                quartile = '1Q'
+            elif (raw_result['score'] < 0.5): 
+                quartile = '2Q'
+            elif (raw_result['score'] < 0.75):
+                quartile = '3Q'
+            else:
+                quartile = '4Q'
+        else:
+            # need to throw an exception or do something here
+            print("ERROR, bad recaptcha token")
+        
+        return(test1_bool, test2_bool, quartile)
     
     def post(self, request):
         secret_key = settings.RECAPTCHA_SECRET_KEY
@@ -662,15 +686,24 @@ class ChkUsrIsRobotView(View):
         passHoneypotTest = self.request.POST.get('js_honey')
         
         print(f'resulting recaptcha is {result}')
-        print(f'math challenge test pass = {passChallengeTest}')
-        print(f'honeypot bot test pass = {passHoneypotTest}')
+        
+        (passChallengeTest_bool, passHoneypotTest_bool, recaptchav3_quartile) = self.convert_results_to_model_params(passChallengeTest, passHoneypotTest, result)
+
+        print(f'resulting recaptcha is {recaptchav3_quartile}')
+        print(f'math challenge test pass = {passChallengeTest_bool}')
+        print(f'honeypot bot test pass = {passHoneypotTest_bool}')
+        
+        # retrieve model and increment the count
 
         #for now, just use challenge test and honeypot test, will assimilate recaptcha v3 as time goes on and
         #it learns the site usage
-        if (passChallengeTest=='true' and passHoneypotTest=='true'):
+        curr_dict = {'not_a_bot': True}
+        if (passChallengeTest_bool and passHoneypotTest_bool):
             #return render(request, 'registration/registration_form.html')
-            return redirect(reverse('registration_register'))
+            print(f'not_a_bot is {curr_dict}')
+            return redirect(reverse('registration_register'), curr_dict)
         else:
             #return HttpResponse('You did not pass the robot test, you will have x more chances')
-            return render(request, 'Rango/chkUsrIsRobot.html', {'status': 'Fail'})
+            #context_dict = {'not_a_bot': False}
+            return render(request, 'Rango/chkUsrIsRobot.html', curr_dict)
         
