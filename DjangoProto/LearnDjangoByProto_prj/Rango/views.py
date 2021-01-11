@@ -16,6 +16,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.utils import timezone
 from django.conf import settings
+from django.contrib import messages
 import urllib.request
 import json
 import time
@@ -697,13 +698,13 @@ class ChkUsrIsRobotView(View):
 
         #for now, just use challenge test and honeypot test, will assimilate recaptcha v3 as time goes on and
         #it learns the site usage
-        curr_dict = {'not_a_bot': True}
         if (passChallengeTest_bool and passHoneypotTest_bool):
-            #return render(request, 'registration/registration_form.html')
-            print(f'not_a_bot is {curr_dict}')
-            return redirect(reverse('registration_register'), curr_dict)
+            # problem is redirect does not allow context dictionary to fill in the template (as render does)
+            #need to send success message
+            messages.success(request,"not a bot")
+            return redirect(reverse('registration_register'))
         else:
             #return HttpResponse('You did not pass the robot test, you will have x more chances')
             #context_dict = {'not_a_bot': False}
-            return render(request, 'Rango/chkUsrIsRobot.html', curr_dict)
+            return render(request, 'Rango/chkUsrIsRobot.html', {'status': 'Fail'})
         

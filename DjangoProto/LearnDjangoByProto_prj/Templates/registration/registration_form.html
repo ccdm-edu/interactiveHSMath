@@ -47,13 +47,24 @@
 			Enter the same password as before, for verification.
 		</span>
 		</p>
-	</div>
-	<button type="submit" class="btn btn-primary">Submit</button>
+		
+		</div>
+		{% if messages %}
+    	{% for msg in messages %}
+			{% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+				{% if msg.message == 'not a bot' %}
+					<button type="submit" class="btn btn-primary">Submit</button>
+				{% else %}
+					YOU didn't pass the bot test, we will limit you
+				{% endif %}
+			{% else %}
+				YOU didn't pass the bot test, we will limit you
+			{% endif %}
+    	{% endfor %}
+    	{% endif %}
 	</form>
 	</div>
 	</div>
 	</div>	
 
-
-	
 {% endblock %}

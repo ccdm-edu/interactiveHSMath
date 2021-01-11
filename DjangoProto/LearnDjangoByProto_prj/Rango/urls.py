@@ -33,7 +33,5 @@ urlpatterns = [
     path('suggest/', views.CategorySuggestionView.as_view(), name='suggest'),
     #name is used in the django template url Rango:name, the first argument is the html page or path
     path('chkUsrIsRobot/', views.ChkUsrIsRobotView.as_view(), name='check_user_is_robot'),
-
-
     
 ]
