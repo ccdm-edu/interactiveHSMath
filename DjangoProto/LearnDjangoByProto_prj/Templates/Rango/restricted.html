@@ -19,7 +19,8 @@
 	<p>This is some text for a JQuery effect, hover and it changes to 
        red and when you leave, it goes blue</p>
        
-    <div id="msg"> Hello!, Below we will try slider inputs <br>
+    <div id="msg"> Hello!, Below we will try slider inputs for my future math app.  This tone generator uses Web Audio which is
+    				not supported in latest version of Internet Explorer, should work fine in Chrome, Edge, Safari, Firefox, etc <br>
     <table width="100%">
 		<tbody>
 			<tr>
@@ -66,6 +67,61 @@
 	</table>
  	</div>
     <br>
+    <div id="msg"> There are three tests a potential user must pass to register a username/password:  Honeypot test, 
+    	Math test and recaptcha v3.  A human only sees the math test. You only have to pass Honeypot and math test
+    	to get in.  Recaptcha needs time to 'learn' the website to give an accurate score.  Recaptcha v3 scores a user
+    	from 0 to 1 where 0 is "definitely robot".  Here I divide up the score into 4 quartiles, 0 to 0.25, 0.25 to 0.5,
+    	0.5 to 0.75 and 0.75 to 1.  Here are the counts for all users of this site.<br>
+    <br>
+    
+    <table style="width:100%; border: 1px solid black; border-collapse: collapse;">
+    <caption style="caption-side:top; text-align=center;">Performance count of users seeking to register with this site</caption>
+  		<tr>
+    	<th>Recaptcha V3</th>
+    	<th>Math test fail</th>
+    	<th>Math test fail</th>
+    	<th>Math test pass</th>
+    	<th>Math test pass</th>
+  		</tr>
+  		
+  		<tr style="border-bottom:1px solid black">
+    	<th>Quartiles</th>
+    	<th>Honeypot test fail</th>
+    	<th>Honeypot test pass</th>
+    	<th>Honeypot test fail</th>
+    	<th>Honeypot test pass</th>
+  		</tr>
+  		
+  		<tr>
+    	<td style="border-right:1px solid black">Bot (1st quartile)</td>
+    	<td style="border-right:1px solid black; text-align:center">{{ hpF_mtF.0 }}</td>
+    	<td style="border-right:1px solid black; text-align:center">{{ hpP_mtF.0 }}</td>
+    	<td style="border-right:1px solid black; text-align:center">{{ hpF_mtP.0 }}</td>
+    	<td style="text-align:center">{{ hpP_mtP.0 }}</td>
+  		</tr>
+  		<tr>
+    	<td style="border-right:1px solid black">Maybe Bot (2nd quartile)</td>
+    	<td style="border-right:1px solid black; text-align:center">{{ hpF_mtF.1 }}</td>
+    	<td style="border-right:1px solid black; text-align:center">{{ hpP_mtF.1 }}</td>
+    	<td style="border-right:1px solid black; text-align:center">{{ hpF_mtP.1 }}</td>
+    	<td style="text-align:center">{{ hpP_mtP.1 }}</td>
+  		</tr>
+  		<tr>
+    	<td style="border-right:1px solid black">Maybe Human (3rd quartile)</td>
+    	<td style="border-right:1px solid black; text-align:center">{{ hpF_mtF.2 }}</td>
+    	<td style="border-right:1px solid black; text-align:center">{{ hpP_mtF.2 }}</td>
+    	<td style="border-right:1px solid black; text-align:center">{{ hpF_mtP.2 }}</td>
+    	<td style="text-align:center">{{ hpP_mtP.2 }}</td>
+  		</tr>
+  		<tr>
+    	<td style="border-right:1px solid black">Human (4th quartile)</td>
+    	<td style="border-right:1px solid black; text-align:center">{{ hpF_mtF.3 }}</td>
+    	<td style="border-right:1px solid black; text-align:center">{{ hpP_mtF.3 }}</td>
+    	<td style="border-right:1px solid black; text-align:center">{{ hpF_mtP.3 }}</td>
+    	<td style="text-align:center">{{ hpP_mtP.3 }}</td>
+  		</tr>
+	</table>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.73/Tone.js"></script>
     <script src="{% static "js/TrigAudio.js" %}" crossorigin="anonymous"></script>
 {% endblock %}

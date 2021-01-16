@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-from Rango.models import Category
-from Rango.models import Page, UserProfile
+from Rango.models import Page, UserProfile, Category, BotChkResults
 from tkinter.constants import PAGES
 from unicodedata import category
 from Rango.forms import  CategoryForm, PageForm, UserForm, UserProfileForm
@@ -390,10 +389,38 @@ class AddPageView(View):
 class RestrictedView(View):
     @method_decorator(login_required)
     def get(self, request):
-        context_dict = {'boldmessage': 'Since you are logged in, you can go for it', 
+        # honeypot test fail, math test fail, get 4 elements on 1st check, use get to pull off 1 element
+        qFF = BotChkResults.objects.filter(pass_honeypot = False, pass_mathtest = False)
+        hpF_mtF = [qFF.get(recaptcha_v3_quartile = '1Q').count,
+                   qFF.get(recaptcha_v3_quartile = '2Q').count,
+                   qFF.get(recaptcha_v3_quartile = '3Q').count,
+                   qFF.get(recaptcha_v3_quartile = '4Q').count ]
+        
+        qFP = BotChkResults.objects.filter(pass_honeypot = False, pass_mathtest = True)
+        hpF_mtP = [qFP.get(recaptcha_v3_quartile = '1Q').count,
+                   qFP.get(recaptcha_v3_quartile = '2Q').count,
+                   qFP.get(recaptcha_v3_quartile = '3Q').count,
+                   qFP.get(recaptcha_v3_quartile = '4Q').count ]
+        
+        qPF = BotChkResults.objects.filter(pass_honeypot = True, pass_mathtest = False)
+        hpP_mtF = [qPF.get(recaptcha_v3_quartile = '1Q').count,
+                   qPF.get(recaptcha_v3_quartile = '2Q').count,
+                   qPF.get(recaptcha_v3_quartile = '3Q').count,
+                   qPF.get(recaptcha_v3_quartile = '4Q').count ]
+        
+        qPP = BotChkResults.objects.filter(pass_honeypot = True, pass_mathtest = True)
+        hpP_mtP = [qPP.get(recaptcha_v3_quartile = '1Q').count,
+                   qPP.get(recaptcha_v3_quartile = '2Q').count,
+                   qPP.get(recaptcha_v3_quartile = '3Q').count,
+                   qPP.get(recaptcha_v3_quartile = '4Q').count ]
+
+        context_dict = {'boldmessage': 'This page has some ideas for future math page and bot check test results', 
                         'page_tab_header': 'Restricted',
+                        'hpF_mtF': hpF_mtF,
+                        'hpP_mtF': hpP_mtF,
+                        'hpF_mtP': hpF_mtP,
+                        'hpP_mtP': hpP_mtP,
                         }
-        # request = WSGIRequest: GET '/Rango/restricted/
         return render(request, 'Rango/restricted.html', context=context_dict)        
 
 
@@ -686,16 +713,16 @@ class ChkUsrIsRobotView(View):
         passChallengeTest = self.request.POST.get('math_test')
         passHoneypotTest = self.request.POST.get('js_honey')
         
-        print(f'resulting recaptcha is {result}')
+        #print(f'resulting recaptcha is {result}')
         
         (passChallengeTest_bool, passHoneypotTest_bool, recaptchav3_quartile) = self.convert_results_to_model_params(passChallengeTest, passHoneypotTest, result)
 
-        print(f'resulting recaptcha is {recaptchav3_quartile}')
-        print(f'math challenge test pass = {passChallengeTest_bool}')
-        print(f'honeypot bot test pass = {passHoneypotTest_bool}')
         
         # retrieve model and increment the count
-
+        curr_stat = BotChkResults.objects.get_or_create(pass_honeypot = passHoneypotTest_bool, pass_mathtest = passChallengeTest_bool, recaptcha_v3_quartile = recaptchav3_quartile)[0]
+        curr_stat.count = curr_stat.count + 1
+        curr_stat.save()
+        print(f'curr_stat = {curr_stat}')
         #for now, just use challenge test and honeypot test, will assimilate recaptcha v3 as time goes on and
         #it learns the site usage
         if (passChallengeTest_bool and passHoneypotTest_bool):
