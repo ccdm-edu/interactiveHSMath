@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+from django.conf.global_settings import SECURE_SSL_REDIRECT, SECURE_HSTS_SECONDS,\
+    SECURE_HSTS_INCLUDE_SUBDOMAINS, SECURE_HSTS_PRELOAD
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # __file__ is the settings.py
@@ -35,7 +37,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['catcoder.pythonanywhwere.com']
 
 # if true, users can register
 REGISTRATION_OPEN = True
@@ -129,6 +131,17 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# security for https deployment
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+#may need to increase this to 1 year once all is working.  This forces https only
+SECURE_HSTS_SECONDS= 3600
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# the preload variable below just allows me to submit to the browsers this is https only, i haven't
+# actually done that submission yet
+SECURE_HSTS_PRELOAD = True
 
 
 # Internationalization
