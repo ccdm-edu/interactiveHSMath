@@ -35,7 +35,9 @@ RECAPTCHA_SECRET_KEY = os.environ.get('G_RECAPTCHA_V3_SECRET_KEY')
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG')
+DEBUG = False
+if os.environ['DEBUG'].lower() == 'true':
+    DEBUG = True
 
 ALLOWED_HOSTS = ['catcoder.pythonanywhere.com']
 
@@ -61,11 +63,9 @@ INSTALLED_APPS = [
     'Rango',
     'registration',  # should be immediately above contrib.admin
     'django.contrib.admin',
-    #'debug_toolbar',
 ]
 
 MIDDLEWARE = [
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
