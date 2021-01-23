@@ -37,7 +37,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = ['catcoder.pythonanywhwere.com']
+ALLOWED_HOSTS = ['catcoder.pythonanywhere.com']
 
 # if true, users can register
 REGISTRATION_OPEN = True

@@ -34,7 +34,7 @@ class IndexView(View):
         # move to server side cookies
         #numVisits = int(request.session['visits'])
         context_dict = {'boldmessage': 'Crunchy, creamy, cookie, candy, cupcake, broccoli!', 
-                        'current_angel_kitty': '../static/images/AngelKitty.jpg',
+                        'current_angel_kitty': '../static/images/AngelKitty.JPG',
                         'page_tab_header': 'Index',
                         'categories': category_list,
                         'pages': page_list,
@@ -59,7 +59,7 @@ class AboutView(View):
         
         context_dict = {'boldmessage': 'Cat Coder did this page', 
                         'greetingmsg': 'This is the ABOUT page',
-                        'current_angel_kitty': '../../media/Mowgli.jpg',
+                        'current_angel_kitty': '../static/images/Mowgli.JPG',
                         'page_tab_header': 'About',
                         'visits': numVisits,
                         'index_page': False
