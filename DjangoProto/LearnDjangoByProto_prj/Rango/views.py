@@ -33,8 +33,8 @@ class IndexView(View):
         #numVisits = int(request.COOKIES.get('visits', '1'))
         # move to server side cookies
         #numVisits = int(request.session['visits'])
-        context_dict = {'boldmessage': 'Crunchy, creamy, cookie, candy, cupcake, broccoli!', 
-                        'current_angel_kitty': '../static/images/AngelKitty.JPG',
+        context_dict = {'boldmessage': 'This is me, learning how to do some server/client web design before I get into web math tutoring!', 
+                        'current_angel_kitty': '/static/images/AngelKitty.JPG',
                         'page_tab_header': 'Index',
                         'categories': category_list,
                         'pages': page_list,
@@ -59,7 +59,7 @@ class AboutView(View):
         
         context_dict = {'boldmessage': 'Cat Coder did this page', 
                         'greetingmsg': 'This is the ABOUT page',
-                        'current_angel_kitty': '../static/images/Mowgli.JPG',
+                        'current_angel_kitty': '/static/images/Mowgli.JPG',
                         'page_tab_header': 'About',
                         'visits': numVisits,
                         'index_page': False
@@ -694,7 +694,7 @@ class ChkUsrIsRobotView(View):
                 quartile = '4Q'
         else:
             # need to throw an exception or do something here
-            print("ERROR, bad recaptcha token")
+            print(f"ERROR, bad recaptcha token, raw result was {raw_result}")
         
         return(test1_bool, test2_bool, quartile)
     
@@ -705,7 +705,7 @@ class ChkUsrIsRobotView(View):
             'secret': secret_key}
         data = urllib.parse.urlencode(payload).encode()
         req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
-        
+        print('finished secret key decoder ring on grecaptcha')
         response = urllib.request.urlopen(req)
         result = json.loads(response.read().decode())
         

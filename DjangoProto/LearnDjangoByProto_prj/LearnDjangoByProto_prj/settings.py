@@ -39,7 +39,10 @@ DEBUG = False
 if os.environ['DEBUG'].lower() == 'true':
     DEBUG = True
 
-ALLOWED_HOSTS = ['catcoder.pythonanywhere.com']
+if DEBUG:
+    ALLOWED_HOSTS = ['127.0.0.1']
+else:
+    ALLOWED_HOSTS = ['catcoder.pythonanywhere.com']
 
 # if true, users can register
 REGISTRATION_OPEN = True
@@ -132,16 +135,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# security for https deployment
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
-#may need to increase this to 1 year once all is working.  This forces https only
-SECURE_HSTS_SECONDS= 3600
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# the preload variable below just allows me to submit to the browsers this is https only, i haven't
-# actually done that submission yet
-SECURE_HSTS_PRELOAD = True
+if DEBUG == False:
+    # we are deployed, not in localserver
+    # security for https deployment
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    #may need to increase this to 1 year once all is working.  This forces https only
+    SECURE_HSTS_SECONDS= 3600
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    # the preload variable below just allows me to submit to the browsers this is https only, i haven't
+    # actually done that submission yet
+    SECURE_HSTS_PRELOAD = True
 
 
 # Internationalization
