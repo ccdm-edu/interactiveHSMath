@@ -222,7 +222,7 @@ class AddCategoryView(View):
         form = CategoryForm()
         #will handle the bad form, new3 form or no form supplied cases
         #Render the form with error messages (if any).
-        return render(request, 'rango/add_category.html', {'form': form})
+        return render(request, 'Rango/add_category.html', {'form': form})
 
     def post(self, request):
         form = CategoryForm(request.POST)
@@ -240,7 +240,7 @@ class AddCategoryView(View):
             print(form.errors)
         #will handle the bad form, new3 form or no form supplied cases
         #Render the form with error messages (if any).
-        return render(request, 'rango/add_category.html', {'form': form})    
+        return render(request, 'Rango/add_category.html', {'form': form})    
         
 class AddPageView(View):
     def getBasics(self, category_name_slug):
