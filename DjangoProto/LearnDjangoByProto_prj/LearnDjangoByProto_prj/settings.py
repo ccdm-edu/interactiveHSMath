@@ -141,8 +141,8 @@ if DEBUG == False:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
-    #may need to increase this to 1 year once all is working.  This forces https only
-    SECURE_HSTS_SECONDS= 3600
+    #may need to increase this from 1 hour (3600) to 1 year once all is working.  This forces https only
+    SECURE_HSTS_SECONDS= 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     # the preload variable below just allows me to submit to the browsers this is https only, i haven't
     # actually done that submission yet
