@@ -19,6 +19,7 @@
 			  enctype="multipart/form-data">
 			  {% csrf_token %}
 			  {{ form.as_p }}
+			  <strong>You dont have to fill this in, just take defaults, hit "Create Profile" and change later if you want.</strong><br>
 			  <input type="submit" value="Create Profile" />
 		</form>
 	</div>

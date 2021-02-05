@@ -17,6 +17,7 @@
 	<form role="form" method="post" action=".">
 		{% csrf_token %}
 		<div class="form-group">
+		{{ form.username.errors }}
 		<p class="required"><label class="required" for="id_username">
 			Username:</label>
 		<input class="form-control" id="id_username" maxlength="30"
@@ -26,18 +27,22 @@
 			Letters, digits and @/./+/-/_ only.
 		</span>
 		</p>
+		
+		{{ form.email.errors }}
 		<p class="required"><label class="required" for="id_email">
-			E-mail (not verified):</label>
+			E-mail (not verified, junk@yahoo.com works fine):</label>
 		<input class="form-control" id="id_email" name="email"
 			type="email" />
 		</p>
-		<strong>CAREFUL here, if you choose a password that isn't "strong" enough or you don't confirm properly,
-		 you will get this blank form again without telling you where you "failed"</strong>
+		
+		<strong>Password > 8 char, not "common" (no keyboard patterns etc.), mix of characters</strong>
+		 {{ form.password1.errors }}
 		<p class="required"><label class="required" for="id_password1">
 			Password:</label>
 		<input class="form-control" id="id_password1" name="password1"
 			type="password" />
 		</p>
+		{{ form.password2.errors }}
 		<p class="required">
 		<label class="required" for="id_password2">
 			Password confirmation:</label>
@@ -49,21 +54,7 @@
 		</p>
 		
 		</div>
-		Be sure to get all this right.  If you make a mistake (by Django standards), the submit button will be taken away and you 
-		have to restart the page.<br>
-		{% if messages %}
-    	{% for msg in messages %}
-			{% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-				{% if msg.message == 'not a bot' %}
-					<button type="submit" class="btn btn-primary">Submit</button>
-				{% else %}
-					YOU didn't pass the bot test, we will limit you
-				{% endif %}
-			{% else %}
-				YOU didn't pass the bot test, we will limit you
-			{% endif %}
-    	{% endfor %}
-    	{% endif %}
+		<button type="submit" class="btn btn-primary">Submit</button>
 	</form>
 	</div>
 	</div>
