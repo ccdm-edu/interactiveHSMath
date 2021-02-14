@@ -43,7 +43,7 @@ class Category(models.Model):
 class Page(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     title = models.CharField(max_length = Category.MAX_LEN_NAME)
-    url = models.URLField()
+    url = models.URLField(help_text="Need http/s prefix, best to cut and paste from a website")
     views = models.IntegerField(default=0)
     last_visit = models.DateTimeField(default=timezone.now)
     
@@ -55,15 +55,15 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     
     #the additional attributes we wish to include
-    website = models.URLField(blank=True)
-    picture = models.ImageField(upload_to='profile_images', blank=True)
+    website = models.URLField(blank=True, help_text="Need http/s prefix, best to cut and paste from website")
+    picture = models.ImageField(upload_to='profile_images', blank=True, help_text="Pick new picture or use default picture")
     
     def __str__(self):
         return self.user.username
 
 class BotChkResults(models.Model):
     pass_honeypot = models.BooleanField(default=False)
-    pass_mathtest = models.BooleanField(default=False)
+    pass_mathtest = models.BooleanField(default=False, help_text="any order, separated by commas")
     RECAPTCHA_V3_QUARTILES = (
         ('1Q', 'Definitely_robot'),
         ('2Q', 'Maybe_robot'),

@@ -13,13 +13,13 @@
 </div>
 <div class="container">
 	<div class="row">
-		<!--need the entype as shown below since people will be uploading images, not just ascii  -->
+		<!--need the enctype as shown below since people will be uploading images, not just ascii  -->
 		<form method="post"
 			  action="{% url 'Rango:register_profile' %}"
 			  enctype="multipart/form-data">
 			  {% csrf_token %}
 			  {{ form.as_p }}
-			  <strong>You dont have to fill this in, just take defaults, hit "Create Profile" and change later if you want.</strong><br>
+			  <strong>You dont have to fill this in. Just take defaults, hit "Create Profile" and change later if you want.</strong><br>
 			  <input type="submit" value="Create Profile" />
 		</form>
 	</div>

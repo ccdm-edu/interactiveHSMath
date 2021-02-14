@@ -69,7 +69,7 @@
                         <li class="nav-item "><a class="nav-link" href="{% url 'Rango:about' %}">About</a></li>
                         <!-- OH, btw, you can't comment out code here in django, it reads it anyway then barfs  -->
                         {% if user.is_authenticated %}
-                        <li class="nav-item "><a class="nav-link" href="{% url 'Rango:restricted' %}">Restricted</a></li>
+                        <li class="nav-item "><a class="nav-link" href="{% url 'Rango:restricted' %}">Sandbox</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'Rango:add_category' %}">Add Category</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'auth_password_change' %}">Change Password</a></li>
                         <!--  this means there is a param to profile view and this param needs to be in the url.py as well You can't
@@ -78,6 +78,7 @@
 						<li class="nav-item"><a class="nav-link" href="{% url 'Rango:users_profiles' %}">Show Users</a></li>
 						<li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}?next=/Rango/">Logout</a></li>
                         {% else %}
+                        <!--  <li class="nav-item"><a class="nav-link" href="{% url 'registration_register' %}">Register Here</a></li> -->
                         <li class="nav-item"><a class="nav-link" href="{% url 'Rango:check_user_is_robot' %}">Register Here</a></li>
                         <li class="nav-item "><a class="nav-link" href="{% url 'auth_login' %}">Login</a></li>
                         {% endif %}

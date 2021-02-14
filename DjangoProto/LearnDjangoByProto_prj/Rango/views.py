@@ -728,10 +728,16 @@ class ChkUsrIsRobotView(View):
         if (passChallengeTest_bool and passHoneypotTest_bool):
             # problem is redirect does not allow context dictionary to fill in the template (as render does)
             #need to send success message
-            messages.success(request,"not a bot")
-            return redirect(reverse('registration_register'))
+            #messages.success(request,"not a bot")
+            print(f'return SUCCESS recaptcha')
+            #response = render(request, 'registration/registration_form.html')
+            response = redirect(reverse('registration_register'))
+            response.set_cookie('notABot','True')
+            return response
         else:
             #return HttpResponse('You did not pass the robot test, you will have x more chances')
             #context_dict = {'not_a_bot': False}
+            print(f'return FAIL recaptcha')
             return render(request, 'Rango/chkUsrIsRobot.html', {'status': 'Fail'})
+
         

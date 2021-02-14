@@ -20,7 +20,9 @@ class RUaHuman {
 	static chkMathQuest(serverLoc)
 	{
 		var user_answer = document.getElementById("test1").value;
-		if ( (user_answer == "-2.3,3.4") || (user_answer == "3.4,-2.3") ) {
+		// pull out all spaces
+		user_answer = user_answer.replace(/\s+/g,'');
+		if (user_answer == "12") {
 			this.mathQ_Pass = true;
 			console.log("user did pass math test")
 		} else {

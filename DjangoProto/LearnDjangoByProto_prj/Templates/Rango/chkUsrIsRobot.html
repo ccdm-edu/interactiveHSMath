@@ -19,14 +19,13 @@
 		</div>
 	</div>
 	{% if status == 'Fail' %}
-		<strong> You have FAILED the robot test. You cannot register.  You can close and restart the page.</strong> 
+		<strong> You have FAILED the robot test. You can try again at 'Register Here' selection.</strong> 
 	{% else %}
 	
 		<!-- you get one chance to get it right before being locked out -->
 		<div>
 			<h2 id="test-results-and-countdown"></h2>
-			<label for="test1">What are the two roots of (x + 2.3)(x - 3.4) = 0?<br>
-							   Can be in any order, separated by comma, no spaces</label>
+			<label for="test1">What is 5 + 7 = </label>
 			{% if debug %}
 				<!-- different google recaptcha keys for different servers, local is debug 127.0.0.1 -->
 				<input type="text" id="test1" onchange="RUaHuman.chkMathQuest('Local')">
