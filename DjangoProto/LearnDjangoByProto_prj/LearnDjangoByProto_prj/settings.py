@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'Rango',
     'registration',  # should be immediately above contrib.admin
     'django.contrib.admin',
+    'user_visit' #keeps track of users to site
 ]
 
 MIDDLEWARE = [
@@ -77,6 +78,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'user_visit.middleware.UserVisitMiddleware'
 ]
 
 ROOT_URLCONF = 'LearnDjangoByProto_prj.urls'
