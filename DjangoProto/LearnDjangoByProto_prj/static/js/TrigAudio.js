@@ -12,16 +12,18 @@ class ToneHandler {
 	
 	constructor() {
 		// initialize the value boxes for each element
-		document.getElementById("currFreq").innerHTML = document.getElementById("in-range-freq").value;
-		document.getElementById("currAmp").innerHTML = document.getElementById("in-range-amp").value;
-		document.getElementById("currPhase").innerHTML = document.getElementById("in-range-phase").value;
+		// using innerHTML allows use of XSS hack since the input would be interpreted as HTML and executed.  Here, we just
+		// take the text only and put in label box
+		document.getElementById("currFreq").textContent = document.getElementById("in-range-freq").value;
+		document.getElementById("currAmp").textContent = document.getElementById("in-range-amp").value;
+		document.getElementById("currPhase").textContent = document.getElementById("in-range-phase").value;
 	}
 	
 	static ChangeFreq()
 	{
 		//min and max freq chosen depends on audio speakers used, my speakers can just barely respond at 100 Hz
 		this.currFreq= document.getElementById("in-range-freq")
-		document.getElementById("currFreq").innerHTML = this.currFreq.value;
+		document.getElementById("currFreq").textContent = this.currFreq.value;
 		if (this.ToneIsOnNow==true) {
 			this.osc.frequency.value = this.currFreq.value;
 			// if tone isn't on, don't have to change anything...
@@ -30,7 +32,7 @@ class ToneHandler {
 	static ChangeAmp()
 	{
 		this.currAmp = document.getElementById("in-range-amp")
-		document.getElementById("currAmp").innerHTML = this.currAmp.value;
+		document.getElementById("currAmp").textContent = this.currAmp.value;
 		if (this.ToneIsOnNow==true) {
 			var tonejs_dB = -40 + 20.0 * Math.log10(this.currAmp.value);
 			this.osc.volume.value = tonejs_dB;
@@ -40,7 +42,7 @@ class ToneHandler {
 	static ChangePhase()
 	{
 		this.currPhase = document.getElementById("in-range-phase")
-		document.getElementById("currPhase").innerHTML = this.currPhase.value;
+		document.getElementById("currPhase").textContent = this.currPhase.value;
 		if (this.ToneIsOnNow==true) {
 			this.osc.phase = this.currPhase.value;
 			console.log("current phase is " + this.currPhase.value)
