@@ -29,7 +29,7 @@
 		<tbody>
 			<tr>
 				<td align="center">
-					<div style="display: inline-block; overflow-x: auto; border: 1px solid black;">
+					<div id="toneChanges" style="display: inline-block; overflow-x: auto; border: 1px solid black;">
 						<table border="0">
 							<tbody>
 								<tr>
@@ -70,6 +70,8 @@
 		</tbody>
 	</table>
  	</div>
+ 	<canvas id="sine_plots" width="800" height="500"></canvas>
+ 	
     <br>
     <hr class="solid">
     <div id="msg"> There are three tests a potential user must pass to register a username/password:  Honeypot test, 
@@ -128,6 +130,7 @@
 	</table>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.73/Tone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
     <script src="{% static "js/TrigAudio.js" %}" crossorigin="anonymous"></script>
 {% endblock %}
 
