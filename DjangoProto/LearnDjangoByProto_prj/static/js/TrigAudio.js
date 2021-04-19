@@ -93,26 +93,36 @@ function roundFP(number, prec) {
     return tempnumber / Math.pow(10, prec);
 }
 
-var time = [];
-var timeMs = [];
-var amp = [];
-var ctx = document.getElementById('sine_plots');
-var samplePeriod = 1/(50*currFreq.value);
+var timeMsLo = [];
+var ampLo = [];
+var timeMsHi = [];
+var ampHi = [];
+
+var ctxLo = document.getElementById('sine_plotsLo').getContext("2d");;
+var ctxHi = document.getElementById('sine_plotsHi').getContext("2d");;
+const NUM_PTS_PLOT = 200;
+const DURATION_LO_PLOT_MS = 10
+const DURATION_HI_PLOT_MS = 1
+// sample period in sec
+var samplePeriodLo = DURATION_LO_PLOT_MS/(1000 * NUM_PTS_PLOT);
+var samplePeriodHi = DURATION_HI_PLOT_MS/(1000 * NUM_PTS_PLOT);
 var i;
-for (i=0; i<=400; i++) {
-	time[i] = (i * samplePeriod);
-	amp[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * time[i] + currPhase.value / 360.0) );
-	timeMs[i] = roundFP(1000 * time[i], 2);
+for (i=0; i<=NUM_PTS_PLOT; i++) {
+	ampLo[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodLo + currPhase.value / 360.0) );
+	timeMsLo[i] = roundFP(i * samplePeriodLo * 1000, 2);
+	ampHi[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodHi + currPhase.value / 360.0) );
+	timeMsHi[i] = roundFP(i * samplePeriodHi * 1000, 2);
 	//console.log("freq = " + currFreq.value + " i = " + i + " time = " + time[i] + " sine = " + amp[i])
 }
-// if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
-var sine_plot = new Chart(ctx, {
+
+//if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
+var sine_plot_100_1k = new Chart(ctxLo, {
     type: 'line',
     data: {
-    	labels: timeMs,
+    	labels: timeMsLo,
         datasets: [{
             label: 'Tone Graph',
-            data: amp,
+            data: ampLo,
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
             }]
@@ -143,26 +153,73 @@ var sine_plot = new Chart(ctx, {
  }
 );
 
+// if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
+var sine_plot_1k_10k = new Chart(ctxHi, {
+    type: 'line',
+    data: {
+    	labels: timeMsHi,
+        datasets: [{
+            label: 'Tone Graph',
+            data: ampHi,
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            }]
+    },
+    options: {
+    	responsive: true,
+
+		scales: {
+
+			xAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: 'milliseconds'
+				},
+
+			}],
+			yAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: 'amplitude'
+				}
+			}]
+		}
+	}
+ }
+);
+
 function drawTone()
 {
-	for (i=0; i<=400; i++) {
-		time[i] = (i * samplePeriod);
-		amp[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * time[i] + currPhase.value / 360.0) );
-		timeMs[i] = roundFP(1000 * time[i], 2);
+	for (i=0; i<=NUM_PTS_PLOT; i++) {
+		ampLo[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodLo + currPhase.value / 360.0) );
+		//timeMsLo[i] = roundFP(i * samplePeriodLo * 1000, 2);
+		ampHi[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodHi + currPhase.value / 360.0) );
+		//timeMsHi[i] = roundFP(i * samplePeriodHi * 1000, 2);
 		//console.log("freq = " + currFreq.value + " i = " + i + " time = " + time[i] + " sine = " + amp[i])
 	}
 	// update time, need to add the new and THEN remove the old.  X axis doesn't like to be empty...
-    sine_plot.data.labels.push(timeMs);
-	sine_plot.data.labels.pop();
+    //sine_plot_100_1k.data.labels.push(timeMsLo);
+	//sine_plot_100_1k.data.labels.pop();
+	
     // update tone, remove old (although for now, just one data set), add new
-    sine_plot.data.datasets.forEach((dataset) => {
+    sine_plot_100_1k.data.datasets.forEach((dataset) => {
         dataset.data.pop();
     });
-    sine_plot.data.datasets.forEach((dataset) => {
-        dataset.data.push(amp);
+    sine_plot_100_1k.data.datasets.forEach((dataset) => {
+        dataset.data.push(ampLo);
     });	                
     //sine_plot.options.scales.xAxes[0].ticks.minRotation = 45;
-    sine_plot.update();
+    sine_plot_100_1k.update();
+    
+    // update tone, remove old (although for now, just one data set), add new
+    sine_plot_1k_10k.data.datasets.forEach((dataset) => {
+        dataset.data.pop();
+    });
+    sine_plot_1k_10k.data.datasets.forEach((dataset) => {
+        dataset.data.push(ampHi);
+    });	                
+    //sine_plot.options.scales.xAxes[0].ticks.minRotation = 45;
+    sine_plot_1k_10k.update();
     
 }
 
