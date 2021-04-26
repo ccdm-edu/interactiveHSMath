@@ -101,18 +101,20 @@ var ampHi = [];
 var ctxLo = document.getElementById('sine_plotsLo').getContext("2d");;
 var ctxHi = document.getElementById('sine_plotsHi').getContext("2d");;
 const NUM_PTS_PLOT = 200;
+const NUM_PTS_PLOT_LO = 1000;
 const DURATION_LO_PLOT_MS = 10
 const DURATION_HI_PLOT_MS = 1
 // sample period in sec
-var samplePeriodLo = DURATION_LO_PLOT_MS/(1000 * NUM_PTS_PLOT);
+var samplePeriodLo = DURATION_LO_PLOT_MS/(1000 * NUM_PTS_PLOT_LO);
 var samplePeriodHi = DURATION_HI_PLOT_MS/(1000 * NUM_PTS_PLOT);
 var i;
-for (i=0; i<=NUM_PTS_PLOT; i++) {
+for (i=0; i<=NUM_PTS_PLOT_LO; i++) {
 	ampLo[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodLo + currPhase.value / 360.0) );
 	timeMsLo[i] = roundFP(i * samplePeriodLo * 1000, 2);
+}
+for (i=0; i<=NUM_PTS_PLOT; i++) {
 	ampHi[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodHi + currPhase.value / 360.0) );
 	timeMsHi[i] = roundFP(i * samplePeriodHi * 1000, 2);
-	//console.log("freq = " + currFreq.value + " i = " + i + " time = " + time[i] + " sine = " + amp[i])
 }
 
 //if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
@@ -128,10 +130,19 @@ var sine_plot_100_1k = new Chart(ctxLo, {
             }]
     },
     options: {
+    	maintainAspectRatio: false,  //uses the size it is given
     	responsive: true,
+        legend: {
+            display: false // gets rid of dataset label/legend
+         },
 		title: {
 			display: true,
 			text: 'Sine Wave Amplitude as function of time (in millisec)'
+		},
+		elements:{
+			point:{
+				radius: 1     // to get rid of individual points
+			}
 		},
 		scales: {
 
@@ -153,6 +164,48 @@ var sine_plot_100_1k = new Chart(ctxLo, {
  }
 );
 
+
+// draw line between the charts
+//https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
+var ctxExpandTime = document.getElementById('timeExpand').getContext("2d");
+
+const CNV_W = ctxExpandTime.canvas.clientWidth;
+const CNV_H = ctxExpandTime.canvas.clientHeight;
+const ARW = 5; 
+console.log("between graph canvas is sized " + "(" + CNV_W + " , " + CNV_H + ")");
+ctxExpandTime.lineWidth = 2;
+
+// draw a line from 0 ms to 0 ms
+ctxExpandTime.beginPath();
+const ZERO = 50;  // about where the zero axis ends up on the canvas
+ctxExpandTime.moveTo(ZERO, 0);
+ctxExpandTime.lineTo(ZERO, CNV_H);
+// left arrow
+ctxExpandTime.moveTo(ZERO - ARW, CNV_H - ARW);
+ctxExpandTime.lineTo(ZERO, CNV_H);
+// right arrow
+ctxExpandTime.moveTo(ZERO + ARW, CNV_H - ARW);
+ctxExpandTime.lineTo(ZERO, CNV_H);
+
+
+// draw line from 1 ms to 1 ms
+const ONE_MS = 125;
+const END = CNV_W - 10;
+ctxExpandTime.moveTo(ONE_MS, 0);
+ctxExpandTime.lineTo(END, CNV_H - ARW);
+// bottom arrow
+ctxExpandTime.moveTo(END - ARW, CNV_H);
+ctxExpandTime.lineTo(END, CNV_H - ARW)
+//top arrow
+ctxExpandTime.moveTo(END - ARW, CNV_H - 2*ARW)
+ctxExpandTime.lineTo(END, CNV_H - ARW)
+ctxExpandTime.stroke();
+ctxExpandTime.closePath();
+
+ctxExpandTime.font = "20px Arial";
+ctxExpandTime.fillText("1ms", 80, CNV_H/2);
+ctxExpandTime.fillText("expanded", 80, CNV_H - 10);
+
 // if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
 var sine_plot_1k_10k = new Chart(ctxHi, {
     type: 'line',
@@ -166,8 +219,16 @@ var sine_plot_1k_10k = new Chart(ctxHi, {
             }]
     },
     options: {
+    	maintainAspectRatio: false,  //uses the size it is given
     	responsive: true,
-
+        legend: {
+            display: false    // gets rid of dataset label/legend
+         },
+ 		elements:{
+			point:{
+				radius: 1  // to get rid of individual points
+			}
+		},
 		scales: {
 
 			xAxes: [{
@@ -190,11 +251,21 @@ var sine_plot_1k_10k = new Chart(ctxHi, {
 
 function drawTone()
 {
-	for (i=0; i<=NUM_PTS_PLOT; i++) {
+//	for (i=0; i<=NUM_PTS_PLOT; i++) {
+//		ampLo[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodLo + currPhase.value / 360.0) );
+//		//timeMsLo[i] = roundFP(i * samplePeriodLo * 1000, 2);
+//		ampHi[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodHi + currPhase.value / 360.0) );
+//		//timeMsHi[i] = roundFP(i * samplePeriodHi * 1000, 2);
+//		//console.log("freq = " + currFreq.value + " i = " + i + " time = " + time[i] + " sine = " + amp[i])
+//	}
+	
+	for (i=0; i<=NUM_PTS_PLOT_LO; i++) {
 		ampLo[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodLo + currPhase.value / 360.0) );
-		//timeMsLo[i] = roundFP(i * samplePeriodLo * 1000, 2);
+		timeMsLo[i] = roundFP(i * samplePeriodLo * 1000, 2);
+	}
+	for (i=0; i<=NUM_PTS_PLOT; i++) {
 		ampHi[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodHi + currPhase.value / 360.0) );
-		//timeMsHi[i] = roundFP(i * samplePeriodHi * 1000, 2);
+		timeMsHi[i] = roundFP(i * samplePeriodHi * 1000, 2);
 		//console.log("freq = " + currFreq.value + " i = " + i + " time = " + time[i] + " sine = " + amp[i])
 	}
 	// update time, need to add the new and THEN remove the old.  X axis doesn't like to be empty...
