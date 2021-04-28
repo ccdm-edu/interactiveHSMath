@@ -92,32 +92,64 @@ function roundFP(number, prec) {
     tempnumber = Math.round(tempnumber);
     return tempnumber / Math.pow(10, prec);
 }
-
+// yeah, shouldn't just update global variables but need to tackle issue of namespaces
 var timeMsLo = [];
 var ampLo = [];
 var timeMsHi = [];
 var ampHi = [];
+function fillInArrays(){
+	const NUM_PTS_PLOT = 200;
+	const NUM_PTS_PLOT_LO = 1000;
+	const DURATION_LO_PLOT_MS = 10;
+	const DURATION_HI_PLOT_MS = 1;
+	//sample period in sec
+	var samplePeriodLo = DURATION_LO_PLOT_MS/(1000 * NUM_PTS_PLOT_LO);
+	var samplePeriodHi = DURATION_HI_PLOT_MS/(1000 * NUM_PTS_PLOT);
+	var i;
+	for (i=0; i<=NUM_PTS_PLOT_LO; i++) {
+		ampLo[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodLo + currPhase.value / 360.0) );
+		timeMsLo[i] = roundFP(i * samplePeriodLo * 1000, 2);
+	}
+	for (i=0; i<=NUM_PTS_PLOT; i++) {
+		ampHi[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodHi + currPhase.value / 360.0) );
+		timeMsHi[i] = roundFP(i * samplePeriodHi * 1000, 2);
+	}	
+}
 
 var ctxLo = document.getElementById('sine_plotsLo').getContext("2d");;
 var ctxHi = document.getElementById('sine_plotsHi').getContext("2d");;
-const NUM_PTS_PLOT = 200;
-const NUM_PTS_PLOT_LO = 1000;
-const DURATION_LO_PLOT_MS = 10
-const DURATION_HI_PLOT_MS = 1
-// sample period in sec
-var samplePeriodLo = DURATION_LO_PLOT_MS/(1000 * NUM_PTS_PLOT_LO);
-var samplePeriodHi = DURATION_HI_PLOT_MS/(1000 * NUM_PTS_PLOT);
-var i;
-for (i=0; i<=NUM_PTS_PLOT_LO; i++) {
-	ampLo[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodLo + currPhase.value / 360.0) );
-	timeMsLo[i] = roundFP(i * samplePeriodLo * 1000, 2);
-}
-for (i=0; i<=NUM_PTS_PLOT; i++) {
-	ampHi[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodHi + currPhase.value / 360.0) );
-	timeMsHi[i] = roundFP(i * samplePeriodHi * 1000, 2);
-}
-
+fillInArrays();
 //if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
+const CHART_OPTIONS = {
+	maintainAspectRatio: false,  //uses the size it is given
+	responsive: true,
+    legend: {
+        display: false // gets rid of dataset label/legend
+     },
+	elements:{
+		point:{
+			radius: 1     // to get rid of individual points
+		}
+	},
+	scales: {
+
+		xAxes: [{
+			scaleLabel: {
+				display: true,
+				labelString: 'milliseconds'
+			},
+
+		}],
+		yAxes: [{
+			scaleLabel: {
+				display: true,
+				labelString: 'amplitude'
+			}
+		}]
+	}
+};
+const NEW_TITLE = {display: true, text: 'Sine Wave Amplitude as function of time (in millisec)'};
+const TOP_CHART = {...CHART_OPTIONS, title: NEW_TITLE };
 var sine_plot_100_1k = new Chart(ctxLo, {
     type: 'line',
     data: {
@@ -129,43 +161,12 @@ var sine_plot_100_1k = new Chart(ctxLo, {
             borderColor: 'rgb(75, 192, 192)',
             }]
     },
-    options: {
-    	maintainAspectRatio: false,  //uses the size it is given
-    	responsive: true,
-        legend: {
-            display: false // gets rid of dataset label/legend
-         },
-		title: {
-			display: true,
-			text: 'Sine Wave Amplitude as function of time (in millisec)'
-		},
-		elements:{
-			point:{
-				radius: 1     // to get rid of individual points
-			}
-		},
-		scales: {
-
-			xAxes: [{
-				scaleLabel: {
-					display: true,
-					labelString: 'milliseconds'
-				},
-
-			}],
-			yAxes: [{
-				scaleLabel: {
-					display: true,
-					labelString: 'amplitude'
-				}
-			}]
-		}
-	}
+    options: TOP_CHART
  }
 );
 
 
-// draw line between the charts
+// draw line between the charts----------------------------------------------------------------------------------
 //https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
 var ctxExpandTime = document.getElementById('timeExpand').getContext("2d");
 
@@ -204,7 +205,8 @@ ctxExpandTime.closePath();
 
 ctxExpandTime.font = "20px Arial";
 ctxExpandTime.fillText("1ms", 80, CNV_H/2);
-ctxExpandTime.fillText("expanded", 80, CNV_H - 10);
+ctxExpandTime.fillText("expanded", 80, CNV_H/2 + 20);
+//--------------------------------------------------------------------------------------------------------------------
 
 // if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
 var sine_plot_1k_10k = new Chart(ctxHi, {
@@ -218,59 +220,14 @@ var sine_plot_1k_10k = new Chart(ctxHi, {
             borderColor: 'rgb(75, 192, 192)',
             }]
     },
-    options: {
-    	maintainAspectRatio: false,  //uses the size it is given
-    	responsive: true,
-        legend: {
-            display: false    // gets rid of dataset label/legend
-         },
- 		elements:{
-			point:{
-				radius: 1  // to get rid of individual points
-			}
-		},
-		scales: {
-
-			xAxes: [{
-				scaleLabel: {
-					display: true,
-					labelString: 'milliseconds'
-				},
-
-			}],
-			yAxes: [{
-				scaleLabel: {
-					display: true,
-					labelString: 'amplitude'
-				}
-			}]
-		}
-	}
+    options: CHART_OPTIONS
  }
 );
 
 function drawTone()
 {
-//	for (i=0; i<=NUM_PTS_PLOT; i++) {
-//		ampLo[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodLo + currPhase.value / 360.0) );
-//		//timeMsLo[i] = roundFP(i * samplePeriodLo * 1000, 2);
-//		ampHi[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodHi + currPhase.value / 360.0) );
-//		//timeMsHi[i] = roundFP(i * samplePeriodHi * 1000, 2);
-//		//console.log("freq = " + currFreq.value + " i = " + i + " time = " + time[i] + " sine = " + amp[i])
-//	}
-	
-	for (i=0; i<=NUM_PTS_PLOT_LO; i++) {
-		ampLo[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodLo + currPhase.value / 360.0) );
-		timeMsLo[i] = roundFP(i * samplePeriodLo * 1000, 2);
-	}
-	for (i=0; i<=NUM_PTS_PLOT; i++) {
-		ampHi[i] = currAmp.value * Math.sin(2 * Math.PI * (currFreq.value * i * samplePeriodHi + currPhase.value / 360.0) );
-		timeMsHi[i] = roundFP(i * samplePeriodHi * 1000, 2);
-		//console.log("freq = " + currFreq.value + " i = " + i + " time = " + time[i] + " sine = " + amp[i])
-	}
-	// update time, need to add the new and THEN remove the old.  X axis doesn't like to be empty...
-    //sine_plot_100_1k.data.labels.push(timeMsLo);
-	//sine_plot_100_1k.data.labels.pop();
+	fillInArrays();
+	// CHART js hint:  update time, need to add the new and THEN remove the old.  X axis doesn't like to be empty...
 	
     // update tone, remove old (although for now, just one data set), add new
     sine_plot_100_1k.data.datasets.forEach((dataset) => {
