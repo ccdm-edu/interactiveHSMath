@@ -3,6 +3,7 @@ var currFreq = document.getElementById("in-range-freq");
 var currAmp = document.getElementById("in-range-amp");
 var currPhase = document.getElementById("in-range-phase")
 
+
 // effectively, this is a singleton, a static class
 class ToneHandler {
 	
