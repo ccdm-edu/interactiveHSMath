@@ -1,4 +1,3 @@
-
 // NOTE, this function uses WebAudio in library Tone.js.  At this time, it does not work in IE Edge
 var currFreq = document.getElementById("in-range-freq");
 var currAmp = document.getElementById("in-range-amp");
