@@ -49,18 +49,18 @@
 								<tr>
 									<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz  -->
 									<td>
-										<input id="in-range-freq" type="range" oninput=ToneHandler.ChangeFreq() step="1" value="2000" min="100" max="10000">
+										<input id="in-range-freq" type="range" step="1" value="2000" min="100" max="10000">
 									</td>
 									<td>
-										<input id="in-range-amp" oninput=ToneHandler.ChangeAmp() type="range" step="1" value="10" min="1" max="100">
+										<input id="in-range-amp" type="range" step="1" value="10" min="1" max="100">
 									</td>
 									<td>
-										<input id="in-range-phase" oninput=ToneHandler.ChangePhase() type="range" step="1" value="0" min="0" max="360">
+										<input id="in-range-phase" type="range" step="1" value="0" min="0" max="360">
 									</td>
 									
 								</tr>
 								<tr>
-									<input type="button" id="start-stop-button" onclick="ToneHandler.StartStopTone()" value="Start Tone">
+									<input type="button" id="start-stop-button" value="Start Tone">
 								</tr>
 							</tbody>
 						</table>
@@ -70,12 +70,15 @@
 		</tbody>
 	</table>
  	</div>
- 	<div style="width:800px;height:250px">
- 		<!-- Needs to be a bit bigger since it has the title -->
- 		<canvas id="sine_plotsLo"></canvas>
- 	</div>
- 	<div>
- 		<canvas id="timeExpand" width="800" height="100"></canvas>
+ 	<div id="overlapExpansionLines">
+ 		<!--  want to overlap the top graph with expansion lines below it -->
+	 	<div style="width:800px;height:250px">
+	 		<!-- Needs to be a bit bigger since it has the title -->
+	 		<canvas id="sine_plotsLo"></canvas>
+	 	</div>
+	 	<div>
+	 		<canvas id="timeExpand" width="800" height="100"></canvas>
+	 	</div>
  	</div>
  	<div style="width:800px;height:200px">
  		<canvas id="sine_plotsHi"></canvas>

@@ -65,6 +65,22 @@ div#tooltip:hover .tooltiptext {
   visibility: visible;
 }
 
+/* arrange the expansion lines between the two graphs for max understandability */
+#overlapExpansionLines{
+    position:relative;
+    /*height: 300;
+    width: 800;*/
+}
+#sine_plotsLo{
+    position:absolute; top:0px; left:0px;
+    /*width: 800;
+    height: 250;*/
+}
+#timeExpand{
+	 position:absolute; top:220px; left:0px;
+	 /*width: 800;
+	 height: 100;*/
+}
 
 
 
