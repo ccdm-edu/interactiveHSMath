@@ -72,16 +72,21 @@
  	</div>
  	<div id="overlapExpansionLines">
  		<!--  want to overlap the top graph with expansion lines below it -->
-	 	<div style="width:800px;height:250px">
+ 		<!--  canvas used for chart js need the size defined one level up at div -->
+	 	<div id = "sinePlotLoWrapper">
 	 		<!-- Needs to be a bit bigger since it has the title -->
-	 		<canvas id="sine_plotsLo"></canvas>
+	 		<canvas id="sine_plotsLo">
+	 		Your Browser does not support canvas tag, you are missing graph capability
+	 		</canvas>
 	 	</div>
-	 	<div>
-	 		<canvas id="timeExpand" width="800" height="100"></canvas>
-	 	</div>
+ 		<canvas id="timeExpand">
+ 		Your Browser does not support canvas tag, you are missing graph capability
+ 		</canvas>
  	</div>
- 	<div style="width:800px;height:200px">
- 		<canvas id="sine_plotsHi"></canvas>
+ 	<div id = "sinePlotsHiWrapper">
+ 		<canvas id="sine_plotsHi">
+ 		Your Browser does not support canvas tag, you are missing graph capability
+ 		</canvas>
  	</div>
 
 	

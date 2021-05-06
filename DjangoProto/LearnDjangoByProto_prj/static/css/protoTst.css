@@ -68,20 +68,36 @@ div#tooltip:hover .tooltiptext {
 /* arrange the expansion lines between the two graphs for max understandability */
 #overlapExpansionLines{
     position:relative;
-    /*height: 300;
-    width: 800;*/
+    height: 250px;
+    width: 800px;
 }
+#sinePlotLoWrapper{
+	position: absolute;
+	height: 250px;
+	width:800px;
+}
+/* we allow the time expand lines to write on this canvas */
 #sine_plotsLo{
-    position:absolute; top:0px; left:0px;
-    /*width: 800;
-    height: 250;*/
+    position:absolute; 
+    top:0px; 
+    left:0px;
+    z-index: -1;
 }
 #timeExpand{
-	 position:absolute; top:220px; left:0px;
-	 /*width: 800;
-	 height: 100;*/
+	 position:absolute; 
+	 top:225px; 
+	 height: 110px;
+	 width: 800px;
 }
-
+#sinePlotsHiWrapper{
+	position: relative;
+	top: 55px;
+	height: 200px;
+	width: 800px;
+}
+#sine_plotsHi{
+	position: absolute;
+}
 
 
 

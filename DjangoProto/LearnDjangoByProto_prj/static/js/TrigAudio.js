@@ -192,15 +192,20 @@ var sine_plot_1k_10k = new Chart(ctxHi, {
 //https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
 var ctxExpandTime = document.getElementById('timeExpand').getContext("2d");
 
-const CNV_W = ctxExpandTime.canvas.clientWidth;
-const CNV_H = ctxExpandTime.canvas.clientHeight;
+// CONSTANTS FOR DRAWING LINES BETWEEN GRAPHS
+const ZERO = 20;  // about where the zero axis ends up on the canvas
+const ONE_MS = 48;
+const CNV_W = ctxExpandTime.canvas.scrollWidth; //ctxExpandTime.canvas.clientWidth;
+const CNV_H = ctxExpandTime.canvas.scrollHeight; //ctxExpandTime.canvas.clientHeight;
+// I have no idea why I need this crazy fudge factor on  width of canvas, but it works
+// I think javascript and css treat sizes differently
+const END = CNV_W /2.69;
 const ARW = 5; 
 console.log("between graph canvas is sized " + "(" + CNV_W + " , " + CNV_H + ")");
-ctxExpandTime.lineWidth = 2;
+ctxExpandTime.lineWidth = 1;
 
 // draw a line from 0 ms to 0 ms
 ctxExpandTime.beginPath();
-const ZERO = 55;  // about where the zero axis ends up on the canvas
 ctxExpandTime.moveTo(ZERO, 0);
 ctxExpandTime.lineTo(ZERO, CNV_H);
 // left arrow
@@ -212,22 +217,20 @@ ctxExpandTime.lineTo(ZERO, CNV_H);
 
 
 // draw line from 1 ms to 1 ms
-const ONE_MS = 125;
-const END = CNV_W - 10;
 ctxExpandTime.moveTo(ONE_MS, 0);
 ctxExpandTime.lineTo(END, CNV_H - ARW);
 // bottom arrow
 ctxExpandTime.moveTo(END - ARW, CNV_H);
 ctxExpandTime.lineTo(END, CNV_H - ARW)
 //top arrow
-ctxExpandTime.moveTo(END - ARW, CNV_H - 2*ARW)
+ctxExpandTime.moveTo(END - ARW, CNV_H - 3*ARW)
 ctxExpandTime.lineTo(END, CNV_H - ARW)
 ctxExpandTime.stroke();
 ctxExpandTime.closePath();
 
 ctxExpandTime.font = "20px Arial";
-ctxExpandTime.fillText("1ms", 80, CNV_H/2);
-ctxExpandTime.fillText("expanded", 80, CNV_H/2 + 20);
+ctxExpandTime.fillText("1ms", 40, CNV_H/2.5);
+ctxExpandTime.fillText("expanded", 40, CNV_H/2.5 + 20);
 //--------------------------------------------------------------------------------------------------------------------
 
 
