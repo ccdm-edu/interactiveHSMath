@@ -23,6 +23,18 @@ function changePhase()
 {
 	currPhase = document.getElementById("in-range-phase")
 	document.getElementById("currPhase").textContent = currPhase.value;
+	// LATER:  look to improve the pop up from alert to something better looking
+	switch (parseInt(currPhase.value)) {
+		case 180:
+			alert('Hey Look!  phase = 180 is a negative sine wave! \nsin(a+180) = sin(a)cos(180) + cos(a)sin(180)\n                  = sin(a) * -1       + cos(a) * 0 \n                  = -sin(a)');
+			break;
+		case 270:
+			alert('Hey Look!  phase = 270 is a negative cosine wave! \nsin(a+270) = sin(a)cos(270) + cos(a)sin(270)\n                  = sin(a) * 0       + cos(a) * -1 \n                  = -cos(a)');
+			break;
+		case 360:
+			alert('Hey Look!  phase = 360 = 0 is a sine wave! \nWhy?  Because 360 degrees = 2 pi takes you back to the beginning at zero');
+			break;
+	}
 	if (ToneIsOnNow==true) {
 		osc.phase = currPhase.value;
 		// if tone isn't on, don't have to change anything...
