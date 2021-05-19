@@ -99,5 +99,9 @@ div#tooltip:hover .tooltiptext {
 	position: absolute;
 }
 
+/* turn off the submit button until user answers math question, to prevent race condition with form */
+#turnIn3{
+	display: none
+}
 
 

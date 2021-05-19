@@ -2,6 +2,11 @@ var mathQ_Pass = false;
 var button_Pass = true; // if user does nothing, they pass
 var G_RECAP_SITE_KEY = 'bogus_site_key'
 
+var mathChallengeAnswer = document.getElementById("turnIn3");
+var mathChallengeLocal = document.getElementById("test1_math_local");
+var mathChallengeRemote = document.getElementById("test1_math_remote");
+var honPotChallenge = document.getElementById("test2_HP");
+
 function chkButtonClk()
 {
 	button_Pass = false;  // on click, user fails and is not a human
@@ -28,6 +33,8 @@ function chkMathQuest(serverLoc)
 		mathQ_Pass = false;
 		console.log("user did NOT pass math test, user answer=" + user_answer)
 	}
+	// NOW, unhide the submit function key...
+	mathChallengeAnswer.style.display = "block";
 }
 grecaptcha.ready(function() {
 	$('#chkUserRobot').submit(function(e) {
@@ -52,18 +59,23 @@ document.getElementById("test2Label").style.visibility = "hidden";
 // set up observers who react to user change
 // There has got to be a better way to distinguish local and remote server recaptcha.....  Need to read django debug 
 // variable in javascript. Not sure how to do this yet...
-var mathChallengeAnswer = document.getElementById("turnIn3");
-var mathChallengeLocal = document.getElementById("test1_math_local");
+// We can't use submit button for updating variables for form because it is also used to turn in form and could
+// create race condition.
 if (mathChallengeLocal != null)
 {
-	// we want it to fire when submit is hit
-	mathChallengeAnswer.addEventListener('click', function(){chkMathQuest("local")}, false);
+	// we want it to fire when user hits CR on entry
+	mathChallengeLocal.addEventListener('keypress', function(e) {if (e.key === 'Enter') {
+																	chkMathQuest("local");
+																	}
+																}, false);
+																	
 }
-var mathChallengeRemote = document.getElementById("test1_math_remote");
 if (mathChallengeRemote != null)
 {
 	// we want it to fire when submit is hit
-	mathChallengeAnswer.addEventListener('click', function(){chkMathQuest("remote")}, false);
+	mathChallengeRemote.addEventListener('keypress', function(e) {if (e.key === 'Enter') {
+																	chkMathQuest("local");
+																	}
+																}, false);
 }
-var honPotChallenge = document.getElementById("test2_HP");
 honPotChallenge.addEventListener('change', chkButtonClk, false);
