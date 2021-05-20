@@ -63,19 +63,12 @@ document.getElementById("test2Label").style.visibility = "hidden";
 // create race condition.
 if (mathChallengeLocal != null)
 {
-	// we want it to fire when user hits CR on entry
-	mathChallengeLocal.addEventListener('keypress', function(e) {if (e.key === 13) {
-																	chkMathQuest("local");
-																	}
-																}, false);
-																	
+	// we want it to fire when user hits CR on entry, keypress is obsolete, change responds to entry of value
+	mathChallengeLocal.addEventListener('change', function(){chkMathQuest("local")}, false);															
 }
 if (mathChallengeRemote != null)
 {
-	// we want it to fire when user hits enter key
-	mathChallengeRemote.addEventListener('keypress', function(e) {if (e.keycode === 13) {
-																	chkMathQuest("remote");
-																	}
-																}, false);
+	// we want it to fire when user hits enter key, keypress is obsolete, change responds to entry of value
+	mathChallengeRemote.addEventListener('change', function(){chkMathQuest("remote")}, false);
 }
 honPotChallenge.addEventListener('change', chkButtonClk, false);
