@@ -52,7 +52,7 @@ grecaptcha.ready(function() {
 	 });
 });
 
-// make the honeypot invisible if running JS, looking to distinguish bots and humans
+// make the honeypot invisible if running JS, looking to distinguish bots and humans, dont want this in CSS
 document.getElementById("test2_HP").style.visibility = "hidden";
 document.getElementById("test2Label").style.visibility = "hidden";
 

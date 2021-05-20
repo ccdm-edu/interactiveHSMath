@@ -1,3 +1,82 @@
+var currFreq = document.getElementById("in-range-freq");
+var currAmp = document.getElementById("in-range-amp");
+var currPhase = document.getElementById("in-range-phase")
+
+var ToneIsOnNow = false;
+var osc = new Tone.Oscillator(); 
+
+// yeah, shouldn't just update global variables but need to tackle issue of namespaces
+var timeMsLo = [];
+var ampLo = [];
+var timeMsHi = [];
+var ampHi = [];
+
+var ctxLo = document.getElementById('sine_plotsLo').getContext("2d");
+var ctxHi = document.getElementById('sine_plotsHi').getContext("2d");
+
+//if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
+const CHART_OPTIONS = {
+	maintainAspectRatio: false,  //uses the size it is given
+	responsive: true,
+    legend: {
+        display: false // gets rid of dataset label/legend
+     },
+	elements:{
+		point:{
+			radius: 1     // to get rid of individual points
+		}
+	},
+	scales: {
+
+		xAxes: [{
+			scaleLabel: {
+				display: true,
+				labelString: 't (milliseconds)'
+			},
+
+		}],
+		yAxes: [{
+			scaleLabel: {
+				display: true,
+				labelString: 'y amplitude'
+			}
+		}]
+	}
+};
+
+var currTitle = {display: true, text: 'y = ' + currAmp.value + ' * sin{ 2 * pi * (' + currFreq.value + ' * t + ' + currPhase.value + '/360) }'};
+
+const TOP_CHART = {...CHART_OPTIONS, title: currTitle };
+var sine_plot_100_1k = new Chart(ctxLo, {
+    type: 'line',
+    data: {
+    	labels: timeMsLo,
+        datasets: [{
+            label: 'Tone Graph',
+            data: ampLo,
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            }]
+    },
+    options: TOP_CHART
+ }
+);
+// if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
+var sine_plot_1k_10k = new Chart(ctxHi, {
+    type: 'line',
+    data: {
+    	labels: timeMsHi,
+        datasets: [{
+            label: 'Tone Graph',
+            data: ampHi,
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            }]
+    },
+    options: CHART_OPTIONS
+ }
+);
+
 // NOTE, this function uses WebAudio in library Tone.js.  At this time, it does not work in IE Edge
 function changeFreq()
 {
@@ -80,8 +159,12 @@ function drawTone()
     });
     sine_plot_100_1k.data.datasets.forEach((dataset) => {
         dataset.data.push(ampLo);
-    });	                
-    //sine_plot.options.scales.xAxes[0].ticks.minRotation = 45;
+    });	   
+    // update title to match new parameters
+    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
+    var currTitleText = 'y = ' + currAmp.value + ' * sin{ 2 * \u03C0 * (' + currFreq.value + ' * t + ' + currPhase.value + '/360) }';
+    sine_plot_100_1k.options.title.text = currTitleText;
+    // make all these changes happen
     sine_plot_100_1k.update();
     
     // update tone, remove old (although for now, just one data set), add new
@@ -91,7 +174,6 @@ function drawTone()
     sine_plot_1k_10k.data.datasets.forEach((dataset) => {
         dataset.data.push(ampHi);
     });	                
-    //sine_plot.options.scales.xAxes[0].ticks.minRotation = 45;
     sine_plot_1k_10k.update();
     
 };
@@ -121,83 +203,6 @@ function fillInArrays(){
 	}	
 };
 
-
-var currFreq = document.getElementById("in-range-freq");
-var currAmp = document.getElementById("in-range-amp");
-var currPhase = document.getElementById("in-range-phase")
-
-var ToneIsOnNow = false;
-var osc = new Tone.Oscillator(); 
-
-// yeah, shouldn't just update global variables but need to tackle issue of namespaces
-var timeMsLo = [];
-var ampLo = [];
-var timeMsHi = [];
-var ampHi = [];
-
-var ctxLo = document.getElementById('sine_plotsLo').getContext("2d");
-var ctxHi = document.getElementById('sine_plotsHi').getContext("2d");
-
-//if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
-const CHART_OPTIONS = {
-	maintainAspectRatio: false,  //uses the size it is given
-	responsive: true,
-    legend: {
-        display: false // gets rid of dataset label/legend
-     },
-	elements:{
-		point:{
-			radius: 1     // to get rid of individual points
-		}
-	},
-	scales: {
-
-		xAxes: [{
-			scaleLabel: {
-				display: true,
-				labelString: 'milliseconds'
-			},
-
-		}],
-		yAxes: [{
-			scaleLabel: {
-				display: true,
-				labelString: 'amplitude'
-			}
-		}]
-	}
-};
-const NEW_TITLE = {display: true, text: 'Sine Wave Amplitude as function of time (in millisec)'};
-const TOP_CHART = {...CHART_OPTIONS, title: NEW_TITLE };
-var sine_plot_100_1k = new Chart(ctxLo, {
-    type: 'line',
-    data: {
-    	labels: timeMsLo,
-        datasets: [{
-            label: 'Tone Graph',
-            data: ampLo,
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            }]
-    },
-    options: TOP_CHART
- }
-);
-// if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
-var sine_plot_1k_10k = new Chart(ctxHi, {
-    type: 'line',
-    data: {
-    	labels: timeMsHi,
-        datasets: [{
-            label: 'Tone Graph',
-            data: ampHi,
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            }]
-    },
-    options: CHART_OPTIONS
- }
-);
 
 
 // draw line between the charts----------------------------------------------------------------------------------
