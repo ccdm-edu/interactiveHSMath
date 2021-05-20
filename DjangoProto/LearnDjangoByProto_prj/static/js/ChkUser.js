@@ -64,7 +64,7 @@ document.getElementById("test2Label").style.visibility = "hidden";
 if (mathChallengeLocal != null)
 {
 	// we want it to fire when user hits CR on entry
-	mathChallengeLocal.addEventListener('keypress', function(e) {if (e.key === 'Enter') {
+	mathChallengeLocal.addEventListener('keypress', function(e) {if (e.key === 13) {
 																	chkMathQuest("local");
 																	}
 																}, false);
@@ -72,9 +72,9 @@ if (mathChallengeLocal != null)
 }
 if (mathChallengeRemote != null)
 {
-	// we want it to fire when submit is hit
-	mathChallengeRemote.addEventListener('keypress', function(e) {if (e.key === 'Enter') {
-																	chkMathQuest("local");
+	// we want it to fire when user hits enter key
+	mathChallengeRemote.addEventListener('keypress', function(e) {if (e.keycode === 13) {
+																	chkMathQuest("remote");
 																	}
 																}, false);
 }
