@@ -1,4 +1,11 @@
 $(document).ready(function() {
+
+	// tooltips using Bootstrap, enable them all but only hovering triggers them, not clicking
+	// https://getbootstrap.com/docs/4.0/components/tooltips/
+	$('[data-toggle="tooltip"]').tooltip({
+    	trigger : 'hover'
+	});
+	
 	//put your code in the document ready to ensure it doesn't execute till page
 	// is fully loaded
 	$('#about-btn').click(function() {

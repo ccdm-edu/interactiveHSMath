@@ -1,3 +1,4 @@
+'use strict'
 var mathQ_Pass = false;
 var button_Pass = true; // if user does nothing, they pass
 var G_RECAP_SITE_KEY = 'bogus_site_key'

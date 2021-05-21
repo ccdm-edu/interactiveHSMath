@@ -23,13 +23,14 @@
     
     <hr class="solid">
        
-    <div id="msg"> Hello!, Below we will try slider inputs for my future math app.  This tone generator uses Web Audio which is
+    <div id="msg1"> Hello!, Below we will try slider inputs for my future math app.  This tone generator uses Web Audio which is
     				not supported in latest version of Internet Explorer, should work fine in Chrome, Edge, Safari, Firefox, etc <br>
+    </div>				
     <table width="100%">
 		<tbody>
 			<tr>
 				<td align="center">
-					<div id="toneChanges" style="display: inline-block; overflow-x: auto; border: 1px solid black;">
+					<div id="toneChanges">
 						<table border="0">
 							<tbody>
 								<tr>
@@ -44,23 +45,22 @@
 									</td>
 									<td align="left">
 										Phase: <span id="currPhase">000</span> degrees
+									</td>						
+								</tr>
+								<tr>
+									<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz, use bootstrap for tooltips  -->
+									<td>
+										<input id="in-range-freq" type="range" step="1" value="2000" min="100" max="10000" data-toggle="tooltip" title="click on slider and use up/down arrows for greater precision">
+									</td>
+									<td>
+										<input id="in-range-amp" type="range" step="1" value="10" min="1" max="100" data-toggle="tooltip" title="click on slider and use up/down arrows for greater precision">
+									</td>
+									<td>
+										<input id="in-range-phase" type="range" step="1" value="0" min="0" max="360" data-toggle="tooltip" title="click on slider and use up/down arrows for greater precision">
 									</td>
 								</tr>
 								<tr>
-									<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz  -->
-									<td>
-										<input id="in-range-freq" type="range" step="1" value="2000" min="100" max="10000">
-									</td>
-									<td>
-										<input id="in-range-amp" type="range" step="1" value="10" min="1" max="100">
-									</td>
-									<td>
-										<input id="in-range-phase" type="range" step="1" value="0" min="0" max="360">
-									</td>
-									
-								</tr>
-								<tr>
-									<input type="button" id="start-stop-button" value="Start Tone">
+									<input type="button" id="start-stop-button" value="Start Tone" data-toggle="tooltip" title="turn on speaker to hear sine wave you created">
 								</tr>
 							</tbody>
 						</table>
@@ -69,7 +69,7 @@
 			</tr>
 		</tbody>
 	</table>
- 	</div>
+
  	<div id="overlapExpansionLines">
  		<!--  want to overlap the top graph with expansion lines below it -->
  		<!--  canvas used for chart js need the size defined one level up at div -->

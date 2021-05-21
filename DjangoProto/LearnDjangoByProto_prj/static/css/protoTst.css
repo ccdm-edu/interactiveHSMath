@@ -58,12 +58,13 @@ div#tooltip .tooltiptext {
 
   /* Position the tooltip */
   position: absolute;
-  z-index: 1;
+  z-index: 1
 }
 
 div#tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
 
 /* arrange the expansion lines between the two graphs for max understandability */
 #overlapExpansionLines{
@@ -103,6 +104,12 @@ div#tooltip:hover .tooltiptext {
 #turnIn3{
 	display: none
 }
+
+#toneChanges{
+	display: inline-block; 
+	border: 1px solid black;"
+}
+
 
 
 
