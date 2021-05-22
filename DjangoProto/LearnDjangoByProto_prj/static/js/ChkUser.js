@@ -4,25 +4,23 @@ var button_Pass = true; // if user does nothing, they pass
 var G_RECAP_SITE_KEY = 'bogus_site_key'
 
 var mathChallengeAnswer = document.getElementById("turnIn3");
-var mathChallengeLocal = document.getElementById("test1_math_local");
-var mathChallengeRemote = document.getElementById("test1_math_remote");
 var honPotChallenge = document.getElementById("test2_HP");
+var mathChallengeInput = document.getElementById("test1_math");
+var isItLocal = document.getElementById("sendServerLoc").innerHTML.toLowerCase();
 
 function chkButtonClk()
 {
 	button_Pass = false;  // on click, user fails and is not a human
 	console.log("bot is detected");
 }
-function chkMathQuest(serverLoc)
+function chkMathQuest()
 {
-	var user_answer;
-	if (serverLoc.toLowerCase() == "local") {
+	var user_answer = document.getElementById("test1_math").value;
+	if (isItLocal == "true") {
 		G_RECAP_SITE_KEY = '6LcXoQ8aAAAAAFWEjH47SCbbrcT2ooody-kWuU_L';
-		user_answer = document.getElementById("test1_math_local").value;
 		console.log("user using local server")
-	} else if (serverLoc.toLowerCase() == "remote") {
+	} else {
 		G_RECAP_SITE_KEY = '6LcyrzAaAAAAALM8nrmbURsAU9-KpQkGvFmDFz13';
-		user_answer = document.getElementById("test1_math_remote").value;
 		console.log("user using remote server")
 	}
 	// pull out all spaces
@@ -62,14 +60,8 @@ document.getElementById("test2Label").style.visibility = "hidden";
 // variable in javascript. Not sure how to do this yet...
 // We can't use submit button for updating variables for form because it is also used to turn in form and could
 // create race condition.
-if (mathChallengeLocal != null)
-{
-	// we want it to fire when user hits CR on entry, keypress is obsolete, change responds to entry of value
-	mathChallengeLocal.addEventListener('change', function(){chkMathQuest("local")}, false);															
-}
-if (mathChallengeRemote != null)
-{
-	// we want it to fire when user hits enter key, keypress is obsolete, change responds to entry of value
-	mathChallengeRemote.addEventListener('change', function(){chkMathQuest("remote")}, false);
-}
+// we want it to fire when user hits CR on entry, keypress is obsolete, change responds to entry of value
+
+mathChallengeInput.addEventListener('change', chkMathQuest, false);															
+
 honPotChallenge.addEventListener('change', chkButtonClk, false);
