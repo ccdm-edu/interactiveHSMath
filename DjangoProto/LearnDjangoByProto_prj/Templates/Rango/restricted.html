@@ -38,29 +38,29 @@
 								</tr>	
 								<tr>		
 									<td align="left">
-										Frequency: <span id="currFreq">000</span> Hz
+										Frequency: <span id="currFreqLabel">000</span> Hz
 									</td>
 									<td align="left">
-										Amplitude: <span id="currAmp">000</span>
+										Amplitude: <span id="currAmpLabel">000</span>
 									</td>
 									<td align="left">
-										Phase: <span id="currPhase">000</span> degrees
+										Phase: <span id="currPhaseLabel">000</span> degrees
 									</td>						
 								</tr>
 								<tr>
 									<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz, use bootstrap for tooltips  -->
 									<td>
-										<input id="in-range-freq" type="range" step="1" value="2000" min="100" max="10000" data-toggle="tooltip" title="click on slider and use up/down arrows for greater precision">
+										<input id="in-range-freq" type="range" step="1" value="2000" min="100" max="10000" data-placement="left" data-toggle="tooltip" title="click on slider and use up/down arrows for greater precision">
 									</td>
 									<td>
-										<input id="in-range-amp" type="range" step="1" value="10" min="1" max="100" data-toggle="tooltip" title="click on slider and use up/down arrows for greater precision">
+										<input id="in-range-amp" type="range" step="1" value="10" min="1" max="100" data-toggle="tooltip" data-placement="left" title="click on slider and use up/down arrows for greater precision">
 									</td>
 									<td>
-										<input id="in-range-phase" type="range" step="1" value="0" min="0" max="360" data-toggle="tooltip" title="click on slider and use up/down arrows for greater precision">
+										<input id="in-range-phase" type="range" step="1" value="0" min="0" max="360" data-toggle="tooltip" data-placement="left" title="click on slider and use up/down arrows for greater precision">
 									</td>
 								</tr>
 								<tr>
-									<input type="button" id="start-stop-button" value="Start Tone" data-toggle="tooltip" title="turn on speaker to hear sine wave you created">
+									<input type="button" id="start-stop-button" value="Start Tone" data-toggle="tooltip" data-placement="top" title="turn on speaker to hear sine wave you created">
 								</tr>
 							</tbody>
 						</table>
@@ -150,6 +150,13 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.73/Tone.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    
+    <!--  have to put another jquery library ref here, not sure why, its in the base -->	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script>
+		window.jQuery || document.write('<script src="{% static "js/jquery-360min.js" %}"><\/script>')
+	</script>
+    
     <script src="{% static "js/TrigAudio.js" %}" crossorigin="anonymous"></script>
 {% endblock %}
 
