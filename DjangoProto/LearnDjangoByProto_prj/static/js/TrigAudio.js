@@ -237,12 +237,12 @@ $(function() {
 	// CONSTANTS FOR DRAWING LINES BETWEEN GRAPHS
 	const ZERO = 20;  // about where the zero axis ends up on the canvas
 	const ONE_MS = 48;
-	const CNV_W = ctxExpandTime.canvas.scrollWidth; //ctxExpandTime.canvas.clientWidth;
-	const CNV_H = ctxExpandTime.canvas.scrollHeight; //ctxExpandTime.canvas.clientHeight;
+	const CNV_W = ctxExpandTime.canvas.scrollWidth; 
+	const CNV_H = ctxExpandTime.canvas.scrollHeight; 
 	// I have no idea why I need this crazy fudge factor on  width of canvas, but it works
 	// I think javascript and css treat sizes differently
 	const END = CNV_W /2.69;
-	const ARW = 5; 
+	const ARW = 5;   // what seems to be good for number of pixels for arrow
 	console.log("between graph canvas is sized " + "(" + CNV_W + " , " + CNV_H + ")");
 	ctxExpandTime.lineWidth = 1;
 	
