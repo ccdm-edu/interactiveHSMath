@@ -65,7 +65,38 @@ div#tooltip:hover .tooltiptext {
   visibility: visible;
 }
 
+/* turn off the submit button until user answers math question, to prevent race condition with form */
+#turnIn3{
+	display: none
+}
 
+/* want to send back django variable but not have it visible */
+#sendServerLoc{
+	display: none;
+}
+/*****************************************************************/
+/* This is the three side by side controls 1.  treble clef that picks instrument/note 2.  explanation of current activity 3.  tone param changes */
+#InstrumentToneMenu {
+          float:left;
+          width:50px;
+          height:100px;
+          background-color:white; 
+          padding: 0px;
+}
+/* item 2, explanation of current activity in read only box */ 
+#ExplnBox {
+          float:left;
+          background-color:white; 
+          margin-left:20px;	
+          margin-right:20px;	
+}
+/* item 3, tone controls */
+#toneChanges {
+		display: inline-block; 
+		border: 1px solid black;"
+		float: right;
+}
+/*****************************************************************/
 /* arrange the expansion lines between the two graphs for max understandability */
 #overlapExpansionLines{
     position:relative;
@@ -77,6 +108,7 @@ div#tooltip:hover .tooltiptext {
 	height: 250px;
 	width:800px;
 }
+
 /* we allow the time expand lines to write on this canvas */
 #sine_plotsLo{
     position:absolute; 
@@ -86,7 +118,7 @@ div#tooltip:hover .tooltiptext {
 }
 #timeExpand{
 	 position:absolute; 
-	 top:225px; 
+	 top:230px; 
 	 height: 110px;
 	 width: 800px;
 }
@@ -100,21 +132,4 @@ div#tooltip:hover .tooltiptext {
 	position: absolute;
 }
 
-/* turn off the submit button until user answers math question, to prevent race condition with form */
-#turnIn3{
-	display: none
-}
-
-#toneChanges{
-	display: inline-block; 
-	border: 1px solid black;"
-}
-
-/* want to send back django variable but not have it visible */
-#sendServerLoc{
-	display: none;
-}
-
-
-
-
+/*****************************************************************/

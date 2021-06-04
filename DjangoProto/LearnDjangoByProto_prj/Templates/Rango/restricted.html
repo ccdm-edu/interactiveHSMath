@@ -25,8 +25,26 @@
        
     <div id="msg1"> Hello!, Below we will try slider inputs for my future math app.  This tone generator uses Web Audio which is
     				not supported in latest version of Internet Explorer, should work fine in Chrome, Edge, Safari, Firefox, etc <br>
-    </div>				
-    <table width="100%">
+    </div>
+    
+    <div>	  
+   		<button class="btn btn-default dropdown-toggle" type="button" id="InstrumentToneMenu" data-toggle="dropdown">
+     		<img src="/static/images/MusicMenu.svg" alt = "Music drop down menu to select instruments playing notes" data-toggle="tooltip" title="click to get musical note dropdown menu" >
+       		<span class="caret"></span>
+   		</button>
+   		<ul class="dropdown-menu" role="menu" aria-labelledby="InstrumentToneMenu">
+			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">B<span>&#9837;</span> Trumpet plays C5</a></li>
+			<li role="presentation" class="divider"></li>
+			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">NextMenuItem</a></li>
+   		</ul>
+    </div>
+    
+    <div id="ExplnBox">
+    <textarea readonly id="classExpln" rows = '4' cols = "50">Help is here </textarea>
+    </div>
+	    
+	<!--  dont put tables inside a div, they stop "working", elements aren't functional anymore -->
+    <table>
 		<tbody>
 			<tr>
 				<td align="center">
@@ -34,7 +52,8 @@
 						<table border="0">
 							<tbody>
 								<tr>
-									<th colspan='3'>Sine Wave (tone) Parameters</th>
+									<th colspan='2'>Sine Wave (tone) Parameters</th>
+									<input type="button" id="start-stop-button" value="Start Tone" data-toggle="tooltip" data-placement="top" title="turn on speaker to hear sine wave you created">
 								</tr>	
 								<tr>		
 									<td align="left">
@@ -50,17 +69,14 @@
 								<tr>
 									<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz, use bootstrap for tooltips  -->
 									<td>
-										<input id="in-range-freq" type="range" step="1" value="2000" min="100" max="10000" data-placement="left" data-toggle="tooltip" title="click on slider and use up/down arrows for greater precision">
+										<input id="in-range-freq" type="range" step="1" value="2000" min="100" max="10000" data-placement="left" data-toggle="tooltip" title="click on slider and use arrows for greater precision">
 									</td>
 									<td>
-										<input id="in-range-amp" type="range" step="1" value="10" min="1" max="100" data-toggle="tooltip" data-placement="left" title="click on slider and use up/down arrows for greater precision">
+										<input id="in-range-amp" type="range" step="1" value="10" min="1" max="100" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
 									</td>
 									<td>
-										<input id="in-range-phase" type="range" step="1" value="0" min="0" max="360" data-toggle="tooltip" data-placement="left" title="click on slider and use up/down arrows for greater precision">
+										<input id="in-range-phase" type="range" step="1" value="0" min="0" max="360" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
 									</td>
-								</tr>
-								<tr>
-									<input type="button" id="start-stop-button" value="Start Tone" data-toggle="tooltip" data-placement="top" title="turn on speaker to hear sine wave you created">
 								</tr>
 							</tbody>
 						</table>
@@ -70,6 +86,8 @@
 		</tbody>
 	</table>
 
+
+	
  	<div id="overlapExpansionLines">
  		<!--  want to overlap the top graph with expansion lines below it -->
  		<!--  canvas used for chart js need the size defined one level up at div -->
