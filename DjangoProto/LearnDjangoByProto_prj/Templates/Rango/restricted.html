@@ -27,11 +27,13 @@
     				not supported in latest version of Internet Explorer, should work fine in Chrome, Edge, Safari, Firefox, etc <br>
     </div>
     
-    <div>	  
-   		<button class="btn btn-default dropdown-toggle" type="button" id="InstrumentToneMenu" data-toggle="dropdown">
+    <div id="InstrumentDropDownMenu">	 
+       	<!-- Bootstrap dropdown see W3schools https://www.w3schools.com/bootstrap/bootstrap_ref_js_dropdown.asp --> 
+   		<button class="btn btn-default dropdown-toggle" type="button"  id="InstrumentToneMenu" data-toggle="dropdown">
      		<img src="/static/images/MusicMenu.svg" alt = "Music drop down menu to select instruments playing notes" data-toggle="tooltip" title="click to get musical note dropdown menu" >
        		<span class="caret"></span>
    		</button>
+   		<!--  role and aria* helps those using screen readers -->
    		<ul class="dropdown-menu" role="menu" aria-labelledby="InstrumentToneMenu">
 			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">B<span>&#9837;</span> Trumpet plays C5</a></li>
 			<li role="presentation" class="divider"></li>

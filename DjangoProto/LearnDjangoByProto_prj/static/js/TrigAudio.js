@@ -10,10 +10,29 @@ $(function() {
 	var ToneIsOnNow = false;
 	var osc = new Tone.Oscillator(); 
 	
+	const STATE_EXPLN_BOX = {TONE_ONLY: 0,
+							BFLAT_TRUMPET_C5: 1 };
+	let currStateExplnBox = STATE_EXPLN_BOX.TONE_ONLY;
+	
 	var timeMsLo = [];
 	var ampLo = [];
 	var timeMsHi = [];
 	var ampHi = [];
+	
+	const TONE_ONLY_EXPLN =  "Sine and Cosine functions, when translated to voltage and sent to a speaker are just tones.  " +
+							 "Pure tones of one frequency only. As the amplitude changes it gets louder/softer.  You can't hear slow " +
+							 "phase changes. If you change phase very fast, it sounds like pops in the speaker.  " +
+							 "As you change frequency, you can move from low bass up to the midrange of human hearing at 10,000 Hz.  " +
+							 "Musical notes are made up of a fundamental frequency, which is one of the tones you create here plus " +
+							 "some harmonics and overtones that give the instrument its richness.  " +
+							 "This is why a trumpet playing X has a fundamental frequency Y and a violin playing Z has the same " +
+							 "fundamental frequency.  They sound similar but the difference is in the other smaller tones that get added " +
+							 "in to create the unique sound.";
+	const MUSICAL_NOTE_EXPLN = "The orange line is created by the trumpet (see Note 1 below for more details).  The waveform looks " +
+							 	"alot like a sine wave at the fundamental tone shown.  The overtones and harmonics give the signal " +
+							 	"its richness and helps distinguish a trumpet from a guitar from a flute etc." +
+								"(Note 1:  Signal read from a mpeg file of someone playing the note, it is digitized voltage" +
+								" sent to a speaker as a function of time)";
 	
 	function fillInArrays(){
 		const NUM_PTS_PLOT = 200;
@@ -148,6 +167,23 @@ $(function() {
 	
 	$("#toneChanges").on('input',drawTone);
 	
+	// Handle user selecting the musical note drop down menu
+	$('#InstrumentDropDownMenu .dropdown-menu li a').on('click', function(event){
+		//let selectItem = $(this).text();  //THIS WORKS sorta
+		let selectItem = $('#InstrumentDropDownMenu .dropdown-menu li a').index($(this));
+		console.log('made it to instrument selection ' + selectItem);
+		
+		switch(currStateExplnBox) {
+			case STATE_EXPLN_BOX.TONE_ONLY:
+				$("#classExpln").text(TONE_ONLY_EXPLN);
+				break;
+			case STATE_EXPLN_BOX.BFLAT_TRUMPET_C5:
+				$("#classExpln").text(MUSICAL_NOTE_EXPLN);
+				break;
+	}
+	
+	});
+	
 	//***********************************
 	//  Immediate execution here
 	//***********************************
@@ -234,6 +270,7 @@ $(function() {
 	    options: CHART_OPTIONS
 	});
 	
+	//--------------------------------------------------------------------------------------------------------------------
 	// CONSTANTS FOR DRAWING LINES BETWEEN GRAPHS
 	const ZERO = 20;  // about where the zero axis ends up on the canvas
 	const ONE_MS = 48;
@@ -243,7 +280,6 @@ $(function() {
 	// I think javascript and css treat sizes differently
 	const END = CNV_W /2.69;
 	const ARW = 5;   // what seems to be good for number of pixels for arrow
-	console.log("between graph canvas is sized " + "(" + CNV_W + " , " + CNV_H + ")");
 	ctxExpandTime.lineWidth = 1;
 	
 	// draw a line from 0 ms to 0 ms
@@ -283,5 +319,16 @@ $(function() {
 	$("#currFreqLabel").text($("#in-range-freq").val());
 	$("#currAmpLabel").text($("#in-range-amp").val());
 	$("#currPhaseLabel").text($("#in-range-phase").val());
-	
-});
+
+	//***********************************
+	//initialize default values for tone
+	//***********************************	
+	switch(currStateExplnBox) {
+		case STATE_EXPLN_BOX.TONE_ONLY:
+			$("#classExpln").text(TONE_ONLY_EXPLN);
+			break;
+		case STATE_EXPLN_BOX.BFLAT_TRUMPET_C5:
+			$("#classExpln").text(MUSICAL_NOTE_EXPLN);
+			break;
+	};
+})
