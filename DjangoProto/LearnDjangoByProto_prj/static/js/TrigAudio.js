@@ -10,9 +10,9 @@ $(function() {
 	var ToneIsOnNow = false;
 	var osc = new Tone.Oscillator(); 
 	
-	const STATE_EXPLN_BOX = {TONE_ONLY: 0,
-							BFLAT_TRUMPET_C5: 1 };
-	let currStateExplnBox = STATE_EXPLN_BOX.TONE_ONLY;
+	const STATE_EXPLN_BOX = ['TONE_ONLY',
+							'BFLAT_TRUMPET_C5'];
+	let currStateExplnBox = STATE_EXPLN_BOX[0];
 	
 	var timeMsLo = [];
 	var ampLo = [];
@@ -172,14 +172,17 @@ $(function() {
 		//let selectItem = $(this).text();  //THIS WORKS sorta
 		let selectItem = $('#InstrumentDropDownMenu .dropdown-menu li a').index($(this));
 		console.log('made it to instrument selection ' + selectItem);
-		
+		currStateExplnBox = STATE_EXPLN_BOX[selectItem];
+		console.log('new curr state exp is ' + currStateExplnBox);
 		switch(currStateExplnBox) {
-			case STATE_EXPLN_BOX.TONE_ONLY:
+			case 'TONE_ONLY':
 				$("#classExpln").text(TONE_ONLY_EXPLN);
 				break;
-			case STATE_EXPLN_BOX.BFLAT_TRUMPET_C5:
+			case 'BFLAT_TRUMPET_C5':
 				$("#classExpln").text(MUSICAL_NOTE_EXPLN);
 				break;
+			default:
+				console.log('Unexpected state for musical tone is ' + currStateExplnBox + ' select item = ' + selectItem);
 	}
 	
 	});
@@ -324,10 +327,10 @@ $(function() {
 	//initialize default values for tone
 	//***********************************	
 	switch(currStateExplnBox) {
-		case STATE_EXPLN_BOX.TONE_ONLY:
-			$("#classExpln").text(TONE_ONLY_EXPLN);
+		case 'TONE_ONLY':
+			$("#classExpln").text(TONE_ONLY_EXPLN);		
 			break;
-		case STATE_EXPLN_BOX.BFLAT_TRUMPET_C5:
+		case 'BFLAT_TRUMPET_C5':
 			$("#classExpln").text(MUSICAL_NOTE_EXPLN);
 			break;
 	};
