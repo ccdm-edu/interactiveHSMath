@@ -22,20 +22,9 @@ $(function() {
 	var timeMsHi = [];
 	var ampHi = [];
 	
-	const TONE_ONLY_EXPLN =  "Sine and Cosine functions, when translated to voltage and sent to a speaker are just tones.  " +
-							 "Pure tones of one frequency only. As the amplitude changes it gets louder/softer.  You can't hear slow " +
-							 "phase changes. If you change phase very fast, it sounds like pops in the speaker.  " +
-							 "As you change frequency, you can move from low bass up to the midrange of human hearing at 10,000 Hz.  " +
-							 "Musical notes are made up of a fundamental frequency, which is one of the tones you create here plus " +
-							 "some harmonics and overtones that give the instrument its richness.  " +
-							 "This is why a trumpet playing X has a fundamental frequency Y and a violin playing Z has the same " +
-							 "fundamental frequency.  They sound similar but the difference is in the other smaller tones that get added " +
-							 "in to create the unique sound.";
-	const MUSICAL_NOTE_EXPLN = "The orange line is created by the trumpet (see Note 1 below for more details).  The waveform looks " +
-							 	"alot like a sine wave at the fundamental tone shown.  The overtones and harmonics give the signal " +
-							 	"its richness and helps distinguish a trumpet from a guitar from a flute etc." +
-								"(Note 1:  Signal read from a mp3 file of someone playing the note, it is digitized voltage" +
-								" sent to a speaker and plotted as a function of time)";
+	// these values will get replaced with init json file
+	let TONE_ONLY_EXPLN =  "tone only";	
+	let MUSICAL_NOTE_EXPLN = "trumpet";
 	
 	function fillInArrays(){
 		const NUM_PTS_PLOT = 200;
@@ -326,37 +315,36 @@ $(function() {
 	$("#currAmpLabel").text($("#in-range-amp").val());
 	$("#currPhaseLabel").text($("#in-range-phase").val());
 
+	console.log("will start request for json file");
 	//***********************************
 	//initialize data fields for tone and musical notes
 	//***********************************	
-	let initValReq = new XMLHttpRequest();
-	//return value action
-	initValReq.onload = function() {
-		if (this.status === 200) {
-			console.log("we got a response back");
-		}
-		else {
-			console.log("config json file request returned with status other than OK");
-		}
-	}
-	initValReq.onerror = function() {
-		console.log('bad connection');
-	}
-	//finish sending the request
-	initValReq.open('GET', urlInitValJson, true);
-	initValReq.responseType = 'text';
-	initValReq.send();
+	$.getJSON(urlInitValJson)
+		.done(function(data,status,xhr) {
+			console.log("started request for json file");
+			//xhr has good stuff like status, responseJSON, statusText, progress
+			if (status === 'success') {
+				TONE_ONLY_EXPLN = data.TestNote[0].expln;
+				MUSICAL_NOTE_EXPLN = data.TestNote[1].expln;
+				
+				//initialize default values for tone	
+				switch(currStateExplnBox) {
+					case 'TONE_ONLY':
+						$("#classExpln").text(TONE_ONLY_EXPLN);		
+						break;
+					case 'BFLAT_TRUMPET_C5':
+						$("#classExpln").text(MUSICAL_NOTE_EXPLN);
+						break;
+				};
+			}
+			else {
+				console.log("config json file request returned with status = " + status);
+			}
+		})
+		.fail(function(error) {
+			console.log("Error in JSON file ");
+		})
+
 	
 
-	//***********************************
-	//initialize default values for tone
-	//***********************************	
-	switch(currStateExplnBox) {
-		case 'TONE_ONLY':
-			$("#classExpln").text(TONE_ONLY_EXPLN);		
-			break;
-		case 'BFLAT_TRUMPET_C5':
-			$("#classExpln").text(MUSICAL_NOTE_EXPLN);
-			break;
-	};
 })
