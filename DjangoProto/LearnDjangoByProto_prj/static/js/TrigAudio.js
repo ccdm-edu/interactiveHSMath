@@ -14,6 +14,9 @@ $(function() {
 							'BFLAT_TRUMPET_C5'];
 	let currStateExplnBox = STATE_EXPLN_BOX[0];
 	
+	//everything is relative to the html page this code operates on, server needs to work from /static directory (without django intervention)
+	const urlInitValJson = "../../static/json/MusicNotes.json";
+	
 	var timeMsLo = [];
 	var ampLo = [];
 	var timeMsHi = [];
@@ -31,8 +34,8 @@ $(function() {
 	const MUSICAL_NOTE_EXPLN = "The orange line is created by the trumpet (see Note 1 below for more details).  The waveform looks " +
 							 	"alot like a sine wave at the fundamental tone shown.  The overtones and harmonics give the signal " +
 							 	"its richness and helps distinguish a trumpet from a guitar from a flute etc." +
-								"(Note 1:  Signal read from a mpeg file of someone playing the note, it is digitized voltage" +
-								" sent to a speaker as a function of time)";
+								"(Note 1:  Signal read from a mp3 file of someone playing the note, it is digitized voltage" +
+								" sent to a speaker and plotted as a function of time)";
 	
 	function fillInArrays(){
 		const NUM_PTS_PLOT = 200;
@@ -322,6 +325,28 @@ $(function() {
 	$("#currFreqLabel").text($("#in-range-freq").val());
 	$("#currAmpLabel").text($("#in-range-amp").val());
 	$("#currPhaseLabel").text($("#in-range-phase").val());
+
+	//***********************************
+	//initialize data fields for tone and musical notes
+	//***********************************	
+	let initValReq = new XMLHttpRequest();
+	//return value action
+	initValReq.onload = function() {
+		if (this.status === 200) {
+			console.log("we got a response back");
+		}
+		else {
+			console.log("config json file request returned with status other than OK");
+		}
+	}
+	initValReq.onerror = function() {
+		console.log('bad connection');
+	}
+	//finish sending the request
+	initValReq.open('GET', urlInitValJson, true);
+	initValReq.responseType = 'text';
+	initValReq.send();
+	
 
 	//***********************************
 	//initialize default values for tone

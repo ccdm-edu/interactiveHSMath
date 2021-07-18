@@ -1,0 +1,7 @@
+{
+	"TestNote": [
+		{"instrument": "Bflat trumpet", "musical note": "C5", "fundamentalHz": "523.25", "fileLoc": "BDM_trumpet_C5.MP3",
+		"expln": "The orange line is created by the trumpet (see Note 1 below for more details).  The waveform looks alot like a sine wave at the fundamental tone shown.  The overtones and harmonics give the signal its richness and helps distinguish a trumpet from a guitar from a flute etc.  (Note 1:  Signal read from a mp3 file of someone playing the note, it is digitized voltage sent to a speaker and plotted as a function of time)"
+		}
+	]
+}
