@@ -3,28 +3,29 @@
 $(function() {
 
 	// implement the Tone sounding and chart tools
-	var $currFreq = $("#in-range-freq");
-	var $currAmp = $("#in-range-amp");
-	var $currPhase = $("#in-range-phase")
+	let $currFreq = $("#in-range-freq");
+	let $currAmp = $("#in-range-amp");
+	let $currPhase = $("#in-range-phase")
 	
-	var ToneIsOnNow = false;
-	var osc = new Tone.Oscillator(); 
+	let ToneIsOnNow = false;
+	let osc = new Tone.Oscillator(); 
 	
-	const STATE_EXPLN_BOX = ['TONE_ONLY',
-							'BFLAT_TRUMPET_C5'];
-	let currStateExplnBox = STATE_EXPLN_BOX[0];
+	//initialize variables needed to play the non synthesized tone musical notes
+	let tuneState = [];
+	let currTuneState = 0;  // pick the first element, which will be the synthesized tones
+	let tuneExpln = [];
+	let tuneFilename = [];
 	
 	//everything is relative to the html page this code operates on, server needs to work from /static directory (without django intervention)
-	const urlInitValJson = "../../static/json/MusicNotes.json";
+	const STATIC_FILE_LOC = "../../static/json/";
+	const urlInitValJson = STATIC_FILE_LOC + "MusicNotes.json";
+	const MUSIC_FILE_LOC = "../../static/MusicNotes/";
 	
-	var timeMsLo = [];
-	var ampLo = [];
-	var timeMsHi = [];
-	var ampHi = [];
 	
-	// these values will get replaced with init json file
-	let TONE_ONLY_EXPLN =  "tone only";	
-	let MUSICAL_NOTE_EXPLN = "trumpet";
+	let timeMsLo = [];
+	let ampLo = [];
+	let timeMsHi = [];
+	let ampHi = [];
 	
 	function fillInArrays(){
 		const NUM_PTS_PLOT = 200;
@@ -32,8 +33,8 @@ $(function() {
 		const DURATION_LO_PLOT_MS = 10;
 		const DURATION_HI_PLOT_MS = 1;
 		//sample period in sec
-		var samplePeriodLo = DURATION_LO_PLOT_MS/(1000 * NUM_PTS_PLOT_LO);
-		var samplePeriodHi = DURATION_HI_PLOT_MS/(1000 * NUM_PTS_PLOT);
+		let samplePeriodLo = DURATION_LO_PLOT_MS/(1000 * NUM_PTS_PLOT_LO);
+		let samplePeriodHi = DURATION_HI_PLOT_MS/(1000 * NUM_PTS_PLOT);
 		var i;
 		for (i=0; i<=NUM_PTS_PLOT_LO; i++) {
 			ampLo[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodLo + $currPhase.val() / 360.0) );
@@ -161,29 +162,37 @@ $(function() {
 	
 	// Handle user selecting the musical note drop down menu
 	$('#InstrumentDropDownMenu .dropdown-menu li a').on('click', function(event){
-		//let selectItem = $(this).text();  //THIS WORKS sorta
 		let selectItem = $('#InstrumentDropDownMenu .dropdown-menu li a').index($(this));
-		console.log('made it to instrument selection ' + selectItem);
-		currStateExplnBox = STATE_EXPLN_BOX[selectItem];
-		console.log('new curr state exp is ' + currStateExplnBox);
-		switch(currStateExplnBox) {
-			case 'TONE_ONLY':
-				$("#classExpln").text(TONE_ONLY_EXPLN);
-				break;
-			case 'BFLAT_TRUMPET_C5':
-				$("#classExpln").text(MUSICAL_NOTE_EXPLN);
-				break;
-			default:
-				console.log('Unexpected state for musical tone is ' + currStateExplnBox + ' select item = ' + selectItem);
-	}
+		currTuneState = selectItem;
+		$("#classExpln").text(tuneExpln[currTuneState]);
+		
+		//NEED some check that the user is not a bot before we give a server file
+		let context;
+		let source;
+		let request;
+		context = new AudioContext();
+	    request = new XMLHttpRequest();
+	    request.open("GET",tuneFilename[currTuneState],true);
+	    request.responseType = "arraybuffer";
 	
-	});
+	    request.onload = function() {
+	      context.decodeAudioData(request.response, function(buffer) {
+	        source = context.createBufferSource();
+	        source.buffer = buffer;
+	        source.connect(context.destination);
+	        // auto play
+	        source.start(0); // start was previously noteOn
+	      });
+	    };
+      	request.send();
+    });
+
 	
 	//***********************************
 	//  Immediate execution here
 	//***********************************
 
-	var ctxLo, ctxHi, ctxExpandTime;
+	let ctxLo, ctxHi, ctxExpandTime;
     if ( $("#sine_plotsLo").length ) {
     	ctxLo = $("#sine_plotsLo").get(0).getContext('2d');
 	} else {
@@ -233,10 +242,10 @@ $(function() {
 		}
 	};
 	
-	var currTitle = {display: true, text: 'y = ' + $currAmp.val() + ' * sin{ 2 * pi * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }'};
+	let currTitle = {display: true, text: 'y = ' + $currAmp.val() + ' * sin{ 2 * pi * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }'};
 	
 	const TOP_CHART = {...CHART_OPTIONS, title: currTitle };
-	var sine_plot_100_1k = new Chart(ctxLo, {
+	let sine_plot_100_1k = new Chart(ctxLo, {
 	    type: 'line',
 	    data: {
 	    	labels: timeMsLo,
@@ -251,7 +260,7 @@ $(function() {
 	});
 	
 	// if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
-	var sine_plot_1k_10k = new Chart(ctxHi, {
+	let sine_plot_1k_10k = new Chart(ctxHi, {
 	    type: 'line',
 	    data: {
 	    	labels: timeMsHi,
@@ -315,34 +324,27 @@ $(function() {
 	$("#currAmpLabel").text($("#in-range-amp").val());
 	$("#currPhaseLabel").text($("#in-range-phase").val());
 
-	console.log("will start request for json file");
 	//***********************************
 	//initialize data fields for tone and musical notes
 	//***********************************	
 	$.getJSON(urlInitValJson)
 		.done(function(data,status,xhr) {
-			console.log("started request for json file");
 			//xhr has good stuff like status, responseJSON, statusText, progress
-			if (status === 'success') {
-				TONE_ONLY_EXPLN = data.TestNote[0].expln;
-				MUSICAL_NOTE_EXPLN = data.TestNote[1].expln;
-				
-				//initialize default values for tone	
-				switch(currStateExplnBox) {
-					case 'TONE_ONLY':
-						$("#classExpln").text(TONE_ONLY_EXPLN);		
-						break;
-					case 'BFLAT_TRUMPET_C5':
-						$("#classExpln").text(MUSICAL_NOTE_EXPLN);
-						break;
-				};
+			if (status === 'success') {				
+				$.each(data.TestNote, function(index, paramSet) {
+					tuneState[index] = (paramSet.instrument).replace(" ","_") + "_" + paramSet.musicalNote;
+					tuneExpln[index] = paramSet.expln;					
+					tuneFilename[index] = MUSIC_FILE_LOC + paramSet.filename;
+				});
+				$("#classExpln").text(tuneExpln[currTuneState]);
 			}
 			else {
 				console.log("config json file request returned with status = " + status);
 			}
 		})
-		.fail(function(error) {
-			console.log("Error in JSON file ");
+		.fail(function(data, status, error) {
+			console.log("Error in JSON file " + status + error);
+			alert("Error in JSON file " + status + error);
 		})
 
 	
