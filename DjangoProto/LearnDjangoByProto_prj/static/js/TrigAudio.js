@@ -15,6 +15,7 @@ $(function() {
 	let currTuneState = 0;  // pick the first element, which will be the synthesized tones
 	let tuneExpln = [];
 	let tuneFilename = [];
+	let tuneTitle = [];
 	
 	//everything is relative to the html page this code operates on, server needs to work from /static directory (without django intervention)
 	const STATIC_FILE_LOC = "../../static/json/";
@@ -165,8 +166,9 @@ $(function() {
 		let selectItem = $('#InstrumentDropDownMenu .dropdown-menu li a').index($(this));
 		currTuneState = selectItem;
 		$("#classExpln").text(tuneExpln[currTuneState]);
+		$("#musicalActivity").text(tuneTitle[currTuneState]);
 		
-		//NEED some check that the user is not a bot before we give a server file
+		//NEED some check that the user is not a bot before we give a server file, and that file is valid name with . in middle
 		let context;
 		let source;
 		let request;
@@ -335,8 +337,10 @@ $(function() {
 					tuneState[index] = (paramSet.instrument).replace(" ","_") + "_" + paramSet.musicalNote;
 					tuneExpln[index] = paramSet.expln;					
 					tuneFilename[index] = MUSIC_FILE_LOC + paramSet.filename;
+					tuneTitle[index] = paramSet.title;
 				});
 				$("#classExpln").text(tuneExpln[currTuneState]);
+				$("#musicalActivity").text(tuneTitle[currTuneState]);
 			}
 			else {
 				console.log("config json file request returned with status = " + status);
@@ -346,7 +350,5 @@ $(function() {
 			console.log("Error in JSON file " + status + error);
 			alert("Error in JSON file " + status + error);
 		})
-
-	
 
 })

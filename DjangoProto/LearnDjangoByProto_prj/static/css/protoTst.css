@@ -74,10 +74,31 @@ div#tooltip:hover .tooltiptext {
 #sendServerLoc{
 	display: none;
 }
+
+
+#headerAndCtl {
+	position: relative;
+}
+/* do NOT put a space between number and word "px" */
+#menuExplnTones {
+	position: relative;
+	top: 30px;
+	left: 0px;
+	height: 700px;
+}
+/*****************************************************************/
+/* This handles the header and "play music again" button that comes and goes as needed */
+#allowNotePlay {
+	float: left
+}
+#musicalActivity {
+	float: right;
+}
 /*****************************************************************/
 /* This is the three side by side controls 1.  treble clef that picks instrument/note 2.  explanation of current activity 3.  tone param changes */
 #InstrumentToneMenu {
-          float:left;
+		  position: absolute;
+		  left: 0px;
           width:50px;
           height:100px;
           background-color:white; 
@@ -85,13 +106,16 @@ div#tooltip:hover .tooltiptext {
 }
 /* item 2, explanation of current activity in read only box */ 
 #ExplnBox {
-          float:left;
+		  position: absolute;
+          left: 100px;
           background-color:white; 
           margin-left:20px;	
           margin-right:20px;	
 }
 /* item 3, tone controls */
 #toneChanges {
+	    position: absolute;
+	    left: 500px;
 		display: inline-block; 
 		border: 1px solid black;"
 		float: right;
@@ -100,6 +124,7 @@ div#tooltip:hover .tooltiptext {
 /* arrange the expansion lines between the two graphs for max understandability */
 #overlapExpansionLines{
     position:relative;
+    top: 100px;
     height: 250px;
     width: 800px;
 }
@@ -119,12 +144,13 @@ div#tooltip:hover .tooltiptext {
 #timeExpand{
 	 position:absolute; 
 	 top:230px; 
+	 left: 0px;
 	 height: 110px;
 	 width: 800px;
 }
 #sinePlotsHiWrapper{
 	position: relative;
-	top: 55px;
+	top: 155px;
 	height: 200px;
 	width: 800px;
 }
