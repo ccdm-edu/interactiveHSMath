@@ -11,8 +11,9 @@ $(function() {
 	let osc = new Tone.Oscillator(); 
 	
 	//initialize variables needed to play the non synthesized tone musical notes
+	const DEFAULT_TONE = 0;  // first item in drop down is always plain synthesized tone
 	let tuneState = [];
-	let currTuneState = 0;  // pick the first element, which will be the synthesized tones
+	let currTuneState = DEFAULT_TONE;  // pick the first element, which will be the synthesized tones
 	let tuneExpln = [];
 	let tuneFilename = [];
 	let tuneTitle = [];
@@ -167,41 +168,54 @@ $(function() {
 		currTuneState = selectItem;
 		$("#classExpln").text(tuneExpln[currTuneState]);
 		$("#musicalActivity").text(tuneTitle[currTuneState]);
-		
-		//NEED some check that the user is not a bot before we give a server file, and that file is valid name with . in middle
-		let context;
-		let source;
-		let request;
-		context = new AudioContext();
-	    request = new XMLHttpRequest();
-	    request.open("GET",tuneFilename[currTuneState],true);
-	    request.responseType = "arraybuffer";
-	
-	    request.onload = function() {
-	      context.decodeAudioData(request.response, function(buffer) {
-	        source = context.createBufferSource();
-	        source.buffer = buffer;
-	        source.connect(context.destination);
-	        // auto play
-	        source.start(0); // start was previously noteOn
-	      });
-	    };
-      	request.send();
-    });
+		if (currTuneState === DEFAULT_TONE) {
+			// no instruments to play, its tone only.  No need for a play tone button
+			$("#allowNotePlay").hide();
+		} else {
+			// then there is music to play, allow user to choose when to play
+			$("#allowNotePlay").show();
+		};
+    });		
 
+
+	// if user selects a musical note, and then clicks "play note" need to play it
+	$('#allowNotePlay').on('click', function(event){
+		//NEED some check that the user is not a bot before we give a server file, and that file is valid name with . in middle
+		// check that the filename has .mp3 in it, thats all we handle now.
+		if (tuneFilename[currTuneState].toLowerCase().indexOf('.mp3') >=0) {
+			let context;
+			let source;
+			let request;
+			context = new AudioContext();
+		    request = new XMLHttpRequest();
+		    request.open("GET",tuneFilename[currTuneState],true);
+		    request.responseType = "arraybuffer";
+		
+		    request.onload = function() {
+		      context.decodeAudioData(request.response, function(buffer) {
+		        source = context.createBufferSource();
+		        source.buffer = buffer;
+		        source.connect(context.destination);
+		        // auto play
+		        source.start(0); // start was previously noteOn
+		      });
+		    };
+	      	request.send();
+      	}
+    });	
 	
 	//***********************************
 	//  Immediate execution here
 	//***********************************
 
 	let ctxLo, ctxHi, ctxExpandTime;
-    if ( $("#sine_plotsLo").length ) {
-    	ctxLo = $("#sine_plotsLo").get(0).getContext('2d');
+    if ( $("#sine_plotsLong").length ) {
+    	ctxLo = $("#sine_plotsLong").get(0).getContext('2d');
 	} else {
     	console.log('Cannot obtain sin_plotsLo context');
 	};
-    if ( $("#sine_plotsHi").length ) {
-    	ctxHi = $("#sine_plotsHi").get(0).getContext('2d');
+    if ( $("#sine_plotsShort").length ) {
+    	ctxHi = $("#sine_plotsShort").get(0).getContext('2d');
 	} else {
     	console.log('Cannot obtain sin_plotsHi context');
 	};

@@ -89,11 +89,19 @@ div#tooltip:hover .tooltiptext {
 /*****************************************************************/
 /* This handles the header and "play music again" button that comes and goes as needed */
 #allowNotePlay {
-	float: left
+	position: absolute;
+	display: none;
+	left: 0px;
 }
 #musicalActivity {
-	float: right;
-}
+	position: absolute;
+	border: 0px;
+	resize: none;
+	left: 350px;
+	width: 700px;
+	font-weight: bold;
+	font-size: 22px;
+	}
 /*****************************************************************/
 /* This is the three side by side controls 1.  treble clef that picks instrument/note 2.  explanation of current activity 3.  tone param changes */
 #InstrumentToneMenu {
@@ -128,14 +136,14 @@ div#tooltip:hover .tooltiptext {
     height: 250px;
     width: 800px;
 }
-#sinePlotLoWrapper{
+#sinePlotLongWrapper{
 	position: absolute;
 	height: 250px;
 	width:800px;
 }
 
 /* we allow the time expand lines to write on this canvas */
-#sine_plotsLo{
+#sine_plotsLong{
     position:absolute; 
     top:0px; 
     left:0px;
@@ -148,13 +156,13 @@ div#tooltip:hover .tooltiptext {
 	 height: 110px;
 	 width: 800px;
 }
-#sinePlotsHiWrapper{
+#sinePlotsShortWrapper{
 	position: relative;
 	top: 155px;
 	height: 200px;
 	width: 800px;
 }
-#sine_plotsHi{
+#sine_plotsShort{
 	position: absolute;
 }
 
