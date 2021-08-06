@@ -18,7 +18,9 @@ $(function() {
 	let tuneFilename = [];
 	let tuneTitle = [];
 	let tuneBuffer = [];  // and AudioBuffer for currTuneState 1 through N, all musical notes
-	
+	const TUNE_OFFSET = [0, 10000]; // determines when plotting will begin in mp3 file, index is currTuneState
+	let noteFilePoint = [];   // array for every instrument of InstrumentNote, will determine next point using nearest neighbor multirate sample rate conversion
+	// DO need to handle the currTuneState = tone and we don't plot that one this way...
 	
 	//everything is relative to the html page this code operates on, server needs to work from /static directory (without django intervention)
 	const STATIC_FILE_LOC = "../../static/json/";
@@ -26,40 +28,51 @@ $(function() {
 	const MUSIC_FILE_LOC = "../../static/MusicNotes/";
 	
 	
+	
 	let timeMsLong = [];
 	let ampLong = [];
+	let ampLongCurrNote = [];
+	let ampLongCurrNoteHold = [];
 	let timeMsShort = [];
 	let ampShort = [];
+	let ampShortCurrNote = [];
+	let ampShortCurrNoteHold = [];
 
-	//const NUM_PTS_PLOT_SHORT = 100;
 	const NUM_PTS_PLOT_SHORT = 200;
 	const NUM_PTS_PLOT_LONG = 1000;
-	//const NUM_PTS_PLOT_LONG = 1000;
-	//const NUM_PTS_PLOT_LONG = 1323;
 	const DURATION_LONG_PLOT_MS = 10;
 	const DURATION_SHORT_PLOT_MS = 1;	
-	let ampCurrNote = [];
+	//sample period in sec
+	// yes, these are ridiculously high rates, didn't want to have ANY sampling artifacts in plots...
+	const samplePeriodLong = DURATION_LONG_PLOT_MS/(1000 * NUM_PTS_PLOT_LONG);
+	const samplePeriodShort = DURATION_SHORT_PLOT_MS/(1000 * NUM_PTS_PLOT_SHORT);
 	
 	function fillInArrays(){
-		//sample period in sec
-		// yes, these are ridiculously high rates, didn't want to have ANY sampling artifacts in plots...
-		let samplePeriodLong = DURATION_LONG_PLOT_MS/(1000 * NUM_PTS_PLOT_LONG);
-		let samplePeriodShort = DURATION_SHORT_PLOT_MS/(1000 * NUM_PTS_PLOT_SHORT);
 		var i;
 		for (i=0; i<=NUM_PTS_PLOT_LONG; i++) {
 			ampLong[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodLong + $currPhase.val() / 360.0) );
 			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 2);
+			
+			
+			// shouldn't need this but do...
+			ampLongCurrNote[i] = $currAmp.val() * ampLongCurrNoteHold[i];
+			
+			
+			
 		}
 		for (i=0; i<=NUM_PTS_PLOT_SHORT; i++) {
 			ampShort[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodShort + $currPhase.val() / 360.0) );
-			timeMsShort[i] = roundFP(i * samplePeriodShort * 1000, 2);			
+			timeMsShort[i] = roundFP(i * samplePeriodShort * 1000, 2);		
+			
+			
+			// shouldn't need this but do...
+			ampShortCurrNote[i] = $currAmp.val() * ampShortCurrNoteHold[i];	
 		}	
 
 	};
 	
 	function drawTone()
 	{
-
 		// CHART js hint:  update time, need to add the new and THEN remove the old.  X axis doesn't like to be empty...
 		// actually, I decided to never change time
 		
@@ -75,24 +88,22 @@ $(function() {
 	        dataset.data.pop();
 	    });
 	    
-		// now fill the arrays
-		fillInArrays();
-
-	    sine_plot_100_1k.data.datasets.forEach((dataset) => {
-	    	console.log("At Update, size of ampLong is " + ampLong.length);
-	        dataset.data.push(ampLong);
-	    });	   
 	    // update title to match new parameters
 	    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
 	    var currTitleText = 'y = ' + $currAmp.val() + ' * sin{ 2 * \u03C0 * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }';
 	    sine_plot_100_1k.options.title.text = currTitleText;
+		
+		// now fill the arrays and push them to the plots
+		fillInArrays();   
+		// update 10 ms plot
+		sine_plot_100_1k.data.datasets[0].data.push(ampLong);	
+		sine_plot_100_1k.data.datasets[1].data.push(ampLongCurrNote);    
+		// update 1 ms plot
+	    sine_plot_1k_10k.data.datasets[0].data.push(ampShort);
+	    sine_plot_1k_10k.data.datasets[0].data.push(ampShortCurrNote);
+
 	    // make all these changes happen
-	    sine_plot_100_1k.update();
-	    
-	    sine_plot_1k_10k.data.datasets.forEach((dataset) => {
-	    	console.log("At update, size of ampShort is " + ampShort.length);
-	        dataset.data.push(ampShort);
-	    });	                
+	    sine_plot_100_1k.update();	                    
 	    sine_plot_1k_10k.update();  
 	};
 	
@@ -103,7 +114,63 @@ $(function() {
 	    tempnumber = Math.round(tempnumber);
 	    return tempnumber / Math.pow(10, prec);
 	};
-	
+
+	//***********************************
+	//  Classes 
+	//***********************************
+	class InstrumentNote {
+		constructor(buffer, tuneState) {
+			this.samplePeriodMp3 = 1/buffer.sampleRate;
+			this.mp3Data = buffer.getChannelData(0);
+			this.currTuneState = tuneState;  
+			if (tuneState === DEFAULT_TONE) {
+				console.log(" This should never be called for the synthesized tone, only for mp3 files");
+			}
+			this.offset = TUNE_OFFSET[tuneState];
+		}
+		
+		getGraphArray(graphIndx) {
+		// graphIndx 0 is the 10ms timespan, index 1 is 1 ms timespan
+			let graphArray = [];
+			// count up time on the graph
+			let tG = 0.0;
+			// count up time for each point in the mp3 file
+			let currIndxMp3 = 0;
+			let numPtsPlot;
+			let graphTs;
+			if (graphIndx === 0) {
+				// plotting for the 10 ms graph
+				numPtsPlot = NUM_PTS_PLOT_LONG;
+				graphTs = samplePeriodLong;
+			} else {
+				if (graphIndx === 1) { 
+					// plotting for the 1 ms graph
+					numPtsPlot = NUM_PTS_PLOT_SHORT;
+					graphTs = samplePeriodShort;
+				} else {
+					// coding error
+					console.log("unexpected value for graph index in getGraphArray, value was " + graphIndx);
+				}
+			}	
+			// using nearest neighbor approximation for arbitrary sample rate conversion of MP3 rate to graph rate
+			for (var i = 0; i <= numPtsPlot; i++) {
+				tG = graphTs * i;
+				let tM = currIndxMp3 * this.samplePeriodMp3;
+				let tMp1 = tM + this.samplePeriodMp3;
+				if ( (tG - tM) > (tMp1 - tG) ) {
+					currIndxMp3 = currIndxMp3 + 1;
+				}
+				graphArray[i] = this.mp3Data[currIndxMp3 + this.offset];
+			}
+			// compare expected with actual graph sample rate/ mp3 file sample rate
+			let approxSampRatio = numPtsPlot/currIndxMp3;
+			let actualSampRatio = this.samplePeriodMp3/graphTs;
+			console.log("Calculated (Sample rate of Graph)/(sample Rate of Mp3) as " + approxSampRatio);
+			console.log("We expected Fsg/Fsmp3 = " + actualSampRatio + " Difference is " + (approxSampRatio - actualSampRatio));
+			return graphArray;
+		}
+	}
+		
 	//***********************************
 	//  User instigated callback events
 	//***********************************
@@ -193,13 +260,59 @@ $(function() {
 		} else {
 			// then there is music to play, allow user to choose when to play
 			$("#allowNotePlay").show();
+			
+			//NEED some check that the user is not a bot before we give a server file
+			// check that the filename has .mp3 in it, thats all we handle now.
+			
+			let source;
+			let context;
+			// Safari has implemented AudioContext as webkitAudioContext so need next LOC
+			window.AudioContext = window.AudioContext || window.webkitAudioContext;
+			context = new AudioContext();	
+			source = context.createBufferSource();		
+
+			if (tuneBuffer == null || tuneBuffer[currTuneState] == null) {
+				// get musical note for first time
+				if (tuneFilename[currTuneState].toLowerCase().indexOf('.mp3') >=0) {
+					console.log("get the file from server");
+					let request;
+					// would be nice to do this in jquery but it looks too painful, requiring ajaxTransport to get arraybuffer returns
+					request = new XMLHttpRequest();
+					request.open("GET",tuneFilename[currTuneState],true);
+					request.responseType = "arraybuffer";
+					// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
+				    request.onload = function() {
+						// DO, rewrite this with promise syntax
+						// first time through, the decodeAudioData takes some time and its asynchronous so force a wait
+						// to play the tone.  First time must be inside the success function off decodeAudioData
+						context.decodeAudioData(request.response, function(buffer) {
+							// to get here means asynchronous mp3 decode is complete and successful
+							console.log("finished decoding mp3");
+							source.buffer = buffer;
+							// copy AudioBuffer into array for this instrument/note so don't have to bug the server with requests
+							// DO, try and throw on RangeError (not enough space) for copying buffer
+							tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate)
+							buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
+							// setup the class from which we will get points to graph the note
+							noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState);
+							// rescale sample rate for both graphs
+							ampLongCurrNoteHold= noteFilePoint[currTuneState].getGraphArray(0);
+							ampShortCurrNoteHold= noteFilePoint[currTuneState].getGraphArray(1);
+							console.log("finished copying AudioBuffer for current musical note, state = " + currTuneState);
+						});
+				    };
+			      	request.send();
+		      	} else {
+		      		alert('Currently we only handle mp3 files, check MusicNotes.json for correct filename for this instrument'); 
+		      	}	
+        	}
 		};
     });		
 
 
 	// if user selects a musical note, and then clicks "play note" need to play it
 	$('#allowNotePlay').on('click', function(event){
-		//NEED some check that the user is not a bot before we give a server file, and that file is valid name with . in middle
+		//NEED some check that the user is not a bot before we give a server file
 		// check that the filename has .mp3 in it, thats all we handle now.
 		
 		let source;
@@ -210,49 +323,14 @@ $(function() {
 		source = context.createBufferSource();		
 
 		if (tuneBuffer == null || tuneBuffer[currTuneState] == null) {
-			// get musical note for first time
-			if (tuneFilename[currTuneState].toLowerCase().indexOf('.mp3') >=0) {
-				console.log("get the file from server");
-				let request;
-				// would be nice to do this in jquery but it looks too painful, requiring ajaxTransport to get arraybuffer returns
-			    request = new XMLHttpRequest();
-			    request.open("GET",tuneFilename[currTuneState],true);
-			    request.responseType = "arraybuffer";
-				// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
-			    request.onload = function() {
-			      // DO, rewrite this with promise syntax
-			      // first time through, the decodeAudioData takes some time and its asynchronous so force a wait
-			      // to play the tone.  First time must be inside the success function off decodeAudioData
-			      context.decodeAudioData(request.response, function(buffer) {
-			      	// to get here means asynchronous mp3 decode is complete and successful
-			      	console.log("finished decoding mp3");
-			        source.buffer = buffer;
-			        // copy AudioBuffer into array for this instrument/note so don't have to bug the server with requests
-			        // DO, try and throw on RangeError (not enough space) for copying buffer
-			        tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate)
-			        buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
-			        let ptrToMP3data = buffer.getChannelData(0);
-			        // we want NUM_PTS_PLOT_LONG but will be interpolating by
-			        //for (var i = 0; i < NUM_PTS_44_1_LONG; i++) {
-			        //	ampCurrNote[i] = $currAmp.val() * ptrToMP3data[i + 2000];
-			        //	console.log("i = " + i + " tone val = " + ampCurrNote[i]);
-			        //}
-			        source.connect(context.destination);
-			        // auto play
-			        source.start(0); // start was previously noteOn
-			        console.log("finished copying AudioBuffer for current musical note, state = " + currTuneState);
-			      });
-			    };
-		      	request.send();
-	      	} else {
-	      		alert('Currently we only handle mp3 files, check MusicNotes.json for correct filename for this instrument'); 
-	      	}
-	     } else {
-	     	console.log("reuse the stored value");
-	     	source.buffer = tuneBuffer[currTuneState];
+			// should never happen, decode and copy should finish before we get here with normal user (non robot)
+			console.log("Timing error, file transfer and decode not complete");
+		} else {
+			console.log("reuse the stored value");
+			source.buffer = tuneBuffer[currTuneState];
 			source.connect(context.destination);
-	        // auto play
-	        source.start(0); 
+			// auto play
+			source.start(0); // start was previously noteOn
         }
     });	
 	
@@ -322,6 +400,12 @@ $(function() {
 	            data: ampLong,
 	            fill: false,
 	            borderColor: 'rgb(75, 192, 192)',
+	            },
+	            {
+	            label: 'Musical Tone',
+	            data: ampLongCurrNote,
+	            fill: false,
+	            borderColor: 'rgb(255,165,0)',
 	            }]
 	    },
 	    options: TOP_CHART
@@ -338,6 +422,12 @@ $(function() {
 	            data: ampShort,
 	            fill: false,
 	            borderColor: 'rgb(75, 192, 192)',
+	            },
+	            {
+	            label: 'Musical Tone',
+	            data: ampShortCurrNote,
+	            fill: false,
+	            borderColor: 'rgb(255,165,0)',
 	            }]
 	    },
 	    options: CHART_OPTIONS
