@@ -18,7 +18,9 @@ $(function() {
 	let tuneFilename = [];
 	let tuneTitle = [];
 	let tuneBuffer = [];  // and AudioBuffer for currTuneState 1 through N, all musical notes
-	const TUNE_OFFSET = [0, 10000]; // determines when plotting will begin in mp3 file, index is currTuneState
+	let tuneOffset = []; // determines when plotting will begin in mp3 file, index is currTuneState
+	let tuneFundamentalFreq = []; // initialize tone for closest approx
+	let tuneFundamentalPhase =[];
 	let noteFilePoint = [];   // array for every instrument of InstrumentNote, will determine next point using nearest neighbor multirate sample rate conversion
 	// DO need to handle the currTuneState = tone and we don't plot that one this way...
 	
@@ -51,20 +53,13 @@ $(function() {
 		var i;
 		for (i=0; i<=NUM_PTS_PLOT_LONG; i++) {
 			ampLong[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodLong + $currPhase.val() / 360.0) );
-			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 2);
-			
-			
+			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 2);	
 			// shouldn't need this but do...
-			ampLongCurrNote[i] = $currAmp.val() * ampLongCurrNoteHold[i];
-			
-			
-			
+			ampLongCurrNote[i] = $currAmp.val() * ampLongCurrNoteHold[i];		
 		}
 		for (i=0; i<=NUM_PTS_PLOT_SHORT; i++) {
 			ampShort[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodShort + $currPhase.val() / 360.0) );
-			timeMsShort[i] = roundFP(i * samplePeriodShort * 1000, 2);		
-			
-			
+			timeMsShort[i] = roundFP(i * samplePeriodShort * 1000, 2);				
 			// shouldn't need this but do...
 			ampShortCurrNote[i] = $currAmp.val() * ampShortCurrNoteHold[i];	
 		}	
@@ -82,6 +77,7 @@ $(function() {
 	    	// seems like a library bug? but one we can get around
 	        dataset.data.pop();
 	    });
+				
 	    // update tone, remove old (although for now, just one data set), add new
 	    sine_plot_1k_10k.data.datasets.forEach((dataset) => {
 	    	// somehow, this pop changes the length of ampShort, so best to refill arrays afterwards to get full length
@@ -97,7 +93,7 @@ $(function() {
 		fillInArrays();   
 		// update 10 ms plot
 		sine_plot_100_1k.data.datasets[0].data.push(ampLong);	
-		sine_plot_100_1k.data.datasets[1].data.push(ampLongCurrNote);    
+		//sine_plot_100_1k.data.datasets[1].data.push(ampLongCurrNote);    
 		// update 1 ms plot
 	    sine_plot_1k_10k.data.datasets[0].data.push(ampShort);
 	    sine_plot_1k_10k.data.datasets[0].data.push(ampShortCurrNote);
@@ -114,6 +110,37 @@ $(function() {
 	    tempnumber = Math.round(tempnumber);
 	    return tempnumber / Math.pow(10, prec);
 	};
+	
+	function updateFreq() {
+		//min and max freq chosen depends on audio speakers used, my speakers can just barely respond at 100 Hz
+		$currFreq= $("#in-range-freq")   // get slider value
+		$("#currFreqLabel").text($currFreq.val());   // and put it on the label as string
+		if (ToneIsOnNow==true) {
+			osc.frequency.value = $currFreq.val();
+			// if tone isn't on, don't have to change anything...
+		}
+	}
+	
+	function updatePhase() {
+		$currPhase = $("#in-range-phase")
+		$("#currPhaseLabel").text($currPhase.val());
+		// LATER:  move this to jquery popups, doesn't work well in safari
+		switch (parseInt($currPhase.val())) {
+			case 180:
+				//alert('Hey Look!  phase = 180 is a negative sine wave! \nsin(a+180) = sin(a)cos(180) + cos(a)sin(180)\n                  = sin(a) * -1       + cos(a) * 0 \n                  = -sin(a)');
+				break;
+			case 270:
+				//alert('Hey Look!  phase = 270 is a negative cosine wave! \nsin(a+270) = sin(a)cos(270) + cos(a)sin(270)\n                  = sin(a) * 0       + cos(a) * -1 \n                  = -cos(a)');
+				break;
+			case 360:
+				//alert('Hey Look!  phase = 360 = 0 is a sine wave! \nWhy?  Because 360 degrees = 2 pi takes you back to the beginning at zero');
+				break;
+		}
+		if (ToneIsOnNow==true) {
+			osc.phase = $currPhase.val();
+			// if tone isn't on, don't have to change anything...
+		}	
+	}
 
 	//***********************************
 	//  Classes 
@@ -126,7 +153,7 @@ $(function() {
 			if (tuneState === DEFAULT_TONE) {
 				console.log(" This should never be called for the synthesized tone, only for mp3 files");
 			}
-			this.offset = TUNE_OFFSET[tuneState];
+			this.offset = tuneOffset[tuneState];
 		}
 		
 		getGraphArray(graphIndx) {
@@ -157,10 +184,22 @@ $(function() {
 				tG = graphTs * i;
 				let tM = currIndxMp3 * this.samplePeriodMp3;
 				let tMp1 = tM + this.samplePeriodMp3;
-				if ( (tG - tM) > (tMp1 - tG) ) {
-					currIndxMp3 = currIndxMp3 + 1;
+				if (graphIndx === 0) {
+					if ( (tG - tM) > (tMp1 - tG) ) {
+						currIndxMp3 = currIndxMp3 + 1;
+					}
+					// mp3 scales so max value is 1, rescale so it will fit this graph
+					graphArray[i] = this.mp3Data[currIndxMp3 + this.offset];
+				} else {
+					if (tG >= tMp1) {
+						currIndxMp3 = currIndxMp3 + 1;
+						tM = currIndxMp3 * this.samplePeriodMp3;
+						tMp1 = tM + this.samplePeriodMp3;
+					}
+					let slope = (this.mp3Data[currIndxMp3 + 1 + this.offset] - this.mp3Data[currIndxMp3 + this.offset])/this.samplePeriodMp3;
+					// mp3 scales so max value is 1, rescale so it will fit this graph
+					graphArray[i] = this.mp3Data[currIndxMp3 + this.offset] + slope * (tG - tM) ;
 				}
-				graphArray[i] = this.mp3Data[currIndxMp3 + this.offset];
 			}
 			// compare expected with actual graph sample rate/ mp3 file sample rate
 			let approxSampRatio = numPtsPlot/currIndxMp3;
@@ -176,13 +215,7 @@ $(function() {
 	//***********************************
 	// Change label on freq slider and adjust the tone as appropriate
 	$('#in-range-freq').on('input', function(){
-		//min and max freq chosen depends on audio speakers used, my speakers can just barely respond at 100 Hz
-		$currFreq= $("#in-range-freq")   // get slider value
-		$("#currFreqLabel").text($currFreq.val());   // and put it on the label as string
-		if (ToneIsOnNow==true) {
-			osc.frequency.value = $currFreq.val();
-			// if tone isn't on, don't have to change anything...
-		}
+		updateFreq();
 	});
 	
 	// Change label on amplitude slider and adjust the tone as appropriate
@@ -198,24 +231,7 @@ $(function() {
 	
 	// Change label on phase slider and adjust the tone as appropriate
 	$('#in-range-phase').on('input', function(){		
-		$currPhase = $("#in-range-phase")
-		$("#currPhaseLabel").text($currPhase.val());
-		// LATER:  move this to jquery popups, doesn't work well in safari
-		switch (parseInt($currPhase.val())) {
-			case 180:
-				//alert('Hey Look!  phase = 180 is a negative sine wave! \nsin(a+180) = sin(a)cos(180) + cos(a)sin(180)\n                  = sin(a) * -1       + cos(a) * 0 \n                  = -sin(a)');
-				break;
-			case 270:
-				//alert('Hey Look!  phase = 270 is a negative cosine wave! \nsin(a+270) = sin(a)cos(270) + cos(a)sin(270)\n                  = sin(a) * 0       + cos(a) * -1 \n                  = -cos(a)');
-				break;
-			case 360:
-				//alert('Hey Look!  phase = 360 = 0 is a sine wave! \nWhy?  Because 360 degrees = 2 pi takes you back to the beginning at zero');
-				break;
-		}
-		if (ToneIsOnNow==true) {
-			osc.phase = $currPhase.val();
-			// if tone isn't on, don't have to change anything...
-		}
+		updatePhase();
 	});
 	
 	// handle user clicking on/off the tone on/off button
@@ -295,10 +311,25 @@ $(function() {
 							buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
 							// setup the class from which we will get points to graph the note
 							noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState);
-							// rescale sample rate for both graphs
-							ampLongCurrNoteHold= noteFilePoint[currTuneState].getGraphArray(0);
-							ampShortCurrNoteHold= noteFilePoint[currTuneState].getGraphArray(1);
-							console.log("finished copying AudioBuffer for current musical note, state = " + currTuneState);
+														
+							// get array of values for both plots
+							ampLongCurrNoteHold = noteFilePoint[currTuneState].getGraphArray(0);
+							ampShortCurrNoteHold = noteFilePoint[currTuneState].getGraphArray(1);
+							
+							// set up tone to approximate the fundamental freq of musical instrument
+							let newToneFreq = tuneFundamentalFreq[currTuneState];
+							$("#currFreqLabel").text(newToneFreq);   // and put it on the label as string
+							$("#in-range-freq").val(newToneFreq);
+							updateFreq();
+							
+							// setup tone so approximate fundamental phase of musical instrment
+							let newTonePhase = tuneFundamentalPhase[currTuneState];
+							$("#currPhaseLabel").text(newTonePhase);
+							$("#in-range-phase").val(newTonePhase);
+							updatePhase();
+					
+							// update graphs
+							drawTone()
 						});
 				    };
 			      	request.send();
@@ -495,6 +526,9 @@ $(function() {
 					tuneExpln[index] = paramSet.expln;					
 					tuneFilename[index] = MUSIC_FILE_LOC + paramSet.filename;
 					tuneTitle[index] = paramSet.title;
+					tuneOffset[index] = parseInt(paramSet.tuneOffset);
+					tuneFundamentalFreq[index] = parseInt(paramSet.fundamentalHz);
+					tuneFundamentalPhase[index] = parseInt(paramSet.fundamentalPhase);
 				});
 				$("#classExpln").text(tuneExpln[currTuneState]);
 				$("#musicalActivity").text(tuneTitle[currTuneState]);
