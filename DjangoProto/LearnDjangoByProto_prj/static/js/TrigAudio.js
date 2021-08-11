@@ -291,7 +291,7 @@ $(function() {
 			if (tuneBuffer == null || tuneBuffer[currTuneState] == null) {
 				// get musical note for first time
 				if (tuneFilename[currTuneState].toLowerCase().indexOf('.mp3') >=0) {
-					console.log("get the file from server");
+					console.log("get the file " + tuneFilename[currTuneState] + " from server");
 					let request;
 					// would be nice to do this in jquery but it looks too painful, requiring ajaxTransport to get arraybuffer returns
 					request = new XMLHttpRequest();
