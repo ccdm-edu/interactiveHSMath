@@ -17,11 +17,11 @@ $(function() {
 	let tuneExpln = [];
 	let tuneFilename = [];
 	let tuneTitle = [];
-	let tuneBuffer = [];  // and AudioBuffer for currTuneState 1 through N, all musical notes
+	let tuneBuffer = [];  // array of AudioBuffer for currTuneState 1 through N, all musical notes, used to play full mp3 file
 	let tuneOffset = []; // determines when plotting will begin in mp3 file, index is currTuneState
 	let tuneFundamentalFreq = []; // initialize tone for closest approx
 	let tuneFundamentalPhase =[];
-	let noteFilePoint = [];   // array for every instrument of InstrumentNote, will determine next point using nearest neighbor multirate sample rate conversion
+	let noteFilePoint = [];   // array for every instrument of InstrumentNote, will determine next point using multirate sample rate conversion
 	// DO need to handle the currTuneState = tone and we don't plot that one this way...
 	
 	//everything is relative to the html page this code operates on, server needs to work from /static directory (without django intervention)
@@ -30,15 +30,15 @@ $(function() {
 	const MUSIC_FILE_LOC = "../../static/MusicNotes/";
 	
 	
-	
+	// used for plotting
 	let timeMsLong = [];
 	let ampLong = [];
-	let ampLongCurrNote = [];
-	let ampLongCurrNoteHold = [];
+	let ampLongCurrNote = [];  // what is plotted
+	let ampLongCurrNoteHold = [];  // what is stored off until plot refresh needed
 	let timeMsShort = [];
 	let ampShort = [];
-	let ampShortCurrNote = [];
-	let ampShortCurrNoteHold = [];
+	let ampShortCurrNote = [];   // what is plotted
+	let ampShortCurrNoteHold = [];   // what is stored off until plot refresh needed
 
 	const NUM_PTS_PLOT_SHORT = 200;
 	const NUM_PTS_PLOT_LONG = 1000;
@@ -145,15 +145,16 @@ $(function() {
 	//***********************************
 	//  Classes 
 	//***********************************
+	// this class is just for drawing the musical note on the graph
 	class InstrumentNote {
 		constructor(buffer, tuneState) {
 			this.samplePeriodMp3 = 1/buffer.sampleRate;
-			this.mp3Data = buffer.getChannelData(0);
+			// only save what we need to recreate plot
+			this.mp3Data = buffer.getChannelData(0).slice(tuneOffset[tuneState], tuneOffset[tuneState] + NUM_PTS_PLOT_LONG + 1);
 			this.currTuneState = tuneState;  
 			if (tuneState === DEFAULT_TONE) {
 				console.log(" This should never be called for the synthesized tone, only for mp3 files");
 			}
-			this.offset = tuneOffset[tuneState];
 		}
 		
 		getGraphArray(graphIndx) {
@@ -189,16 +190,16 @@ $(function() {
 						currIndxMp3 = currIndxMp3 + 1;
 					}
 					// mp3 scales so max value is 1, rescale so it will fit this graph
-					graphArray[i] = this.mp3Data[currIndxMp3 + this.offset];
+					graphArray[i] = this.mp3Data[currIndxMp3];
 				} else {
 					if (tG >= tMp1) {
 						currIndxMp3 = currIndxMp3 + 1;
 						tM = currIndxMp3 * this.samplePeriodMp3;
 						tMp1 = tM + this.samplePeriodMp3;
 					}
-					let slope = (this.mp3Data[currIndxMp3 + 1 + this.offset] - this.mp3Data[currIndxMp3 + this.offset])/this.samplePeriodMp3;
+					let slope = (this.mp3Data[currIndxMp3 + 1] - this.mp3Data[currIndxMp3])/this.samplePeriodMp3;
 					// mp3 scales so max value is 1, rescale so it will fit this graph
-					graphArray[i] = this.mp3Data[currIndxMp3 + this.offset] + slope * (tG - tM) ;
+					graphArray[i] = this.mp3Data[currIndxMp3] + slope * (tG - tM) ;
 				}
 			}
 			// compare expected with actual graph sample rate/ mp3 file sample rate
@@ -307,14 +308,19 @@ $(function() {
 							source.buffer = buffer;
 							// copy AudioBuffer into array for this instrument/note so don't have to bug the server with requests
 							// DO, try and throw on RangeError (not enough space) for copying buffer
-							tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate)
-							buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
-							// setup the class from which we will get points to graph the note
-							noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState);
+							try {
+								tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate)
+								buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
+								// setup the class from which we will get points to graph the note
+								noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState);
+							} catch(e) {
+								// most likely not enough space to createBuffer
+								console.error(e);
+							}
 														
-							// get array of values for both plots
+							// get array of values for both plots. Actually no need for short plot for low freq waveforms
 							ampLongCurrNoteHold = noteFilePoint[currTuneState].getGraphArray(0);
-							ampShortCurrNoteHold = noteFilePoint[currTuneState].getGraphArray(1);
+							//ampShortCurrNoteHold = noteFilePoint[currTuneState].getGraphArray(1);
 							
 							// set up tone to approximate the fundamental freq of musical instrument
 							let newToneFreq = tuneFundamentalFreq[currTuneState];
