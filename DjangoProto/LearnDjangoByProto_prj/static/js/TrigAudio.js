@@ -21,6 +21,8 @@ $(function() {
 	let tuneOffset = []; // determines when plotting will begin in mp3 file, index is currTuneState
 	let tuneFundamentalFreq = []; // initialize tone for closest approx
 	let tuneFundamentalPhase =[];
+	let tuneGraphLong = [[]];  // holds an array, per note, of graphing points for long graph (10ms)
+	let tuneGraphShort = [[]];    // holds an array, per note, of graphing points for short graph (1ms)
 	let noteFilePoint = [];   // array for every instrument of InstrumentNote, will determine next point using multirate sample rate conversion
 	// DO need to handle the currTuneState = tone and we don't plot that one this way...
 	
@@ -34,11 +36,9 @@ $(function() {
 	let timeMsLong = [];
 	let ampLong = [];
 	let ampLongCurrNote = [];  // what is plotted
-	let ampLongCurrNoteHold = [];  // what is stored off until plot refresh needed
 	let timeMsShort = [];
 	let ampShort = [];
 	let ampShortCurrNote = [];   // what is plotted
-	let ampShortCurrNoteHold = [];   // what is stored off until plot refresh needed
 
 	const NUM_PTS_PLOT_SHORT = 200;
 	const NUM_PTS_PLOT_LONG = 1000;
@@ -51,17 +51,18 @@ $(function() {
 	
 	function fillInArrays(){
 		var i;
+					console.log("about to plot, curr state is " + currTuneState);
 		for (i=0; i<=NUM_PTS_PLOT_LONG; i++) {
 			ampLong[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodLong + $currPhase.val() / 360.0) );
 			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 2);	
-			// shouldn't need this but do...
-			ampLongCurrNote[i] = $currAmp.val() * ampLongCurrNoteHold[i];		
+			// this allows us to turn off graph yet keep data around, for currTuneState=TONE_ONLY, this will be a null array 
+			ampLongCurrNote[i] = $currAmp.val() * tuneGraphLong[currTuneState][i];		
 		}
 		for (i=0; i<=NUM_PTS_PLOT_SHORT; i++) {
 			ampShort[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodShort + $currPhase.val() / 360.0) );
 			timeMsShort[i] = roundFP(i * samplePeriodShort * 1000, 2);				
-			// shouldn't need this but do...
-			ampShortCurrNote[i] = $currAmp.val() * ampShortCurrNoteHold[i];	
+			// For now, no instructive benefit to filling in this graph for low freq notes...
+			//ampShortCurrNote[i] = $currAmp.val() * tuneGraphShort[currTuneState][i];	
 		}	
 
 	};
@@ -274,6 +275,8 @@ $(function() {
 		if (currTuneState === DEFAULT_TONE) {
 			// no instruments to play, its tone only.  No need for a play tone button
 			$("#allowNotePlay").hide();
+			// update graphs, to eliminate musical note if present
+			drawTone()
 		} else {
 			// then there is music to play, allow user to choose when to play
 			$("#allowNotePlay").show();
@@ -319,8 +322,8 @@ $(function() {
 							}
 														
 							// get array of values for both plots. Actually no need for short plot for low freq waveforms
-							ampLongCurrNoteHold = noteFilePoint[currTuneState].getGraphArray(0);
-							//ampShortCurrNoteHold = noteFilePoint[currTuneState].getGraphArray(1);
+							tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray(0);
+							//tuneGraphShort[currTuneState] = noteFilePoint[currTuneState].getGraphArray(1);
 							
 							// set up tone to approximate the fundamental freq of musical instrument
 							let newToneFreq = tuneFundamentalFreq[currTuneState];
@@ -343,6 +346,8 @@ $(function() {
 		      		alert('Currently we only handle mp3 files, check MusicNotes.json for correct filename for this instrument'); 
 		      	}	
         	}
+        	// update graphs with stored musical tone data
+			drawTone()
 		};
     });		
 
