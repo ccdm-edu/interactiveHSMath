@@ -7,7 +7,8 @@ $(function() {
 	let $currAmp = $("#in-range-amp");
 	let $currPhase = $("#in-range-phase")
 	
-	let ToneIsOnNow = false;
+	let noteIsOnNow = false;  // for musical note
+	let ToneIsOnNow = false;  // for synthesized tone, both musical note and tone can play additively.
 	let osc = new Tone.Oscillator(); 
 	
 	//initialize variables needed to play the non synthesized tone musical notes
@@ -38,7 +39,6 @@ $(function() {
 	let ampLongCurrNote = [];  // what is plotted
 	let timeMsShort = [];
 	let ampShort = [];
-	let ampShortCurrNote = [];   // what is plotted
 
 	const NUM_PTS_PLOT_SHORT = 200;
 	const NUM_PTS_PLOT_LONG = 1000;
@@ -51,18 +51,18 @@ $(function() {
 	
 	function fillInArrays(){
 		var i;
-					console.log("about to plot, curr state is " + currTuneState);
 		for (i=0; i<=NUM_PTS_PLOT_LONG; i++) {
 			ampLong[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodLong + $currPhase.val() / 360.0) );
 			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 2);	
 			// this allows us to turn off graph yet keep data around, for currTuneState=TONE_ONLY, this will be a null array 
-			ampLongCurrNote[i] = $currAmp.val() * tuneGraphLong[currTuneState][i];		
+			if (tuneGraphLong[currTuneState] != null) {
+				ampLongCurrNote[i] = $currAmp.val() * tuneGraphLong[currTuneState][i];	
+			}	
 		}
 		for (i=0; i<=NUM_PTS_PLOT_SHORT; i++) {
 			ampShort[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodShort + $currPhase.val() / 360.0) );
 			timeMsShort[i] = roundFP(i * samplePeriodShort * 1000, 2);				
-			// For now, no instructive benefit to filling in this graph for low freq notes...
-			//ampShortCurrNote[i] = $currAmp.val() * tuneGraphShort[currTuneState][i];	
+
 		}	
 
 	};
@@ -97,7 +97,7 @@ $(function() {
 		//sine_plot_100_1k.data.datasets[1].data.push(ampLongCurrNote);    
 		// update 1 ms plot
 	    sine_plot_1k_10k.data.datasets[0].data.push(ampShort);
-	    sine_plot_1k_10k.data.datasets[0].data.push(ampShortCurrNote);
+
 
 	    // make all these changes happen
 	    sine_plot_100_1k.update();	                    
@@ -264,6 +264,7 @@ $(function() {
 		}
 	});
 	
+	//whenever any of the tone params change, redraw both graphs and update
 	$("#toneChanges").on('input',drawTone);
 	
 	// Handle user selecting the musical note drop down menu
@@ -351,30 +352,53 @@ $(function() {
 		};
     });		
 
-
+	// must do these at a global level since we allow an abort of tone playing, must keep around the original
+	// source reference
+	let sourceNote;
+	let context;
+			
 	// if user selects a musical note, and then clicks "play note" need to play it
 	$('#allowNotePlay').on('click', function(event){
 		//NEED some check that the user is not a bot before we give a server file
-		// check that the filename has .mp3 in it, thats all we handle now.
+		//For the 0.x rev of code, they must be authenticated to get this far so they are not a bot.
+		// revisit when go to educational site..
 		
-		let source;
-		let context;
-		// Safari has implemented AudioContext as webkitAudioContext so need next LOC
-		window.AudioContext = window.AudioContext || window.webkitAudioContext;
-		context = new AudioContext();	
-		source = context.createBufferSource();		
+		if (typeof noteIsOnNow == "undefined")  {
+			// First time in, 
+			noteIsOnNow = false;
+		};			
 
 		if (tuneBuffer == null || tuneBuffer[currTuneState] == null) {
 			// should never happen, decode and copy should finish before we get here with normal user (non robot)
 			console.log("Timing error, file transfer and decode not complete");
 		} else {
-			console.log("reuse the stored value");
-			source.buffer = tuneBuffer[currTuneState];
-			source.connect(context.destination);
-			// auto play
-			source.start(0); // start was previously noteOn
+			if (noteIsOnNow === false) {
+				// Safari has implemented AudioContext as webkitAudioContext so need next LOC
+				window.AudioContext = window.AudioContext || window.webkitAudioContext;
+				context = new AudioContext();	
+				sourceNote = context.createBufferSource();
+				// about to turn on the note
+				console.log("reuse the stored value");
+				sourceNote.buffer = tuneBuffer[currTuneState];
+				sourceNote.connect(context.destination);
+				// auto play
+				sourceNote.start(0); 
+				noteIsOnNow = true;
+				$("#allowNotePlay").prop("value", "Stop Note");
+			} else {
+	        	// someone is tired of listening to our lovely tuning note
+	        	sourceNote.stop(0); 
+				noteIsOnNow = false;
+				$("#allowNotePlay").prop("value", "Play Note");
+			}
+			sourceNote.onended = function(){
+				// no longer playing the note, either by user stop or natural completion
+				noteIsOnNow = false;
+				$("#allowNotePlay").prop("value", "Play Note");
+			}
         }
     });	
+
 	
 	//***********************************
 	//  Immediate execution here
@@ -464,12 +488,6 @@ $(function() {
 	            data: ampShort,
 	            fill: false,
 	            borderColor: 'rgb(75, 192, 192)',
-	            },
-	            {
-	            label: 'Musical Tone',
-	            data: ampShortCurrNote,
-	            fill: false,
-	            borderColor: 'rgb(255,165,0)',
 	            }]
 	    },
 	    options: CHART_OPTIONS
