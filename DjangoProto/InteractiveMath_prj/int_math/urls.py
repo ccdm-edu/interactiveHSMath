@@ -8,6 +8,8 @@ app_name = 'int_math'
 # avoiding hardcoding {%url 'Rango:name' %}
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
-
+    path('trig/', views.TrigView.as_view(), name='trig'),
+    path('imag_num/', views.ImagNumView.as_view(), name='imag_num'),
+    
     
 ]

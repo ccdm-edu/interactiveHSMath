@@ -1,0 +1,23 @@
+<!-- This controls appearance of the subtopics off to the left side of the page -->
+<ul class="nav flex-column">
+{% if subtopics %}
+	<p id="headerForSubtopics"> {{current_topic.name}} Subtopics </p>
+	{% for s in subtopics %}
+		{% if s == current_topic %}
+			<li class="nav-item">
+			<a class="nav-link active" href={{ s.url }}>
+				<span data-feather="archive"></span>{{ s.title }}
+			</a>
+			</li>
+		{% else %}
+			<li class="nav-item">
+			<a class="nav-link" href={{ s.url }}>
+			<span data-feather="archive"></span>{{ s.title }}
+			</a>
+			</li>
+		{% endif %}
+	{% endfor %}
+{% else %}
+	<li class="nav-item">Select a subject from menu and will get subtopics here.</li>
+{% endif %}
+</ul>

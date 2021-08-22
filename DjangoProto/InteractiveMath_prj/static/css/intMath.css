@@ -1,0 +1,18 @@
+	/* blinking color changing word "fun" on landing page */
+	span#blinkingColor {
+	    animation:blinkingColorText 1.2s infinite;
+	}
+	@keyframes blinkingColorText{
+	    0%{     color: red;    }
+	    49%{    color: purple; }
+	    60%{    color: transparent; }
+	    99%{    color:transparent;  }
+	    100%{   color: red;    }
+	}
+	
+	/* change text/color/font for subtopics off to the side */
+	p#headerForSubtopics {
+		color: blue;
+		font-size: 30px;
+		font: papyrus;
+	}
