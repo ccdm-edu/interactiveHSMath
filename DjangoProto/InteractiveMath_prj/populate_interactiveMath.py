@@ -10,6 +10,7 @@ def populate():
     
     #first we will create the subtopics for each topic
     trig_subtopics = [
+        {'title': 'Origin of trig functions', 'url':'#top'},
         {'title': 'Sine Cosine Tones and Musical Notes', 'url':'#SineCosID'},
         {'title':'Next Trig topic 1', 'url':'#NextTrigTopic1'},
         {'title':'Next Trig Topic 2', 'url':'#NextTrigTopic1'}]

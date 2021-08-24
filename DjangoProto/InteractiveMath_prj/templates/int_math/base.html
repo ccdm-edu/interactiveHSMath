@@ -31,9 +31,10 @@
     <link href="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css" rel="stylesheet">
     <!-- want to override things here -->
     <link href="{%static 'css/intMath.css' %}" rel="stylesheet">
+    <link href="{%static 'css/SinCosTune.css' %}" rel="stylesheet">
 
-	<!-- apparently putting this in css file wasn't a high enough specificity rating to make it work-->
-	<!--  AND, style blocks dont like comments in the middle -->
+
+	<!--  style blocks dont like comments in the middle -->
 	<!--  THIS MAKES THE RECAPTCHA LOGO ON ALL PAGES -->
 	{% if debug %}
 		<!--  this is for dev server 127.0.0.1 site key -->
@@ -64,7 +65,7 @@
         <div class="container-fluid">
             <div class="row">
                 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                    <div class="sidebar-sticky" id="categories-listing">
+                    <div class="sidebar-sticky">
 	                    {% block sidebar_block %}
 	                        {% get_subtopic_list topic %}
 	                    {% endblock %}
@@ -94,5 +95,8 @@
         
         <script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+        <!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
+		<script>feather.replace()</script>
+        
     </body>
 </html>

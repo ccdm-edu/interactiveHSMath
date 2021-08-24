@@ -1,18 +1,51 @@
-	/* blinking color changing word "fun" on landing page */
-	span#blinkingColor {
-	    animation:blinkingColorText 1.2s infinite;
-	}
-	@keyframes blinkingColorText{
-	    0%{     color: red;    }
-	    49%{    color: purple; }
-	    60%{    color: transparent; }
-	    99%{    color:transparent;  }
-	    100%{   color: red;    }
-	}
+/* blinking color changing word "fun" on landing page */
+span#blinkingColor {
+    animation:blinkingColorText 1.2s infinite;
+}
+@keyframes blinkingColorText{
+    0%{     color: red;    }
+    49%{    color: purple; }
+    60%{    color: transparent; }
+    99%{    color:transparent;  }
+    100%{   color: red;    }
+}
+
+/* change text/color/font for subtopics header off to the side */
+p#headerForSubtopics {
+	color: blue;
+	font-size: 30px;
+	font: papyrus;
+}
 	
-	/* change text/color/font for subtopics off to the side */
-	p#headerForSubtopics {
-		color: blue;
-		font-size: 30px;
-		font: papyrus;
-	}
+/*this tooltip stuff didn't work if i only used class=, I had to up the specificity to id but I didn't have to put
+in the head of base.html */
+
+div#tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+div#tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1
+}
+
+div#tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+/* want to send back django variable but not have it visible, use different server params if local/test or remote server */
+#sendServerLoc{
+	display: none;
+}
+	

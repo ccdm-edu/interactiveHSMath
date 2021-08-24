@@ -3,19 +3,11 @@
 {% if subtopics %}
 	<p id="headerForSubtopics"> {{current_topic.name}} Subtopics </p>
 	{% for s in subtopics %}
-		{% if s == current_topic %}
-			<li class="nav-item">
-			<a class="nav-link active" href={{ s.url }}>
-				<span data-feather="archive"></span>{{ s.title }}
-			</a>
-			</li>
-		{% else %}
-			<li class="nav-item">
-			<a class="nav-link" href={{ s.url }}>
-			<span data-feather="archive"></span>{{ s.title }}
-			</a>
-			</li>
-		{% endif %}
+		<li class="nav-item">
+		<a class="nav-link" href={{ s.url }}>
+			<span data-feather="heart" ></span>{{ s.title }}
+		</a>
+		</li>
 	{% endfor %}
 {% else %}
 	<li class="nav-item">Select a subject from menu and will get subtopics here.</li>

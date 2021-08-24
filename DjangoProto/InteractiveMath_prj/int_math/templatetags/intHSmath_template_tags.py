@@ -10,5 +10,4 @@ register = template.Library()
  
 @register.inclusion_tag('int_math/subtopics.html')
 def get_subtopic_list(topic = None):
-    return{'subtopics': Subtopic.objects.filter(topic=topic),
-           'current_topic': topic}
+    return{'subtopics': Subtopic.objects.filter(topic=topic)}
