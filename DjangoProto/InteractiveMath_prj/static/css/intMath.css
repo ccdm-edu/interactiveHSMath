@@ -1,3 +1,4 @@
+/****************Landing page***************************/
 /* blinking color changing word "fun" on landing page */
 span#blinkingColor {
     animation:blinkingColorText 1.2s infinite;
@@ -9,16 +10,43 @@ span#blinkingColor {
     99%{    color:transparent;  }
     100%{   color: red;    }
 }
+/*  center the logo on landing page */
+#logo-home-page {
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+	width: 80%;
+	animation-name: logo-fade-away;
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
+}
+@keyframes logo-fade-away{
+	 0%   {opacity: 1.0;}
+	 25%   {opacity: 0.8;}
+	 50%   {opacity: 0.5;}
+	 75%   {opacity: 0.3;}
+	 100%   {opacity: 0.05;}
+}
+div.home_expln p {
+	margin: 5%;
+    font-weight: bold;
+    color: #000000;
+}
 
+/****************All pages, subtopic section on left side***************************/
 /* change text/color/font for subtopics header off to the side */
 p#headerForSubtopics {
 	color: blue;
 	font-size: 30px;
 	font: papyrus;
 }
-	
-/*this tooltip stuff didn't work if i only used class=, I had to up the specificity to id but I didn't have to put
-in the head of base.html */
+
+/****************All pages, tool tips***************************/
+/*this tooltip stuff didn't work if i only used class=, I had to up the specificity to id  */
+
+div:hover p {
+  display: block;
+}
 
 div#tooltip {
   position: relative;
