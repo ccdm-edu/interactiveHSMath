@@ -7,17 +7,8 @@
     
 {% block body_block %}
 
-	<img src="{% static 'images/TrigDividerTruncClean.jpg' %}" alt = "Musical Decoration before showing how sine/cos relates to musical notes">
-	<!-- Image above needs to give credit to creator, see below -->
-	<p style="font-size: 0.9rem;font-style: italic;"> 
-	<a href="https://www.flickr.com/photos/31355686@N00/2310453999">"MUSIC: 200603-200803 Listening History Graph"</a>
-	<span> by <a href="https://www.flickr.com/photos/31355686@N00">Claire CJS</a></span> is licensed under 
-	<a href="https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch&atype=html" style="margin-right: 5px;">CC BY-NC-SA 2.0</a>
-	</p>
-
 <!-- SineCosID is a placemarker for begin of link to go to sine cosine tones and musical notes -->
 <div id="SineCosID">
-    <br></br>
 	<div id ="headerAndCtl">
     	<input type="button" id="allowNotePlay" value="Play Note">  	
     	<textarea readonly id="musicalActivity" rows = "1" >Test header </textarea>
@@ -115,7 +106,7 @@
 	<script>
 		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
 	</script>
-    
+
     <script src="{% static 'js/SinCosTune.js' %}" crossorigin="anonymous"></script>	
 </div>
 {% endblock %}

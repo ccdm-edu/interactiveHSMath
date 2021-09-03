@@ -1,4 +1,8 @@
 /****************Landing page***************************/
+/* make parts of header red, parts black, just like the logo */
+span#homePageHeader {
+	color: red;
+}
 /* blinking color changing word "fun" on landing page */
 span#blinkingColor {
     animation:blinkingColorText 1.2s infinite;
@@ -10,29 +14,40 @@ span#blinkingColor {
     99%{    color:transparent;  }
     100%{   color: red;    }
 }
-/*  center the logo on landing page */
+/*  center the logo on landing page, have it explode out and fade away */
 #logo-home-page {
 	display: block;
     margin-left: auto;
     margin-right: auto;
-	width: 80%;
+	width: 50%;
+	position: relative;
 	animation-name: logo-fade-away;
 	animation-duration: 2s;
 	animation-fill-mode: forwards;
 }
 @keyframes logo-fade-away{
-	 0%   {opacity: 1.0;}
-	 25%   {opacity: 0.8;}
-	 50%   {opacity: 0.5;}
-	 75%   {opacity: 0.3;}
-	 100%   {opacity: 0.05;}
+	 0%   {opacity: 1.0; width: 50%}
+	 50%   {opacity: 1.0; width: 100%}
+	 100%   {opacity: 0.05; width: 80%}
 }
+/* put the home page verbiage over the logo, invisible at first then fades in after logo "burst" */
 div.home_expln p {
-	margin: 5%;
+	margin: 10%;
     font-weight: bold;
     color: #000000;
+    position: relative;
+    top: -450px;
+    font-size: 18px;
+    opacity: 0.0;
+    animation-name: expln_fade_in;
+	animation-duration: 2s;
+	animation-delay: 2s;
+	animation-fill-mode: forwards;
 }
-
+@keyframes expln_fade_in{
+	 0%  {opacity: 0.0;}
+	 100%   {opacity: 1.0;}
+}
 /****************All pages, subtopic section on left side***************************/
 /* change text/color/font for subtopics header off to the side */
 p#headerForSubtopics {

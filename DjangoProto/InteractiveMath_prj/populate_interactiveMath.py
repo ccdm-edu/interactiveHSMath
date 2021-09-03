@@ -8,12 +8,12 @@ from int_math.models import Topic, Subtopic
 
 def populate():
     
-    #first we will create the subtopics for each topic
+    #first we will create the subtopics for each topic. For trig, we land on the Origin page but then URL constructed relative
+    # to that page so need .. to get to pages on same level
     trig_subtopics = [
-        {'title': 'Origin of trig functions', 'url':'#top'},
-        {'title': 'Sine Cosine Tones and Musical Notes', 'url':'#SineCosID'},
-        {'title':'Next Trig topic 1', 'url':'#NextTrigTopic1'},
-        {'title':'Next Trig Topic 2', 'url':'#NextTrigTopic1'}]
+        {'title': 'Origin of Sine Cosine', 'url':'../OriginTrig'},
+        {'title':'Sine Cosine in Action', 'url':'../DynamicTrig'},
+        {'title': 'Sine Cosine Tones and Musical Notes', 'url':'../ToneTrig'}]
     
     imag_num_subtopics = [
         {'title':'Imag Num topic 1', 'url':'#ImagNumTopic1'},

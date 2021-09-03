@@ -31,6 +31,7 @@
     <link href="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css" rel="stylesheet">
     <!-- want to override things here -->
     <link href="{%static 'css/intMath.css' %}" rel="stylesheet">
+    <link href="{%static 'css/SinCosIntro.css' %}" rel="stylesheet">
     <link href="{%static 'css/SinCosTune.css' %}" rel="stylesheet">
 
 
@@ -55,7 +56,7 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item"><a class="nav-link" href="{% url 'int_math:index' %}">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:trig' %}">Trig Functions</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:OriginTrig' %}">Trig Functions</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'int_math:imag_num' %}">Imaginary Numbers</a></li>
                     </ul>
                 </div>
