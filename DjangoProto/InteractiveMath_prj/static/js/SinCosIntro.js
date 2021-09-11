@@ -91,7 +91,7 @@ $(function() {
 			// 180 degrees
 			x: CIRC_X0 - Math.round((amp * CIRC_RAD)),
 			y: CIRC_Y0,
-			xcos:  Math.round((amp * CIRC_RAD)),
+			xcos:  -Math.round((amp * CIRC_RAD)),
 			ysin:  0,
 			angleRad: Math.PI,
 		},
@@ -392,9 +392,7 @@ $(function() {
 	ctxExpandableUnitCircle.stroke();
 	console.log(" width is " + circleDotsCanvas.width + " height is " + circleDotsCanvas.height);
 	
-	
-	
-	
+		
 	const NUM_ANIMATION_SIN_COS = 5;
 	let sinLineMovement = [];
 	let cosLineMovement = [];
@@ -404,37 +402,44 @@ $(function() {
 		let x2Axis = TRIG_X_ORIGIN + thetaGraph[indx].pix;
 		let x2Graph = x2Axis;
 		let y2Axis;
+		let y2Graph;
+		let makeAPoint = 0;  // if sin/cos is zero, let a tiny point travel to the graph, else this does nothing
 		if (whichGraph ==="sin") {
 			 //we know x axis origin of sin graph is at SIN_Y_ORIGIN
 			y2Axis = SIN_Y_ORIGIN;
+			// remember, Y grows downward (yeah, counterintuitive
+			y2Graph = y2Axis - schoolAngles[indx].ysin;
+			if (y1Circ === y1Axis) {
+				makeAPoint = 5;	// if sin = 0, want to show a tiny point moving to proper place, else nothing would move	
+			}
 		} else if (whichGraph == "cos") {
 			 //we know x axis origin of cos graph is at COS_Y_ORIGIN
 			y2Axis = COS_Y_ORIGIN;
-		}
-		// remember, Y grows downward (yeah, counterintuitive
-		let y2Graph = y2Axis - schoolAngles[indx].ysin;
-		
-		console.log("i = "+indx+"start is ( " + x1Axis + "," + y1Axis + ") on axis and (" + x1Circ +"," + y1Circ);
-		console.log(" on plot, sine is " + schoolAngles[indx].ysin);
-		console.log("  end at point (" + x2Axis +","+ y2Axis +") on axis and (" + x2Graph+","+ y2Graph);
-		
-		if (whichGraph ==="sin") {
-			// sin line starts out vertical and ends up vertical
-			let deltaX_Pt = (x2Graph - x1Circ)/NUM_ANIMATION_SIN_COS;
-			let deltaX_Ax = (x2Axis - x1Axis)/NUM_ANIMATION_SIN_COS;
-			let deltaY_Pt = (y2Graph - y1Circ)/NUM_ANIMATION_SIN_COS;
-			let deltaY_Ax = (y2Axis - y1Axis)/NUM_ANIMATION_SIN_COS;
-			for (var i=1; i <= NUM_ANIMATION_SIN_COS; i++) {
-				line = {"begin_x": Math.round(x1Axis + i * deltaX_Ax), 
-						"begin_y": Math.round(y1Axis + i * deltaY_Ax), 
-						"end_x": Math.round(x1Circ + i * deltaX_Pt), 
-						"end_y": Math.round(y1Circ + i * deltaY_Pt) };
-				console.log(" line is begin_x=" + line.begin_x + " begin_y=" + line.begin_y + " end_x=" + line.end_x + " end_y" + line.end_y);
-				sinLineMovement.push(line);
+			// remember, Y grows downward (yeah, counterintuitive
+			y2Graph = y2Axis - schoolAngles[indx].xcos;
+			if (x1Circ === x1Axis) {
+				makeAPoint = 5;	// if cos = 0, want to show a tiny point moving to proper place, else nothing would move
+				console.log("COS = 0 is activated to give a point");	
 			}
-		} else if (whichGraph == "cos") {
-			// cos line starts out horizontal and ends up vertical, try doing in one step...
-		}		
+		}
+				
+		let deltaX_Pt = (x2Graph - x1Circ)/NUM_ANIMATION_SIN_COS;
+		let deltaX_Ax = (x2Axis - x1Axis)/NUM_ANIMATION_SIN_COS;
+		let deltaY_Pt = (y2Graph - y1Circ)/NUM_ANIMATION_SIN_COS;
+		let deltaY_Ax = (y2Axis - y1Axis)/NUM_ANIMATION_SIN_COS;
+				
+		for (var i=1; i <= NUM_ANIMATION_SIN_COS; i++) {
+			line = {"begin_x": Math.round(x1Axis + i * deltaX_Ax), 
+					"begin_y": Math.round(y1Axis + i * deltaY_Ax), 
+					"end_x": Math.round(x1Circ + i * deltaX_Pt), 
+					"end_y": Math.round(y1Circ + i * deltaY_Pt + makeAPoint) };
+			//console.log(" line is begin_x=" + line.begin_x + " begin_y=" + line.begin_y + " end_x=" + line.end_x + " end_y" + line.end_y);
+			if (whichGraph ==="sin") {
+				sinLineMovement.push(line);
+			} else {
+				cosLineMovement.push(line);
+			}
+		}
 	}
 	
 	// animate the sine/cos lines from circle to move to the graphs
@@ -443,18 +448,29 @@ $(function() {
 	let preAnimatePlot;
 	setInterval(function(){
 		if (doAnimation) {
+			// dont start till both line arrays are ready
 			ctxExpandableUnitCircle.putImageData(preAnimatePlot, 0, 0);
+			// place the sine line
 			ctxExpandableUnitCircle.beginPath();
 			ctxExpandableUnitCircle.lineWidth = 3.0;
 			ctxExpandableUnitCircle.strokeStyle = 'blue';
 			ctxExpandableUnitCircle.moveTo(sinLineMovement[ind].begin_x, sinLineMovement[ind].begin_y);
-			ctxExpandableUnitCircle.lineTo(sinLineMovement[ind].end_x, sinLineMovement[ind++].end_y);
+			ctxExpandableUnitCircle.lineTo(sinLineMovement[ind].end_x, sinLineMovement[ind].end_y);
 			ctxExpandableUnitCircle.stroke();
-			console.log(" inside animation, ind = " +ind+" total looping is "+sinLineMovement.length);
-			if (sinLineMovement.length == ind) {
+			// place the cosine line
+			ctxExpandableUnitCircle.beginPath();
+			ctxExpandableUnitCircle.lineWidth = 3.0;
+			ctxExpandableUnitCircle.strokeStyle = 'red';
+			ctxExpandableUnitCircle.moveTo(cosLineMovement[ind].begin_x, cosLineMovement[ind].begin_y);
+			ctxExpandableUnitCircle.lineTo(cosLineMovement[ind].end_x, cosLineMovement[ind].end_y);
+			ctxExpandableUnitCircle.stroke();
+			ind++;
+			console.log(" animation ind = " + ind);
+			if (sinLineMovement.length == ind)  {
 				doAnimation = false;
 				// we are done with this animation array, empty it and reset counter
 				sinLineMovement = [];
+				cosLineMovement = [];
 				ind = 0;
 			}
 		}
@@ -537,8 +553,10 @@ $(function() {
 				
 				// now animate the sine/cos lines going over to graph, first fill in the array, then turn on animate
 				animate_circ2graph("sin", dot.x, CIRC_Y0, dot.x, dot.y, cntr);
+				animate_circ2graph("cos", CIRC_X0, CIRC_Y0, dot.x, CIRC_Y0, cntr);
+				console.log("sin length is " + sinLineMovement.length + "cosine len is " + cosLineMovement.length)
 				doAnimation = true;
-		    }
+		    }	
 		    cntr = cntr + 1;
 		});
 	});
