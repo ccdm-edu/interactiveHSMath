@@ -10,7 +10,7 @@ $(function() {
     	console.log('Cannot obtain Sin/Cos unit circle context');
 	}
 	
-	let amp = 1.1;
+	let amp = 0.8;
 	const MAX_AMP = 1.1;
 	const CIRC_X0 = 210;
 	const CIRC_Y0 = 210;
@@ -169,7 +169,30 @@ $(function() {
 	ctxExpandableUnitCircle.moveTo(CIRC_X0 - HALF_AXIS, CIRC_Y0);
 	ctxExpandableUnitCircle.lineTo(CIRC_X0 + HALF_AXIS, CIRC_Y0);
 	ctxExpandableUnitCircle.font = '20px Arial';
-	ctxExpandableUnitCircle.fillText("x", CIRC_X0 + HALF_AXIS + 5, CIRC_Y0 + 5);	
+	ctxExpandableUnitCircle.fillText("x", CIRC_X0 + HALF_AXIS + 5, CIRC_Y0 + 5);
+	ctxExpandableUnitCircle.stroke();	
+	
+	// draw x and y axis tick marks for other amplitudes, we will do 0.1 ticks up to 1.1, 1.1 is as big as I want sin/cos
+	// graphs to get
+	for(var i=1; i<= 11; i++){ 
+		ctxExpandableUnitCircle.beginPath();
+		// y axis
+		ctxExpandableUnitCircle.moveTo(CIRC_X0 - 5, CIRC_Y0 - 0.1 * i * CIRC_RAD);
+		ctxExpandableUnitCircle.lineTo(CIRC_X0 + 5, CIRC_Y0 - 0.1 * i * CIRC_RAD);
+		// x axis
+		ctxExpandableUnitCircle.moveTo(CIRC_X0 + 0.1 * i * CIRC_RAD, CIRC_Y0 + 5);
+		ctxExpandableUnitCircle.lineTo(CIRC_X0 + 0.1 * i * CIRC_RAD, CIRC_Y0 - 5);
+		ctxExpandableUnitCircle.stroke();
+	}
+	// label 0.5 and 1.0 on each x and y axis
+	ctxExpandableUnitCircle.font = '10px Arial';
+	// y axis ticks
+	ctxExpandableUnitCircle.fillText("0.5", CIRC_X0 + 5, CIRC_Y0 - 0.1 * 5 * CIRC_RAD + 3);	
+	ctxExpandableUnitCircle.fillText("1.0", CIRC_X0 + 5, CIRC_Y0 - 0.1 * 10 * CIRC_RAD + 3);
+	// x axis ticks
+	ctxExpandableUnitCircle.fillText("0.5", CIRC_X0  + 0.1 * 5 * CIRC_RAD - 8, CIRC_Y0 + 13);	
+	ctxExpandableUnitCircle.fillText("1.0", CIRC_X0  + 0.1 * 10 * CIRC_RAD - 8, CIRC_Y0 + 13);
+	
 				
 				
 	ctxExpandableUnitCircle.stroke();
@@ -260,6 +283,31 @@ $(function() {
 	rightArrow(TRIG_X_ORIGIN + TRIG_AXIS, SIN_Y_ORIGIN);
 	upArrow(TRIG_X_ORIGIN, SIN_Y_ORIGIN - MAX_AMP_AXIS);
 	downArrow(TRIG_X_ORIGIN, SIN_Y_ORIGIN + MAX_AMP_AXIS);  
+	
+	// draw y axis tick marks for other amplitudes, we will do 0.1 ticks up to 1.1, 1.1 is as big as I want sin/cos
+	// graphs to get
+	for(var i=1; i<= 11; i++){ 
+		ctxExpandableUnitCircle.beginPath();
+		// y axis sin
+		ctxExpandableUnitCircle.moveTo(TRIG_X_ORIGIN - 5, SIN_Y_ORIGIN - 0.1 * i * CIRC_RAD);
+		ctxExpandableUnitCircle.lineTo(TRIG_X_ORIGIN + 5, SIN_Y_ORIGIN - 0.1 * i * CIRC_RAD);
+		// y axis cos
+		ctxExpandableUnitCircle.moveTo(TRIG_X_ORIGIN - 5, COS_Y_ORIGIN - 0.1 * i * CIRC_RAD);
+		ctxExpandableUnitCircle.lineTo(TRIG_X_ORIGIN + 5, COS_Y_ORIGIN - 0.1 * i * CIRC_RAD);
+		ctxExpandableUnitCircle.stroke();
+	}
+	// label 0.5 and 1.0 on each y sin and y cos axis
+	ctxExpandableUnitCircle.font = '10px Arial';
+	// y sin axis ticks
+	ctxExpandableUnitCircle.fillText("0.5", TRIG_X_ORIGIN - 15, SIN_Y_ORIGIN - 0.1 * 5 * CIRC_RAD);	
+	ctxExpandableUnitCircle.fillText("1.0", TRIG_X_ORIGIN - 15, SIN_Y_ORIGIN - 0.1 * 10 * CIRC_RAD);
+	// y cos axis ticks
+	ctxExpandableUnitCircle.fillText("0.5", TRIG_X_ORIGIN - 15, COS_Y_ORIGIN - 0.1 * 5 * CIRC_RAD);	
+	ctxExpandableUnitCircle.fillText("1.0", TRIG_X_ORIGIN - 15, COS_Y_ORIGIN - 0.1 * 10 * CIRC_RAD);
+
+	
+	
+	
 	
 	// draw dashed amplitude bar at current point
 	ctxExpandableUnitCircle.beginPath();
@@ -496,7 +544,6 @@ $(function() {
 		let cntr = 0;
 		schoolAngles.forEach(dot => {
 			// not sure yet which dot the user clicked on, must search all
-			let result = (isInside(pos, dot, DOT_RADIUS));
 			if (isInside(pos, dot, DOT_RADIUS)) {
 				// we found the dot the user clicked on
 		  		//clear any old drawings before we put up the new stuff, take it back to the background image
@@ -560,5 +607,5 @@ $(function() {
 		    cntr = cntr + 1;
 		});
 	});
-	
+
 })
