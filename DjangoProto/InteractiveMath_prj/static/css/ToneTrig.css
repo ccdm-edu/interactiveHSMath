@@ -1,3 +1,6 @@
+/***********************
+This is the style sheet for ToneTrig.html
+************************/
 #headerAndCtl {
 	position: relative;
 }
@@ -14,15 +17,23 @@
 	position: absolute;
 	display: none;
 	left: 0px;
+	top: 20px;
 }
+/* This allows user to choose text box to be either a Do list or explanation */
+#ToDo_or_expln {
+	position: relative;
+	left: 120px;
+	top: 20px;
+}
+/* this is a header of current activity*/
 #musicalActivity {
 	position: absolute;
 	border: 0px;
 	resize: none;
-	left: 350px;
+	left: 300px;
 	width: 700px;
 	font-weight: bold;
-	font-size: 22px;
+	font-size: 32px;
 	}
 /*****************************************************************/
 /* This is the three side by side controls 1.  treble clef that picks instrument/note 2.  explanation of current activity 3.  tone param changes */

@@ -1,3 +1,7 @@
+/***********************
+This is the style sheet for the entire website and all common items
+************************/
+
 /****************Landing page***************************/
 /* make parts of header red, parts black, just like the logo */
 span#homePageHeader {
@@ -90,5 +94,13 @@ div#tooltip:hover .tooltiptext {
 /* want to send back django variable but not have it visible, use different server params if local/test or remote server */
 #sendServerLoc{
 	display: none;
+}
+/************all pages, footer **************************/
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 2.5rem;
+	color: black;
 }
 	

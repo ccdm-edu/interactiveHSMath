@@ -31,8 +31,8 @@
     <link href="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css" rel="stylesheet">
     <!-- want to override things here -->
     <link href="{%static 'css/intMath.css' %}" rel="stylesheet">
-    <link href="{%static 'css/SinCosIntro.css' %}" rel="stylesheet">
-    <link href="{%static 'css/SinCosTune.css' %}" rel="stylesheet">
+    <link href="{%static 'css/StaticTrig.css' %}" rel="stylesheet">
+    <link href="{%static 'css/ToneTrig.css' %}" rel="stylesheet">
 
 
 	<!--  style blocks dont like comments in the middle -->
@@ -56,7 +56,7 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item"><a class="nav-link" href="{% url 'int_math:index' %}">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:OriginTrig' %}">Trig Functions</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:StaticTrig' %}">Trig Functions</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'int_math:imag_num' %}">Imaginary Numbers</a></li>
                     </ul>
                 </div>
@@ -74,13 +74,14 @@
                 </nav>
                 
                 <main role="main" class="col-md-9  ml-sm-auto col-lg-10 px-4">		
-                    {% block body_block %}{% endblock %}
-                    
-                    <!-- FOOTER -->
-                    <footer>
-                        <p class="float-right"><a href="#">Back to top</a></p>
-                        <p>&copy; 2021 Interactable Math &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
-                    </footer>
+	                    {% block body_block %}
+	                    {% endblock %}
+	                    
+	                    <!-- FOOTER -->
+	                    <footer>
+	                        <p class="float-right"><a href="#">Back to top</a></p>
+	                        <p>&copy; 2021 Interactable Math &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+	                    </footer>
                 </main>
             </div>
         </div>

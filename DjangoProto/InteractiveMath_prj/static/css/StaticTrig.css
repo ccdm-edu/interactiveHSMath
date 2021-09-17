@@ -1,0 +1,78 @@
+/***********************
+This is the style sheet for the StaticTrig.html page
+************************/
+/* create canvas for expandable unit circle, position = relative lets the footer float to bottom for all parent elements.
+We use negative value for top since we want some overlap*/
+#AmpSinCosCircle{
+	 position:relative; 
+	 top:-50px; 
+	 left: 10px;
+}
+/***************************/
+/* put a label up and an expln/to do selector input box */
+#headerAndCtl {
+	position: relative;
+	top: 0px;
+	width: auto;
+}
+#ToDo_or_expln {
+	position: absolute;
+	left: 10px;
+}
+/* text header of page activity*/
+#HeaderTrig1 {
+	position: absolute;
+	border: 0px;
+	left: 400px;
+	font-weight: bold;
+	font-size: 32px;
+}
+/***************************/
+/* item 2, explanation of current activity in read only box */ 
+#HelpBox {
+		  position: relative;
+          left: 50px;
+          top: 30px;
+          background-color:white; 
+}
+/************Params that define circle***************/
+/* arrange all the parms that feed into or get info out of circle */
+#CircleValues {
+	position: relative;
+}
+#ampCircLabel {
+	position: absolute;
+	left: 50px;
+	top: 75px;
+}
+/* need to ensure spinbox is on top so users can input values, else up/down arrows and input not active, just visible*/
+#ampCirc {
+	position: absolute;
+	left: 50px;
+	top: 100px;
+	z-index: 9;
+}
+#xyValueLabel {
+	position: absolute;
+	left: 170px;
+	top: 75px;
+}
+#xyValue {
+	position: absolute;
+	left: 170px;
+	top: 100px;
+	resize: none;
+}
+#theta {
+	position: absolute;
+	left: 300px;
+	top: 100px;
+	resize: none;
+}
+#thetaLabel {
+	position: absolute;
+	left: 300px;
+	top: 75px;
+}
+/***************************/
+		

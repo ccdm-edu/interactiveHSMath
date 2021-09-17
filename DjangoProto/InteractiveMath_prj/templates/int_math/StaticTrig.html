@@ -1,0 +1,46 @@
+{% extends 'int_math/base.html' %}
+
+{% load static %} <!--  another difference from django 2 to 3.1 -->
+
+{%block title_block %}
+	{{ page_tab_header }}
+{% endblock %}
+    
+{% block body_block %}
+
+	<div id ="headerAndCtl">
+		<input type="button" id="ToDo_or_expln" value="Explain">
+		<textarea readonly id="HeaderTrig1" rows = "1" >Static Trig Functions </textarea>
+	</div>
+	<div id="HelpBox">
+	 	<textarea readonly id="LongTextBox" rows = '4' cols = "50">Help is here </textarea>
+	</div>
+	<div id="CircleValues">	
+		<label id="ampCircLabel">Amplitude (R)</label>
+		<input id="ampCirc" type="number" min="0" max="2" step="0.1" value="1.0" required>	
+		<label id="xyValueLabel">(x,y)</label>
+		<textarea readonly id="xyValue" rows = '2' cols = "10">(x,y) </textarea>
+		<label id="thetaLabel">&#920</label>
+		<textarea readonly id="theta" rows = '2' cols = "9">rad, deg </textarea>
+		
+	</div>
+	
+	<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
+	<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas:  you must set bitmap for canvas in html, css only -->
+	<!-- sets element size, resulting in distortion -->
+	<canvas id="AmpSinCosCircle" width=1050 height=650>
+		Your Browser does not support canvas tag, you are missing graph capability
+	</canvas>
+	
+	<!--  have to put another jquery library ref here, not sure why, its in the base -->	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script>
+		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
+	</script>
+	
+	<script src="{% static 'js/Utils.js' %}" crossorigin="anonymous"></script>	    
+	<script src="{% static 'js/StaticTrig.js' %}" crossorigin="anonymous"></script>	    
+	<br><br>
+
+	
+{% endblock %}

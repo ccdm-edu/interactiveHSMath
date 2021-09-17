@@ -16,6 +16,7 @@ $(function() {
 	let tuneState = [];
 	let currTuneState = DEFAULT_TONE;  // pick the first element, which will be the synthesized tones
 	let tuneExpln = [];
+	let tuneToDo = []
 	let tuneFilename = [];
 	let tuneTitle = [];
 	let tuneBuffer = [];  // array of AudioBuffer for currTuneState 1 through N, all musical notes, used to play full mp3 file
@@ -29,7 +30,7 @@ $(function() {
 	
 	//everything is relative to the html page this code operates on, server needs to work from /static directory (without django intervention)
 	const STATIC_FILE_LOC = "../../static/json/";
-	const urlInitValJson = STATIC_FILE_LOC + "MusicNotesConfig.json";
+	const urlInitValJson = STATIC_FILE_LOC + "ToneTrigConfig.json";
 	const MUSIC_FILE_LOC = "../../static/MusicNotes/";
 	
 	
@@ -271,7 +272,8 @@ $(function() {
 	$('#InstrumentDropDownMenu .dropdown-menu li a').on('click', function(event){
 		let selectItem = $('#InstrumentDropDownMenu .dropdown-menu li a').index($(this));
 		currTuneState = selectItem;
-		$("#classExpln").text(tuneExpln[currTuneState]);
+		$("#LongTextBox").text(tuneToDo[currTuneState]);
+		$("#ToDo_or_expln").prop("value", "Explain");
 		$("#musicalActivity").text(tuneTitle[currTuneState]);
 		if (currTuneState === DEFAULT_TONE) {
 			// no instruments to play, its tone only.  No need for a play tone button
@@ -399,7 +401,21 @@ $(function() {
         }
     });	
 
-	
+	//*****
+	// User can choose a TO DO set for the text box or an explanation, this code is the implementation
+	//*****
+	$('#ToDo_or_expln').on('click', function(event){
+		if ("Explain" == $("#ToDo_or_expln").prop("value")) {
+			// currently showing the Try This text.  Move into explanation text
+			$("#LongTextBox").text(tuneExpln[currTuneState]);
+			$("#ToDo_or_expln").prop("value", "Try This");
+		} else {
+			// currently showing the explanation text.  Move into Try This text
+			$("#LongTextBox").text(tuneToDo[currTuneState]);
+			$("#ToDo_or_expln").prop("value", "Explain");
+		}
+    });	
+		
 	//***********************************
 	//  Immediate execution here
 	//***********************************
@@ -552,14 +568,16 @@ $(function() {
 			if (status === 'success') {				
 				$.each(data.TestNote, function(index, paramSet) {
 					tuneState[index] = (paramSet.instrument).replace(" ","_") + "_" + paramSet.musicalNote;
-					tuneExpln[index] = paramSet.expln;					
+					tuneExpln[index] = paramSet.expln;		
+					tuneToDo[index]= paramSet.todo;			
 					tuneFilename[index] = MUSIC_FILE_LOC + paramSet.filename;
 					tuneTitle[index] = paramSet.title;
 					tuneOffset[index] = parseInt(paramSet.tuneOffset);
 					tuneFundamentalFreq[index] = parseInt(paramSet.fundamentalHz);
 					tuneFundamentalPhase[index] = parseInt(paramSet.fundamentalPhase);
 				});
-				$("#classExpln").text(tuneExpln[currTuneState]);
+				$("#LongTextBox").text(tuneToDo[currTuneState]);
+				$("#ToDo_or_expln").prop("value", "Explain");
 				$("#musicalActivity").text(tuneTitle[currTuneState]);
 			}
 			else {

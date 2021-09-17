@@ -10,7 +10,8 @@
 <!-- SineCosID is a placemarker for begin of link to go to sine cosine tones and musical notes -->
 <div id="SineCosID">
 	<div id ="headerAndCtl">
-    	<input type="button" id="allowNotePlay" value="Play Note">  	
+    	<input type="button" id="allowNotePlay" value="Play Note"> 
+    	<input type="button" id="ToDo_or_expln" value="Explain">  	
     	<textarea readonly id="musicalActivity" rows = "1" >Test header </textarea>
     </div>
     
@@ -25,11 +26,12 @@
 	   		<ul class="dropdown-menu" role="menu" aria-labelledby="InstrumentToneMenu">
 				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Tone Only</a></li>
 				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">B<span>&#9837;</span> Trumpet plays C5</a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Clarinet plays C5</a></li>
 	   		</ul>
 	    </div>
 	    
 	    <div id="ExplnBox">
-	    <textarea readonly id="classExpln" rows = '4' cols = "50">Help is here </textarea>
+	    <textarea readonly id="LongTextBox" rows = '4' cols = "50">Help is here </textarea>
 	    </div>
 		    
 		<!--  dont put tables inside a div, they stop "working", elements aren't functional anymore -->
@@ -107,7 +109,7 @@
 		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
 	</script>
 
-    <script src="{% static 'js/SinCosTune.js' %}" crossorigin="anonymous"></script>	
+    <script src="{% static 'js/ToneTrig.js' %}" crossorigin="anonymous"></script>	
 </div>
 {% endblock %}
 
