@@ -28,12 +28,13 @@ We use negative value for top since we want some overlap*/
 	font-size: 32px;
 }
 /***************************/
-/* item 2, explanation of current activity in read only box */ 
-#HelpBox {
+/* item 2, explanation of current activity in read only box,  Need this box to be above the canvas so sidebars active */ 
+#LongTextBox {
 		  position: relative;
           left: 50px;
           top: 30px;
           background-color:white; 
+          z-index: 10;
 }
 /************Params that define circle***************/
 /* arrange all the parms that feed into or get info out of circle */
@@ -73,6 +74,11 @@ We use negative value for top since we want some overlap*/
 	position: absolute;
 	left: 300px;
 	top: 75px;
+}
+#TossMeOut {
+	position: absolute;
+	left: 300px;
+	top: 175px;	
 }
 /***************************/
 		

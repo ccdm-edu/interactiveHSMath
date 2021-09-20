@@ -19,9 +19,11 @@
 		<label id="ampCircLabel">Amplitude (R)</label>
 		<input id="ampCirc" type="number" min="0" max="2" step="0.1" value="1.0" required>	
 		<label id="xyValueLabel">(x,y)</label>
-		<textarea readonly id="xyValue" rows = '2' cols = "10">(x,y) </textarea>
+		<p id="xyValue"">  </p>
 		<label id="thetaLabel">&#920</label>
-		<textarea readonly id="theta" rows = '2' cols = "9">rad, deg </textarea>
+		<p id="theta">  </p>
+		<p id="TossMeOut">test
+		</p>
 		
 	</div>
 	
@@ -38,8 +40,13 @@
 		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
 	</script>
 	
+	<!-- the next two scripts bring in mathjax, which is compatible with most number of browsers, these scripts will keep up with version changes in mathjax --> 
+	<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+	</script>
+	<!-- Custom JS for this page -->
 	<script src="{% static 'js/Utils.js' %}" crossorigin="anonymous"></script>	    
-	<script src="{% static 'js/StaticTrig.js' %}" crossorigin="anonymous"></script>	    
+	<script src="{% static 'js/StaticTrig.js' %}" crossorigin="anonymous"></script>	 
+	
 	<br><br>
 
 	
