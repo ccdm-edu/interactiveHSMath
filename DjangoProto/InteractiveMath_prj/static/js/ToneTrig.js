@@ -272,8 +272,8 @@ $(function() {
 	$('#InstrumentDropDownMenu .dropdown-menu li a').on('click', function(event){
 		let selectItem = $('#InstrumentDropDownMenu .dropdown-menu li a').index($(this));
 		currTuneState = selectItem;
-		$("#LongTextBox").text(tuneToDo[currTuneState]);
-		$("#ToDo_or_expln").prop("value", "Explain");
+		$("#LongTextBox_TT").text(tuneToDo[currTuneState]);
+		$("#ToDo_or_expln_TT").prop("value", "Explain");
 		$("#musicalActivity").text(tuneTitle[currTuneState]);
 		if (currTuneState === DEFAULT_TONE) {
 			// no instruments to play, its tone only.  No need for a play tone button
@@ -404,15 +404,15 @@ $(function() {
 	//*****
 	// User can choose a TO DO set for the text box or an explanation, this code is the implementation
 	//*****
-	$('#ToDo_or_expln').on('click', function(event){
-		if ("Explain" == $("#ToDo_or_expln").prop("value")) {
+	$('#ToDo_or_expln_TT').on('click', function(event){
+		if ("Explain" == $("#ToDo_or_expln_TT").prop("value")) {
 			// currently showing the Try This text.  Move into explanation text
-			$("#LongTextBox").text(tuneExpln[currTuneState]);
-			$("#ToDo_or_expln").prop("value", "Try This");
+			$("#LongTextBox_TT").text(tuneExpln[currTuneState]);
+			$("#ToDo_or_expln_TT").prop("value", "Try This");
 		} else {
 			// currently showing the explanation text.  Move into Try This text
-			$("#LongTextBox").text(tuneToDo[currTuneState]);
-			$("#ToDo_or_expln").prop("value", "Explain");
+			$("#LongTextBox_TT").text(tuneToDo[currTuneState]);
+			$("#ToDo_or_expln_TT").prop("value", "Explain");
 		}
     });	
 		
@@ -576,8 +576,8 @@ $(function() {
 					tuneFundamentalFreq[index] = parseInt(paramSet.fundamentalHz);
 					tuneFundamentalPhase[index] = parseInt(paramSet.fundamentalPhase);
 				});
-				$("#LongTextBox").text(tuneToDo[currTuneState]);
-				$("#ToDo_or_expln").prop("value", "Explain");
+				$("#LongTextBox_TT").text(tuneToDo[currTuneState]);
+				$("#ToDo_or_expln_TT").prop("value", "Explain");
 				$("#musicalActivity").text(tuneTitle[currTuneState]);
 			}
 			else {

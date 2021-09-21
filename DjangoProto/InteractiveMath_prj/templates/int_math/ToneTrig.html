@@ -9,9 +9,9 @@
 
 <!-- SineCosID is a placemarker for begin of link to go to sine cosine tones and musical notes -->
 <div id="SineCosID">
-	<div id ="headerAndCtl">
+	<div id ="headerAndCtl_TT">
     	<input type="button" id="allowNotePlay" value="Play Note"> 
-    	<input type="button" id="ToDo_or_expln" value="Explain">  	
+    	<input type="button" id="ToDo_or_expln_TT" value="Explain">  	
     	<textarea readonly id="musicalActivity" rows = "1" >Test header </textarea>
     </div>
     
@@ -30,8 +30,8 @@
 	   		</ul>
 	    </div>
 	    
-	    <div id="ExplnBox">
-	    <textarea readonly id="LongTextBox" rows = '4' cols = "50">Help is here </textarea>
+	    <div id="ExplnBox_TT">
+	    <textarea readonly id="LongTextBox_TT" rows = '4' cols = "50">Help is here </textarea>
 	    </div>
 		    
 		<!--  dont put tables inside a div, they stop "working", elements aren't functional anymore -->
@@ -108,7 +108,8 @@
 	<script>
 		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
 	</script>
-
+	<!-- Custom JS for this page -->
+	<script src="{% static 'js/Utils.js' %}" crossorigin="anonymous"></script>	    
     <script src="{% static 'js/ToneTrig.js' %}" crossorigin="anonymous"></script>	
 </div>
 {% endblock %}

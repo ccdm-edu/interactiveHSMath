@@ -59,3 +59,12 @@
 	function isInside(point, circle, radius) {
 		return ((point.x-circle.x) ** 2 + (point.y - circle.y) ** 2) <= (radius) ** 2;
 	};
+	
+	//****************
+	//want to round but leave value as number, not string, so toFixed() is out. 
+	//If x axis is a number, chart js will figure out grid lines/step size as needed
+	function roundFP(number, prec) {
+	    var tempnumber = number * Math.pow(10, prec);
+	    tempnumber = Math.round(tempnumber);
+	    return tempnumber / Math.pow(10, prec);
+	};

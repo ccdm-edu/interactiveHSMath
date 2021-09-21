@@ -1,7 +1,7 @@
 /***********************
 This is the style sheet for ToneTrig.html
 ************************/
-#headerAndCtl {
+#headerAndCtl_TT {
 	position: relative;
 }
 /* do NOT put a space between number and word "px" */
@@ -20,7 +20,7 @@ This is the style sheet for ToneTrig.html
 	top: 20px;
 }
 /* This allows user to choose text box to be either a Do list or explanation */
-#ToDo_or_expln {
+#ToDo_or_expln_TT {
 	position: relative;
 	left: 120px;
 	top: 20px;
@@ -46,7 +46,7 @@ This is the style sheet for ToneTrig.html
           padding: 0px;
 }
 /* item 2, explanation of current activity in read only box */ 
-#ExplnBox {
+#ExplnBox_TT {
 		  position: absolute;
           left: 100px;
           background-color:white; 

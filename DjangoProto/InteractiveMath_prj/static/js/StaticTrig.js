@@ -27,7 +27,8 @@ $(function() {
 	// schoolAngles are the "special" angles that kids learn on the unit circle.  
 	//The params will be defined every time user changes amplitude of circle
 	let schoolAngles;  	
-	let amp = 1.0;
+	let amp = 1.0;  // size of "unit circle", which can grow
+	let ampStr = "";  // amp value converted to string, null if amp=1.0
 	const MAX_AMP = 1.1;   // this is set to keep circle and sin/cos graphs from getting too big
 	const MIN_AMP = 0.8;  //this is set so that the graphics are still readable
 	const CIRC_X0 = 210;
@@ -88,9 +89,9 @@ $(function() {
 	// which will change as user changes amplitude
 	//****
 
-	const SIN_Y_ORIGIN = 175;
-	const TRIG_X_ORIGIN = 600;
-	const COS_Y_ORIGIN = 480;
+	const SIN_Y_ORIGIN = 150;
+	const TRIG_X_ORIGIN = 550;
+	const COS_Y_ORIGIN = 455;
 	const TRIG_AXIS = 420; 
 	const MAX_AMP_AXIS = MAX_AMP * CIRC_RAD + 10;  // needs to be at least MAX_AMP*CIRC_RAD to match the circle values
 	// full theta pix is the number of pixels between 0 and 2pi for both graphs
@@ -108,7 +109,7 @@ $(function() {
 	ctxExpandableUnitCircle.lineTo(TRIG_X_ORIGIN, SIN_Y_ORIGIN - MAX_AMP_AXIS);
 	ctxExpandableUnitCircle.fillStyle = 'black';
 	ctxExpandableUnitCircle.font = '20px Arial';
-	ctxExpandableUnitCircle.fillText("S=Rsin\u03b8", TRIG_X_ORIGIN, SIN_Y_ORIGIN - MAX_AMP_AXIS);
+	ctxExpandableUnitCircle.fillText("S=Rsin(\u03b8)", TRIG_X_ORIGIN - 100, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);
 	ctxExpandableUnitCircle.stroke();
 	ctxExpandableUnitCircle.closePath();
 	// make arrows for Angle-Sin graph
@@ -152,7 +153,7 @@ $(function() {
 	ctxExpandableUnitCircle.lineTo(TRIG_X_ORIGIN, COS_Y_ORIGIN - MAX_AMP_AXIS);
 	ctxExpandableUnitCircle.fillStyle = 'black';
 	ctxExpandableUnitCircle.font = '20px Arial';
-	ctxExpandableUnitCircle.fillText("C=Rcos\u03b8", TRIG_X_ORIGIN, COS_Y_ORIGIN - MAX_AMP_AXIS);	
+	ctxExpandableUnitCircle.fillText("C=Rcos(\u03b8)", TRIG_X_ORIGIN - 100, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);	
 	
 	ctxExpandableUnitCircle.stroke();
 	ctxExpandableUnitCircle.closePath();	
@@ -218,8 +219,9 @@ $(function() {
 				ysin: 0,
 				angleRad: 0, 
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xycoord:  "(1,0)",
+				xycoord:  ampStr + "(1,0)",
 				theta:"0 rad = \\(0^\\circ \\)",
+				xycoordDecimal: "= (" + amp + " , 0)",
 
 			},
 			{
@@ -230,8 +232,9 @@ $(function() {
 				ysin: Math.round((amp * CIRC_RAD)*Math.sin(Math.PI/6)),
 				angleRad: 11*Math.PI/6,
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xycoord: '\\( \\left[ {\\sqrt{3} \\over 2}, \\frac12 \\right] \\)',
-				theta: '\\( {{\\mathrm\\pi} \\over 6 } = 30^\\circ \\)',
+				xycoord: ampStr + '\\( \\left[ {\\sqrt{3} \\over 2}, \\frac12 \\right] \\)',
+				theta: '\\( {{\\mathrm\\pi} \\over 6 } rad = 30^\\circ \\)',
+				xycoordDecimal: "= (" + roundFP(amp*Math.cos(Math.PI/6),3) + " , " + roundFP(amp*Math.sin(Math.PI/6),3) + ")",
 			},
 			{
 				// 45 degrees
@@ -240,6 +243,10 @@ $(function() {
 				xcos: Math.round((amp * CIRC_RAD)*Math.cos(Math.PI/4)),
 				ysin: Math.round((amp * CIRC_RAD)*Math.sin(Math.PI/4)),
 				angleRad: 7*Math.PI/4,
+				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
+				xycoord: ampStr + '\\( \\left[ {\\sqrt{2} \\over 2} , {\\sqrt{2} \\over 2} \\right] \\)',
+				theta: '\\( {{\\mathrm\\pi} \\over 4 } rad = 45^\\circ \\)',
+				xycoordDecimal: "= (" + roundFP(amp*Math.cos(Math.PI/4),3) + " , " + roundFP(amp*Math.sin(Math.PI/4),3) + ")",
 			},
 			{
 				// 60 degrees
@@ -249,8 +256,9 @@ $(function() {
 				ysin: Math.round((amp * CIRC_RAD)*Math.sin(Math.PI/3)),
 				angleRad: 5*Math.PI/3,
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xycoord: '\\( \\left[ \\frac12, {\\sqrt{3} \\over 2} \\right] \\)',
-				theta: '\\( {{\\mathrm\\pi} \\over 3 } = 60^\\circ \\)',
+				xycoord: ampStr + '\\( \\left[ \\frac12, {\\sqrt{3} \\over 2} \\right] \\)',
+				theta: '\\( {{\\mathrm\\pi} \\over 3 } rad = 60^\\circ \\)',
+				xycoordDecimal: "= (" + roundFP(amp*Math.cos(Math.PI/3),3) + " , " + roundFP(amp*Math.sin(Math.PI/3),3) + ")",
 			},
 			{
 				// 90 degrees
@@ -259,8 +267,9 @@ $(function() {
 				xcos: 0,
 				ysin: Math.round((amp * CIRC_RAD)),
 				angleRad: 3*Math.PI/2,
-				xycoord:  "(0,1)",
-				theta: '\\( {{\\mathrm\\pi} \\over 2 } = 90^\\circ \\)'
+				xycoord:  ampStr + "(0,1)",
+				theta: '\\( {{\\mathrm\\pi} \\over 2 } rad = 90^\\circ \\)',
+				xycoordDecimal: "= (0 , " + amp + ")",
 			},
 			{
 				// 120 degrees
@@ -270,8 +279,9 @@ $(function() {
 				ysin: Math.round((amp * CIRC_RAD)*Math.sin((2/3) * Math.PI)),
 				angleRad: (4/3) * Math.PI,
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xycoord: '\\( \\left[ -\\frac12, {\\sqrt{3} \\over 2} \\right] \\)',
-				theta: '\\( {{2\\mathrm\\pi} \\over 3 } = 120^\\circ \\)',
+				xycoord: ampStr + '\\( \\left[ -\\frac12, {\\sqrt{3} \\over 2} \\right] \\)',
+				theta: '\\( {{2\\mathrm\\pi} \\over 3 } rad = 120^\\circ \\)',
+				xycoordDecimal: "= (" + roundFP(amp*Math.cos((2*Math.PI)/3),3) + " , " + roundFP(amp*Math.sin((2*Math.PI)/3),3) + ")",
 			},
 			{
 				// 135 degrees
@@ -280,6 +290,11 @@ $(function() {
 				xcos:  Math.round((amp * CIRC_RAD)*Math.cos(3*Math.PI/4)),
 				ysin:  Math.round((amp * CIRC_RAD)*Math.sin(3*Math.PI/4)),
 				angleRad: 5*Math.PI/4,
+				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
+				xycoord: ampStr + '\\( \\left[ -{\\sqrt{2} \\over 2} , {\\sqrt{2} \\over 2} \\right] \\)',
+				theta: '\\( {{3\\mathrm\\pi} \\over 4 } rad = 135^\\circ \\)',
+				xycoordDecimal: "= (" + roundFP(amp*Math.cos(3*Math.PI/4),3) + " , " + roundFP(amp*Math.sin(3*Math.PI/4),3) + ")",
+				
 			},
 			{
 				// 150 degrees
@@ -290,8 +305,9 @@ $(function() {
 				angleRad: 7*Math.PI/6,
 				xycoord: "\begin{array}{l}\left[-\begin{array}{cc}\frac{\sqrt3}2,&\frac12\end{array}\right]\\(-0.866,\;0.5)\end{array}",
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xycoord: '\\( \\left[ -{\\sqrt{3} \\over 2}, \\frac12 \\right] \\)',
-				theta: '\\( {{5\\mathrm\\pi} \\over 6 } = 150^\\circ \\)',
+				xycoord: ampStr + '\\( \\left[ -{\\sqrt{3} \\over 2}, \\frac12 \\right] \\)',
+				theta: '\\( {{5\\mathrm\\pi} \\over 6 } rad = 150^\\circ \\)',
+				xycoordDecimal: "= (" + roundFP(amp*Math.cos(5*Math.PI/6),3) + " , " + roundFP(amp*Math.sin(5*Math.PI/6),3) + ")",
 			},
 			{
 				// 180 degrees
@@ -300,8 +316,9 @@ $(function() {
 				xcos:  -Math.round((amp * CIRC_RAD)),
 				ysin:  0,
 				angleRad: Math.PI,
-				xycoord:  "(-1,0)",
-				theta: '\\( {\\mathrm\\pi} = 180^\\circ \\)'
+				xycoord:  ampStr + "(-1,0)",
+				theta: '\\( {\\mathrm\\pi} rad = 180^\\circ \\)',
+				xycoordDecimal: "= ( -" + amp + " , " + "0)",
 			},
 			{
 				// 210 degrees
@@ -311,8 +328,9 @@ $(function() {
 				ysin:  Math.round((amp * CIRC_RAD)*Math.sin(7*Math.PI/6)),
 				angleRad: 5*Math.PI/6,
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xycoord: '\\( \\left[ -{\\sqrt{3} \\over 2}, \\frac12 \\right] \\)',
-				theta: '\\( {{7\\mathrm\\pi} \\over 6 } = 210^\\circ \\)',
+				xycoord: ampStr + '\\( \\left[ -{\\sqrt{3} \\over 2}, -\\frac12 \\right] \\)',
+				theta: '\\( {{7\\mathrm\\pi} \\over 6 } rad = 210^\\circ \\)',
+				xycoordDecimal: "= (" + roundFP(amp*Math.cos(7*Math.PI/6),3) + " , " + roundFP(amp*Math.sin(7*Math.PI/6),3) + ")",
 			},
 			{
 				// 225 degrees
@@ -321,6 +339,10 @@ $(function() {
 				xcos:  Math.round((amp * CIRC_RAD)*Math.cos(5*Math.PI/4)),
 				ysin:  Math.round((amp * CIRC_RAD)*Math.sin(5*Math.PI/4)),
 				angleRad: 3*Math.PI/4,
+				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
+				xycoord: ampStr + '\\( \\left[ -{\\sqrt{2} \\over 2} , -{\\sqrt{2} \\over 2} \\right] \\)',
+				theta: '\\( {{5\\mathrm\\pi} \\over 4 } rad = 225^\\circ \\)',
+				xycoordDecimal: "= (" + roundFP(amp*Math.cos(5*Math.PI/4),3) + " , " + roundFP(amp*Math.sin(5*Math.PI/4),3) + ")",
 			},
 			{
 				// 240 degrees
@@ -330,9 +352,9 @@ $(function() {
 				ysin:  Math.round((amp * CIRC_RAD)*Math.sin(4*Math.PI/3)),
 				angleRad: 2*Math.PI/3,
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xycoord: '\\( \\left[ -\\frac12, {-\\sqrt{3} \\over 2} \\right] \\)',
-				theta: '\\( {{4\\mathrm\\pi} \\over 3 } = 240^\\circ \\)',
-
+				xycoord: ampStr + '\\( \\left[ -\\frac12, {-\\sqrt{3} \\over 2} \\right] \\)',
+				theta: '\\( {{4\\mathrm\\pi} \\over 3 } rad = 240^\\circ \\)',
+				xycoordDecimal: "= (" + roundFP(amp*Math.cos(4*Math.PI/3),3) + " , " + roundFP(amp*Math.sin(4*Math.PI/3),3) + ")",
 			},
 			{
 				// 270 degrees
@@ -341,8 +363,9 @@ $(function() {
 				xcos: 0,
 				ysin: -Math.round((amp * CIRC_RAD)),
 				angleRad: Math.PI/2,
-				xycoord:  "(0,-1)",
-				theta: '\\( {3{\\mathrm\\pi} \\over 2 } = 270^\\circ \\)'
+				xycoord:  ampStr + "(0,-1)",
+				theta: '\\( {3{\\mathrm\\pi} \\over 2 } rad = 270^\\circ \\)',
+				xycoordDecimal: "= (0 , " + -amp + ")",
 			},
 			{
 				// 300 degrees
@@ -352,8 +375,9 @@ $(function() {
 				ysin:  Math.round((amp * CIRC_RAD)*Math.sin(5*Math.PI/3)),
 				angleRad: Math.PI/3,
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xycoord: '\\( \\left[ \\frac12, {-\\sqrt{3} \\over 2} \\right] \\)',
-				theta: '\\( {{5\\mathrm\\pi} \\over 3 } = 300^\\circ \\)',
+				xycoord: ampStr + '\\( \\left[ \\frac12, {-\\sqrt{3} \\over 2} \\right] \\)',
+				theta: '\\( {{5\\mathrm\\pi} \\over 3 } rad = 300^\\circ \\)',
+				xycoordDecimal: "= (" + roundFP(amp*Math.cos(5*Math.PI/3),3) + " , " + roundFP(amp*Math.sin(5*Math.PI/3),3) + ")",
 			},	
 			{
 				// 315 degrees
@@ -362,6 +386,11 @@ $(function() {
 				xcos: Math.round((amp * CIRC_RAD)*Math.cos(7*Math.PI/4)),
 				ysin: Math.round((amp * CIRC_RAD)*Math.sin(7*Math.PI/4)),
 				angleRad: Math.PI/4,
+				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
+				xycoord: ampStr + '\\( \\left[ {\\sqrt{2} \\over 2} , -{\\sqrt{2} \\over 2} \\right] \\)',
+				theta: '\\( {{7\\mathrm\\pi} \\over 4 } rad = 315^\\circ \\)',
+				xycoordDecimal: "= (" + roundFP(amp*Math.cos(7*Math.PI/4),3) + " , " + roundFP(amp*Math.sin(7*Math.PI/4),3) + ")",
+
 			},
 			{
 				// 330 degrees
@@ -371,8 +400,9 @@ $(function() {
 				ysin: Math.round((amp * CIRC_RAD)*Math.sin(11*Math.PI/6)),
 				angleRad: Math.PI/6, 
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xycoord: '\\( \\left[ {\\sqrt{3} \\over 2}, \\frac12 \\right] \\)',
-				theta: '\\( {{11\\mathrm\\pi} \\over 6 } = 330^\\circ \\)',
+				xycoord: ampStr + '\\( \\left[ {\\sqrt{3} \\over 2}, \\frac12 \\right] \\)',
+				theta: '\\( {{11\\mathrm\\pi} \\over 6 } rad = 330^\\circ \\)',
+				xycoordDecimal: "= (" + roundFP(amp*Math.cos(11*Math.PI/6),3) + " , " + roundFP(amp*Math.sin(11*Math.PI/6),3) + ")",
 				
 			}
 		];
@@ -442,15 +472,15 @@ $(function() {
 	// Setup the user buttons
 	//*********************************************************
 	// User can choose a TO DO set for the text box or an explanation, this code is the implementation
-	$('#ToDo_or_expln').on('click', function(event){
-		if ("Explain" == $("#ToDo_or_expln").prop("value")) {
+	$('#ToDo_or_expln_ST').on('click', function(event){
+		if ("Explain" == $("#ToDo_or_expln_ST").prop("value")) {
 			// currently showing the Try This text.  Move into explanation text
-			$("#LongTextBox").text(staticTrigExpln);
-			$("#ToDo_or_expln").prop("value", "Try This");
+			$("#LongTextBox_ST").text(staticTrigExpln);
+			$("#ToDo_or_expln_ST").prop("value", "Try This");
 		} else {
 			// currently showing the Explanation text, move into TO DO  text
-			$("#LongTextBox").text(staticTrigToDo);
-			$("#ToDo_or_expln").prop("value", "Explain");
+			$("#LongTextBox_ST").text(staticTrigToDo);
+			$("#ToDo_or_expln_ST").prop("value", "Explain");
 		}
     });
     
@@ -463,8 +493,19 @@ $(function() {
     	// we allow first decimal place on input amplitude values, test a valid value was input
 		if ( Number.isInteger(temp * 10) ) {
 			if ( (temp >= MIN_AMP) && (temp <= MAX_AMP) ) {
-				console.log(" amp value is in range");
 				amp = temp;
+				if (temp != 1.0) {
+					ampStr = amp.toString();
+				} else {
+					//no need to show mpy by 1
+					ampStr = "";
+				}
+				// since user might have typed in a value that is close but not allowed, put in the value we chose
+				$("#ampCirc").text(ampStr);
+				// since amplitude changed, need to clear out old values for xy and theta
+				$('#xyValue').text(" ");
+				$('#xyValueDecimal').text(" ");
+				$('#theta').text(" ");
 				redrawNewAmp();
 			} else {
 				console.log("Somehow, the user entered in a number outside expected range");
@@ -633,15 +674,11 @@ $(function() {
 				
 				// put the labels up for this selection
 				$('#xyValue').text(dot.xycoord);
+				$('#xyValueDecimal').text(dot.xycoordDecimal);
 				$('#theta').text(dot.theta);
-//				MathJax.Hub.Queue(["Typeset",MathJax.Hub,"xyValue"]);
-//				MathJax.Hub.Queue(["Typeset",MathJax.Hub,"theta"]);
-//				MathJax.Hub.Queue(["Typeset",MathJax.Hub, "TossMeOut"]);
-				
-
-				  setTimeout(async function () {
+				setTimeout(async function () {
 				    await MathJax.typesetPromise()
-				  }, 100)
+				}, 100)
 				
 				// snap a picture of what we have so we can go back to it during animation
 				preAnimatePlot = ctxExpandableUnitCircle.getImageData(0, 0, circleDotsCanvas.width, circleDotsCanvas.height);	
@@ -665,8 +702,8 @@ $(function() {
 			if (status === 'success') {				
 				staticTrigToDo = data.todo;
 				staticTrigExpln = data.expln;
-				$("#LongTextBox").text(staticTrigToDo);
-				$("#ToDo_or_expln").prop("value", "Explain");
+				$("#LongTextBox_ST").text(staticTrigToDo);
+				$("#ToDo_or_expln_ST").prop("value", "Explain");
 			}
 			else {
 				console.log("config json file request returned with status = " + status);
@@ -677,29 +714,4 @@ $(function() {
 			alert("Error in JSON file " + status + error);
 		})
 
-//*******************************figure this out*************************************************
-				const content = document.createElement('span');
- // content.textContent = '<math><mfenced open="[" close="]"><mrow><mfrac><msqrt><mn>3</mn></msqrt><mn>2</mn></mfrac><mo>,</mo><mo>&#xA0;</mo><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow></mfenced><mo>&#xA0;</mo></math>';
- //
- // play around with js strings
- // content.textContent = '<math><mfenced open="[" close="]"><mrow><mfrac><msqrt><mn>3</mn></msqrt><mn>2</mn></mfrac><mo>,</mo><mo>\&#xA0;</mo><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow></mfenced><mo>\&#xA0;</mo></math>';
-
-
-				//  content.textContent = '\\(x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}\\)';
-				  //                      \(x = {-b \pm \sqrt{b^2-4ac} \over 2a}\)
-
-	
-				content.textContent = '\\( \\left[ \\frac12, {\\sqrt{3} \\over 2} \\right] \\)'; // works!!!
-			//	content.textContent = '\\( {{\\mathrm\\pi} \\over 6 } = 30^\\circ \\)';  \\works!
-			//content.textContent = '0 rad = \\(0^\\circ \\)';
-				
-				
-				
-				  const asyncTypeset = document.querySelector('#TossMeOut')
-				  asyncTypeset.appendChild(content.cloneNode(true))
-				  setTimeout(async function () {
-				    await MathJax.typesetPromise()
-				    console.log(" we are done with promise");
-				  }, 1000)
 })
-//$('#TossMeOut').text('<math xmlns="http://www.w3.org/1998/Math/MathML"><mfenced open="[" close="]"><mrow><mfrac><msqrt><mn>3</mn></msqrt><mn>2</mn></mfrac><mo>,</mo><mo>&#xA0;</mo><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow></mfenced><mo>&#xA0;</mo></math>');

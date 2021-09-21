@@ -10,17 +10,17 @@ We use negative value for top since we want some overlap*/
 }
 /***************************/
 /* put a label up and an expln/to do selector input box */
-#headerAndCtl {
+#headerAndCtl_ST {
 	position: relative;
 	top: 0px;
 	width: auto;
 }
-#ToDo_or_expln {
+#ToDo_or_expln_ST {
 	position: absolute;
 	left: 10px;
 }
 /* text header of page activity*/
-#HeaderTrig1 {
+#HeaderTrig_ST {
 	position: absolute;
 	border: 0px;
 	left: 400px;
@@ -29,7 +29,7 @@ We use negative value for top since we want some overlap*/
 }
 /***************************/
 /* item 2, explanation of current activity in read only box,  Need this box to be above the canvas so sidebars active */ 
-#LongTextBox {
+#LongTextBox_ST {
 		  position: relative;
           left: 50px;
           top: 30px;
@@ -62,23 +62,23 @@ We use negative value for top since we want some overlap*/
 	position: absolute;
 	left: 170px;
 	top: 100px;
-	resize: none;
+}
+#xyValueDecimal {
+	position: absolute;
+	left: 170px;
+	top: 130px;
 }
 #theta {
 	position: absolute;
 	left: 300px;
 	top: 100px;
-	resize: none;
+
 }
 #thetaLabel {
 	position: absolute;
 	left: 300px;
 	top: 75px;
 }
-#TossMeOut {
-	position: absolute;
-	left: 300px;
-	top: 175px;	
-}
+
 /***************************/
 		
