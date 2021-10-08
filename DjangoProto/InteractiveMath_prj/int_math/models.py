@@ -24,4 +24,22 @@ class Subtopic(models.Model):
     
     def __str__(self):
         return self.title
+
+# This is to keep track of users to site and see how well the robot checks are working
+class BotChkResults(models.Model):
+    pass_honeypot = models.BooleanField(default=False)
+    pass_mathtest = models.BooleanField(default=False, help_text="any order, separated by commas")
+    RECAPTCHA_V3_QUARTILES = (
+        ('1Q', 'Definitely_robot'),
+        ('2Q', 'Maybe_robot'),
+        ('3Q', 'Maybe_human'),
+        ('4Q', 'Definitely_human'))
+    recaptcha_v3_quartile = models.CharField(max_length=2, choices=RECAPTCHA_V3_QUARTILES)
+    count = models.IntegerField(default = 0)
     
+    class Meta:
+        #its already plural
+        verbose_name_plural = 'BotChkResults'
+    
+    def __str__(self):
+        return f"pass_honeypot={self.pass_honeypot}, pass_math={self.pass_mathtest}, recaptcha_v3={self.recaptcha_v3_quartile}, count = {self.count}"

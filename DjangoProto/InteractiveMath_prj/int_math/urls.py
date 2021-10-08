@@ -12,6 +12,7 @@ urlpatterns = [
     path('DynamicTrig/', views.DynamicTrigView.as_view(), name='DynamicTrig'),
     path('ToneTrig/', views.ToneTrigView.as_view(), name='ToneTrig'),
     path('imag_num/', views.ImagNumView.as_view(), name='imag_num'),
+    path('bot_check/', views.ChkUsrIsRobotView.as_view(), name='bot_check'),
     
     
 ]

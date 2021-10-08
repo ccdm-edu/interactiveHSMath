@@ -15,6 +15,13 @@
     	<textarea readonly id="musicalActivity" rows = "1" >Test header </textarea>
     </div>
     
+	<!-- When user requests large mp3 file from server via drop down menu, put up modal window to ensure user is not a bot -->
+	<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content"></div>
+		</div>
+	</div>
+    
     <div id="menuExplnTones">
 	    <div id="InstrumentDropDownMenu">	 
 	       	<!-- Bootstrap dropdown see W3schools https://www.w3schools.com/bootstrap/bootstrap_ref_js_dropdown.asp --> 
@@ -102,15 +109,32 @@
 	<br>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.73/Tone.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
-    
+        
     <!--  have to put another jquery library ref here, not sure why, its in the base -->	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
 	<script>
 		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
 	</script>
+	
+	<!-- To be able to add modal window for robot check -->
+	<script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}" crossorigin="anonymous"></script>
+	
+	
 	<!-- Custom JS for this page -->
-	<script src="{% static 'js/Utils.js' %}" crossorigin="anonymous"></script>	    
+	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	    
     <script src="{% static 'js/ToneTrig.js' %}" crossorigin="anonymous"></script>	
+    <script src="{% static 'js/RobotChk.js' %}" crossorigin="anonymous"></script>	
+    
+    <script type="text/javascript">
+    $.getScript("../../../static/js/jquery.bootstrap.modal.forms.js", function() {
+    	// we also have to wait until we are SURE the proper file has loaded before doing all this
+		// This has to be here for django to render properly, cannot be in js file
+		$('#InstrumentDropDownMenu').modalForm({
+			//we put a next param on the url to indicate we want to come back to this spot when modal window done
+	        formURL: "{% url 'int_math:bot_check' %}?next={{ request.path|urlencode }}"
+	    });
+	});
+	</script>
 </div>
 {% endblock %}
 
