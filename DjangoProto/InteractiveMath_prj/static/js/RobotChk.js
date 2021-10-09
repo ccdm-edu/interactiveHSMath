@@ -18,8 +18,8 @@ $(function() {
     } 
 	
 	function sendRecaptchaData() {
-		var mathQ_Pass = false;
-		var button_Pass = true; // if user does nothing, they pass
+		var mathQ_Pass = 0;
+		var honey_Pass = "true"; // if user does nothing, they pass
 		const BOGUS = 'bogus_site_key';
 		var G_RECAP_SITE_KEY = BOGUS
 		
@@ -59,8 +59,8 @@ $(function() {
 				var form = this;
 				//This is where we send data to the django form and to the server.
 				grecaptcha.execute(G_RECAP_SITE_KEY, {action: 'bot_check_form'}).then(function(token) {
-					console.log('inside the recaptcha execute on token, button pass = ' + button_Pass + ' math pass= ' + mathQ_Pass);
-					$('#id_js_honey').val(button_Pass);
+					console.log('inside the recaptcha execute on token, button pass = ' + honey_Pass + ' math pass= ' + mathQ_Pass);
+					$('#id_js_honey').val(honey_Pass);
 					$('#id_math_test').val(mathQ_Pass);
 					$('#id_g_recaptcha_response').val(token);
 					form.submit();
@@ -83,10 +83,10 @@ $(function() {
 			// pull out all spaces
 			user_answer = user_answer.replace(/\s+/g,'');
 			if (user_answer == "12") {
-				mathQ_Pass = true;
+				mathQ_Pass = 1;
 				console.log("user did pass math test")
 			} else {
-				mathQ_Pass = false;
+				mathQ_Pass = 0;
 				console.log("user did NOT pass math test, user answer=" + user_answer)
 			}
 
@@ -96,9 +96,9 @@ $(function() {
 		
 		//***************
 		//***************
-		// idea here is that bots dont always pull in the js to know a button is hidden, if they click on it, they fail test														
+		// idea here is that bots dont always pull in the js to know a field is hidden, if they click on it, they fail test														
 		$('#id_js_honey').on('change', function(){
-			button_Pass = false;  // on click, user fails and is not a human
+			honey_Pass = "false";  // on click, user fails and is not a human
 			console.log("bot is detected");		
 
 		});
