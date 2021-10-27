@@ -16,18 +16,19 @@ class ChkUsrIsRobotView(BSModalFormView):
     form_class = BotChkForm
 
     def get_success_url(self):
-        # we return back to the page that sent us, encoded in html as next parameter
+        # we return back to the page that sent us, encoded in html as next parameter, 
+        # if that fails, go back to home page (should never happen)
         return self.request.GET.get('next', reverse('int_math:index'))
     
     def post(self, request):  
         # check the form validity for basic stuff first
         form = self.form_class(request.POST) 
-        responseForm = super().form_valid(form)
-        
+        responseTest = super().form_valid(form)
         
         quartile = '1Q'
         recaptcha_str = self.request.POST.get('g_recaptcha_response')
         if recaptcha_str is not None:
+            #cant do this on the client since server is the only onw with secret key
             secret_key = settings.RECAPTCHA_SECRET_KEY
             payload = {
                 'response': recaptcha_str,
@@ -54,8 +55,22 @@ class ChkUsrIsRobotView(BSModalFormView):
         #JS passes back text string, not a bool
         passChallengeTest = self.request.POST.get('math_test')
         passHoneypotTest = self.request.POST.get('js_honey')
-        print('results on math test is ' + passChallengeTest + " honey is " + passHoneypotTest + " quartile is " + quartile)
-        return responseForm
+        print('results on math test is ' + passChallengeTest + " honey is " + passHoneypotTest + " quartile is " + quartile + " response form is ")
+        
+        botCheckNeeded = False
+        context_dict = {'page_tab_header': 'ToneTrig',
+                        'topic': Topic.objects.get(name="Trig"),
+                        'botChkTstNeed': botCheckNeeded,
+                        }
+        # next url is encoded in this POST request, if failure, go back home, youre screwed
+        nextURL = self.request.GET.get('next', reverse('int_math:index')) 
+        #need to remove first and last slash and add .html to this text in order to render template
+        nextURL = nextURL[1:-1] + ".html"
+        print('next url is ' + nextURL)
+        responseTest = render(request, nextURL, context=context_dict)
+        #return response
+        #print(responseTest)
+        return responseTest
 
         
         
@@ -89,8 +104,12 @@ class DynamicTrigView(View):
 
 class ToneTrigView(View):
     def get(self, request):
+        # get client side cookie on bot check, verify timestamp and decide if bot check is completed
+        #DO, fix this up later
+        botCheckNeeded = True
         context_dict = {'page_tab_header': 'ToneTrig',
                         'topic': Topic.objects.get(name="Trig"),
+                        'botChkTstNeed': botCheckNeeded,
                         }
         response = render(request, 'int_math/ToneTrig.html', context=context_dict)
         return response

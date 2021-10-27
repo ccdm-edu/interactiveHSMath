@@ -9,6 +9,9 @@
 
 <!-- SineCosID is a placemarker for begin of link to go to sine cosine tones and musical notes -->
 <div id="SineCosID">
+	<!--  for robot checking, if true, don't put bot check modal window up, user is not a bot -->
+	<div id="botCheckTestNeeded">{{ botChkTstNeed }}</div>
+	
 	<div id ="headerAndCtl_TT">
     	<input type="button" id="allowNotePlay" value="Play Note"> 
     	<input type="button" id="ToDo_or_expln_TT" value="Explain">  	
@@ -129,10 +132,12 @@
     $.getScript("../../../static/js/jquery.bootstrap.modal.forms.js", function() {
     	// we also have to wait until we are SURE the proper file has loaded before doing all this
 		// This has to be here for django to render properly, cannot be in js file
-		$('#InstrumentDropDownMenu').modalForm({
-			//we put a next param on the url to indicate we want to come back to this spot when modal window done
-	        formURL: "{% url 'int_math:bot_check' %}?next={{ request.path|urlencode }}"
-	    });
+		{% if botChkTstNeed %}
+			$('#InstrumentDropDownMenu').modalForm({
+				//we put a next param on the url to indicate we want to come back to this spot when modal window done
+		        formURL: "{% url 'int_math:bot_check' %}?next={{ request.path|urlencode }}"
+		    });
+		{% endif %}
 	});
 	</script>
 </div>

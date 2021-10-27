@@ -51,28 +51,11 @@ $(function() {
 		//$(".modal-footer button").prop("disabled",true);
 		
 		//***************
+		// Get the recaptcha token ready and hidden honeypot ready, when all data considered valid
+		// and user hits enter or submit button, the form will submit by jquery.bootstrap.modal.forms.js.
+		// This takes awhile but should be done by time human answers math question
 		//***************
 		grecaptcha.ready(function() {
-			$('#bot_check_form').submit(function(e) {
-				e.preventDefault();
-				console.log('hit the form submit');
-				var form = this;
-				//This is where we send data to the django form and to the server.
-				grecaptcha.execute(G_RECAP_SITE_KEY, {action: 'bot_check_form'}).then(function(token) {
-					console.log('inside the recaptcha execute on token, button pass = ' + honey_Pass + ' math pass= ' + mathQ_Pass);
-					$('#id_js_honey').val(honey_Pass);
-					$('#id_math_test').val(mathQ_Pass);
-					$('#id_g_recaptcha_response').val(token);
-					form.submit();
-				});
-			 });
-		});
-
-		//***************
-		//***************
-		$('#id_math_test').change( function() {
-			
-			var user_answer = this.value;
 			if ($('#sendServerLoc').text().toLowerCase() == "true") {
 				G_RECAP_SITE_KEY = '6LcXoQ8aAAAAAFWEjH47SCbbrcT2ooody-kWuU_L';
 				console.log("user using local server")
@@ -80,19 +63,16 @@ $(function() {
 				G_RECAP_SITE_KEY = '6LcyrzAaAAAAALM8nrmbURsAU9-KpQkGvFmDFz13';
 				console.log("user using remote server")
 			}
-			// pull out all spaces
-			user_answer = user_answer.replace(/\s+/g,'');
-			if (user_answer == "12") {
-				mathQ_Pass = 1;
-				console.log("user did pass math test")
-			} else {
-				mathQ_Pass = 0;
-				console.log("user did NOT pass math test, user answer=" + user_answer)
-			}
-
-			//all params setup, now user can submit once recaptcha is ready
-			//$(".modal-footer button").prop("disabled",false);
-		});	
+			console.log('setup recaptcha');
+			//This is where we send data to the django form and to the server.
+			grecaptcha.execute(G_RECAP_SITE_KEY, {action: 'bot_check_form'}).then(function(token) {
+    			console.log('inside the recaptcha execute on token, button pass = ' + honey_Pass + ' math pass= ' + mathQ_Pass);
+				console.log('recaptcha token is ' + token);
+				$('#id_js_honey').val(honey_Pass);
+				$('#id_g_recaptcha_response').val(token);
+			});
+			console.log('recaptcha setup done');
+		});
 		
 		//***************
 		//***************
