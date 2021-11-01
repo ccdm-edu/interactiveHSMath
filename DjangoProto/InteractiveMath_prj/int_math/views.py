@@ -11,9 +11,11 @@ import json
 from bootstrap_modal_forms.generic import BSModalFormView
 
 
+
 class ChkUsrIsRobotView(BSModalFormView):
     template_name = 'int_math/bot_check.html'
     form_class = BotChkForm
+    success_message = "Passed Test, You can now access server files"
 
     def get_success_url(self):
         # we return back to the page that sent us, encoded in html as next parameter, 
@@ -54,10 +56,19 @@ class ChkUsrIsRobotView(BSModalFormView):
 
         #JS passes back text string, not a bool
         passChallengeTest = self.request.POST.get('math_test')
-        passHoneypotTest = self.request.POST.get('js_honey')
-        print('results on math test is ' + passChallengeTest + " honey is " + passHoneypotTest + " quartile is " + quartile + " response form is ")
+        print('results on math test is ' + passChallengeTest +  " quartile is " + quartile)
         
-        botCheckNeeded = False
+        if (('12' == passChallengeTest) and ('4Q' == quartile)):
+            #trust this user for the duration of session, no need to retest them as long as client has this cookie
+            request.session['notABot'] = True
+            botCheckNeeded = False
+            print('Bot test PASSED')
+        else:
+            # tell server not to trust this client on all subsequent accesses and to retest the user
+            request.session['notABot'] = False
+            botCheckNeeded = True
+            print('Bot test FAILED')
+
         context_dict = {'page_tab_header': 'ToneTrig',
                         'topic': Topic.objects.get(name="Trig"),
                         'botChkTstNeed': botCheckNeeded,

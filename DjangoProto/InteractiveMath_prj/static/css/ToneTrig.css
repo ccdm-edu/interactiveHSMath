@@ -12,6 +12,15 @@ This is the style sheet for ToneTrig.html
 	height: 700px;
 }
 /*****************************************************************/
+/* turn off the indicator (botCheckTestNeeded) that bot check is needed or not (modal window comes up with test or not).  
+   The server sends a cookie to client which
+   cannot be modified, which holds the bot state for the server of this particular client.  If the client asks for 
+   something and the bot test has not
+   passed, the request will be rejected. */
+/*#botCheckTestNeeded{
+	display: none;
+}*/
+/*****************************************************************/
 /* This handles the header and "play music again" button that comes and goes as needed */
 #allowNotePlay {
 	position: absolute;

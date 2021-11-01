@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 from django.conf.global_settings import SECURE_SSL_REDIRECT, SECURE_HSTS_SECONDS,\
-    SECURE_HSTS_INCLUDE_SUBDOMAINS, SECURE_HSTS_PRELOAD
+    SECURE_HSTS_INCLUDE_SUBDOMAINS, SECURE_HSTS_PRELOAD, SESSION_COOKIE_HTTPONLY
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -103,6 +103,9 @@ if DEBUG == False:
     # the preload variable below just allows me to submit to the browsers this is https only, i haven't
     # actually done that submission yet
     SECURE_HSTS_PRELOAD = True
+    
+    #defaulted already to true but repeating here
+    SESSION_COOKIE_HTTPONLY = True
     
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

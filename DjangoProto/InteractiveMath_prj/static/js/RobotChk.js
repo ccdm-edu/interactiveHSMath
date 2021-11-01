@@ -19,25 +19,14 @@ $(function() {
 	
 	function sendRecaptchaData() {
 		var mathQ_Pass = 0;
-		var honey_Pass = "true"; // if user does nothing, they pass
 		const BOGUS = 'bogus_site_key';
 		var G_RECAP_SITE_KEY = BOGUS
 		
 		//***************
 		// Hide inputs and disable submit on startup
 		//***************
-		// hide the two inputs we don't want users trying to access, honeypot and recaptcha v3
-		$('#id_js_honey').hide();
+		// hide the inputs we don't want users trying to access, recaptcha v3
 		$('#id_g_recaptcha_response').hide();
-		
-		// want to hide the labels as well as inputs to "trap" a robot that doesn't load js
-		var $jsLabel = $("label[for='"+$('#id_js_honey').attr('id')+"']");
-		if ($jsLabel.length == 0) {
-			// try again to hit the label
-			$jsLabel = $('#id_js_honey').closest('label')
-		}
-		//we did our best, now try to hide it, if we can't hide label, oh well...
-		$jsLabel.hide();
 		
 		var $grLabel = $("label[for='"+$('#id_g_recaptcha_response').attr('id')+"']");
 		if ($grLabel.length == 0) {
@@ -66,22 +55,13 @@ $(function() {
 			console.log('setup recaptcha');
 			//This is where we send data to the django form and to the server.
 			grecaptcha.execute(G_RECAP_SITE_KEY, {action: 'bot_check_form'}).then(function(token) {
-    			console.log('inside the recaptcha execute on token, button pass = ' + honey_Pass + ' math pass= ' + mathQ_Pass);
+    			console.log('inside the recaptcha execute on token' + ' math pass= ' + mathQ_Pass);
 				console.log('recaptcha token is ' + token);
-				$('#id_js_honey').val(honey_Pass);
 				$('#id_g_recaptcha_response').val(token);
 			});
 			console.log('recaptcha setup done');
 		});
 		
-		//***************
-		//***************
-		// idea here is that bots dont always pull in the js to know a field is hidden, if they click on it, they fail test														
-		$('#id_js_honey').on('change', function(){
-			honey_Pass = "false";  // on click, user fails and is not a human
-			console.log("bot is detected");		
-
-		});
 	};
 
 });
