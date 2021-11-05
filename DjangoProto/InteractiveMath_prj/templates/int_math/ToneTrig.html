@@ -135,7 +135,7 @@
 		{% if botChkTstNeed %}
 			$('#InstrumentDropDownMenu').modalForm({
 				//we put a next param on the url to indicate we want to come back to this spot when modal window done
-		        formURL: "{% url 'int_math:bot_check' %}?next={{ request.path|urlencode }}"
+		        formURL: "{% url 'int_math:bot_check' %}?next={% url 'int_math:ToneTrig' %}"
 		    });
 		{% endif %}
 	});

@@ -1,5 +1,13 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready on the modal form
+
+// DESIGN NOTES:  We use sessionID server side cookie 'notABot' and an indicator on the page
+// as to whether the bot test on the server was successful or not.  The cookie is what is used 
+// to make the decision as to whether to allow the client action or not.  The page element indicator
+// is used whether to decide to put the modal window test up or not.  If client hacks past this, they
+// will get caught by the cookie.  However, if it is a legit human, the cookie will remember for x days
+// that they passed and will not bug them with the modal window.
+
 $(function() {
 	// need to wait till modal window comes up, problem is that the elements are already 
 	// there and "ready" but have zero length and there is no event that fires off when the length >0 so 

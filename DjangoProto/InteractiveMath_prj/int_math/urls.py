@@ -13,6 +13,7 @@ urlpatterns = [
     path('ToneTrig/', views.ToneTrigView.as_view(), name='ToneTrig'),
     path('imag_num/', views.ImagNumView.as_view(), name='imag_num'),
     path('bot_check/', views.ChkUsrIsRobotView.as_view(), name='bot_check'),
+#    path('give_file/<filename:tune_filename>/', views.VerifyClientGiveFile.as_view(), name='give_file')
     
     
 ]

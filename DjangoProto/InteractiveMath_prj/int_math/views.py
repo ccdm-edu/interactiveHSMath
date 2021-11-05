@@ -11,7 +11,10 @@ import json
 from bootstrap_modal_forms.generic import BSModalFormView
 
 
-
+#**********************************************************
+# Modal window resonse, check if user is a Robot before allowing significant
+# server time to client
+#**********************************************************
 class ChkUsrIsRobotView(BSModalFormView):
     template_name = 'int_math/bot_check.html'
     form_class = BotChkForm
@@ -26,48 +29,56 @@ class ChkUsrIsRobotView(BSModalFormView):
         # check the form validity for basic stuff first
         form = self.form_class(request.POST) 
         responseTest = super().form_valid(form)
-        
+        botCheckNeeded = True
         quartile = '1Q'
-        recaptcha_str = self.request.POST.get('g_recaptcha_response')
-        if recaptcha_str is not None:
-            #cant do this on the client since server is the only onw with secret key
-            secret_key = settings.RECAPTCHA_SECRET_KEY
-            payload = {
-                'response': recaptcha_str,
-                'secret': secret_key}
-            data = urllib.parse.urlencode(payload).encode()
-            req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
-            print('finished secret key decoder ring on grecaptcha')
-            response = urllib.request.urlopen(req)
-            result = json.loads(response.read().decode())
-            if (result['success'] and result['action'] == 'bot_check_form'):
-                if (result['score'] < 0.25):
-                    quartile = '1Q'
-                elif (result['score'] < 0.5): 
-                    quartile = '2Q'
-                elif (result['score'] < 0.75):
-                    quartile = '3Q'
+        
+        # I chose to use django-bootstrap-modal-forms to do generic modal forms.  In retrospect, I should have just
+        #done straight bootstrap modal forms with django and skipped this library and I may rewrite things to do that
+        # because the django-bootstrap-mopdal-forms pypi library INTENTIONALLY posts twice by design.  Full expln is here
+        # https://github.com/trco/django-bootstrap-modal-forms/issues/14.  The first post is ajax, the second is normal post.
+        # we can ignore the first post (so we don't get a duplicate token error from recaptcha).  We could also do this in mixins, if
+        # I knew how to use mixins which I don't yet.  Another bug in this library is success message is not shown.  Sigh....
+        if not self.request.is_ajax():
+            recaptcha_str = self.request.POST.get('g_recaptcha_response')
+            if recaptcha_str is not None:
+                #cant do this on the client since server is the only onw with secret key
+                secret_key = settings.RECAPTCHA_SECRET_KEY
+                payload = {
+                    'response': recaptcha_str,
+                    'secret': secret_key}
+                data = urllib.parse.urlencode(payload).encode()
+                req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
+                print('finished secret key decoder ring on grecaptcha')
+                response = urllib.request.urlopen(req)
+                result = json.loads(response.read().decode())
+                if (result['success'] and result['action'] == 'bot_check_form'):
+                    if (result['score'] < 0.25):
+                        quartile = '1Q'
+                    elif (result['score'] < 0.5): 
+                        quartile = '2Q'
+                    elif (result['score'] < 0.75):
+                        quartile = '3Q'
+                    else:
+                        quartile = '4Q'
                 else:
-                    quartile = '4Q'
+                    # need to throw an exception or do something here
+                    print(f"ERROR, bad recaptcha token, raw result was {result}")
+            
+    
+            #JS passes back text string, not a bool
+            passChallengeTest = self.request.POST.get('math_test')
+            print('results on math test is ' + passChallengeTest +  " quartile is " + quartile)
+            
+            if (('12' == passChallengeTest) and ('4Q' == quartile)):
+                #trust this user for the duration of session, no need to retest them as long as client has this cookie
+                request.session['notABot'] = True
+                botCheckNeeded = False
+                print('Bot test PASSED')
             else:
-                # need to throw an exception or do something here
-                print(f"ERROR, bad recaptcha token, raw result was {result}")
-        
-
-        #JS passes back text string, not a bool
-        passChallengeTest = self.request.POST.get('math_test')
-        print('results on math test is ' + passChallengeTest +  " quartile is " + quartile)
-        
-        if (('12' == passChallengeTest) and ('4Q' == quartile)):
-            #trust this user for the duration of session, no need to retest them as long as client has this cookie
-            request.session['notABot'] = True
-            botCheckNeeded = False
-            print('Bot test PASSED')
-        else:
-            # tell server not to trust this client on all subsequent accesses and to retest the user
-            request.session['notABot'] = False
-            botCheckNeeded = True
-            print('Bot test FAILED')
+                # tell server not to trust this client on all subsequent accesses and to retest the user
+                request.session['notABot'] = False
+                botCheckNeeded = True
+                print('Bot test FAILED')
 
         context_dict = {'page_tab_header': 'ToneTrig',
                         'topic': Topic.objects.get(name="Trig"),
@@ -83,9 +94,24 @@ class ChkUsrIsRobotView(BSModalFormView):
         #print(responseTest)
         return responseTest
 
-        
-        
-    
+#**********************************************************
+# These are actions that will require significant server time, verify and 
+# respond to client appropriately
+#**********************************************************       
+#class VerifyClientGiveFile(View):
+#    def get(self, request, filename):
+#        sendFile = False
+#        try: 
+            # If bot test already performed, get results
+#            sendFile = request.session['notABot']
+#        except:
+            # else, bot test not passed/failed yet.  SW Error.  Send msg back to client
+            
+#    return 
+
+#    response = HttpResponse()
+#    response.status_code = 400  or choose 404 or 403
+#    return response
 #**********************************************************
 # these are all page views
 #**********************************************************
@@ -115,9 +141,13 @@ class DynamicTrigView(View):
 
 class ToneTrigView(View):
     def get(self, request):
-        # get client side cookie on bot check, verify timestamp and decide if bot check is completed
-        #DO, fix this up later
-        botCheckNeeded = True
+        #check session cookie (which expires after soom time--default 15 days) to see if bot test passed
+        try: 
+            # If session is established, use it
+            botCheckNeeded = not request.session['notABot']
+        except:
+            # else, no session established, set it up so robot check test required
+            botCheckNeeded = True
         context_dict = {'page_tab_header': 'ToneTrig',
                         'topic': Topic.objects.get(name="Trig"),
                         'botChkTstNeed': botCheckNeeded,
