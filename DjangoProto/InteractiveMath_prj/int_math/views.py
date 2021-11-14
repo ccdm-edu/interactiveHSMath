@@ -2,13 +2,19 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import View
 from int_math.models import Topic, Subtopic
-from int_math.forms import BotChkForm
 from django.conf import settings
 from django.urls import reverse
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.contrib.staticfiles import finders
+from django.core.files import File
 import urllib.request
 import json
+import os
 #----for modal windows--------
 from bootstrap_modal_forms.generic import BSModalFormView
+# homegrown stuff
+from int_math.forms import BotChkForm
+
 
 
 #**********************************************************
@@ -98,20 +104,77 @@ class ChkUsrIsRobotView(BSModalFormView):
 # These are actions that will require significant server time, verify and 
 # respond to client appropriately
 #**********************************************************       
-#class VerifyClientGiveFile(View):
-#    def get(self, request, filename):
-#        sendFile = False
-#        try: 
-            # If bot test already performed, get results
-#            sendFile = request.session['notABot']
-#        except:
-            # else, bot test not passed/failed yet.  SW Error.  Send msg back to client
+class VerifyClientGiveFile(View):
+    def get(self, request):
+        response = HttpResponse()
+        filename = ''
+        if 'filename' in request.GET:
+            # Need to go up one level from give_file URL we are in to get to int_math level and correct file location
+            filename = request.GET['filename']
+            module_dir = os.path.dirname(__file__)  # get current directory
+            #print("current dir is " + module_dir)
+            #filename = os.path.join(module_dir, '../static/MusicNotes/' + filename)
+            #localFilename = staticfiles_storage.url('MusicNotes' + filename)
+            #localFilename = '/../static/MusicNotes/' + filename
+            #print('localfile is' + localFilename)
+            tuneFilename = os.path.join(module_dir,"..")
+            tuneFilename2 = os.path.join(tuneFilename, 'static')
+            tuneFilename3 = os.path.join(tuneFilename2, 'MusicNotes')
+            tuneFilename4 = os.path.join(tuneFilename3, filename)
+            #print('tunefilename is ' + tuneFilename4)
+            resultFilename = finders.find(filename)
+            print('result of finders is ')
+            print(resultFilename)
+            searched_locations = finders.searched_locations
+            #print('searched locations: ')  
+            #print(searched_locations)
             
-#    return 
 
-#    response = HttpResponse()
-#    response.status_code = 400  or choose 404 or 403
-#    return response
+        
+        if 'notABot' in request.session:
+            # bot test already performed, notaBot exists, get results
+            if request.session.get('notABot', True):
+                print('you are NOT a bot')
+                try:
+                    #all is good, get the file and send if off.  
+                    # DO, redo this in terms of nginx access for greater efficiency
+                    print('after concat, filename is ' + resultFilename)
+                    print(' size of this file is ' + str(os.path.getsize(resultFilename)))
+                    #tuneFile = open(resultFilename,'rb').read()
+                    #tuneFile = open(resultFilename,'rb')
+                    #tuneData = tuneFile.read()
+                    #print('done reading file')
+                    #print('opening filename' + filename + 'and handle is ' + tuneFile)
+                    #response = HttpResponse(mp3_data, content_type="audio/mpeg", status=206)
+
+
+                    #Best shot
+                    #response= HttpResponse('',
+                    tuneFile = open(resultFilename,"rb")
+                    response.write(tuneFile.read())
+                    response['Content_Type'] = 'audio/mpeg'
+                    #response['X-Accel-Redirect'] = resultFilename
+                    #response['X-Accel-Buffering'] = 'no'
+                    response['Content-Length'] = os.path.getsize(resultFilename)
+                    #response['Content-Disposition'] = 'attachment; filename=' + resultFilename
+                    
+                    return response
+                except OSError as e: 
+                    print('File not found:  error=' + e)
+                    response.status_code = 404
+                except Exception as e:
+                    print(e)
+                    response.status_code = 404
+            else:
+                print('you are a bot')
+                response.status_code = 403  #Forbidden 
+        else:
+            # else, bot test not passed/failed yet.  SW Error.  Send msg back to client
+            print('Client short circuited the bot test. NO file for YOU!')
+            response.status_code = 403  #forbidden
+
+
+        return response
 #**********************************************************
 # these are all page views
 #**********************************************************

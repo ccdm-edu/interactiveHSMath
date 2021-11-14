@@ -18,7 +18,8 @@ from django.conf.global_settings import SECURE_SSL_REDIRECT, SECURE_HSTS_SECONDS
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 STATIC_DIR = os.path.join(BASE_DIR,"static")
-STATICFILES_DIRS = [STATIC_DIR,]
+STATIC_MUSIC_DIR = os.path.join(STATIC_DIR, 'MusicNotes')
+STATICFILES_DIRS = [STATIC_DIR, STATIC_MUSIC_DIR,]
 
 RECAPTCHA_SECRET_KEY = os.environ.get('G_RECAPTCHA_V3_SECRET_KEY')
 

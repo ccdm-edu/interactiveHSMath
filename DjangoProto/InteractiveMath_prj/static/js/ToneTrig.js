@@ -31,7 +31,7 @@ $(function() {
 	//everything is relative to the html page this code operates on, server needs to work from /static directory (without django intervention)
 	const STATIC_FILE_LOC = "../../static/json/";
 	const urlInitValJson = STATIC_FILE_LOC + "ToneTrigConfig.json";
-	const MUSIC_FILE_LOC = "../../static/MusicNotes/";
+	//const MUSIC_FILE_LOC = "../static/MusicNotes/";
 	
 	
 	// used for plotting
@@ -292,72 +292,82 @@ $(function() {
 				// get musical note for first time, filename in config must be mp3
 				if (tuneFilename[currTuneState].toLowerCase().indexOf('.mp3') >= 0) {
 					console.log("get the file " + tuneFilename[currTuneState] + " from server");
-					let request;
+					//		let request;
 					// would be nice to do this in jquery but it looks too painful, requiring ajaxTransport to get arraybuffer returns
-					request = new XMLHttpRequest();
+					//		request = new XMLHttpRequest();
 					//let tuneURL = 'give_file/?filename=' + tuneFilename[currTuneState];
 					//console.log("TEST: tuneURL is " + tuneURL);
-					request.open("GET",tuneFilename[currTuneState],true);
+					//		request.open("GET",tuneFilename[currTuneState],true);
 					// I don't think we need a csrf token for this ajax post.  1.  there is already a session ID required for this
 					// request 2.  Nothing is stored to database, request must be a filename we have or else get error back
-					request.responseType = "arraybuffer";
+					//		request.responseType = "arraybuffer";
 					// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
-				    request.onload = function() {
-						// DO, rewrite this with promise syntax
-						// first time through, the decodeAudioData takes some time and its asynchronous so force a wait
-						// to play the tone.  First time must be inside the success function off decodeAudioData
-						// By definition, to get here means request is done but not necessarily successful
-						console.log('status = ' + this.status + 'ready state is ' + this.readyState);
-						if (this.status == '200') {
+				    //	request.onload = 
+				    $.ajax({url:  '../give_file/',
+				    		type: 'GET',
+				    	  	data:  {filename: tuneFilename[currTuneState]},
+				    	  	dataType: "arraybuffer",
 
-							context.decodeAudioData(request.response, function(buffer) {
-								// to get here means asynchronous mp3 decode is complete and successful
-								console.log("finished decoding mp3");
-								$("#allowNotePlay").show(); // we have new instrument mp3, allow play
-								source.buffer = buffer;
-								// copy AudioBuffer into array for this instrument/note so don't have to bug the server with requests
-								// DO, try and throw on RangeError (not enough space) for copying buffer
-								try {
-									tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate)
-									buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
-									// setup the class from which we will get points to graph the note
-									noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState);
-								} catch(e) {
-									// most likely not enough space to createBuffer
-									console.error(e);
-									alert("Failed note file setup, error is " + e);
-								}
-															
-								// get array of values for both plots. Actually no need for short plot for low freq waveforms
-								tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray(0);
-								//tuneGraphShort[currTuneState] = noteFilePoint[currTuneState].getGraphArray(1);
-								
-								// set up tone to approximate the fundamental freq of musical instrument
-								let newToneFreq = tuneFundamentalFreq[currTuneState];
-								$("#currFreqLabel").text(newToneFreq);   // and put it on the label as string
-								$("#in-range-freq").val(newToneFreq);
-								updateFreq();
-								
-								// setup tone so approximate fundamental phase of musical instrment
-								let newTonePhase = tuneFundamentalPhase[currTuneState];
-								$("#currPhaseLabel").text(newTonePhase);
-								$("#in-range-phase").val(newTonePhase);
-								updatePhase();
-						
-								// update graphs
-								drawTone()
+						})
+						.done(function(data, statusText, jqXHR) {
+								// DO, rewrite this with promise syntax
+								// first time through, the decodeAudioData takes some time and its asynchronous so force a wait
+								// to play the tone.  First time must be inside the success function off decodeAudioData
+								// By definition, to get here means request is done and successful, (status = 4 and 200)
+								console.log('SUCCESS:  RX FILE status = ' + this.status + 'ready state is ' + this.readyState);
+								context.decodeAudioData(request.response, function(buffer) {
+									// to get here means asynchronous mp3 decode is complete and successful
+									console.log("finished decoding mp3");
+									$("#allowNotePlay").show(); // we have new instrument mp3, allow play
+									source.buffer = buffer;
+									// copy AudioBuffer into array for this instrument/note so don't have to bug the server with requests
+									// DO, try and throw on RangeError (not enough space) for copying buffer
+									try {
+										tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate)
+										buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
+										// setup the class from which we will get points to graph the note
+										noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState);
+									} catch(e) {
+										// most likely not enough space to createBuffer
+										console.error(e);
+										alert("Failed note file setup, error is " + e);
+									}
+																
+									// get array of values for both plots. Actually no need for short plot for low freq waveforms
+									tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray(0);
+									//tuneGraphShort[currTuneState] = noteFilePoint[currTuneState].getGraphArray(1);
+									
+									// set up tone to approximate the fundamental freq of musical instrument
+									let newToneFreq = tuneFundamentalFreq[currTuneState];
+									$("#currFreqLabel").text(newToneFreq);   // and put it on the label as string
+									$("#in-range-freq").val(newToneFreq);
+									updateFreq();
+									
+									// setup tone so approximate fundamental phase of musical instrment
+									let newTonePhase = tuneFundamentalPhase[currTuneState];
+									$("#currPhaseLabel").text(newTonePhase);
+									$("#in-range-phase").val(newTonePhase);
+									updatePhase();
 							
-								// decodeAudioData is async, can't use try/catch for errors
-							},function(err) { alert("err(decodeAudioData) on file: " + tuneFilename[currTuneState] + " error =" + err); } );
-
-						} else if (this.status == "404") {
-							alert("File not found on server.  Possible config file error or deleted tone file.  Report error to administrator");
-						} else {
-							//User must have aborted robot test and then requested a file that requires a robot test
-			      			alert("Return status = " + this.status + ".  Need to pass robot test to access this file.  Restart your request from the beginning");
-						}
-				    };
-			      	request.send();
+									// update graphs
+									drawTone()
+								
+									// decodeAudioData is async, can't use try/catch for errors
+								},function(err) { alert("err(decodeAudioData) on file: " + tuneFilename[currTuneState] + " error =" + err); } );
+	
+							})  // done with success function
+							.fail(function(jqXHR, exception) {
+									if (jqXHR.status == 403) {
+										alert("Need to pass bot test to access server file.  No file for YOU!");  
+									} else if (jqXHR.status == 404) {
+										alert("File not found, check JSON config file or server to ensure present.  See Administrator");
+									} else {
+										alert("ERROR:  return status is " + jqXHR.status );
+										console.log(jqXHR)
+									}
+								}
+							);   // done with ajax
+			      	//request.send();
 		      	} else {
 		      		alert('Currently we only handle mp3 files, check MusicNotes.json for correct filename for this instrument'); 
 		      	}	
@@ -583,7 +593,7 @@ $(function() {
 					tuneState[index] = (paramSet.instrument).replace(" ","_") + "_" + paramSet.musicalNote;
 					tuneExpln[index] = paramSet.expln;		
 					tuneToDo[index]= paramSet.todo;			
-					tuneFilename[index] = MUSIC_FILE_LOC + paramSet.filename;
+					tuneFilename[index] = paramSet.filename;
 					tuneTitle[index] = paramSet.title;
 					tuneOffset[index] = parseInt(paramSet.tuneOffset);
 					tuneFundamentalFreq[index] = parseInt(paramSet.fundamentalHz);
