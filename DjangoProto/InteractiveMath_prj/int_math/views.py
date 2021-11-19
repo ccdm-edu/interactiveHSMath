@@ -137,22 +137,14 @@ class VerifyClientGiveFile(View):
                 print('you are NOT a bot')
                 try:
                     #all is good, get the file and send if off.  
-                    # DO, redo this in terms of nginx access for greater efficiency
+                    # DO, redo this in terms of nginx access for greater efficiency  Use python django-sendfile library
+                    #need different way to send off via development server and nginx (or apache if we later go that way)
                     print('after concat, filename is ' + resultFilename)
                     print(' size of this file is ' + str(os.path.getsize(resultFilename)))
-                    #tuneFile = open(resultFilename,'rb').read()
-                    #tuneFile = open(resultFilename,'rb')
-                    #tuneData = tuneFile.read()
-                    #print('done reading file')
-                    #print('opening filename' + filename + 'and handle is ' + tuneFile)
-                    #response = HttpResponse(mp3_data, content_type="audio/mpeg", status=206)
 
-
-                    #Best shot
-                    #response= HttpResponse('',
                     tuneFile = open(resultFilename,"rb")
                     response.write(tuneFile.read())
-                    response['Content_Type'] = 'audio/mpeg'
+                    response['Content-Type'] = 'audio/mpeg'
                     #response['X-Accel-Redirect'] = resultFilename
                     #response['X-Accel-Buffering'] = 'no'
                     response['Content-Length'] = os.path.getsize(resultFilename)
