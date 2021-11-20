@@ -91,7 +91,7 @@ WSGI_APPLICATION = 'InteractiveMath_prj.wsgi.application'
 INTERNAL_IPS = [
     '127.0.0.1',
     ]
-
+    
 if DEBUG == False:
     # we are deployed, not in localserver
     # security for https deployment
@@ -107,6 +107,7 @@ if DEBUG == False:
     
     #defaulted already to true but repeating here
     SESSION_COOKIE_HTTPONLY = True
+
     
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

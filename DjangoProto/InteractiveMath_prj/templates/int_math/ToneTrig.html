@@ -120,8 +120,7 @@
 	</script>
 	
 	<!-- To be able to add modal window for robot check -->
-	<script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}" crossorigin="anonymous"></script>
-	
+	<script src="{% static 'js/jquery-bootstrap-modal-forms-min.js' %}" crossorigin="anonymous"></script>
 	
 	<!-- Custom JS for this page -->
 	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	    
@@ -129,7 +128,7 @@
     <script src="{% static 'js/RobotChk.js' %}" crossorigin="anonymous"></script>	
     
     <script type="text/javascript">
-    $.getScript("../../../static/js/jquery.bootstrap.modal.forms.js", function() {
+    $.getScript("../../../static/js/jquery-bootstrap-modal-forms-min.js", function() {
     	// we also have to wait until we are SURE the proper file has loaded before doing all this
 		// This has to be here for django to render properly, cannot be in js file
 		{% if botChkTstNeed %}

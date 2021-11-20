@@ -49,7 +49,7 @@ $(function() {
 		
 		//***************
 		// Get the recaptcha token ready and hidden honeypot ready, when all data considered valid
-		// and user hits enter or submit button, the form will submit by jquery.bootstrap.modal.forms.js.
+		// and user hits enter or submit button, the form will submit by jquery-bootstrap-modal-forms-min.js.
 		// This takes awhile but should be done by time human answers math question
 		//***************
 		grecaptcha.ready(function() {
