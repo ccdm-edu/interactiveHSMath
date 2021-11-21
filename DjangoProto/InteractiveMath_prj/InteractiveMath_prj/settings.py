@@ -28,8 +28,9 @@ SECRET_KEY = os.environ.get('INT_MATH_SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
+DEBUG_str = os.environ.get('DEBUG').lower()
 DEBUG = False
-if os.environ['DEBUG'].lower() == 'true':
+if DEBUG_str == 'true':
     DEBUG = True
 
 if DEBUG:
