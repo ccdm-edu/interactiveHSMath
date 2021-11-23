@@ -22,6 +22,8 @@ STATIC_MUSIC_DIR = os.path.join(STATIC_DIR, 'MusicNotes')
 STATICFILES_DIRS = [STATIC_DIR, STATIC_MUSIC_DIR,]
 
 RECAPTCHA_SECRET_KEY = os.environ.get('G_RECAPTCHA_V3_SECRET_KEY')
+test_rsk_val = RECAPTCHA_SECRET_KEY.lower()
+print('test rsk is ' + test_rsk_val)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('INT_MATH_SECRET_KEY')
