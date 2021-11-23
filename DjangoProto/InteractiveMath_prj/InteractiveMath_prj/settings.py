@@ -33,8 +33,8 @@ SECRET_KEY = os.environ.get('INT_MATH_SECRET_KEY')
 DEBUG_str = os.environ.get('DEBUG')
 DEBUG = False
 #
-if DEBUG_str.lower() == 'true':
-    DEBUG = True
+#if DEBUG_str.lower() == 'true':
+#    DEBUG = True
 
 if DEBUG:
     ALLOWED_HOSTS = ['127.0.0.1']
