@@ -1,0 +1,93 @@
+/***********************
+This is the style sheet for the DynamicTrig1.html page
+************************/
+
+/***************************/
+/* put a label up and an expln/to do selector input box */
+#headerAndCtl_DT1 {
+	position: relative;
+	top: 0px;
+	width: auto;
+}
+#ToDo_or_expln_DT1 {
+	position: absolute;
+	left: 10px;
+}
+/* text header of page activity*/
+#HeaderTrig_DT1 {
+	position: absolute;
+	border: 0px;
+	left: 400px;
+	font-weight: bold;
+	font-size: 32px;
+}
+/***************************/
+/* item 2, explanation of current activity in read only box,  Need this box to be above the canvas so sidebars active */ 
+#LongTextBox_DT1 {
+		  position: relative;
+          left: 50px;
+          top: 30px;
+          background-color:white; 
+          z-index: 10;
+}
+/************Params that describe and control activity***************/
+
+/* this is the parent for a series of controls/labels */
+#CircleValues_DT1 {
+	position: relative;
+	left: 100;
+	top: 100;
+}
+/* these are the children of CircleValues_DT1 */
+/* start button z-index must outrank the todo/expln box so it can be active */
+#StartPhaseAccum_DT1{
+	position: absolute;
+	left: 0px;
+	top: 30px;
+	z-index: 20;
+}
+#time_DT1{
+	position: absolute;
+	left: 100px;
+	top: 30px;
+}
+#timeVal_DT1{
+	position: absolute;
+	left: 100px;
+	top: 50px;	
+}
+#thetaLabel_DT1 {
+	position: absolute;
+	left: 250px;
+	top: 30px;
+}
+#theta_DT1 {
+	position: absolute;
+	left: 250px;
+	top: 50px;
+}
+#LastFrequenciesLabel_DT1{
+	position: absolute;
+	left: 300px;
+	top: 30px;
+}
+#LastFrequencies_DT1{
+	position: absolute;
+	left: 300px;
+	top: 50px;
+}
+#UserNotices_DT1{
+	position: absolute;
+	left: 0px;
+	top: 150px;
+}
+
+
+/***************************/
+/* create canvas for expandable unit circle, position = relative lets the footer float to bottom for all parent elements.
+We use negative value for top since we want some overlap*/
+#AmpSinCosCircle_DT1{
+	 position:relative; 
+	 top:-50px; 
+	 left: 10px;
+}
