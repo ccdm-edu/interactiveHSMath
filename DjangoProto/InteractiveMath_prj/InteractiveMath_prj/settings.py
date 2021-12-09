@@ -26,13 +26,15 @@ RECAPTCHA_SECRET_KEY = os.environ.get('G_RECAPTCHA_V3_SECRET_KEY')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('INT_MATH_SECRET_KEY')
 
+#FILE_UPLOAD_PERMISSIONS defaults to 0o644 which is ok, User can R/W, rest can only R, no executing
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG_str = os.environ.get('DEBUG')
+#note, this variable is used on several pages in this project, cant change name here alone
 DEBUG = False
 #
-#if DEBUG_str.lower() == 'true':
-#    DEBUG = True
+if DEBUG_str.lower() == 'true':
+    DEBUG = True
 
 if DEBUG:
     ALLOWED_HOSTS = ['127.0.0.1']

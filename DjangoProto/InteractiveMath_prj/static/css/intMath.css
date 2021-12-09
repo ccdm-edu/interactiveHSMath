@@ -34,7 +34,8 @@ span#blinkingColor {
 	 50%   {opacity: 1.0; width: 100%}
 	 100%   {opacity: 0.05; width: 80%}
 }
-/* put the home page verbiage over the logo, invisible at first then fades in after logo "burst" */
+/* put the home page verbiage over the logo, invisible at first then fades in after logo "burst" 
+   the top was set so that the words would lay on top of logo*/
 div.home_expln p {
 	margin: 10%;
     font-weight: bold;

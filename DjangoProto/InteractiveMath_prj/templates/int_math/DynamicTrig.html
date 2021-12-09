@@ -7,9 +7,44 @@
 {% endblock %}
     
 {% block body_block %}
-	
-	<p>Under Construction, dynamic trig</p>
-	<br>
-	<br>	
 
+	<div id ="headerAndCtl_DT1">
+		<input type="button" id="ToDo_or_expln_DT1" value="Explain">
+		<textarea readonly id="HeaderTrig_DT1" rows = "1" >Dynamic Trig Functions </textarea>
+	</div>
+	<div id="HelpBox_DT1">
+	 	<textarea readonly id="LongTextBox_DT1" rows = '4' cols = "50">Help is here </textarea>
+	</div>
+	<div id="CircleValues_DT1">	
+		<input type="button" id="StartPhaseAccum_DT1" value="Start">
+		<label id = "time_DT1">Time (sec)</label>
+		<p id="timeVal_DT1"> </p>
+		<label id="thetaLabel_DT1">&#920</label>
+		<p id="theta_DT1"> 0 </p>
+		<label id = "LastFrequenciesLabel_DT1">Frequencies (Hz)</label>
+		<textarea readonly id="LastFrequencies_DT1" rows = '4' cols = "4">0.00 0.00 0.00 0.00 </textarea>
+		<p id="UserNotices_DT1"	></p>	
+	</div>
+	
+	
+	<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
+	<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas:  you must set bitmap for canvas in html, css only -->
+	<!-- sets element size, resulting in distortion -->
+	<canvas id="AmpSinCosCircle_DT1" width=1050 height=650>
+		Your Browser does not support canvas tag, you are missing graph capability
+	</canvas>
+	
+	<!--  have to put another jquery library ref here, not sure why, its in the base -->	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script>
+		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
+	</script>
+	
+	<!-- Custom JS for this page -->
+	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	    
+	<script src="{% static 'js/DynamicTrig1.js' %}" crossorigin="anonymous"></script>	 
+	
+	<br><br>
+
+	
 {% endblock %}

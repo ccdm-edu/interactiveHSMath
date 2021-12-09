@@ -21,6 +21,7 @@ $(function() {
 	let backgroundPlot; // used when user selects a new yellow dot to clear out the values of the old dot selected
 	let preAnimatePlot;  // used in animation to clear out the intermediate steps in the circle sin/cos values moving to the angle graphs
 	
+	
 	//********************************************************
 	// Start drawing the "unit circle" with all static trig stuff around it
 	//********************************************************	
@@ -31,58 +32,8 @@ $(function() {
 	let ampStr = "";  // amp value converted to string, null if amp=1.0
 	const MAX_AMP = 1.1;   // this is set to keep circle and sin/cos graphs from getting too big
 	const MIN_AMP = 0.8;  //this is set so that the graphics are still readable
-	const CIRC_X0 = 210;
-	const CIRC_Y0 = 410;
-	const CIRC_RAD = 120;
-	const AXIS_OVERLAP = 40;
 	const HALF_AXIS = (MAX_AMP * CIRC_RAD) + AXIS_OVERLAP;
-	const DOT_RADIUS = 5;
-	const ANGLE_IND = 30;
-
-	// draw y axis for circle/angle
-	ctxExpandableUnitCircle.beginPath();
-	ctxExpandableUnitCircle.moveTo(CIRC_X0, CIRC_Y0 - HALF_AXIS);
-	ctxExpandableUnitCircle.lineTo(CIRC_X0, CIRC_Y0 + HALF_AXIS);
-	ctxExpandableUnitCircle.font = '20px Arial';
-	ctxExpandableUnitCircle.fillText("y", CIRC_X0 + 5, CIRC_Y0 - HALF_AXIS + 5);	
-	
-	// draw x axis for circle/angle
-	ctxExpandableUnitCircle.moveTo(CIRC_X0 - HALF_AXIS, CIRC_Y0);
-	ctxExpandableUnitCircle.lineTo(CIRC_X0 + HALF_AXIS, CIRC_Y0);
-	ctxExpandableUnitCircle.font = '20px Arial';
-	ctxExpandableUnitCircle.fillText("x", CIRC_X0 + HALF_AXIS + 5, CIRC_Y0 + 5);
-	ctxExpandableUnitCircle.stroke();	
-	
-	// draw x and y axis tick marks for other amplitudes, we will do 0.1 ticks up to 1.1, 1.1 is as big as I want sin/cos
-	// graphs to get
-	for(var i=1; i<= 11; i++){ 
-		ctxExpandableUnitCircle.beginPath();
-		// y axis
-		ctxExpandableUnitCircle.moveTo(CIRC_X0 - 5, CIRC_Y0 - 0.1 * i * CIRC_RAD);
-		ctxExpandableUnitCircle.lineTo(CIRC_X0 + 5, CIRC_Y0 - 0.1 * i * CIRC_RAD);
-		// x axis
-		ctxExpandableUnitCircle.moveTo(CIRC_X0 + 0.1 * i * CIRC_RAD, CIRC_Y0 + 5);
-		ctxExpandableUnitCircle.lineTo(CIRC_X0 + 0.1 * i * CIRC_RAD, CIRC_Y0 - 5);
-		ctxExpandableUnitCircle.stroke();
-	}
-	// label 0.5 and 1.0 on each x and y axis
-	ctxExpandableUnitCircle.font = '10px Arial';
-	// y axis ticks
-	ctxExpandableUnitCircle.fillText("0.5", CIRC_X0 + 5, CIRC_Y0 - 0.1 * 5 * CIRC_RAD + 3);	
-	ctxExpandableUnitCircle.fillText("1.0", CIRC_X0 + 5, CIRC_Y0 - 0.1 * 10 * CIRC_RAD + 3);
-	// x axis ticks
-	ctxExpandableUnitCircle.fillText("0.5", CIRC_X0  + 0.1 * 5 * CIRC_RAD - 8, CIRC_Y0 + 13);	
-	ctxExpandableUnitCircle.fillText("1.0", CIRC_X0  + 0.1 * 10 * CIRC_RAD - 8, CIRC_Y0 + 13);
-					
-	ctxExpandableUnitCircle.stroke();
-	ctxExpandableUnitCircle.closePath();
-	
-	// *****
-	// make arrows for XY axis 
-	leftArrow(ctxExpandableUnitCircle, CIRC_X0 - HALF_AXIS, CIRC_Y0);
-	rightArrow(ctxExpandableUnitCircle, CIRC_X0 + HALF_AXIS, CIRC_Y0);
-	upArrow(ctxExpandableUnitCircle, CIRC_X0, CIRC_Y0 - HALF_AXIS);
-	downArrow(ctxExpandableUnitCircle, CIRC_X0, CIRC_Y0 + HALF_AXIS);
+	drawTrigCircle(ctxExpandableUnitCircle, HALF_AXIS);
 
 	//****
 	// NOW draw the two sin/cos axis off to the right of circle, which will stay fixed forever.  Don't draw the sine/cos curve
