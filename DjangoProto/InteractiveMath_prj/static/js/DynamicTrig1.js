@@ -56,17 +56,19 @@ $(function() {
         if (!timerStarted) {
             timerStarted = true;
             countTime =0;
-            $(this).attr('disabled', 'disabled');
+            $(this).prop('disabled', true);
             startInterval = setInterval(function(){
 	    		countTime++;
-	    		$('#timeVal_DT1').text(countTime); 
+	    		$('#timeVal_DT1').text(roundFP(countTime * 0.1, 1)); 
+	    		if (countTime == 100) {
+	    			console.log('we made 100');
+	    			//After 10 sec, end the experiment
+	        		if (startInterval) clearInterval(startInterval);
+	        		$(this).prop('disabled', false);
+	        		timerStarted = false;
+	        	}
 	    	}           
-            , 1000);
-        } else {
-        	if (countTime == 100) {
-        		if (startInterval) clearInterval(startInterval);
-        		timeStarted = false;
-        	}
+            , 100);
         }
 
     });
