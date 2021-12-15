@@ -58,12 +58,12 @@ This is the style sheet for the DynamicTrig1.html page
 }
 #thetaLabel_DT1 {
 	position: absolute;
-	left: 250px;
+	left: 200px;
 	top: 30px;
 }
 #theta_DT1 {
 	position: absolute;
-	left: 250px;
+	left: 200px;
 	top: 50px;
 }
 #LastFrequenciesLabel_DT1{
