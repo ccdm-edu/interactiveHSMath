@@ -33,7 +33,9 @@ $(function() {
 	const MAX_AMP = 1.1;   // this is set to keep circle and sin/cos graphs from getting too big
 	const MIN_AMP = 0.8;  //this is set so that the graphics are still readable
 	const HALF_AXIS = (MAX_AMP * CIRC_RAD) + AXIS_OVERLAP;
-	drawTrigCircle(ctxExpandableUnitCircle, HALF_AXIS);
+	const CIRC_X0 = 210;
+	const CIRC_Y0 = 410;
+	drawTrigCircle(ctxExpandableUnitCircle, CIRC_X0, CIRC_Y0, HALF_AXIS);
 
 	//****
 	// NOW draw the two sin/cos axis off to the right of circle, which will stay fixed forever.  Don't draw the sine/cos curve

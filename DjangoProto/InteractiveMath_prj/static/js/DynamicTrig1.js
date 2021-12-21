@@ -23,7 +23,9 @@ $(function() {
 	// Start drawing the "unit circle" with all touch sensitive angle-dots around it
 	//********************************************************	
 	const HALF_AXIS = CIRC_RAD + AXIS_OVERLAP;
-	drawTrigCircle(ctxUnitCircle, HALF_AXIS);
+	const CIRC_X0 = 210;
+	const CIRC_Y0 = 430;
+	drawTrigCircle(ctxUnitCircle, CIRC_X0, CIRC_Y0, HALF_AXIS);
 	
 	//Draw the big unit circle which could be expanded/contracted based on user input
 	// need to ensure the points here can never be negative, else they get clipped
@@ -58,6 +60,8 @@ $(function() {
 	
 	//********************************************************
 	// Start drawing the graph to show the changes in freq and sine plots with respect to time
+	// Upper plot is longer view of time and good for low freq, Lower plot is shorter view of time
+	// and good for higher freq
 	//********************************************************
 	let ctxFreqPlot;
 	let freqCanvas =  $("#FreqChange_DT1").get(0);  // later on, this will set the "background image" for animation
@@ -67,75 +71,78 @@ $(function() {
 	} else {
     	console.log('Cannot obtain Sin/Cos unit circle context');
 	}	
+	const PIX_PER_MINOR_TICK = 17;
+	function drawSineAxis(xOrigin, yOrigin, maxTime) {
+		const TRIG_AXIS = 420; 
+		const MAX_AMP_AXIS = CIRC_RAD + 10;  
+		ctxFreqPlot.beginPath();
+		// make x axis
+		ctxFreqPlot.moveTo(xOrigin - TRIG_AXIS/8, yOrigin);
+		ctxFreqPlot.lineTo(xOrigin + TRIG_AXIS, yOrigin);
+		ctxFreqPlot.fillStyle = 'black';
+		ctxFreqPlot.font = '15px Arial';
+		ctxFreqPlot.fillText("t (sec)", xOrigin + TRIG_AXIS - 30 , yOrigin + 30);	
+		// draw y axis
+		ctxFreqPlot.moveTo(xOrigin, yOrigin + MAX_AMP_AXIS);
+		ctxFreqPlot.lineTo(xOrigin, yOrigin - MAX_AMP_AXIS);
+		ctxFreqPlot.fillStyle = 'black';
+		ctxFreqPlot.font = '20px Arial';
+		ctxFreqPlot.fillText("S=sin(2\u03c0 f t)", 10, yOrigin - MAX_AMP_AXIS - 10);
+		ctxFreqPlot.stroke();
+		ctxFreqPlot.closePath();
+		// make arrows for Angle-Sin graph
+		leftArrow(ctxFreqPlot, xOrigin - TRIG_AXIS/8, yOrigin);
+		rightArrow(ctxFreqPlot, xOrigin + TRIG_AXIS, yOrigin);
+		upArrow(ctxFreqPlot, xOrigin, yOrigin - MAX_AMP_AXIS);
+		downArrow(ctxFreqPlot, xOrigin, yOrigin + MAX_AMP_AXIS);  
+		
+		// draw y axis tick marks for other amplitudes, we will do 0.1 ticks up to 1,
+		// graphs to get
+		const SHORT_TICK_LEN = 5
+		for(var i=1; i<= 10; i++){ 
+			ctxFreqPlot.beginPath();
+			// y axis sin
+			ctxFreqPlot.moveTo(xOrigin - SHORT_TICK_LEN, yOrigin - 0.1 * i * CIRC_RAD);
+			ctxFreqPlot.lineTo(xOrigin + SHORT_TICK_LEN, yOrigin - 0.1 * i * CIRC_RAD);
+			ctxFreqPlot.stroke();
+		}
+		// label 0.5 and 1.0 on each y sin and y cos axis
+		ctxFreqPlot.font = '10px Arial';
+		// y sin axis ticks
+		ctxFreqPlot.fillText("0.5", xOrigin - 20, yOrigin - 0.1 * 5 * CIRC_RAD);	
+		ctxFreqPlot.fillText("1.0", xOrigin - 20, yOrigin - 0.1 * 10 * CIRC_RAD);
+		
+		// x sine axis time ticks
+		for(var i=1; i<= 20; i++){ 
+			ctxFreqPlot.beginPath();
+			// y axis sin
+			let xLoc = xOrigin + i * PIX_PER_MINOR_TICK;
+			ctxFreqPlot.moveTo(xLoc, yOrigin );
+			if (i%5 == 0) {
+				// major axis tick
+				ctxFreqPlot.lineTo(xLoc, yOrigin + 2 * SHORT_TICK_LEN);
+				// time is now i*maxTime/20
+				ctxFreqPlot.fillText(String(i*maxTime/20), xLoc - 2, yOrigin + 2 * SHORT_TICK_LEN + 5);
+			} else {
+				// minor axis tick
+				ctxFreqPlot.lineTo(xLoc, yOrigin + SHORT_TICK_LEN);
+			}			
+			ctxFreqPlot.stroke();
+		}
+	}
 	// draw sin axis off to right and a little above
-	const SIN_Y_ORIGIN = 200;
-	const TRIG_X_ORIGIN = 60;
-	const TRIG_AXIS = 420; 
-	const MAX_AMP_AXIS = CIRC_RAD + 10;  
-	ctxFreqPlot.beginPath();
-	// make x axis
-	ctxFreqPlot.moveTo(TRIG_X_ORIGIN - TRIG_AXIS/8, SIN_Y_ORIGIN);
-	ctxFreqPlot.lineTo(TRIG_X_ORIGIN + TRIG_AXIS, SIN_Y_ORIGIN);
-	ctxFreqPlot.fillStyle = 'black';
-	ctxFreqPlot.font = '15px Arial';
-	ctxFreqPlot.fillText("t (sec)", TRIG_X_ORIGIN + TRIG_AXIS - 30 , SIN_Y_ORIGIN + 30);	
-	// draw y axis
-	ctxFreqPlot.moveTo(TRIG_X_ORIGIN, SIN_Y_ORIGIN + MAX_AMP_AXIS);
-	ctxFreqPlot.lineTo(TRIG_X_ORIGIN, SIN_Y_ORIGIN - MAX_AMP_AXIS);
-	ctxFreqPlot.fillStyle = 'black';
-	ctxFreqPlot.font = '20px Arial';
-	ctxFreqPlot.fillText("S=sin(2\u03c0 f t)", 10, SIN_Y_ORIGIN - MAX_AMP_AXIS - 10);
-	ctxFreqPlot.stroke();
-	ctxFreqPlot.closePath();
-	// make arrows for Angle-Sin graph
-	leftArrow(ctxFreqPlot, TRIG_X_ORIGIN - TRIG_AXIS/8, SIN_Y_ORIGIN);
-	rightArrow(ctxFreqPlot, TRIG_X_ORIGIN + TRIG_AXIS, SIN_Y_ORIGIN);
-	upArrow(ctxFreqPlot, TRIG_X_ORIGIN, SIN_Y_ORIGIN - MAX_AMP_AXIS);
-	downArrow(ctxFreqPlot, TRIG_X_ORIGIN, SIN_Y_ORIGIN + MAX_AMP_AXIS);  
-	
-	// draw y axis tick marks for other amplitudes, we will do 0.1 ticks up to 1,
-	// graphs to get
-	const SHORT_TICK_LEN = 5
-	for(var i=1; i<= 10; i++){ 
-		ctxFreqPlot.beginPath();
-		// y axis sin
-		ctxFreqPlot.moveTo(TRIG_X_ORIGIN - SHORT_TICK_LEN, SIN_Y_ORIGIN - 0.1 * i * CIRC_RAD);
-		ctxFreqPlot.lineTo(TRIG_X_ORIGIN + SHORT_TICK_LEN, SIN_Y_ORIGIN - 0.1 * i * CIRC_RAD);
-		ctxFreqPlot.stroke();
-	}
-	// label 0.5 and 1.0 on each y sin and y cos axis
-	ctxFreqPlot.font = '10px Arial';
-	// y sin axis ticks
-	ctxFreqPlot.fillText("0.5", TRIG_X_ORIGIN - 20, SIN_Y_ORIGIN - 0.1 * 5 * CIRC_RAD);	
-	ctxFreqPlot.fillText("1.0", TRIG_X_ORIGIN - 20, SIN_Y_ORIGIN - 0.1 * 10 * CIRC_RAD);
-	
-	// x sine axis time ticks
-	const PIX_PER_SEC = 17;
-	for(var i=1; i<= EXPIRATION_TIME_SEC; i++){ 
-		ctxFreqPlot.beginPath();
-		// y axis sin
-		let xLoc = TRIG_X_ORIGIN + i * PIX_PER_SEC;
-		ctxFreqPlot.moveTo(xLoc, SIN_Y_ORIGIN );
-		if (i%5 == 0) {
-			// major axis tick
-			ctxFreqPlot.lineTo(xLoc, SIN_Y_ORIGIN + 2 * SHORT_TICK_LEN);
-			ctxFreqPlot.fillText(String(i), xLoc - 2, SIN_Y_ORIGIN + 2 * SHORT_TICK_LEN + 5);
-		} else {
-			// minor axis tick
-			ctxFreqPlot.lineTo(xLoc, SIN_Y_ORIGIN + SHORT_TICK_LEN);
-		}			
-		ctxFreqPlot.stroke();
-	}
+	const UPPER_Y_ORIGIN = 180;
+	const UPPER_X_ORIGIN = 60;
+	const LOWER_Y_ORIGIN = 500;
+	const LOWER_X_ORIGIN = 60;
+	drawSineAxis(UPPER_X_ORIGIN, UPPER_Y_ORIGIN, EXPIRATION_TIME_SEC);
+	drawSineAxis(LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPIRATION_TIME_SEC/10);
 	sineAxisBkgd = ctxFreqPlot.getImageData(0, 0, freqCanvas.width, freqCanvas.height);
 	
-
 	//********************************************************
-	// Update graph to show what user has done
+	// Update graph to show what user has done in both lower and upper plot
 	//********************************************************
-	function drawPlots() {
-		// go back to bare plots before we redo everything
-		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
-		// plot all freq the user has produced (up to max num saved)
+	function drawOnePlot(x_orig, y_orig, maxTimePlot){
 		for (var plotInd = 0; plotInd < freqMeasured.length; plotInd++) {	
 			ctxFreqPlot.beginPath();
 			let minColorInd = MAX_FREQ - freqMeasured.length;
@@ -143,28 +150,35 @@ $(function() {
 			ctxFreqPlot.strokeStyle = FREQ_COLORS[colorInd];
 			var currFreq = freqMeasured[plotInd];
 			let T = 1/currFreq;
-			let dashSegPix = Math.round(1 + 2*T/20);
+			
 			function calcSine(j) {
 				// j is the time in sec
 				return Math.round(CIRC_RAD*Math.sin(2* Math.PI * j * currFreq));
 			}
-			// loop every 1/2 sec
-			let timeInc = roundFP((0.5*T/20),3);
-			console.log('Freq is ' + currFreq + 'time inc is ' + timeInc + 'dashSegPix is ' + dashSegPix);
-			for(var i=0; i<EXPIRATION_TIME_SEC; i+= timeInc){ 
-		    	var yLo = calcSine(i); 
-		    	var yHi = calcSine(i + dashSegPix/PIX_PER_SEC);
-		    	// remember, on bitmap, y increases as you go from top to bottom
-		  		ctxFreqPlot.moveTo(TRIG_X_ORIGIN + i* PIX_PER_SEC, SIN_Y_ORIGIN - yLo); 
-		  		// make a dash seg and then skip and redo again.  
-		    	ctxFreqPlot.lineTo(TRIG_X_ORIGIN + i* PIX_PER_SEC + dashSegPix, SIN_Y_ORIGIN - yHi); 
-				ctxFreqPlot.stroke(); 
-		  	}
+			
+			const TOT_PIX_X_AXIS = PIX_PER_MINOR_TICK * 20; // we do 20 minor ticks regardless of plot
+			let numPts = 40 + 10*maxTimePlot/T;  // higher freq gets more points on plot
+			let pixPerPt = TOT_PIX_X_AXIS/numPts;
+			let timeInc = maxTimePlot/numPts;  // each point covers this much time
+			for (var i = 0; i<numPts; i++){
+				let currTime = (i/numPts) * maxTimePlot;
+				// plot from currTime to next increment
+				var yLo = calcSine(currTime);
+				var yHi = calcSine(currTime + timeInc);
+				ctxFreqPlot.moveTo(x_orig + i*pixPerPt, Math.round(y_orig - yLo));
+				ctxFreqPlot.lineTo(x_orig + i*pixPerPt + pixPerPt, Math.round(y_orig - yHi));
+				ctxFreqPlot.stroke();
+			}
 
 		}
 	}
+	function drawPlots() {
+		// go back to bare plots before we redo everything
+		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
+		drawOnePlot(UPPER_X_ORIGIN, UPPER_Y_ORIGIN, EXPIRATION_TIME_SEC);
+		drawOnePlot(LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPIRATION_TIME_SEC/10);
+	}
 	
-
     //********************************************************
 	// User Interaction:  Start counting time and collecting phase
 	//********************************************************
@@ -181,8 +195,6 @@ $(function() {
 	const FREQ_COLORS = ["red", "orange", "green", "blue"];
 	const LATEST_FREQ_TEXT = "   <- Most Recent";
 	const EARLIEST_FREQ_TEXT = "   <- Least Recent";
-
-
 
 	// start the timer and stop it on expiration or if user hits 360 degrees of phase
 	function startFreqMeas(){
@@ -202,7 +214,7 @@ $(function() {
         		accumPhase = 0;
         		lastIndexClicked = 0;
         		$('#theta_DT1').text(String(accumPhase));
-        		$('#UserNotices_DT1').text('Time expired for accumulating 360 degrees of phase.  As you click yellow dots going around counter clock wise, dont forget to hit 360 degrees as your last point.');
+        		$('#UserNotices_DT1').html('Time expired for accumulating 360 degrees of phase.  <br>As you click yellow dots going around counter clock wise, <br>dont forget to hit 360 degrees as your last point.');
         	}
         	if (accumPhase >= 360) {
         		// then this frequency sampling is done, show results to user
@@ -310,5 +322,26 @@ $(function() {
 			$("#ToDo_or_expln_DT1").prop("value", "Explain");
 		}
     });   
+    
+    //***********************************
+	//initialize data fields for this page using config json file
+	//***********************************	
+	$.getJSON(urlInitValJson)
+		.done(function(data,status,xhr) {
+			//xhr has good stuff like status, responseJSON, statusText, progress
+			if (status === 'success') {				
+				dynamicTrig1ToDo = data.todo;
+				dynamicTrig1Expln = data.expln;
+				$("#LongTextBox_DT1").text(dynamicTrig1ToDo);
+				$("#ToDo_or_expln_DT1").prop("value", "Explain");
+			}
+			else {
+				console.log("config json file request returned with status = " + status);
+			}
+		})
+		.fail(function(data, status, error) {
+			console.log("Error in JSON file " + status + error);
+			alert("Error in JSON file " + status + error);
+		})
 
 })
