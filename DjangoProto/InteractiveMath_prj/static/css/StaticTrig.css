@@ -35,6 +35,7 @@ We use negative value for top since we want some overlap*/
           top: 30px;
           background-color:white; 
           z-index: 10;
+          resize: none;
 }
 /************Params that define circle***************/
 /* arrange all the parms that feed into or get info out of circle */
