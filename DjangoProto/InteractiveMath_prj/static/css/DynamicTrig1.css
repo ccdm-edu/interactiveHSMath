@@ -24,10 +24,18 @@ This is the style sheet for the DynamicTrig1.html page
 }
 /***************************/
 /* item 2, explanation of current activity in read only box,  Need this box to be above the canvas so sidebars active */ 
+#HelpBox_DT1 {
+	position: relative;
+	left: 50px;
+	top: 30px;
+}
 #LongTextBox_DT1 {
-		  position: relative;
-          left: 50px;
-          top: 30px;
+		/*  position: relative;  */
+		  position: absolute;
+          /*left: 50px;
+          top: 30px; */
+          left: 0px;
+          top: 0px;
           background-color:white; 
           z-index: 10;
           resize: none;
@@ -37,8 +45,9 @@ This is the style sheet for the DynamicTrig1.html page
 /* this is the parent for a series of controls/labels */
 #CircleValues_DT1 {
 	position: relative;
-	left: 100;
-	top: 100;
+	left: 0px;
+	/*top: 100; */
+	top: 100px;
 }
 /* these are the children of CircleValues_DT1 */
 /* start button z-index must outrank the todo/expln box so it can be active */
@@ -81,22 +90,42 @@ This is the style sheet for the DynamicTrig1.html page
 #UserNotices_DT1{
 	position: absolute;
 	left: 0px;
-	top: 150px;
+	top: 120px;
 }
 
 
 /***************************/
 /* create canvas for expandable unit circle, position = relative lets the footer float to bottom for all parent elements.
 We use negative value for top since we want some overlap*/
+#UnitCircleAndGraphCanvas{
+	position: relative;
+	left: 0px;
+	top: 100px;
+}
 #AmpSinCosCircle_DT1{
-	 position:relative; 
+/*	 position:relative; 
 	 top:-50px; 
-	 left: 10px;
+	 left: 0px;  */
+	 position: absolute;
+	 top: 50px;
+	 left: 0px;  
+	 margin-left: 0 px;
+	 padding-left: 0 px;
+	 margin-right: 0 px;
+	 padding-right: 0 px;
 }
 /* this is the graph off to the right that needs to be on separate canvas since animations need to 
-clear and redraw at different times than the other canvas*/
+clear and redraw at different times than the other canvas  We did position as absolute so if window too small
+it won't shove this to below the unit circle-- off to side prods user to expand screen */
 #FreqChange_DT1{
-	 position:relative; 
+/*	 position:relative; 
 	 top: -50px; 
-	 left: 10px;
+	 left: 0px;  */
+	 position: absolute;
+	 top: -50px;
+	 left: 450px;
+	 margin-left: 0 px;
+	 padding-left: 0 px;
+	 margin-right: 0 px;
+	 padding-right: 0 px;
 }

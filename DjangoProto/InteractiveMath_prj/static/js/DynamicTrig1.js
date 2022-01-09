@@ -17,14 +17,13 @@ $(function() {
 	let dynamicTrig1ToDo;
 	
 	const EXPIRATION_TIME_SEC = 20
-		
-	
+			
 	//********************************************************
 	// Start drawing the "unit circle" with all touch sensitive angle-dots around it
 	//********************************************************	
 	const HALF_AXIS = CIRC_RAD + AXIS_OVERLAP;
 	const CIRC_X0 = 210;
-	const CIRC_Y0 = 430;
+	const CIRC_Y0 = 300;
 	drawTrigCircle(ctxUnitCircle, CIRC_X0, CIRC_Y0, HALF_AXIS);
 	
 	//Draw the big unit circle which could be expanded/contracted based on user input
@@ -72,9 +71,9 @@ $(function() {
     	console.log('Cannot obtain Sin/Cos unit circle context');
 	}	
 	const PIX_PER_MINOR_TICK = 17;
+	const MAX_AMP_AXIS = CIRC_RAD + 10;
 	function drawSineAxis(xOrigin, yOrigin, maxTime) {
-		const TRIG_AXIS = 420; 
-		const MAX_AMP_AXIS = CIRC_RAD + 10;  
+		const TRIG_AXIS = 420;   
 		ctxFreqPlot.beginPath();
 		// make x axis
 		ctxFreqPlot.moveTo(xOrigin - TRIG_AXIS/8, yOrigin);
@@ -97,7 +96,6 @@ $(function() {
 		downArrow(ctxFreqPlot, xOrigin, yOrigin + MAX_AMP_AXIS);  
 		
 		// draw y axis tick marks for other amplitudes, we will do 0.1 ticks up to 1,
-		// graphs to get
 		const SHORT_TICK_LEN = 5
 		for(var i=1; i<= 10; i++){ 
 			ctxFreqPlot.beginPath();
@@ -137,6 +135,24 @@ $(function() {
 	const LOWER_X_ORIGIN = 60;
 	drawSineAxis(UPPER_X_ORIGIN, UPPER_Y_ORIGIN, EXPIRATION_TIME_SEC);
 	drawSineAxis(LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPIRATION_TIME_SEC/10);
+	//*****************
+	// draw lines inbetween plots to show lower plot is expanded time of upper plot
+	ctxFreqPlot.moveTo(UPPER_X_ORIGIN, UPPER_Y_ORIGIN);
+	ctxFreqPlot.lineTo(LOWER_X_ORIGIN, LOWER_Y_ORIGIN - MAX_AMP_AXIS - 10);
+	ctxFreqPlot.setLineDash([5, 10])
+	ctxFreqPlot.strokeStyle = 'red';
+	ctxFreqPlot.fillStyle = 'red';
+	ctxFreqPlot.font = '15px Arial';
+	ctxFreqPlot.fillText("2 sec expanded", UPPER_X_ORIGIN + 10, UPPER_Y_ORIGIN + MAX_AMP_AXIS + 20);
+	ctxFreqPlot.stroke();
+	ctxFreqPlot.moveTo(UPPER_X_ORIGIN + 2*PIX_PER_MINOR_TICK, UPPER_Y_ORIGIN);
+	ctxFreqPlot.lineTo(LOWER_X_ORIGIN  + 20*PIX_PER_MINOR_TICK, LOWER_Y_ORIGIN);
+	ctxFreqPlot.stroke();
+	// go back to background color
+	ctxFreqPlot.strokeStyle = 'black';
+	ctxFreqPlot.fillStyle = 'black';
+	ctxFreqPlot.setLineDash([])
+	//*****************
 	sineAxisBkgd = ctxFreqPlot.getImageData(0, 0, freqCanvas.width, freqCanvas.height);
 	
 	//********************************************************
@@ -190,9 +206,9 @@ $(function() {
 	let accumPhase = 0;
 	// keep track of the last MAX_FREQ frequencies produce by the user
 	let freqMeasured = [];
-	const MAX_FREQ = 4;
-	// want oldest frequencies to be redish newest to be blueish
-	const FREQ_COLORS = ["red", "orange", "green", "blue"];
+	const MAX_FREQ = 3;
+	// newest freq are dark blue and fading to pale blue for older frequencies
+	const FREQ_COLORS = ["#89CFF0", "#6495ED", "#000080"];
 	const LATEST_FREQ_TEXT = "   <- Most Recent";
 	const EARLIEST_FREQ_TEXT = "   <- Least Recent";
 
@@ -200,7 +216,6 @@ $(function() {
 	function startFreqMeas(){
         timerStarted = true;
         countTime =0;
-        $(this).prop('disabled', true);
         $('#UserNotices_DT1').text('');
         startInterval = setInterval(function(){
     		countTime++;
@@ -256,7 +271,7 @@ $(function() {
         		}
         		lastFreq = currFreq;
         		// do everything else first
-        		$('#StartPhaseAccum_DT1').prop('disabled', false);
+        		$("#StartPhaseAccum_DT1").prop("value", "Let's Go");
         		accumPhase = 0;   
         		drawPlots();		
         	}
@@ -264,9 +279,20 @@ $(function() {
 	}
 
     $('#StartPhaseAccum_DT1').on('click', function(event) {
-        if (!timerStarted) {
-			startFreqMeas();
-        }
+    	if ("Let's Go" == $("#StartPhaseAccum_DT1").prop("value")) {
+			// user wants to start the timer
+			$("#StartPhaseAccum_DT1").prop("value", "Stop");
+			if (!timerStarted) {
+				startFreqMeas();
+        	}
+		} else {
+			// User wants to abort a timed phase accumulation, explain more to user
+			$("#UserNotices_DT1").html("Just click on dots and ending at zero phase.  <br>You can skip dots if you want.  <br>Your phase accumulation over time (frequency) will be measured");
+			$("#StartPhaseAccum_DT1").prop("value", "Let's Go");
+			// stop timer
+			if (startInterval) clearInterval(startInterval);
+        	timerStarted = false;
+		}
     });
 
 	const ANGLE_PER_PT_DEG = ANGLE_PER_PT_RAD * 180 / Math.PI;
