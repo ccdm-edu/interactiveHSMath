@@ -60,39 +60,41 @@ This is the style sheet for the DynamicTrig1.html page
 #time_DT1{
 	position: absolute;
 	left: 100px;
-	top: 30px;
+	top: 40px;
 }
 #timeVal_DT1{
 	position: absolute;
 	left: 100px;
-	top: 50px;	
+	top: 60px;	
 }
 #thetaLabel_DT1 {
 	position: absolute;
 	left: 200px;
-	top: 30px;
+	top: 40px;
 }
 #theta_DT1 {
 	position: absolute;
 	left: 200px;
-	top: 50px;
+	top: 60px;
 }
 #LastFrequenciesLabel_DT1{
 	position: absolute;
 	left: 300px;
-	top: 30px;
+	top: 40px;
 }
 #LastFrequencies_DT1{
 	position: absolute;
 	left: 300px;
-	top: 50px;
+	top: 60px;
 }
 #UserNotices_DT1{
 	position: absolute;
 	left: 0px;
 	top: 120px;
 }
-
+#ExplnFreqMark{
+	color: green
+}
 
 /***************************/
 /* create canvas for expandable unit circle, position = relative lets the footer float to bottom for all parent elements.

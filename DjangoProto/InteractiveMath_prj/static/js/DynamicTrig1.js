@@ -23,7 +23,7 @@ $(function() {
 	//********************************************************	
 	const HALF_AXIS = CIRC_RAD + AXIS_OVERLAP;
 	const CIRC_X0 = 210;
-	const CIRC_Y0 = 300;
+	const CIRC_Y0 = 330;   // use this to raise and lower the whole circle, remember y increases going down the page
 	drawTrigCircle(ctxUnitCircle, CIRC_X0, CIRC_Y0, HALF_AXIS);
 	
 	//Draw the big unit circle which could be expanded/contracted based on user input
@@ -80,15 +80,16 @@ $(function() {
 		ctxFreqPlot.lineTo(xOrigin + TRIG_AXIS, yOrigin);
 		ctxFreqPlot.fillStyle = 'black';
 		ctxFreqPlot.font = '15px Arial';
-		ctxFreqPlot.fillText("t (sec)", xOrigin + TRIG_AXIS - 30 , yOrigin + 30);	
+		ctxFreqPlot.fillText("t (sec)", xOrigin + TRIG_AXIS - 30 , yOrigin + 30);
+		ctxFreqPlot.stroke()	
 		// draw y axis
+		ctxFreqPlot.beginPath();
 		ctxFreqPlot.moveTo(xOrigin, yOrigin + MAX_AMP_AXIS);
 		ctxFreqPlot.lineTo(xOrigin, yOrigin - MAX_AMP_AXIS);
 		ctxFreqPlot.fillStyle = 'black';
 		ctxFreqPlot.font = '20px Arial';
 		ctxFreqPlot.fillText("S=sin(2\u03c0 f t)", 10, yOrigin - MAX_AMP_AXIS - 10);
 		ctxFreqPlot.stroke();
-		ctxFreqPlot.closePath();
 		// make arrows for Angle-Sin graph
 		leftArrow(ctxFreqPlot, xOrigin - TRIG_AXIS/8, yOrigin);
 		rightArrow(ctxFreqPlot, xOrigin + TRIG_AXIS, yOrigin);
@@ -137,6 +138,7 @@ $(function() {
 	drawSineAxis(LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPIRATION_TIME_SEC/10);
 	//*****************
 	// draw lines inbetween plots to show lower plot is expanded time of upper plot
+	ctxFreqPlot.beginPath();
 	ctxFreqPlot.moveTo(UPPER_X_ORIGIN, UPPER_Y_ORIGIN);
 	ctxFreqPlot.lineTo(LOWER_X_ORIGIN, LOWER_Y_ORIGIN - MAX_AMP_AXIS - 10);
 	ctxFreqPlot.setLineDash([5, 10])
@@ -145,6 +147,7 @@ $(function() {
 	ctxFreqPlot.font = '15px Arial';
 	ctxFreqPlot.fillText("2 sec expanded", UPPER_X_ORIGIN + 10, UPPER_Y_ORIGIN + MAX_AMP_AXIS + 20);
 	ctxFreqPlot.stroke();
+	ctxFreqPlot.beginPath();
 	ctxFreqPlot.moveTo(UPPER_X_ORIGIN + 2*PIX_PER_MINOR_TICK, UPPER_Y_ORIGIN);
 	ctxFreqPlot.lineTo(LOWER_X_ORIGIN  + 20*PIX_PER_MINOR_TICK, LOWER_Y_ORIGIN);
 	ctxFreqPlot.stroke();
@@ -160,7 +163,6 @@ $(function() {
 	//********************************************************
 	function drawOnePlot(x_orig, y_orig, maxTimePlot){
 		for (var plotInd = 0; plotInd < freqMeasured.length; plotInd++) {	
-			ctxFreqPlot.beginPath();
 			let minColorInd = MAX_FREQ - freqMeasured.length;
 			let colorInd = minColorInd + plotInd;		
 			ctxFreqPlot.strokeStyle = FREQ_COLORS[colorInd];
@@ -181,11 +183,11 @@ $(function() {
 				// plot from currTime to next increment
 				var yLo = calcSine(currTime);
 				var yHi = calcSine(currTime + timeInc);
+				ctxFreqPlot.beginPath();
 				ctxFreqPlot.moveTo(x_orig + i*pixPerPt, Math.round(y_orig - yLo));
 				ctxFreqPlot.lineTo(x_orig + i*pixPerPt + pixPerPt, Math.round(y_orig - yHi));
 				ctxFreqPlot.stroke();
 			}
-
 		}
 	}
 	function drawPlots() {
@@ -194,7 +196,38 @@ $(function() {
 		drawOnePlot(UPPER_X_ORIGIN, UPPER_Y_ORIGIN, EXPIRATION_TIME_SEC);
 		drawOnePlot(LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPIRATION_TIME_SEC/10);
 	}
-	
+	//********************************************************
+	// Add temporary circles and verbiage to show user their new period/freq
+	//********************************************************
+	function showUserPeriod(latestPeriod){
+		ctxUnitCircle.beginPath();
+		ctxUnitCircle.lineWidth = 2.0
+		ctxUnitCircle.strokeStyle = "green";
+	    ctxUnitCircle.arc(110, 20, 18, 0, Math.PI * 2, true); 
+	    ctxUnitCircle.stroke();
+	    
+		// decide whether to put arrow on upper or lower plot
+		if (latestPeriod > EXPIRATION_TIME_SEC/10){
+			// draw on upper graph, its a low freq signal
+			let xcoord = Math.round(UPPER_X_ORIGIN + latestPeriod*PIX_PER_MINOR_TICK);
+			ctxFreqPlot.beginPath();
+			ctxFreqPlot.lineWidth = 2.0
+			ctxFreqPlot.strokeStyle = "green";
+			ctxFreqPlot.arc(xcoord, UPPER_Y_ORIGIN, 15, 0, Math.PI * 2, true);
+			ctxFreqPlot.stroke();
+		} else {
+			// draw on lower graph, its a high freq signal
+			let xcoord = Math.round(LOWER_X_ORIGIN  + 10*latestPeriod*PIX_PER_MINOR_TICK);
+			ctxFreqPlot.beginPath();
+			ctxFreqPlot.lineWidth = 2.0
+			ctxFreqPlot.strokeStyle = "green";
+			ctxFreqPlot.arc(xcoord, LOWER_Y_ORIGIN, 15, 0, Math.PI * 2, true);
+			ctxFreqPlot.stroke();
+		}
+		// go back to defaults
+		ctxUnitCircle.strokeStyle = "black";
+		ctxFreqPlot.strokeStyle = "black";
+	}
     //********************************************************
 	// User Interaction:  Start counting time and collecting phase
 	//********************************************************
@@ -211,7 +244,7 @@ $(function() {
 	const FREQ_COLORS = ["#89CFF0", "#6495ED", "#000080"];
 	const LATEST_FREQ_TEXT = "   <- Most Recent";
 	const EARLIEST_FREQ_TEXT = "   <- Least Recent";
-
+	const GREEN_CIRCLE_EXPLN = "<p id='ExplnFreqMark'>Look at the two green circles.  They both reflect the time it took you to <br>accumulate 360 degrees of phase.  This is the period (T) of the waveform.  <br>The frequency of the waveform is 1/T.  Pull out your calculator and confirm!</p>";
 	// start the timer and stop it on expiration or if user hits 360 degrees of phase
 	function startFreqMeas(){
         timerStarted = true;
@@ -260,20 +293,21 @@ $(function() {
         		$('#LastFrequencies_DT1').html(freqText);
         		// give user feedback on their performance
         		if (lastFreq == 0) {
-        			$('#UserNotices_DT1').text('Nice work, lets try another one');
+        			$('#UserNotices_DT1').html('Nice work, lets try another one' + GREEN_CIRCLE_EXPLN);
         		} else {
         			let perDiff = roundFP((currFreq - lastFreq) * 100 / lastFreq, 1);
         			if (perDiff > 0) {
-        				$('#UserNotices_DT1').text('This time your frequency was higher by ' + perDiff + '%');
+        				$('#UserNotices_DT1').html('This time your frequency was higher by ' + perDiff + '%' + GREEN_CIRCLE_EXPLN);
         			} else {
-        				$('#UserNotices_DT1').text('This time your frequency was lower by ' + (-perDiff) + '%');
+        				$('#UserNotices_DT1').html('This time your frequency was lower by ' + (-perDiff) + '%' + GREEN_CIRCLE_EXPLN);
         			}
         		}
         		lastFreq = currFreq;
         		// do everything else first
         		$("#StartPhaseAccum_DT1").prop("value", "Let's Go");
         		accumPhase = 0;   
-        		drawPlots();		
+        		drawPlots();
+        		showUserPeriod(countTime/10);		
         	}
     	}, 100);	
 	}
