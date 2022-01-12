@@ -30,10 +30,7 @@ This is the style sheet for the DynamicTrig1.html page
 	top: 30px;
 }
 #LongTextBox_DT1 {
-		/*  position: relative;  */
 		  position: absolute;
-          /*left: 50px;
-          top: 30px; */
           left: 0px;
           top: 0px;
           background-color:white; 
@@ -55,6 +52,12 @@ This is the style sheet for the DynamicTrig1.html page
 	position: absolute;
 	left: 0px;
 	top: 30px;
+	z-index: 20;
+}
+#ClearOldFreq_DT1{
+	position: absolute;
+	left: 0px;
+	top: 60px;
 	z-index: 20;
 }
 #time_DT1{
@@ -93,7 +96,7 @@ This is the style sheet for the DynamicTrig1.html page
 	top: 120px;
 }
 #ExplnFreqMark{
-	color: green
+	color: lime
 }
 
 /***************************/
@@ -105,9 +108,6 @@ We use negative value for top since we want some overlap*/
 	top: 100px;
 }
 #AmpSinCosCircle_DT1{
-/*	 position:relative; 
-	 top:-50px; 
-	 left: 0px;  */
 	 position: absolute;
 	 top: 50px;
 	 left: 0px;  
@@ -120,9 +120,6 @@ We use negative value for top since we want some overlap*/
 clear and redraw at different times than the other canvas  We did position as absolute so if window too small
 it won't shove this to below the unit circle-- off to side prods user to expand screen */
 #FreqChange_DT1{
-/*	 position:relative; 
-	 top: -50px; 
-	 left: 0px;  */
 	 position: absolute;
 	 top: -50px;
 	 left: 450px;

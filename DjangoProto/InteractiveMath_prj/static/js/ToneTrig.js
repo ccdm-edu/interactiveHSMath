@@ -17,7 +17,7 @@ $(function() {
 	let currTuneState = DEFAULT_TONE;  // pick the first element, which will be the synthesized tones
 	let tuneExpln = [];
 	let tuneToDo = []
-	let tuneFilename = [];
+	let tuneInstrument = [];
 	let tuneTitle = [];
 	let tuneBuffer = [];  // array of AudioBuffer for currTuneState 1 through N, all musical notes, used to play full mp3 file
 	let tuneOffset = []; // determines when plotting will begin in mp3 file, index is currTuneState
@@ -286,97 +286,94 @@ $(function() {
 
 			if (tuneBuffer == null || tuneBuffer[currTuneState] == null) {
 				// get musical note for first time, filename in config must be mp3
-				if (tuneFilename[currTuneState].toLowerCase().indexOf('.mp3') >= 0) {
-					// I don't think we need a csrf token for this ajax post.  1.  there is already a session ID required for this
-					// request 2.  Nothing is stored to database, request must be a filename we have or else get error back
-					// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
-				    $.ajax({url:  '../give_file/',
-				    		type: 'GET',
-				    	  	data:  {filename: tuneFilename[currTuneState]},
-				    	  	// if all is ok, return a blob, which we will convert to arrayBuffer, else return text cuz its an error
-				    	  	xhr: function () {
-                    			var xhr = new XMLHttpRequest();
-                    			xhr.onreadystatechange = function () {
-	                        		if (xhr.readyState == 2) {
-	                        			// send() was called and headers and status are returned
-	                            		if (xhr.status == 200) {
-	                                		xhr.responseType = "blob";
-	                            		} else {
-	                                		xhr.responseType = "text";
-	                            		}
-	                        		}
-                    			};
-                    			return xhr;
-                			},
-						})
-						.done(function(data, statusText, jqXHR) {
-								// DO, rewrite this with promise syntax  https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/decodeAudioData
-								// first time through, the decodeAudioData takes some time and its asynchronous so force a wait
-								// to play the tone.  First time must be inside the success function off decodeAudioData
-								// By definition, to get here means request is done and successful, (status = 4 and 200)
-								let blobTune = new Blob([data], { 'type': 'audio/mpeg' });  // this must match what we send over
-								console.log('file size is ' + blobTune.size + ' type is ' + blobTune.type);
-								blobTune.arrayBuffer().then(blob2array => 
-									{ // done converting blob to arrayBuffer, promise complete, convert blob2array to buffer
-									context.decodeAudioData(blob2array, function(buffer) {
-										// to get here means asynchronous mp3 decode is complete and successful
-										console.log("finished decoding mp3");
-										// copy AudioBuffer into array for this instrument/note so don't have to bug the server with requests
-										try {
-											console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate + " currTuneState = " + currTuneState);
-											tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate);
-											buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
-											// setup the class from which we will get points to graph the note
-											noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState);
-										} catch(e) {
-											// most likely not enough space to createBuffer
-											console.error(e);
-											alert("Failed note file setup, error is " + e);
-										}
-																	
-										// get array of values for both plots. Actually no need for short plot for low freq waveforms
-										tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray(0);
-										
-										// set up tone to approximate the fundamental freq of musical instrument
-										let newToneFreq = tuneFundamentalFreq[currTuneState];
-										$("#currFreqLabel").text(newToneFreq);   // and put it on the label as string
-										$("#in-range-freq").val(newToneFreq);
-										updateFreq();
-										
-										// setup tone so approximate fundamental phase of musical instrment
-										let newTonePhase = tuneFundamentalPhase[currTuneState];
-										$("#currPhaseLabel").text(newTonePhase);
-										$("#in-range-phase").val(newTonePhase);
-										updatePhase();
-								
-										// update graphs
-										drawTone()
-										// we have new instrument mp3, allow play
-										$("#allowNotePlay").show(); 
-										
-										// decodeAudioData is async and doesn't support promises, can't use try/catch for errors
-										},function(err) { alert("err(decodeAudioData) on file: " + tuneFilename[currTuneState] + " error =" + err); } )
-									}, reason => {
-										console.error("conversion of blob to arraybuffer failed");
+				// I don't think we need a csrf token for this ajax post.  1.  there is already a session ID required for this
+				// request 2.  Nothing is stored to database, request must be a filename we have or else get error back
+				// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
+			    $.ajax({url:  '../give_file/',
+			    		type: 'GET',
+			    	  	data:  {instrument: tuneInstrument[currTuneState]},
+			    	  	// if all is ok, return a blob, which we will convert to arrayBuffer, else return text cuz its an error
+			    	  	xhr: function () {
+                			var xhr = new XMLHttpRequest();
+                			xhr.onreadystatechange = function () {
+                        		if (xhr.readyState == 2) {
+                        			// send() was called and headers and status are returned
+                            		if (xhr.status == 200) {
+                                		xhr.responseType = "blob";
+                            		} else {
+                                		xhr.responseType = "text";
+                            		}
+                        		}
+                			};
+                			return xhr;
+            			},
+					})
+					.done(function(data, statusText, jqXHR) {
+							// DO, rewrite this with promise syntax  https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/decodeAudioData
+							// first time through, the decodeAudioData takes some time and its asynchronous so force a wait
+							// to play the tone.  First time must be inside the success function off decodeAudioData
+							// By definition, to get here means request is done and successful, (status = 4 and 200)
+							let blobTune = new Blob([data], { 'type': 'audio/mpeg' });  // this must match what we send over
+							console.log('file size is ' + blobTune.size + ' type is ' + blobTune.type);
+							blobTune.arrayBuffer().then(blob2array => 
+								{ // done converting blob to arrayBuffer, promise complete, convert blob2array to buffer
+								context.decodeAudioData(blob2array, function(buffer) {
+									// to get here means asynchronous mp3 decode is complete and successful
+									console.log("finished decoding mp3");
+									// copy AudioBuffer into array for this instrument/note so don't have to bug the server with requests
+									try {
+										console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate + " currTuneState = " + currTuneState);
+										tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate);
+										buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
+										// setup the class from which we will get points to graph the note
+										noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState);
+									} catch(e) {
+										// most likely not enough space to createBuffer
+										console.error(e);
+										alert("Failed note file setup, error is " + e);
 									}
-			
-								);
-	
-							})  // done with success function
-							.fail(function(jqXHR, exception) {
-									if (jqXHR.status == 403) {
-										alert("Need to pass bot test to access server file.  No file for YOU!");  
-									} else if (jqXHR.status == 404) {
-										alert("File not found, check JSON config file or server to ensure present.  See Administrator");
-									} else {
-										alert("ERROR:  return status is " + jqXHR.status );
-										console.error(jqXHR)
-									}
+																
+									// get array of values for both plots. Actually no need for short plot for low freq waveforms
+									tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray(0);
+									
+									// set up tone to approximate the fundamental freq of musical instrument
+									let newToneFreq = tuneFundamentalFreq[currTuneState];
+									$("#currFreqLabel").text(newToneFreq);   // and put it on the label as string
+									$("#in-range-freq").val(newToneFreq);
+									updateFreq();
+									
+									// setup tone so approximate fundamental phase of musical instrment
+									let newTonePhase = tuneFundamentalPhase[currTuneState];
+									$("#currPhaseLabel").text(newTonePhase);
+									$("#in-range-phase").val(newTonePhase);
+									updatePhase();
+							
+									// update graphs
+									drawTone()
+									// we have new instrument mp3, allow play
+									$("#allowNotePlay").show(); 
+									
+									// decodeAudioData is async and doesn't support promises, can't use try/catch for errors
+									},function(err) { alert("err(decodeAudioData) on file for: " + tuneInstrument[currTuneState] + " error =" + err); } )
+								}, reason => {
+									console.error("conversion of blob to arraybuffer failed");
 								}
-							);   // done with ajax
-		      	} else {
-		      		alert('Currently we only handle mp3 files, check MusicNotes.json for correct filename for this instrument'); 
-		      	}	
+		
+							);
+
+						})  // done with success function
+						.fail(function(jqXHR, exception) {
+								if (jqXHR.status == 403) {
+									alert("Need to pass bot test to access server file.  No file for YOU!");  
+								} else if (jqXHR.status == 404) {
+									alert("File not found.  See Administrator");
+								} else {
+									alert("ERROR:  return status is " + jqXHR.status );
+									console.error(jqXHR)
+								}
+							}
+				);   // done with ajax
+	
         	}
         	// update graphs with stored musical tone data
 			drawTone()
@@ -602,7 +599,7 @@ $(function() {
 					tuneState[index] = (paramSet.instrument).replace(" ","_") + "_" + paramSet.musicalNote;
 					tuneExpln[index] = paramSet.expln;		
 					tuneToDo[index]= paramSet.todo;			
-					tuneFilename[index] = paramSet.filename;
+					tuneInstrument[index] = paramSet.instrument;
 					tuneTitle[index] = paramSet.title;
 					tuneOffset[index] = parseInt(paramSet.tuneOffset);
 					tuneFundamentalFreq[index] = parseInt(paramSet.fundamentalHz);

@@ -105,29 +105,21 @@ class ChkUsrIsRobotView(BSModalFormView):
 # respond to client appropriately
 #**********************************************************       
 class VerifyClientGiveFile(View):
+    instrumentFilenames = {'trumpet': "BDM_trumpet_468.MP3", 
+                           'clarinet': "DG_clarinet467.MP3", 
+                           'soprano sax': "MS_SSax_midC.MP3", 
+                           'tenor sax': "MS_TSax_midC.MP3"}
     def get(self, request):
         response = HttpResponse()
-        filename = ''
-        if 'filename' in request.GET:
+        resultFilename = ''
+        if 'instrument' in request.GET:
             # Need to go up one level from give_file URL we are in to get to int_math level and correct file location
-            filename = request.GET['filename']
-            module_dir = os.path.dirname(__file__)  # get current directory
-            #print("current dir is " + module_dir)
-            #filename = os.path.join(module_dir, '../static/MusicNotes/' + filename)
-            #localFilename = staticfiles_storage.url('MusicNotes' + filename)
-            #localFilename = '/../static/MusicNotes/' + filename
-            #print('localfile is' + localFilename)
-            tuneFilename = os.path.join(module_dir,"..")
-            tuneFilename2 = os.path.join(tuneFilename, 'static')
-            tuneFilename3 = os.path.join(tuneFilename2, 'MusicNotes')
-            tuneFilename4 = os.path.join(tuneFilename3, filename)
-            #print('tunefilename is ' + tuneFilename4)
-            resultFilename = finders.find(filename)
+            instrument = request.GET['instrument']
+            resultFilename = finders.find(self.instrumentFilenames[instrument])
             print('result of finders is ')
             print(resultFilename)
             searched_locations = finders.searched_locations
-            #print('searched locations: ')  
-            #print(searched_locations)
+
             
 
         
@@ -139,9 +131,6 @@ class VerifyClientGiveFile(View):
                     #all is good, get the file and send if off.  
                     # DO, redo this in terms of nginx access for greater efficiency  Use python django-sendfile library
                     #need different way to send off via development server and nginx (or apache if we later go that way)
-                    print('after concat, filename is ' + resultFilename)
-                    print(' size of this file is ' + str(os.path.getsize(resultFilename)))
-
                     tuneFile = open(resultFilename,"rb")
                     response.write(tuneFile.read())
                     response['Content-Type'] = 'audio/mpeg'

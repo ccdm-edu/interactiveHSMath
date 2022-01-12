@@ -202,7 +202,7 @@ $(function() {
 	function showUserPeriod(latestPeriod){
 		ctxUnitCircle.beginPath();
 		ctxUnitCircle.lineWidth = 2.0
-		ctxUnitCircle.strokeStyle = "green";
+		ctxUnitCircle.strokeStyle = "lime";
 	    ctxUnitCircle.arc(110, 20, 18, 0, Math.PI * 2, true); 
 	    ctxUnitCircle.stroke();
 	    
@@ -212,7 +212,7 @@ $(function() {
 			let xcoord = Math.round(UPPER_X_ORIGIN + latestPeriod*PIX_PER_MINOR_TICK);
 			ctxFreqPlot.beginPath();
 			ctxFreqPlot.lineWidth = 2.0
-			ctxFreqPlot.strokeStyle = "green";
+			ctxFreqPlot.strokeStyle = "lime";
 			ctxFreqPlot.arc(xcoord, UPPER_Y_ORIGIN, 15, 0, Math.PI * 2, true);
 			ctxFreqPlot.stroke();
 		} else {
@@ -220,7 +220,7 @@ $(function() {
 			let xcoord = Math.round(LOWER_X_ORIGIN  + 10*latestPeriod*PIX_PER_MINOR_TICK);
 			ctxFreqPlot.beginPath();
 			ctxFreqPlot.lineWidth = 2.0
-			ctxFreqPlot.strokeStyle = "green";
+			ctxFreqPlot.strokeStyle = "lime";
 			ctxFreqPlot.arc(xcoord, LOWER_Y_ORIGIN, 15, 0, Math.PI * 2, true);
 			ctxFreqPlot.stroke();
 		}
@@ -251,6 +251,7 @@ $(function() {
         countTime =0;
         $('#UserNotices_DT1').text('');
         startInterval = setInterval(function(){
+			$('#ClearOldFreq_DT1').prop('disabled', true);
     		countTime++;
     		$('#timeVal_DT1').text(roundFP(countTime * 0.1, 1)); 
     		$('#theta_DT1').text(String(accumPhase));
@@ -261,6 +262,7 @@ $(function() {
         		timerStarted = false;
         		accumPhase = 0;
         		lastIndexClicked = 0;
+        		$('#ClearOldFreq_DT1').prop('disabled', false);
         		$('#theta_DT1').text(String(accumPhase));
         		$('#UserNotices_DT1').html('Time expired for accumulating 360 degrees of phase.  <br>As you click yellow dots going around counter clock wise, <br>dont forget to hit 360 degrees as your last point.');
         	}
@@ -305,9 +307,10 @@ $(function() {
         		lastFreq = currFreq;
         		// do everything else first
         		$("#StartPhaseAccum_DT1").prop("value", "Let's Go");
+        		$('#ClearOldFreq_DT1').prop('disabled', false);
         		accumPhase = 0;   
         		drawPlots();
-        		showUserPeriod(countTime/10);		
+        		showUserPeriod(countTime/10);		// puts up indicators at time/graph and explanation
         	}
     	}, 100);	
 	}
@@ -321,12 +324,23 @@ $(function() {
         	}
 		} else {
 			// User wants to abort a timed phase accumulation, explain more to user
-			$("#UserNotices_DT1").html("Just click on dots and ending at zero phase.  <br>You can skip dots if you want.  <br>Your phase accumulation over time (frequency) will be measured");
+			$("#UserNotices_DT1").html("Just click on dots going counterclockwise and ending at zero phase.  <br>You can skip dots if you want.  <br>Your phase accumulation over time (frequency) will be measured");
 			$("#StartPhaseAccum_DT1").prop("value", "Let's Go");
+			// get rid of old green line
+			ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
 			// stop timer
 			if (startInterval) clearInterval(startInterval);
         	timerStarted = false;
 		}
+    });
+    
+    $('#ClearOldFreq_DT1').on('click', function(event) {
+		// go back to bare plots and no freq
+		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
+		ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
+		freqMeasured = [];
+		$('#LastFrequencies_DT1').text('');
+		$('#UserNotices_DT1').text('');
     });
 
 	const ANGLE_PER_PT_DEG = ANGLE_PER_PT_RAD * 180 / Math.PI;
@@ -352,6 +366,7 @@ $(function() {
 				}
 				// we found the dot the user clicked on, if timer not on, turn it on
 				if (!timerStarted) {
+					$("#StartPhaseAccum_DT1").prop("value", "Stop");
 					startFreqMeas();
         		}	
 		  		//clear any old drawings before we put up the new stuff, take it back to the background image
