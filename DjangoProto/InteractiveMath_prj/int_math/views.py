@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import View
-from int_math.models import Topic, Subtopic
+from int_math.models import Topic, Subtopic, BotChkResults
 from django.conf import settings
 from django.urls import reverse
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -30,7 +30,7 @@ class ChkUsrIsRobotView(BSModalFormView):
         # we return back to the page that sent us, encoded in html as next parameter, 
         # if that fails, go back to home page (should never happen)
         return self.request.GET.get('next', reverse('int_math:index'))
-    
+        
     def post(self, request):  
         # check the form validity for basic stuff first
         form = self.form_class(request.POST) 
@@ -57,6 +57,7 @@ class ChkUsrIsRobotView(BSModalFormView):
                 print('finished secret key decoder ring on grecaptcha')
                 response = urllib.request.urlopen(req)
                 result = json.loads(response.read().decode())
+                #take action on robot test results
                 if (result['success'] and result['action'] == 'bot_check_form'):
                     if (result['score'] < 0.25):
                         quartile = '1Q'
@@ -70,21 +71,29 @@ class ChkUsrIsRobotView(BSModalFormView):
                     # need to throw an exception or do something here
                     print(f"ERROR, bad recaptcha token, raw result was {result}")
             
-    
             #JS passes back text string, not a bool
             passChallengeTest = self.request.POST.get('math_test')
             print('results on math test is ' + passChallengeTest +  " quartile is " + quartile)
             
+            passChallengeTest_bool = False
             if (('12' == passChallengeTest) and ('4Q' == quartile)):
                 #trust this user for the duration of session, no need to retest them as long as client has this cookie
                 request.session['notABot'] = True
                 botCheckNeeded = False
+                passChallengeTest_bool = True
                 print('Bot test PASSED')
             else:
                 # tell server not to trust this client on all subsequent accesses and to retest the user
                 request.session['notABot'] = False
                 botCheckNeeded = True
                 print('Bot test FAILED')
+            
+            # add results to running tab kept at server
+            # retrieve model and increment the count
+            curr_stat = BotChkResults.objects.get_or_create(pass_mathtest = passChallengeTest_bool, recaptcha_v3_quartile = quartile)[0]
+            curr_stat.count = curr_stat.count + 1
+            curr_stat.save()
+            print(f'curr_stat = {curr_stat}')
 
         context_dict = {'page_tab_header': 'ToneTrig',
                         'topic': Topic.objects.get(name="Trig"),
@@ -96,8 +105,6 @@ class ChkUsrIsRobotView(BSModalFormView):
         nextURL = nextURL[1:-1] + ".html"
         print('next url is ' + nextURL)
         responseTest = render(request, nextURL, context=context_dict)
-        #return response
-        #print(responseTest)
         return responseTest
 
 #**********************************************************
@@ -120,9 +127,6 @@ class VerifyClientGiveFile(View):
             print(resultFilename)
             searched_locations = finders.searched_locations
 
-            
-
-        
         if 'notABot' in request.session:
             # bot test already performed, notaBot exists, get results
             if request.session.get('notABot', True):
@@ -156,6 +160,7 @@ class VerifyClientGiveFile(View):
 
 
         return response
+    
 #**********************************************************
 # these are all page views
 #**********************************************************
@@ -175,12 +180,20 @@ class StaticTrigView(View):
         response = render(request, 'int_math/StaticTrig.html', context=context_dict)
         return response
     
-class DynamicTrigView(View):
+class DynamicTrig1View(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'DynamicTrig',
                         'topic': Topic.objects.get(name="Trig"),
                         }
-        response = render(request, 'int_math/DynamicTrig.html', context=context_dict)
+        response = render(request, 'int_math/DynamicTrig1.html', context=context_dict)
+        return response
+    
+class DynamicTrig2View(View):
+    def get(self, request):
+        context_dict = {'page_tab_header': 'DynamicTrig',
+                        'topic': Topic.objects.get(name="Trig"),
+                        }
+        response = render(request, 'int_math/DynamicTrig2.html', context=context_dict)
         return response
 
 class ToneTrigView(View):
@@ -207,5 +220,33 @@ class ImagNumView(View):
         response = render(request, 'int_math/imag_num.html', context=context_dict)
         return response
     
+class PeopleView(View):
+    # give user all the info I collect about them
+    def get(self, request):
+        qF = BotChkResults.objects.filter(pass_mathtest = False)
+        mtF = [qF.get(recaptcha_v3_quartile = '1Q').count,
+               qF.get(recaptcha_v3_quartile = '2Q').count,
+               qF.get(recaptcha_v3_quartile = '3Q').count,
+               qF.get(recaptcha_v3_quartile = '4Q').count ]
+        
+        qP = BotChkResults.objects.filter(pass_mathtest = True)
+        mtP = [qP.get(recaptcha_v3_quartile = '1Q').count,
+               qP.get(recaptcha_v3_quartile = '2Q').count,
+               qP.get(recaptcha_v3_quartile = '3Q').count,
+               qP.get(recaptcha_v3_quartile = '4Q').count ]
 
+        context_dict = {'page_tab_header': 'People',
+                        'topic': Topic.objects.get(name="You"),
+                        'mtF': mtF,
+                        'mtP': mtP,
+                        }
+        return render(request, 'int_math/user_contrib.html', context=context_dict)
+
+class AckView(View):
+    def get(self, request):
+        context_dict = {'page_tab_header': 'Thank You!',
+                        'topic': Topic.objects.get(name="You"),
+                        }
+        response = render(request, 'int_math/acknowledgements.html', context=context_dict)
+        return response        
         

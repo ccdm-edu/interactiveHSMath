@@ -27,8 +27,7 @@ class Subtopic(models.Model):
 
 # This is to keep track of users to site and see how well the robot checks are working
 class BotChkResults(models.Model):
-    pass_honeypot = models.BooleanField(default=False)
-    pass_mathtest = models.BooleanField(default=False, help_text="any order, separated by commas")
+    pass_mathtest = models.BooleanField(default=False, help_text="Don't make this hard")
     RECAPTCHA_V3_QUARTILES = (
         ('1Q', 'Definitely_robot'),
         ('2Q', 'Maybe_robot'),
@@ -42,4 +41,4 @@ class BotChkResults(models.Model):
         verbose_name_plural = 'BotChkResults'
     
     def __str__(self):
-        return f"pass_honeypot={self.pass_honeypot}, pass_math={self.pass_mathtest}, recaptcha_v3={self.recaptcha_v3_quartile}, count = {self.count}"
+        return f"pass_math={self.pass_mathtest}, recaptcha_v3={self.recaptcha_v3_quartile}, count = {self.count}"

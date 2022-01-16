@@ -57,8 +57,18 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item"><a class="nav-link" href="{% url 'int_math:index' %}">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:StaticTrig' %}">Trig Functions</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:imag_num' %}">Imaginary Numbers</a></li>
+				        <!-- Did this by looking at bootstrap dashboard navbar dropdown -->
+				        <li class="nav-item dropdown">
+				            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				            Trig
+				            </a>
+				            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+				                <a class="dropdown-item" href="{% url 'int_math:StaticTrig' %}">Trig Functions</a>
+				                <a class="dropdown-item" href="#">Trig Identities</a>
+				            </div>
+				        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:imag_num' %}">Imaginary</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:user_contrib' %}">You</a></li>
                     </ul>
                 </div>
             </nav>
