@@ -240,7 +240,7 @@ class PeopleView(View):
                         'mtF': mtF,
                         'mtP': mtP,
                         }
-        return render(request, 'int_math/user_contrib.html', context=context_dict)
+        return render(request, 'int_math/UserData.html', context=context_dict)
 
 class AckView(View):
     def get(self, request):
@@ -249,4 +249,11 @@ class AckView(View):
                         }
         response = render(request, 'int_math/acknowledgements.html', context=context_dict)
         return response        
-        
+
+class TrigIDView(View):
+    def get(self, request):
+        context_dict = {'page_tab_header': 'Trig ID',
+                        'topic': Topic.objects.get(name="Trig"),
+                        }
+        response = render(request, 'int_math/TrigIdentity.html', context=context_dict)
+        return response          

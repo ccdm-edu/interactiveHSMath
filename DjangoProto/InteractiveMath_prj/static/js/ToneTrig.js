@@ -55,7 +55,10 @@ $(function() {
 			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 2);	
 			// this allows us to turn off graph yet keep data around, for currTuneState=TONE_ONLY, this will be a null array 
 			if (tuneGraphLong[currTuneState] != null) {
-				ampLongCurrNote[i] = $currAmp.val() * tuneGraphLong[currTuneState][i];	
+				// arbitrary fixed amplification factor put on mp3 signals for ease in plotting.  Changing
+				// amplitude only changes tone volume, not the mp3 musical note volume
+				ampLongCurrNote[i] = 10 * tuneGraphLong[currTuneState][i];	
+
 			}	
 		}
 		for (i=0; i<=NUM_PTS_PLOT_SHORT; i++) {
@@ -92,8 +95,7 @@ $(function() {
 		// now fill the arrays and push them to the plots
 		fillInArrays();   
 		// update 10 ms plot
-		sine_plot_100_1k.data.datasets[0].data.push(ampLong);	
-		//sine_plot_100_1k.data.datasets[1].data.push(ampLongCurrNote);    
+		sine_plot_100_1k.data.datasets[0].data.push(ampLong);	 
 		// update 1 ms plot
 	    sine_plot_1k_10k.data.datasets[0].data.push(ampShort);
 
@@ -374,9 +376,24 @@ $(function() {
 							}
 				);   // done with ajax
 	
-        	}
-        	// update graphs with stored musical tone data
-			drawTone()
+        	} else {
+				// we have new instrument mp3, allow play
+				$("#allowNotePlay").show(); 
+				// set up tone to approximate the fundamental freq of musical instrument
+				let newToneFreq = tuneFundamentalFreq[currTuneState];
+				$("#currFreqLabel").text(newToneFreq);   // and put it on the label as string
+				$("#in-range-freq").val(newToneFreq);
+				updateFreq();
+				
+				// setup tone so approximate fundamental phase of musical instrment
+				let newTonePhase = tuneFundamentalPhase[currTuneState];
+				$("#currPhaseLabel").text(newTonePhase);
+				$("#in-range-phase").val(newTonePhase);
+				updatePhase();
+				
+				// update graphs with stored musical tone data (we've done this before)
+				drawTone();
+			}
 		};
     });		
 

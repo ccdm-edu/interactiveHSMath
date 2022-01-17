@@ -22,7 +22,7 @@ def populate():
         {'title':'Imag Num topic 3', 'url':'#ImagNumTopic3'}]
     
     people_subtopics = [
-        {'title': 'Robot Results', 'url': '../user_contrib'},
+        {'title': 'Robot Results', 'url': '../UserData'},
         {'title': 'Thank You!', 'url': '../acknowledgements'},
         ]
     
