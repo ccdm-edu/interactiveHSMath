@@ -73,7 +73,7 @@ $(function() {
 	
 	// draw y axis tick marks for other amplitudes, we will do 0.1 ticks up to 1.1, 1.1 is as big as I want sin/cos
 	// graphs to get
-	for(var i=1; i<= 11; i++){ 
+	for(let i=1; i<= 11; i++){ 
 		ctxExpandableUnitCircle.beginPath();
 		// y axis sin
 		ctxExpandableUnitCircle.moveTo(TRIG_X_ORIGIN - 5, SIN_Y_ORIGIN - 0.1 * i * CIRC_RAD);
@@ -143,7 +143,7 @@ $(function() {
 
 			
 	// add tick marks to sin/cos axes, no need to mark 0 degrees
-	for (var i = 1; i < thetaGraph.length; i++) {
+	for (let i = 1; i < thetaGraph.length; i++) {
 		ctxExpandableUnitCircle.beginPath();
 		ctxExpandableUnitCircle.setLineDash([5,25]); // dash the lines to mostly space 
 		ctxExpandableUnitCircle.moveTo(TRIG_X_ORIGIN + thetaGraph[i].pix, SIN_Y_ORIGIN);
@@ -389,9 +389,9 @@ $(function() {
 		function calcSine(j) {
 			return Math.round((amp * CIRC_RAD)*Math.sin(2* Math.PI * j/FULL_THETA_PIX));
 		}
-		for(var i=0; i<FULL_THETA_PIX; i=i+2*DASH_SEG_PIX){ // Loop from left side to create dashed sin curve
-	    	var yLo = calcSine(i); 
-	    	var yHi = calcSine(i+DASH_SEG_PIX);
+		for(let i=0; i<FULL_THETA_PIX; i=i+2*DASH_SEG_PIX){ // Loop from left side to create dashed sin curve
+	    	let yLo = calcSine(i); 
+	    	let yHi = calcSine(i+DASH_SEG_PIX);
 	    	// remember, on bitmap, y increases as you go from top to bottom
 	  		ctxExpandableUnitCircle.moveTo(TRIG_X_ORIGIN + i, SIN_Y_ORIGIN - yLo); 
 	  		// make a dash seg and then skip and redo again.  
@@ -405,9 +405,9 @@ $(function() {
 		function calcCos(j) {
 			return Math.round((amp * CIRC_RAD)*Math.cos(2* Math.PI * j/FULL_THETA_PIX));
 		}
-		for(var i=0; i<FULL_THETA_PIX; i=i+2*DASH_SEG_PIX){ // Loop from left side to create dashed cos curve
-	    	var yLo = calcCos(i); 
-	    	var yHi = calcCos(i+DASH_SEG_PIX);
+		for(let i=0; i<FULL_THETA_PIX; i=i+2*DASH_SEG_PIX){ // Loop from left side to create dashed cos curve
+	    	let yLo = calcCos(i); 
+	    	let yHi = calcCos(i+DASH_SEG_PIX);
 	    	// remember, on bitmap, y increases as you go from top to bottom
 	  		ctxExpandableUnitCircle.moveTo(TRIG_X_ORIGIN + i, COS_Y_ORIGIN - yLo); 
 	  		// make a dash seg and then skip and redo again.  
@@ -510,7 +510,7 @@ $(function() {
 		let deltaY_Pt = (y2Graph - y1Circ)/NUM_ANIMATION_SIN_COS;
 		let deltaY_Ax = (y2Axis - y1Axis)/NUM_ANIMATION_SIN_COS;
 				
-		for (var i=1; i <= NUM_ANIMATION_SIN_COS; i++) {
+		for (let i=1; i <= NUM_ANIMATION_SIN_COS; i++) {
 			line = {"begin_x": Math.round(x1Axis + i * deltaX_Ax), 
 					"begin_y": Math.round(y1Axis + i * deltaY_Ax), 
 					"end_x": Math.round(x1Circ + i * deltaX_Pt), 
@@ -566,7 +566,7 @@ $(function() {
 	circleDotsCanvas.addEventListener('click', (e) => {
 	
 		// need to convert canvas coord into bitmap coord
-		var rect = circleDotsCanvas.getBoundingClientRect();
+		let rect = circleDotsCanvas.getBoundingClientRect();
 		const pos = {
 		  x: e.clientX - rect.left,
 		  y: e.clientY - rect.top

@@ -98,7 +98,7 @@ $(function() {
 		
 		// draw y axis tick marks for other amplitudes, we will do 0.1 ticks up to 1,
 		const SHORT_TICK_LEN = 5
-		for(var i=1; i<= 10; i++){ 
+		for(let i=1; i<= 10; i++){ 
 			ctxFreqPlot.beginPath();
 			// y axis sin
 			ctxFreqPlot.moveTo(xOrigin - SHORT_TICK_LEN, yOrigin - 0.1 * i * CIRC_RAD);
@@ -112,7 +112,7 @@ $(function() {
 		ctxFreqPlot.fillText("1.0", xOrigin - 20, yOrigin - 0.1 * 10 * CIRC_RAD);
 		
 		// x sine axis time ticks
-		for(var i=1; i<= 20; i++){ 
+		for(let i=1; i<= 20; i++){ 
 			ctxFreqPlot.beginPath();
 			// y axis sin
 			let xLoc = xOrigin + i * PIX_PER_MINOR_TICK;
@@ -162,11 +162,11 @@ $(function() {
 	// Update graph to show what user has done in both lower and upper plot
 	//********************************************************
 	function drawOnePlot(x_orig, y_orig, maxTimePlot){
-		for (var plotInd = 0; plotInd < freqMeasured.length; plotInd++) {	
+		for (let plotInd = 0; plotInd < freqMeasured.length; plotInd++) {	
 			let minColorInd = MAX_FREQ - freqMeasured.length;
 			let colorInd = minColorInd + plotInd;		
 			ctxFreqPlot.strokeStyle = FREQ_COLORS[colorInd];
-			var currFreq = freqMeasured[plotInd];
+			let currFreq = freqMeasured[plotInd];
 			let T = 1/currFreq;
 			
 			function calcSine(j) {
@@ -178,11 +178,11 @@ $(function() {
 			let numPts = 40 + 10*maxTimePlot/T;  // higher freq gets more points on plot
 			let pixPerPt = TOT_PIX_X_AXIS/numPts;
 			let timeInc = maxTimePlot/numPts;  // each point covers this much time
-			for (var i = 0; i<numPts; i++){
+			for (let i = 0; i<numPts; i++){
 				let currTime = (i/numPts) * maxTimePlot;
 				// plot from currTime to next increment
-				var yLo = calcSine(currTime);
-				var yHi = calcSine(currTime + timeInc);
+				let yLo = calcSine(currTime);
+				let yHi = calcSine(currTime + timeInc);
 				ctxFreqPlot.beginPath();
 				ctxFreqPlot.moveTo(x_orig + i*pixPerPt, Math.round(y_orig - yLo));
 				ctxFreqPlot.lineTo(x_orig + i*pixPerPt + pixPerPt, Math.round(y_orig - yHi));
@@ -347,7 +347,7 @@ $(function() {
     circleDotsCanvas.addEventListener('click', (e) => {	
     	// now the timer has started, collect phase
     	// need to convert canvas coord into bitmap coord
-		var rect = circleDotsCanvas.getBoundingClientRect();
+		let rect = circleDotsCanvas.getBoundingClientRect();
 		const pos = {
 		  x: e.clientX - rect.left,
 		  y: e.clientY - rect.top

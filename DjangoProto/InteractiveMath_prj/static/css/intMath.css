@@ -23,25 +23,24 @@ span#blinkingColor {
 	display: block;
     margin-left: auto;
     margin-right: auto;
-	width: 50%;
-	position: relative;
+	transform: scale(0.5);
+	position: absolute;
 	animation-name: logo-fade-away;
 	animation-duration: 2s;
 	animation-fill-mode: forwards;
 }
 @keyframes logo-fade-away{
-	 0%   {opacity: 1.0; width: 50%}
-	 50%   {opacity: 1.0; width: 100%}
-	 100%   {opacity: 0.05; width: 80%}
+	 0%   {opacity: 1.0; transform: scale(0.8)}
+	 50%   {opacity: 1.0; transform: scale(1.2)}
+	 100%   {opacity: 0.05; transform: scale(0.8)}
 }
 /* put the home page verbiage over the logo, invisible at first then fades in after logo "burst" 
-   the top was set so that the words would lay on top of logo*/
+   the top is implicitely 0 so that the words would lay on top of logo*/
 div.home_expln p {
 	margin: 10%;
     font-weight: bold;
     color: #000000;
-    position: relative;
-    top: -450px;
+    position: absolute;
     font-size: 18px;
     opacity: 0.0;
     animation-name: expln_fade_in;

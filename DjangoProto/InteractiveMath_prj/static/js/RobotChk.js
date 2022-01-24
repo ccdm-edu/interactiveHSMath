@@ -12,7 +12,7 @@ $(function() {
 	// need to wait till modal window comes up, problem is that the elements are already 
 	// there and "ready" but have zero length and there is no event that fires off when the length >0 so 
 	// we have to poll
-	var timer;
+	let timer;
 	if ($("#RobotCheckModal").length > 0) {
 		console.log('length is not zero at startup')
 		// this will never happen, it does not power up in this state
@@ -26,9 +26,9 @@ $(function() {
     } 
 	
 	function sendRecaptchaData() {
-		var mathQ_Pass = 0;
+		let mathQ_Pass = 0;
 		const BOGUS = 'bogus_site_key';
-		var G_RECAP_SITE_KEY = BOGUS
+		let G_RECAP_SITE_KEY = BOGUS
 		
 		//***************
 		// Hide inputs and disable submit on startup
@@ -36,7 +36,7 @@ $(function() {
 		// hide the inputs we don't want users trying to access, recaptcha v3
 		$('#id_g_recaptcha_response').hide();
 		
-		var $grLabel = $("label[for='"+$('#id_g_recaptcha_response').attr('id')+"']");
+		let $grLabel = $("label[for='"+$('#id_g_recaptcha_response').attr('id')+"']");
 		if ($grLabel.length == 0) {
 			// try again to hit the label
 			$grLabel = $('#id_g_recaptcha_response').closest('label')

@@ -86,7 +86,7 @@
 		
 		// draw x and y axis tick marks for other amplitudes, we will do 0.1 ticks up to 1.1, 1.1 is as big as I want sin/cos
 		// graphs to get
-		for(var i=1; i<= 11; i++){ 
+		for(let i=1; i<= 11; i++){ 
 			ctxExpandableUnitCircle.beginPath();
 			// y axis
 			ctxExpandableUnitCircle.moveTo(x_center - 5, y_center - 0.1 * i * CIRC_RAD);
@@ -120,7 +120,7 @@
 	//want to round but leave value as number, not string, so toFixed() is out. 
 	//If x axis is a number, chart js will figure out grid lines/step size as needed
 	function roundFP(number, prec) {
-	    var tempnumber = number * Math.pow(10, prec);
+	    let tempnumber = number * Math.pow(10, prec);
 	    tempnumber = Math.round(tempnumber);
 	    return tempnumber / Math.pow(10, prec);
 	};

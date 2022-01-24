@@ -49,7 +49,7 @@ $(function() {
 	const samplePeriodShort = DURATION_SHORT_PLOT_MS/(1000 * NUM_PTS_PLOT_SHORT);
 	
 	function fillInArrays(){
-		var i;
+		let i;
 		for (i=0; i<=NUM_PTS_PLOT_LONG; i++) {
 			ampLong[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodLong + $currPhase.val() / 360.0) );
 			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 2);	
@@ -89,7 +89,7 @@ $(function() {
 	    
 	    // update title to match new parameters
 	    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
-	    var currTitleText = 'y = ' + $currAmp.val() + ' * sin{ 2 * \u03C0 * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }';
+	    let currTitleText = 'y = ' + $currAmp.val() + ' * sin{ 2 * \u03C0 * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }';
 	    sine_plot_100_1k.options.title.text = currTitleText;
 		
 		// now fill the arrays and push them to the plots
@@ -108,7 +108,7 @@ $(function() {
 	//want to round but leave value as number, not string, so toFixed() is out. 
 	//If x axis is a number, chart js will figure out grid lines/step size as needed
 	function roundFP(number, prec) {
-	    var tempnumber = number * Math.pow(10, prec);
+	    let tempnumber = number * Math.pow(10, prec);
 	    tempnumber = Math.round(tempnumber);
 	    return tempnumber / Math.pow(10, prec);
 	};
@@ -183,7 +183,7 @@ $(function() {
 				}
 			}	
 			// using nearest neighbor approximation for arbitrary sample rate conversion of MP3 rate to graph rate
-			for (var i = 0; i <= numPtsPlot; i++) {
+			for (let i = 0; i <= numPtsPlot; i++) {
 				tG = graphTs * i;
 				let tM = currIndxMp3 * this.samplePeriodMp3;
 				let tMp1 = tM + this.samplePeriodMp3;
@@ -226,7 +226,7 @@ $(function() {
 		$currAmp = $("#in-range-amp")
 		$("#currAmpLabel").text($currAmp.val());
 		if (ToneIsOnNow==true) {
-			var tonejs_dB = -40 + 20.0 * Math.log10($currAmp.val());
+			let tonejs_dB = -40 + 20.0 * Math.log10($currAmp.val());
 			osc.volume.value = tonejs_dB;
 			// if tone isn't on, don't have to change anything...
 		}
@@ -247,7 +247,7 @@ $(function() {
 		// and 0 dB is plenty loud enough.  I know this isn't the music industry definition (decibel SPL where 0 dB
 		// is the quietest sound one can hear and 100 dB will cause hearing damage) so I will say Amplitude = 1
 		// is min audible and amplitude 40 dB higher (40 = 20log(A1/A0) or A1=100 if A0 = 1) is max we want to put out
-		var tonejs_dB = -40 + 20.0 * Math.log10($currAmp.val());
+		let tonejs_dB = -40 + 20.0 * Math.log10($currAmp.val());
 		if (ToneIsOnNow==false) {
 			// currently false, clicked by user and about to be true 
 			osc = new Tone.Oscillator({
@@ -296,7 +296,7 @@ $(function() {
 			    	  	data:  {instrument: tuneInstrument[currTuneState]},
 			    	  	// if all is ok, return a blob, which we will convert to arrayBuffer, else return text cuz its an error
 			    	  	xhr: function () {
-                			var xhr = new XMLHttpRequest();
+                			let xhr = new XMLHttpRequest();
                 			xhr.onreadystatechange = function () {
                         		if (xhr.readyState == 2) {
                         			// send() was called and headers and status are returned
