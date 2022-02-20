@@ -7,32 +7,34 @@
 {% endblock %}
     
 {% block body_block %}
-
 	<div id ="headerAndCtl_ST">
 		<input type="button" id="ToDo_or_expln_ST" value="Explain">
-		<textarea readonly id="HeaderTrig_ST" rows = "1" >Static Trig Functions </textarea>
+		<textarea readonly id="HeaderTrig_ST" rows = "1" >Where do sine waves come from?</textarea>
 	</div>
 	<div id="HelpBox_ST">
 	 	<textarea readonly id="LongTextBox_ST" rows = '4' cols = "50">Help is here </textarea>
 	</div>
+
 	<div id="CircleValues">	
-		<label id="ampCircLabel">Amplitude (R)</label>
-		<input id="ampCirc" type="number" min="0" max="2" step="0.1" value="1.0" required>	
-		<label id="xyValueLabel">(x,y)</label>
-		<p id="xyValue">  </p>
-		<p id="xyValueDecimal"> </p>
-		<label id="thetaLabel">&#920</label>
+		<label id="ampCircLabel"><b>Amplitude (r)</b></label>
+		<input id="ampCirc" type="number" min="0" max="2" step="0.1" value="1.0" required data-toggle="tooltip" title="Increase or decrease your unit circle">	
+		<label id="xyValueLabel"><b>(x,y)</b></label>
+		<p id="xyEqtn">= (r&#8901cos(&#920), r&#8901sin(&#920))</p>
+		<p id ="xyFilledIn"></p>
+		<p id="xyExactValue" data-toggle="tooltip" data-placement="right" title="Exact Value of (x,y)"></p>
+		<p id="xyValueDecimal"data-toggle="tooltip"  data-placement="right" title="Decimal Approx of (x,y)"></p>
+		<label id="thetaLabel"><b>&#920</b></label>
 		<p id="theta">  </p>
-		</p>
-		
+		</p>	
 	</div>
-	
+
 	<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
 	<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas:  you must set bitmap for canvas in html, css only -->
 	<!-- sets element size, resulting in distortion -->
-	<canvas id="AmpSinCosCircle" width=1050 height=650>
-		Your Browser does not support canvas tag, you are missing graph capability
-	</canvas>
+	<!--  use this to create border for debug  style="border:1px solid #000000;" -->
+	<canvas id="AmpSinCosCircle" width=1050 height=650 >
+			Your Browser does not support canvas tag, you are missing graph capability
+	</canvas>	
 	
 	<!--  have to put another jquery library ref here, not sure why, its in the base -->	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

@@ -1,6 +1,18 @@
 /***********************
 This is the style sheet for the StaticTrig.html page
 ************************/
+/* create global var for this html */
+:root{
+	--LABEL_Y_VAL: 30px;
+	--VALUE_Y_1: 60px;
+	--VALUE_Y_2: 90px;
+	--VALUE_Y_3: 120px;
+	--VALUE_Y_4: 150px;
+	--LABEL_X_VAL1: 50px;
+	--LABEL_X_VAL2: 170px;
+	--LABEL_X_VAL3: 350px;
+}
+
 /* create canvas for expandable unit circle, position = relative lets the footer float to bottom for all parent elements.
 We use negative value for top since we want some overlap*/
 #AmpSinCosCircle{
@@ -13,7 +25,6 @@ We use negative value for top since we want some overlap*/
 #headerAndCtl_ST {
 	position: relative;
 	top: 0px;
-	width: auto;
 }
 #ToDo_or_expln_ST {
 	position: absolute;
@@ -26,6 +37,7 @@ We use negative value for top since we want some overlap*/
 	left: 400px;
 	font-weight: bold;
 	font-size: 32px;
+	width: 100%
 }
 /***************************/
 /* item 2, explanation of current activity in read only box,  Need this box to be above the canvas so sidebars active */ 
@@ -44,42 +56,60 @@ We use negative value for top since we want some overlap*/
 }
 #ampCircLabel {
 	position: absolute;
-	left: 50px;
-	top: 75px;
+	left: var(--LABEL_X_VAL1);
+	top: var(--LABEL_Y_VAL);
 }
+/* because the canvas with unit circle and two plots takes up so much space and overlaps...*/
 /* need to ensure spinbox is on top so users can input values, else up/down arrows and input not active, just visible*/
 #ampCirc {
 	position: absolute;
-	left: 50px;
-	top: 100px;
+	left: var(--LABEL_X_VAL1);
+	top: var(--VALUE_Y_1);
 	z-index: 9;
 }
 #xyValueLabel {
 	position: absolute;
-	left: 170px;
-	top: 75px;
+	left: var(--LABEL_X_VAL2);
+	top: var(--LABEL_Y_VAL);
 }
-#xyValue {
+#xyEqtn {
 	position: absolute;
-	left: 170px;
-	top: 100px;
+	left: var(--LABEL_X_VAL2);
+	top: var(--VALUE_Y_1);
 }
+#xyFilledIn {
+	position: absolute;
+	left: var(--LABEL_X_VAL2);
+	top: var(--VALUE_Y_2);
+}
+/* because the canvas with unit circle and two plots takes up so much space and overlaps...*/
+/* need high z index so the tooltip comes to the top and is visible on hover */
+#xyExactValue {
+	position: absolute;
+	left: var(--LABEL_X_VAL2);
+	top:  var(--VALUE_Y_3);
+	z-index: 9;
+}
+/* because the canvas with unit circle and two plots takes up so much space and overlaps...*/
+/* need high z index so the tooltip comes to the top and is visible on hover */
 #xyValueDecimal {
 	position: absolute;
-	left: 170px;
-	top: 130px;
-}
-#theta {
-	position: absolute;
-	left: 300px;
-	top: 100px;
-
+	left: var(--LABEL_X_VAL2);
+	top:  var(--VALUE_Y_4);
+	z-index: 9;
 }
 #thetaLabel {
 	position: absolute;
-	left: 300px;
-	top: 75px;
+	left: var(--LABEL_X_VAL3);
+	top: var(--LABEL_Y_VAL);
+}
+#theta {
+	position: absolute;
+	left: var(--LABEL_X_VAL3);
+	top: var(--VALUE_Y_1);
+
 }
 
 /***************************/
+
 		

@@ -439,7 +439,7 @@ $(function() {
 				noteIsOnNow = false;
 				$("#allowNotePlay").prop("value", "Play Note");
 			}
-			sourceNote.onended = function(){
+			sourceNote.onended = () => {
 				// no longer playing the note, either by user stop or natural completion
 				noteIsOnNow = false;
 				$("#allowNotePlay").prop("value", "Play Note");
@@ -515,7 +515,7 @@ $(function() {
 			}]
 		}
 	};
-	
+	Object.freeze(CHART_OPTIONS);
 	let currTitle = {display: true, text: 'y = ' + $currAmp.val() + ' * sin{ 2 * pi * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }'};
 	
 	const TOP_CHART = {...CHART_OPTIONS, title: currTitle };
@@ -538,7 +538,7 @@ $(function() {
 	    },
 	    options: TOP_CHART
 	});
-	
+	Object.freeze(TOP_CHART);
 	// if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
 	let sine_plot_1k_10k = new Chart(ctxShort, {
 	    type: 'line',

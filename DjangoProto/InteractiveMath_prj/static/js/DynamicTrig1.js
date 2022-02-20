@@ -242,6 +242,7 @@ $(function() {
 	const MAX_FREQ = 3;
 	// newest freq are dark blue and fading to pale blue for older frequencies
 	const FREQ_COLORS = ["#89CFF0", "#6495ED", "#000080"];
+	Object.freeze(FREQ_COLORS);
 	const LATEST_FREQ_TEXT = "   <- Most Recent";
 	const EARLIEST_FREQ_TEXT = "   <- Least Recent";
 	const GREEN_CIRCLE_EXPLN = "<p id='ExplnFreqMark'>Look at the two green circles.  They both reflect the time it took you to <br>accumulate 360 degrees of phase.  This is the period (T) of the waveform.  <br>The frequency of the waveform is 1/T.  Pull out your calculator and confirm!</p>";
@@ -352,6 +353,7 @@ $(function() {
 		  x: e.clientX - rect.left,
 		  y: e.clientY - rect.top
 		};	
+		Object.freeze(pos);
 		let ind = 0;
 		littleDotCenter.forEach(dot => {
 			// not sure yet which dot the user clicked on, must search all
