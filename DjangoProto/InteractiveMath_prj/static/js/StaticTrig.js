@@ -466,7 +466,7 @@ $(function() {
 			if ( (temp >= MIN_AMP) && (temp <= MAX_AMP) ) {
 				amp = temp;
 				if (temp != 1.0) {
-					ampStr = amp.toString().concat("*");
+					ampStr = amp.toString().concat("\u22C5");
 				} else {
 					//no need to show mpy by 1
 					ampStr = "";
@@ -643,7 +643,7 @@ $(function() {
 				ctxExpandableUnitCircle.closePath();
 				
 				// put the labels up for this selection
-				$('#xyFilledIn').text("= (" + ampStr + "sin" + dot.thetaRad + " , " + ampStr + "cos" + dot.thetaRad + ") ");
+				$('#xyFilledIn').text("= (" + ampStr + "cos" + dot.thetaRad + " , " + ampStr + "sin" + dot.thetaRad + ") ");
 				$('#xyExactValue').text(dot.xyExact);
 				$('#xyValueDecimal').text(dot.xyApproxDecimal);
 				$('#theta').text(dot.thetaRad + " rad = " + dot.thetaDeg);
