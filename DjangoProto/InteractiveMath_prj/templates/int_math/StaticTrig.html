@@ -9,7 +9,7 @@
 {% block body_block %}
 	<div id ="headerAndCtl_ST">
 		<input type="button" id="ToDo_or_expln_ST" value="Explain">
-		<textarea readonly id="HeaderTrig_ST" rows = "1" >Where do sine waves come from?</textarea>
+		<h1 id="HeaderTrig_ST">Where do sine waves come from?</h1>
 	</div>
 	<div id="HelpBox_ST">
 	 	<textarea readonly id="LongTextBox_ST" rows = '4' cols = "50">Help is here </textarea>
@@ -35,6 +35,11 @@
 	<canvas id="AmpSinCosCircle" width=1050 height=650 >
 			Your Browser does not support canvas tag, you are missing graph capability
 	</canvas>	
+	
+	<div id="FirstHelp">
+	<!--  will dynamically add elements here -->
+		<p> Start clicking yellow dots, which represent phase &#920 values</p>
+	</div>
 	
 	<!--  have to put another jquery library ref here, not sure why, its in the base -->	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

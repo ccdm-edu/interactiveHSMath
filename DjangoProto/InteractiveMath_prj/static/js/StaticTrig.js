@@ -578,12 +578,37 @@ $(function() {
 		}
 	
 	}, 500); // every 500 ms, move the animation
-	
+	//***********************************
+	// this code is used to help the user get started
+	//***********************************
+	let userHasStarted = false;
+	circleDotsCanvas.addEventListener("mousemove", (e) => {
+		if (!userHasStarted) {
+			// user is wandering around aimlessly trying to figure out how to get started
+			// put up some help, once they start clicking on yellow dots, they dont need this help anymore
+			// need to convert canvas coord into bitmap coord
+			let rect = circleDotsCanvas.getBoundingClientRect();
+			const pos = {
+			  x: e.clientX - rect.left,
+			  y: e.clientY - rect.top
+			};	
+			Object.freeze(pos);  // this makes const REALLY const, not needed here though
+			// if user is inside the "unit circle" put up some help
+			let bigCirc = {x: CIRC_X0, y: CIRC_Y0};
+			let bigCircRad = amp * CIRC_RAD;
+			if (isInside(pos, bigCirc, bigCircRad)) {
+				// if you are inside the circle, show the help, else turn it off, its annoying
+				$('#FirstHelp').css("visibility", "visible");
+			}
+			else {
+				$('#FirstHelp').css("visibility", "hidden");
+			}
+		}
+	});
 	//***********************************
 	// this code is used as user interacts with the yellow dots on main circle
 	//***********************************
 	circleDotsCanvas.addEventListener('click', (e) => {
-	
 		// need to convert canvas coord into bitmap coord
 		let rect = circleDotsCanvas.getBoundingClientRect();
 		const pos = {
@@ -595,6 +620,10 @@ $(function() {
 		schoolAngles.forEach(dot => {
 			// not sure yet which dot the user clicked on, must search all
 			if (isInside(pos, dot, DOT_RADIUS)) {
+				//once user has figured this all out, hide the obvious help
+				userHasStarted = true;
+				$('#FirstHelp').css("visibility", "hidden");
+				
 				// we found the dot the user clicked on
 		  		//clear any old drawings before we put up the new stuff, take it back to the background image
 				ctxExpandableUnitCircle.putImageData(backgroundPlot, 0, 0);
@@ -647,7 +676,6 @@ $(function() {
 				$('#xyExactValue').text(dot.xyExact);
 				$('#xyValueDecimal').text(dot.xyApproxDecimal);
 				$('#theta').text(dot.thetaRad + " rad = " + dot.thetaDeg);
-				console.log("ampstr is " + ampStr);
 				setTimeout(async function () {
 				    await MathJax.typesetPromise()
 				}, 100)

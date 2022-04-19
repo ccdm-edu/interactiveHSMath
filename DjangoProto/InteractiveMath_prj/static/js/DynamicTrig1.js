@@ -391,34 +391,24 @@ $(function() {
 	$('#ToDo_or_expln_DT1').on('click', function(event){
 		if ("Explain" == $("#ToDo_or_expln_DT1").prop("value")) {
 			// currently showing the Try This text.  Move into explanation text
-			$("#LongTextBox_DT1").text(dynamicTrig1Expln);
+			$("#LongTextBox_DT1").text(dynamicTrig1Expln_text);
 			$("#ToDo_or_expln_DT1").prop("value", "Try This");
 		} else {
 			// currently showing the Explanation text, move into TO DO  text
-			$("#LongTextBox_DT1").text(dynamicTrig1ToDo);
+			$("#LongTextBox_DT1").text(dynamicTrig1ToDo_text);
 			$("#ToDo_or_expln_DT1").prop("value", "Explain");
 		}
-    });   
-    
+    }); 
     //***********************************
-	//initialize data fields for this page using config json file
+	//initialize text TO DO and explanation sections of this page
 	//***********************************	
-	$.getJSON(urlInitValJson)
-		.done(function(data,status,xhr) {
-			//xhr has good stuff like status, responseJSON, statusText, progress
-			if (status === 'success') {				
-				dynamicTrig1ToDo = data.todo;
-				dynamicTrig1Expln = data.expln;
-				$("#LongTextBox_DT1").text(dynamicTrig1ToDo);
-				$("#ToDo_or_expln_DT1").prop("value", "Explain");
-			}
-			else {
-				console.log("config json file request returned with status = " + status);
-			}
-		})
-		.fail(function(data, status, error) {
-			console.log("Error in JSON file " + status + error);
-			alert("Error in JSON file " + status + error);
-		})
+    // dont want this text to just plop up on page, will use as needed
+    $('#TryThis_help').css("visibility", "hidden");  
+    let dynamicTrig1ToDo_text = $("#TryThis_help").text();
+    $("#LongTextBox_DT1").text(dynamicTrig1ToDo_text);
+    $("#Explain_help").css("visibility", "hidden");
+    let dynamicTrig1Expln_text = $("#Explain_help").text();
+
+
 
 })

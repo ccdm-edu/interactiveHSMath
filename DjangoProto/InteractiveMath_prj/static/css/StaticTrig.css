@@ -110,6 +110,22 @@ We use negative value for top since we want some overlap*/
 
 }
 
-/***************************/
+/*************Dynamic Help**************/
+/*I don't really understand why the values of left, top are what they are.... */
+#FirstHelp {
+	position: relative;
+	width: 200px;
+	border: 1px solid black;
+	padding: 10px;
+	background-color: pink;
+	font-family: Arial;
+	font-size: 15px;
+	font-weight: bold;
+	left: 120px;
+	top: -350px;
+	z-index: 10;
+	visibility: hidden;
+}
+
 
 		
