@@ -128,3 +128,19 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	 margin-right: 0 px;
 	 padding-right: 0 px;
 }
+/*************Dynamic Help**************/
+/*I don't really understand why the values of left, top are what they are.... */
+#FirstHelp_DT1 {
+	position: relative;
+	width: 200px;
+	border: 1px solid black;
+	padding: 10px;
+	background-color: pink;
+	font-family: Arial;
+	font-size: 15px;
+	font-weight: bold;
+	left: 110px;
+	top: 430px;
+	z-index: 10;
+	visibility: hidden;
+}

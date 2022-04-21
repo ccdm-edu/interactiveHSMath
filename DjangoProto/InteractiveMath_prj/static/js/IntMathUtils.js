@@ -125,3 +125,24 @@
 	    tempnumber = Math.round(tempnumber);
 	    return tempnumber / Math.pow(10, prec);
 	};
+	
+	//****************
+	// Draw arbitrary arrows to help user get started, needs a point, tip1 and tip 2 define the 
+	// arrow and end is the end of the arrow.  tip1, tip2 and end are lines that end in point
+	function arbArrow(TwoDContext, arrow, text) {
+			  	TwoDContext.beginPath();
+				TwoDContext.moveTo(arrow.tip1[0], arrow.tip1[1]);
+				TwoDContext.lineTo(arrow.point[0], arrow.point[1]);
+				TwoDContext.moveTo(arrow.tip2[0], arrow.tip2[1]);
+				TwoDContext.lineTo(arrow.point[0], arrow.point[1]);
+				TwoDContext.moveTo(arrow.end[0], arrow.end[1]);
+				TwoDContext.lineTo(arrow.point[0], arrow.point[1]);
+				TwoDContext.strokeStyle = 'red';
+				TwoDContext.fillStyle = 'red';
+				TwoDContext.font = '20px Arial';
+				TwoDContext.fillText(text, arrow.end[0] + 5, arrow.end[1] + 5);	
+				TwoDContext.lineWidth = 2.0
+				TwoDContext.stroke();
+				TwoDContext.closePath();
+	};
+	

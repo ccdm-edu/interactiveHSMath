@@ -17,6 +17,88 @@ $(function() {
 	let dynamicTrig1ToDo;
 	
 	const EXPIRATION_TIME_SEC = 20
+	// When user first enters page, they need to know what dots to hit to create desired
+	// effect, slow frequency that increases through these arrows that prompt the user
+	// Each set represents one of the dots, starting at 0/360 phase, next set is 30 degrees, etc
+	// the elements of the set tell the arrow drawing function where to put the lines
+	const ARROW_HELPERS = [
+	// 0:  0 degrees
+	{	tip1: [345, 338],
+		tip2: [338, 345],
+		point: [338,338],
+		end: [350,350]
+	},
+	// 1:  30 degrees
+	{	tip1: [328, 264],
+		tip2: [322, 258],
+		point: [322,264],
+		end: [335,255]
+	},
+	// 2:  60 degrees
+	{	tip1: [282, 216],
+		tip2: [276, 210],
+		point: [276,216],
+		end: [285,205]
+	},
+	// 3:  90 degrees
+	{	tip1: [225,202],
+		tip2: [218,195],
+		point: [219,201],
+		end: [228,192]
+	},
+	// 4:  120 degrees
+	{	tip1: [136,218],
+		tip2: [145,209],
+		point: [144,217],
+		end: [134,204]
+	},
+	// 5:  150 degrees
+	{	tip1: [87,266],
+		tip2: [92,255],
+		point: [97,263],
+		end: [81,253]
+	},
+	// 6:  180 degrees
+	{	tip1: [84,315],
+		tip2: [78,321],
+		point: [84,322],
+		end: [72,310]
+	},
+	// 7:  210 degrees
+	{	tip1: [90,391],
+		tip2: [95,401],
+		point: [98,394],
+		end: [84,403]
+	},
+	// 8:  240 degrees
+	{	tip1: [137,440],
+		tip2: [146,449],
+		point: [145,441],
+		end: [135,452]
+	},
+	// 9:  270 degrees
+	{	tip1: [197,455],
+		tip2: [203,461],
+		point: [202,455],
+		end: [193,467]
+	},
+	// 10:  300 degrees
+	{	tip1: [272,449],
+		tip2: [283,442],
+		point: [276,441],
+		end: [287,453]
+	},	
+	// 11:  330 degrees
+	{	tip1: [323,403],
+		tip2: [328,389],
+		point: [322,394],
+		end: [336,403]
+	},	
+	 ];
+	let numFreqGenSoFar = 0;
+	const ANGLE_PER_PT_RAD = Math.PI/6;
+	const TOTAL_NUM_DOTS = 2.0 * Math.PI/ANGLE_PER_PT_RAD;
+	let ptsClickedOnCircle = 0;
 			
 	//********************************************************
 	// Start drawing the "unit circle" with all touch sensitive angle-dots around it
@@ -37,9 +119,7 @@ $(function() {
     
     // angle in rad, draw small yellow circles that user can click on to accumulate phase
     let littleDotCenter = [];
-
-    const ANGLE_PER_PT_RAD = Math.PI/6;
-    for (let pt = 0; pt < 2.0 * Math.PI/ANGLE_PER_PT_RAD; pt++) {
+    for (let pt = 0; pt < TOTAL_NUM_DOTS; pt++) {
     	let curr_angle = pt * ANGLE_PER_PT_RAD;
     	let x = CIRC_X0 + Math.round(CIRC_RAD*Math.cos(curr_angle));
 		let y = CIRC_Y0 - Math.round(CIRC_RAD*Math.sin(curr_angle));
@@ -56,7 +136,7 @@ $(function() {
      // keep a snapshot of drawing before user interation, need to go back to it on change
      let backgroundPlot; // used when user selects a new yellow dot to clear out the values of the old dot selected
 	 backgroundPlot = ctxUnitCircle.getImageData(0, 0, circleDotsCanvas.width, circleDotsCanvas.height);
-	
+
 	//********************************************************
 	// Start drawing the graph to show the changes in freq and sine plots with respect to time
 	// Upper plot is longer view of time and good for low freq, Lower plot is shorter view of time
@@ -229,6 +309,30 @@ $(function() {
 		ctxFreqPlot.strokeStyle = "black";
 	}
     //********************************************************
+	// Initial User Assistance: First direct user to create slow frequency and 
+	// later direct them to create second faster frequency. After that, they are on their own.
+	//********************************************************
+    circleDotsCanvas.addEventListener("mousemove", (e) => {
+		if ((numFreqGenSoFar == 0) && (ptsClickedOnCircle == 0)) {
+			// user is wandering around aimlessly trying to figure out how to get started.  Start them
+			// generating the slowest frequency, clicking on all dots
+			// Once they start clicking on yellow dots, they dont need this help anymore
+			$('#FirstHelp_DT1').css("visibility", "visible");
+			arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "Start here");
+		}
+		else if ((numFreqGenSoFar == 1) && (ptsClickedOnCircle == 0)) {
+			// user has done 1st slow freq.  Show them it can be done faster.
+			// Once they start clicking on yellow dots, they dont need this help anymore
+			$('#FirstHelp_DT1').css("visibility", "visible");
+			arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "Start here");
+		}
+		else {
+			$('#FirstHelp_DT1').css("visibility", "hidden");
+		}
+		
+	});
+
+    //********************************************************
 	// User Interaction:  Start counting time and collecting phase
 	//********************************************************
 	let countTime;
@@ -259,7 +363,6 @@ $(function() {
     		if (countTime/10 == EXPIRATION_TIME_SEC) {
     			//After EXPIRATION_TIME_SEC sec, end the experiment
         		if (startInterval) clearInterval(startInterval);
-        		$('#StartPhaseAccum_DT1').prop('disabled', false);
         		timerStarted = false;
         		accumPhase = 0;
         		lastIndexClicked = 0;
@@ -307,7 +410,6 @@ $(function() {
         		}
         		lastFreq = currFreq;
         		// do everything else first
-        		$("#StartPhaseAccum_DT1").prop("value", "Let's Go");
         		$('#ClearOldFreq_DT1').prop('disabled', false);
         		accumPhase = 0;   
         		drawPlots();
@@ -315,25 +417,6 @@ $(function() {
         	}
     	}, 100);	
 	}
-
-    $('#StartPhaseAccum_DT1').on('click', function(event) {
-    	if ("Let's Go" == $("#StartPhaseAccum_DT1").prop("value")) {
-			// user wants to start the timer
-			$("#StartPhaseAccum_DT1").prop("value", "Stop");
-			if (!timerStarted) {
-				startFreqMeas();
-        	}
-		} else {
-			// User wants to abort a timed phase accumulation, explain more to user
-			$("#UserNotices_DT1").html("Just click on dots going counterclockwise and ending at zero phase.  <br>You can skip dots if you want.  <br>Your phase accumulation over time (frequency) will be measured");
-			$("#StartPhaseAccum_DT1").prop("value", "Let's Go");
-			// get rid of old green line
-			ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
-			// stop timer
-			if (startInterval) clearInterval(startInterval);
-        	timerStarted = false;
-		}
-    });
     
     $('#ClearOldFreq_DT1').on('click', function(event) {
 		// go back to bare plots and no freq
@@ -358,30 +441,69 @@ $(function() {
 		littleDotCenter.forEach(dot => {
 			// not sure yet which dot the user clicked on, must search all
 			if (isInside(pos, dot, DOT_RADIUS)) {
-				if (ind > lastIndexClicked) {
+				// we found the dot the user clicked on, 
+				if ( (ind > lastIndexClicked) || ((ind == 0) && (lastIndexClicked == 0)) ){
+					// either we are incrementing CCW from last point clicked or we are on 1st pt
 					accumPhase = roundFP(accumPhase + (ind - lastIndexClicked) * ANGLE_PER_PT_DEG, 1);
 					lastIndexClicked = ind;
+							
+					//clear any old drawings before we put up the new stuff, take it back to the background image
+					ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
+			  		// create line from center to dot (only done on selection)
+			  		ctxUnitCircle.beginPath();
+					ctxUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
+					ctxUnitCircle.lineTo(dot.x, dot.y);
+					ctxUnitCircle.strokeStyle = 'green';
+					ctxUnitCircle.fillStyle = 'green';
+					ctxUnitCircle.lineWidth = 3.0
+					ctxUnitCircle.stroke();
+					ctxUnitCircle.closePath();
+					// update the user help for the first two tries to generate a freq
+					ptsClickedOnCircle++;
+					if (numFreqGenSoFar == 0){
+						// point user to click on every yellow dot
+						if (ptsClickedOnCircle >= TOTAL_NUM_DOTS) {
+							// should never get to be more than TOTAL_NUM_DOTS...
+							arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "End here");
+						} else {
+							arbArrow(ctxUnitCircle, ARROW_HELPERS[ptsClickedOnCircle], "");
+						}
+					} else if (numFreqGenSoFar == 1) {
+						// point user to click on every other yellow dot
+						if (2*ptsClickedOnCircle >= TOTAL_NUM_DOTS) {
+							// should never get to be more than TOTAL_NUM_DOTS...
+							arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "End here");
+						} else {
+							arbArrow(ctxUnitCircle, ARROW_HELPERS[2*ptsClickedOnCircle], "");
+						}
+					}		
+				
 				} else if (ind == 0 && lastIndexClicked !=0) {
+					// we are on last point used to generate this freq.  User is done with this frequency
+					// do clean up and prep for next freq
 					accumPhase = 360;
 					// all done, reset to start again
 					lastIndexClicked = 0;
-				}
-				// we found the dot the user clicked on, if timer not on, turn it on
+					numFreqGenSoFar++;
+					ptsClickedOnCircle = 0;  // start over for next frequency set
+					
+					//clear any old drawings before we put up the new stuff, take it back to the background image
+					ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
+			  		// create line from center to dot (only done on selection)
+			  		ctxUnitCircle.beginPath();
+					ctxUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
+					ctxUnitCircle.lineTo(dot.x, dot.y);
+					ctxUnitCircle.strokeStyle = 'green';
+					ctxUnitCircle.fillStyle = 'green';
+					ctxUnitCircle.lineWidth = 3.0
+					ctxUnitCircle.stroke();
+					ctxUnitCircle.closePath();
+				
+				}		
+				// if timer not on, turn it on
 				if (!timerStarted) {
-					$("#StartPhaseAccum_DT1").prop("value", "Stop");
 					startFreqMeas();
         		}	
-		  		//clear any old drawings before we put up the new stuff, take it back to the background image
-				ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
-		  		// create line from center to dot (only done on selection)
-		  		ctxUnitCircle.beginPath();
-				ctxUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
-				ctxUnitCircle.lineTo(dot.x, dot.y);
-				ctxUnitCircle.strokeStyle = 'green';
-				ctxUnitCircle.fillStyle = 'green';
-				ctxUnitCircle.lineWidth = 3.0
-				ctxUnitCircle.stroke();
-				ctxUnitCircle.closePath();
 			}
 			ind = ind + 1;
 		});	
@@ -408,7 +530,8 @@ $(function() {
     $("#LongTextBox_DT1").text(dynamicTrig1ToDo_text);
     $("#Explain_help").css("visibility", "hidden");
     let dynamicTrig1Expln_text = $("#Explain_help").text();
-
+    
+    
 
 
 })
