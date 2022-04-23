@@ -95,6 +95,12 @@ $(function() {
 		end: [336,403]
 	},	
 	 ];
+	const POINT_TO_TIME = 
+	{	tip1: [101, 47],
+		tip2: [115, 47],
+		point: [110,39],
+		end: [101,95]
+	};
 	let numFreqGenSoFar = 0;
 	const ANGLE_PER_PT_RAD = Math.PI/6;
 	const TOTAL_NUM_DOTS = 2.0 * Math.PI/ANGLE_PER_PT_RAD;
@@ -108,7 +114,7 @@ $(function() {
 	const CIRC_Y0 = 330;   // use this to raise and lower the whole circle, remember y increases going down the page
 	drawTrigCircle(ctxUnitCircle, CIRC_X0, CIRC_Y0, HALF_AXIS);
 	
-	//Draw the big unit circle which could be expanded/contracted based on user input
+	//*** Draw the big unit circle which could be expanded/contracted based on user input
 	// need to ensure the points here can never be negative, else they get clipped
 	ctxUnitCircle.beginPath();
 	// draw main circle
@@ -117,7 +123,7 @@ $(function() {
     ctxUnitCircle.arc(CIRC_X0, CIRC_Y0, CIRC_RAD, 0, Math.PI * 2, true); 
     ctxUnitCircle.stroke();
     
-    // angle in rad, draw small yellow circles that user can click on to accumulate phase
+    //*** angle in rad, draw small yellow circles that user can click on to accumulate phase
     let littleDotCenter = [];
     for (let pt = 0; pt < TOTAL_NUM_DOTS; pt++) {
     	let curr_angle = pt * ANGLE_PER_PT_RAD;
@@ -283,27 +289,47 @@ $(function() {
 		ctxUnitCircle.beginPath();
 		ctxUnitCircle.lineWidth = 2.0
 		ctxUnitCircle.strokeStyle = "lime";
+		// put circle up at numeric count down timer
 	    ctxUnitCircle.arc(110, 20, 18, 0, Math.PI * 2, true); 
 	    ctxUnitCircle.stroke();
+	    arbArrow(ctxUnitCircle, POINT_TO_TIME, "lime");
 	    
-		// decide whether to put arrow on upper or lower plot
+		let arrow_to_graph_time;
+		// decide whether to put circle on upper or lower plot
 		if (latestPeriod > EXPIRATION_TIME_SEC/10){
 			// draw on upper graph, its a low freq signal
 			let xcoord = Math.round(UPPER_X_ORIGIN + latestPeriod*PIX_PER_MINOR_TICK);
 			ctxFreqPlot.beginPath();
 			ctxFreqPlot.lineWidth = 2.0
 			ctxFreqPlot.strokeStyle = "lime";
+			let point_y = UPPER_Y_ORIGIN;
 			ctxFreqPlot.arc(xcoord, UPPER_Y_ORIGIN, 15, 0, Math.PI * 2, true);
 			ctxFreqPlot.stroke();
+			arrow_to_graph_time = {
+				tip1: [xcoord - 20, point_y + 5],
+				tip2: [xcoord - 20, point_y + 25],
+				point: [xcoord - 15, point_y + 15],
+				end: [8,221]
+			}
 		} else {
 			// draw on lower graph, its a high freq signal
 			let xcoord = Math.round(LOWER_X_ORIGIN  + 10*latestPeriod*PIX_PER_MINOR_TICK);
 			ctxFreqPlot.beginPath();
 			ctxFreqPlot.lineWidth = 2.0
 			ctxFreqPlot.strokeStyle = "lime";
+			let point_y = LOWER_Y_ORIGIN
 			ctxFreqPlot.arc(xcoord, LOWER_Y_ORIGIN, 15, 0, Math.PI * 2, true);
 			ctxFreqPlot.stroke();
+			arrow_to_graph_time = {
+				tip1: [xcoord - 15, point_y - 25],
+				tip2: [xcoord - 23, point_y - 12],
+				point: [xcoord - 15, point_y - 15],
+				end: [8,221]
+			}
 		}
+		// plot arrow to the place on x axis that is period
+		arbArrow(ctxFreqPlot, arrow_to_graph_time, "lime");
+		
 		// go back to defaults
 		ctxUnitCircle.strokeStyle = "black";
 		ctxFreqPlot.strokeStyle = "black";
@@ -318,22 +344,39 @@ $(function() {
 			// generating the slowest frequency, clicking on all dots
 			// Once they start clicking on yellow dots, they dont need this help anymore
 			$('#FirstHelp_DT1').css("visibility", "visible");
-			arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "Start here");
+			arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "red", "Start here");
 		}
 		else if ((numFreqGenSoFar == 1) && (ptsClickedOnCircle == 0)) {
 			// user has done 1st slow freq.  Show them it can be done faster.
 			// Once they start clicking on yellow dots, they dont need this help anymore
 			$('#FirstHelp_DT1').css("visibility", "visible");
-			arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "Start here");
+			arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "red", "Start here");
+		}
+		else if ((numFreqGenSoFar == 2) && (ptsClickedOnCircle == 0)) {
+			// user has done two freq.  Show them it can be done faster.
+			// Once they start clicking on yellow dots, they dont need this help anymore
+			$('#FirstHelp_DT1').css("visibility", "visible");
+			$("#FirstHelp_DT1").text("Start at any dot, move counter clockwise, skip as many as you want, end at red arrow");
 		}
 		else {
 			$('#FirstHelp_DT1').css("visibility", "hidden");
 		}
-		
+		if (numFreqGenSoFar >= 2) {
+			arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "red", "End here");
+		}
+	});
+	freqCanvas.addEventListener("mousemove",(e)=> {
+		// delete this
+		let rect = freqCanvas.getBoundingClientRect();
+		const pos = {
+			  x: e.clientX - rect.left,
+			  y: e.clientY - rect.top
+			};	
+		console.log("the current position is (" + pos.x + " , " + pos.y + ")");
 	});
 
     //********************************************************
-	// User Interaction:  Start counting time and collecting phase
+	// User Interaction clicking yellow dots:  Start counting time and collecting phase
 	//********************************************************
 	let countTime;
 	let lastFreq = 0;  // used for user messages on performance
@@ -350,7 +393,8 @@ $(function() {
 	const LATEST_FREQ_TEXT = "   <- Most Recent";
 	const EARLIEST_FREQ_TEXT = "   <- Least Recent";
 	const GREEN_CIRCLE_EXPLN = "<p id='ExplnFreqMark'>Look at the two green circles.  They both reflect the time it took you to <br>accumulate 360 degrees of phase.  This is the period (T) of the waveform.  <br>The frequency of the waveform is 1/T.  Pull out your calculator and confirm!</p>";
-	// start the timer and stop it on expiration or if user hits 360 degrees of phase
+	
+	//*** start the timer and stop it on expiration or if user hits 360 degrees of phase
 	function startFreqMeas(){
         timerStarted = true;
         countTime =0;
@@ -417,16 +461,30 @@ $(function() {
         	}
     	}, 100);	
 	}
-    
-    $('#ClearOldFreq_DT1').on('click', function(event) {
+	// this function used when user hits clear or start over
+	function clearPage() {
 		// go back to bare plots and no freq
 		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
 		ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
 		freqMeasured = [];
 		$('#LastFrequencies_DT1').text('');
 		$('#UserNotices_DT1').text('');
+	}
+    //*** user clicks the Clear button
+    $('#ClearOldFreq_DT1').on('click', function(event) {
+		clearPage();
     });
-
+    //*** user wants to start over with the handholding help that first directs them to hit 
+    // every dot (getting a lower freq) then every other dot (getting a higher freq) then do it your
+    // way and max out freq
+    $('#StartOver_DT1').on('click', function(event) {
+    	$('#StartOver_DT1').css("visibility", "hidden");
+    	clearPage();
+    	numFreqGenSoFar = 0;
+		ptsClickedOnCircle = 0;
+    }); 
+    
+	//*** user clicks a yellow dot
 	const ANGLE_PER_PT_DEG = ANGLE_PER_PT_RAD * 180 / Math.PI;
     circleDotsCanvas.addEventListener('click', (e) => {	
     	// now the timer has started, collect phase
@@ -461,23 +519,25 @@ $(function() {
 					// update the user help for the first two tries to generate a freq
 					ptsClickedOnCircle++;
 					if (numFreqGenSoFar == 0){
+						// user might mess up, give them the opportunity to start over
+						$('#StartOver_DT1').css("visibility", "visible");
 						// point user to click on every yellow dot
 						if (ptsClickedOnCircle >= TOTAL_NUM_DOTS) {
 							// should never get to be more than TOTAL_NUM_DOTS...
-							arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "End here");
+							arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "red", "End here");
 						} else {
-							arbArrow(ctxUnitCircle, ARROW_HELPERS[ptsClickedOnCircle], "");
+							arbArrow(ctxUnitCircle, ARROW_HELPERS[ptsClickedOnCircle], "red");
 						}
 					} else if (numFreqGenSoFar == 1) {
 						// point user to click on every other yellow dot
 						if (2*ptsClickedOnCircle >= TOTAL_NUM_DOTS) {
 							// should never get to be more than TOTAL_NUM_DOTS...
-							arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "End here");
+							arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "red", "End here");
 						} else {
-							arbArrow(ctxUnitCircle, ARROW_HELPERS[2*ptsClickedOnCircle], "");
+							arbArrow(ctxUnitCircle, ARROW_HELPERS[2*ptsClickedOnCircle], "red");
 						}
-					}		
-				
+					} 
+										
 				} else if (ind == 0 && lastIndexClicked !=0) {
 					// we are on last point used to generate this freq.  User is done with this frequency
 					// do clean up and prep for next freq
@@ -509,7 +569,7 @@ $(function() {
 		});	
 	});
     
-	// User can choose a TO DO set for the text box or an explanation, this code is the implementation
+	//*** User can choose a TO DO set for the text box or an explanation, this code is the implementation
 	$('#ToDo_or_expln_DT1').on('click', function(event){
 		if ("Explain" == $("#ToDo_or_expln_DT1").prop("value")) {
 			// currently showing the Try This text.  Move into explanation text
@@ -524,12 +584,12 @@ $(function() {
     //***********************************
 	//initialize text TO DO and explanation sections of this page
 	//***********************************	
-    // dont want this text to just plop up on page, will use as needed
-    $('#TryThis_help').css("visibility", "hidden");  
-    let dynamicTrig1ToDo_text = $("#TryThis_help").text();
+    //*** turn off text until user needs it
+    $('#TryThis_help_DT1').css("visibility", "hidden");  
+    let dynamicTrig1ToDo_text = $("#TryThis_help_DT1").text();
     $("#LongTextBox_DT1").text(dynamicTrig1ToDo_text);
-    $("#Explain_help").css("visibility", "hidden");
-    let dynamicTrig1Expln_text = $("#Explain_help").text();
+    $("#Explain_help_DT1").css("visibility", "hidden");
+    let dynamicTrig1Expln_text = $("#Explain_help_DT1").text();
     
     
 

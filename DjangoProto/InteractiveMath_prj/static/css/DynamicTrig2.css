@@ -1,20 +1,20 @@
 /***********************
-This is the style sheet for the DynamicTrig1.html page
+This is the style sheet for the DynamicTrig2.html page
 ************************/
 
 /***************************/
 /* put a label up and an expln/to do selector input box */
-#headerAndCtl_DT1 {
+#headerAndCtl_DT2 {
 	position: relative;
 	top: 0px;
 	width: auto;
 }
-#ToDo_or_expln_DT1 {
+#ToDo_or_expln_DT2 {
 	position: absolute;
 	left: 10px;
 }
 /* text header of page activity*/
-#HeaderTrig_DT1 {
+#HeaderTrig_DT2 {
 	position: absolute;
 	border: 0px;
 	left: 400px;
@@ -24,12 +24,12 @@ This is the style sheet for the DynamicTrig1.html page
 }
 /***************************/
 /* item 2, explanation of current activity in read only box,  Need this box to be above the canvas so sidebars active */ 
-#HelpBox_DT1 {
+#HelpBox_DT2 {
 	position: relative;
 	left: 50px;
 	top: 30px;
 }
-#LongTextBox_DT1 {
+#LongTextBox_DT2 {
 		  position: absolute;
           left: 0px;
           top: 0px;
@@ -40,76 +40,87 @@ This is the style sheet for the DynamicTrig1.html page
 /************Params that describe and control activity***************/
 
 /* this is the parent for a series of controls/labels */
-#CircleValues_DT1 {
+#CircleValues_DT2 {
 	position: relative;
 	left: 0px;
 	/*top: 100; */
 	top: 100px;
 }
-/* these are the children of CircleValues_DT1 */
-/* these button z-index must outrank the todo/expln box so it can be active */
-#ClearOldFreq_DT1{
+/* these are the children of CircleValues_DT2 */
+/* start button z-index must outrank the todo/expln box so it can be active */
+
+#ClearOldFreq_DT2{
 	position: absolute;
 	left: 0px;
 	top: 60px;
 	z-index: 20;
 }
-#StartOver_DT1{
-	position: absolute;
-	left: 0px;
-	top: 90px;
-	z-index: 20;
-	background-color: pink;
-	visibility: hidden;
-}
-#time_DT1{
+
+#time_DT2{
 	position: absolute;
 	left: 100px;
 	top: 40px;
 }
-#timeVal_DT1{
+#timeVal_DT2{
 	position: absolute;
 	left: 100px;
 	top: 60px;	
 }
-#thetaLabel_DT1 {
+#thetaLabel_DT2 {
 	position: absolute;
 	left: 200px;
 	top: 40px;
 }
-#theta_DT1 {
+#theta_DT2 {
 	position: absolute;
 	left: 200px;
 	top: 60px;
 }
-#LastFrequenciesLabel_DT1{
+#LastFrequenciesLabel_DT2{
 	position: absolute;
 	left: 300px;
 	top: 40px;
 }
-#LastFrequencies_DT1{
+#LastFrequencies_DT2{
 	position: absolute;
 	left: 300px;
 	top: 60px;
 }
-#UserNotices_DT1{
+#UserNotices_DT2{
 	position: absolute;
 	left: 0px;
 	top: 120px;
 }
-#ExplnFreqMark{
+/* arrange the freq input labels and associated go button*/
+#FreqLabel_DT2{
+	position: absolute;
+	left: 0px;
+	top: 80px;
+}
+#Freq_DT2{
+	position: absolute;
+	left: 0px;
+	top: 100px;
+}
+#GoFreq_DT2{
+	position: absolute;
+	left: 300px;
+	top: 100px;
+}
+/* arrow from explanation to freq circle indicator */
+#ExplnFreqMark_DT2{
 	color: lime
 }
 
 /***************************/
 /* create canvas for expandable unit circle, position = relative lets the footer float to bottom for all parent elements.
 We use negative value for top since we want some overlap*/
-#UnitCircleAndGraphCanvas{
+#UnitCircleAndGraphCanvas_DT2{
 	position: relative;
 	left: 0px;
 	top: 100px;
 }
-#AmpSinCosCircle_DT1{
+#AmpSinCosCircle_DT2{
 	 position: absolute;
 	 top: 50px;
 	 left: 0px;  
@@ -121,7 +132,7 @@ We use negative value for top since we want some overlap*/
 /* this is the graph off to the right that needs to be on separate canvas since animations need to 
 clear and redraw at different times than the other canvas  We did position as absolute so if window too small
 it won't shove this to below the unit circle-- off to side prods user to expand screen */
-#FreqChange_DT1{
+#FreqChange_DT2{
 	 position: absolute;
 	 top: -50px;
 	 left: 450px;
@@ -131,8 +142,7 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	 padding-right: 0 px;
 }
 /*************Dynamic Help**************/
-/*I don't really understand why the values of left, top are what they are.... */
-#FirstHelp_DT1 {
+#FirstHelp_DT2 {
 	position: relative;
 	width: 200px;
 	border: 1px solid black;
