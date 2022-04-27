@@ -89,23 +89,31 @@ This is the style sheet for the DynamicTrig2.html page
 #UserNotices_DT2{
 	position: absolute;
 	left: 0px;
-	top: 120px;
+	top: 130px;
 }
-/* arrange the freq input labels and associated go button*/
+/* arrange the freq input labels, slider, curr val and associated go button*/
 #FreqLabel_DT2{
 	position: absolute;
 	left: 0px;
-	top: 80px;
+	top: 90px;
 }
-#Freq_DT2{
+#currFreqVal_DT2{
+	position: absolute;
+	left: 100px;
+	top: 90px;
+}
+/* inputs must have max z index so they are user inputable, else they fall behind invisible canvas */
+#FreqSlider_DT2{
 	position: absolute;
 	left: 0px;
-	top: 100px;
+	top: 110px;
+	z-index: 20;
 }
 #GoFreq_DT2{
 	position: absolute;
-	left: 300px;
-	top: 100px;
+	left: 150px;
+	top: 110px;
+	z-index: 20;
 }
 /* arrow from explanation to freq circle indicator */
 #ExplnFreqMark_DT2{

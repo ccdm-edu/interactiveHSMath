@@ -9,7 +9,7 @@
 {% block body_block %}
 	<div id ="headerAndCtl_DT2">
 		<input type="button" id="ToDo_or_expln_DT2" value="Explain">
-		<textarea readonly id="HeaderTrig_DT2" rows = "1" >Trig Functions Go Faster</textarea>
+		<h1 id="HeaderTrig_DT2" >Trig Functions Need Speed</h1>
 	</div>
 	<div id="HelpBox_DT2">
 	 	<textarea readonly id="LongTextBox_DT2" rows = '4' cols = "50">Help is here </textarea>
@@ -23,8 +23,8 @@
 		<label id = "LastFrequenciesLabel_DT2">f (frequency in Hz)</label>
 		<p id="LastFrequencies_DT2"> </p>
 		<p id="UserNotices_DT2" ></p>	
-		<label id="FreqLabel_DT2"> Frequency: </label><span id="currFreqLabel_DT2">000</span> 
-		<input id="Freq_DT2" type="range" step="0.1" value="10" min="0.1" max="10" data-placement="left" data-toggle="tooltip" title="click on slider and use arrows for greater precision">
+		<label id="FreqLabel_DT2"> Frequency: </label><span id="currFreqVal_DT2">000</span> 
+		<input id="FreqSlider_DT2" type="range" step="0.1" value="10" min="1" max="20" data-placement="left" data-toggle="tooltip" title="click on slider and use arrows for greater precision">
 		<input type="button" id="GoFreq_DT2" value="Go">
 	</div>
 	
@@ -49,9 +49,9 @@
 	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  
 	At the bottom it doesn't consume space from other elements but it does give search engines a clue what page is all about. -->
-	<p id="TryThis_help_DT2">TRY THIS:  Pick a frequency on the slider and hit GO button.  The circle phases you clicked manually before will be sampled automatically.  This accumulates phase much faster but speed is now limited by update rates on your browser.  We use more samples at lower rates to illustrate what is happening and fewer samples at higher rates to reduce update time.  You really only NEED two samples per cycle to fully describe the sine wave.   The samples collected are shown as dots on the plots created to the right.  The human ear can hear 20Hz to 20,000Hz but typical cheap speakers can only play down to about 100Hz.  This is why you can't hear the frequencies we generate this way, showing you all the samples collected in real time.  We'll hear these frequencies on the next page where we aren't trying to show the sample collection.  Wanna understand this?  hit the Explain button above this box
+	<p id="TryThis_help_DT2">TRY THIS:  Pick a frequency on the slider and hit GO button.  The circle phases you clicked manually before will be sampled automatically.  This accumulates phase much faster but speed is now limited by update rates on your browser.  We use more samples at lower rates to illustrate what is happening and fewer samples at higher rates to reduce update time.  We could have sampled at any phase value, I just picked the ones you are used to looking at.  You really only NEED two samples per complete 360 degree cycle to fully describe the sine wave.   The samples collected are shown as dots on the plots created to the right.  The human ear can hear 20Hz to 20,000Hz but typical cheap speakers can only play down to about 100Hz.  This is why you can't hear the frequencies we generate this way.  We'll hear these frequencies on the next page where we aren't trying to show the sample collection.  Wanna understand this?  hit the Explain button above this box
 	</p>
-	<p id = "Explain_help_DT2">EXPLANATION: The sine wave has infinite points per period and yet its highly predictable.  Audio compression such as MP3 wants to represent these signals with as few samples as possible.  Looking at the samples on the graph, you may be able to see that if you knew it was a sine wave, two samples per period would allow you to reproduce the wave exactly.  This is the Nyquist sample rate (college level signal processing) and is part of how MP3 works.  Your ear can only detect between 20 Hz and up to 20,000 Hz of sound (if you are young and lucky).  Standard MP3 samples at 44,100 Hz which is a bit above twice the max human hearing frequency. If you sample even higher and you are generally wasting memory, sample lower and you risk cutting off frequencies some can hear." 	
+	<p id = "Explain_help_DT2">EXPLANATION: The sine wave has infinite points per period and yet its highly predictable.  Music is made up of sine waves such as these.  Audio compression such as MP3 wants to represent these signals with as few samples as possible.  Looking at the samples on the graph, you may be able to see that if you knew it was a sine wave, two samples per period would allow you to reproduce the wave exactly.  This is the Nyquist sample rate (college level signal processing) and is part of how MP3 works.  Your ear can only detect between 20 Hz and up to 20,000 Hz of sound (if you are young and lucky).  Standard MP3 samples at 44,100 Hz which is a bit above twice the max human hearing frequency. If you sample even higher and you are generally wasting memory, sample lower and you risk cutting off frequencies many people can hear." 	
 	</p>
 	
 	

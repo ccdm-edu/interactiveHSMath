@@ -66,10 +66,11 @@ $(function() {
 	ctxExpandableUnitCircle.stroke();
 	ctxExpandableUnitCircle.closePath();
 	// make arrows for Angle-Sin graph
-	leftArrow(ctxExpandableUnitCircle, TRIG_X_ORIGIN - TRIG_AXIS/8, SIN_Y_ORIGIN);
-	rightArrow(ctxExpandableUnitCircle, TRIG_X_ORIGIN + TRIG_AXIS, SIN_Y_ORIGIN);
-	upArrow(ctxExpandableUnitCircle, TRIG_X_ORIGIN, SIN_Y_ORIGIN - MAX_AMP_AXIS);
-	downArrow(ctxExpandableUnitCircle, TRIG_X_ORIGIN, SIN_Y_ORIGIN + MAX_AMP_AXIS);  
+	new AxisArrow(ctxExpandableUnitCircle, [TRIG_X_ORIGIN - TRIG_AXIS/8, SIN_Y_ORIGIN], "L").draw();
+	new AxisArrow(ctxExpandableUnitCircle, [TRIG_X_ORIGIN + TRIG_AXIS, SIN_Y_ORIGIN], "R").draw();
+	new AxisArrow(ctxExpandableUnitCircle, [TRIG_X_ORIGIN, SIN_Y_ORIGIN - MAX_AMP_AXIS], "U").draw();
+	new AxisArrow(ctxExpandableUnitCircle, [TRIG_X_ORIGIN, SIN_Y_ORIGIN + MAX_AMP_AXIS], "D").draw();
+  
 	
 	// draw y axis tick marks for other amplitudes, we will do 0.1 ticks up to 1.1, 1.1 is as big as I want sin/cos
 	// graphs to get
@@ -112,12 +113,11 @@ $(function() {
 	ctxExpandableUnitCircle.stroke();
 	ctxExpandableUnitCircle.closePath();	
 	
-	// make arrows for Angle-Cos graph
-	leftArrow(ctxExpandableUnitCircle, TRIG_X_ORIGIN - TRIG_AXIS/8, COS_Y_ORIGIN);
-	rightArrow(ctxExpandableUnitCircle, TRIG_X_ORIGIN + TRIG_AXIS, COS_Y_ORIGIN);
-	upArrow(ctxExpandableUnitCircle, TRIG_X_ORIGIN, COS_Y_ORIGIN - MAX_AMP_AXIS);
-	downArrow(ctxExpandableUnitCircle, TRIG_X_ORIGIN, COS_Y_ORIGIN + MAX_AMP_AXIS); 
-
+	// make arrows for Angle-Cos graph 
+	new AxisArrow(ctxExpandableUnitCircle, [TRIG_X_ORIGIN - TRIG_AXIS/8, COS_Y_ORIGIN], "L").draw();
+	new AxisArrow(ctxExpandableUnitCircle, [TRIG_X_ORIGIN + TRIG_AXIS, COS_Y_ORIGIN], "R").draw();
+	new AxisArrow(ctxExpandableUnitCircle, [TRIG_X_ORIGIN, COS_Y_ORIGIN - MAX_AMP_AXIS], "U").draw();
+	new AxisArrow(ctxExpandableUnitCircle, [TRIG_X_ORIGIN, COS_Y_ORIGIN + MAX_AMP_AXIS], "D").draw();
 	
 	//put ticks on the sin/cos axis.  FULL_THETA_PIX is the number of pixels in 0 to 2pi (full scale)
 	// thetaGraph is indexed by the yellow dots on the circle (16 in total) and represents the angle on a sine/cos graph
@@ -593,16 +593,11 @@ $(function() {
 			  y: e.clientY - rect.top
 			};	
 			Object.freeze(pos);  // this makes const REALLY const, not needed here though
-			// if user is inside the "unit circle" put up some help
-			let bigCirc = {x: CIRC_X0, y: CIRC_Y0};
-			let bigCircRad = amp * CIRC_RAD;
-			if (isInside(pos, bigCirc, bigCircRad)) {
-				// if you are inside the circle, show the help, else turn it off, its annoying
-				$('#FirstHelp').css("visibility", "visible");
-			}
-			else {
-				$('#FirstHelp').css("visibility", "hidden");
-			}
+
+			// if you are wandering aimlessly,help out.  On first click, you don't need help
+			$('#FirstHelp').css("visibility", "visible");
+		} else {
+			$('#FirstHelp').css("visibility", "hidden");
 		}
 	});
 	//***********************************

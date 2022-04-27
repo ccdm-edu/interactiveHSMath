@@ -114,7 +114,7 @@ $(function() {
 	const CIRC_Y0 = 330;   // use this to raise and lower the whole circle, remember y increases going down the page
 	drawTrigCircle(ctxUnitCircle, CIRC_X0, CIRC_Y0, HALF_AXIS);
 	
-	//*** Draw the big unit circle which could be expanded/contracted based on user input
+	//*** Draw the big unit circle which is fixed radius
 	// need to ensure the points here can never be negative, else they get clipped
 	ctxUnitCircle.beginPath();
 	// draw main circle
@@ -158,90 +158,21 @@ $(function() {
 	}	
 	const PIX_PER_MINOR_TICK = 17;
 	const MAX_AMP_AXIS = CIRC_RAD + 10;
-	function drawSineAxis(xOrigin, yOrigin, maxTime) {
-		const TRIG_AXIS = 420;   
-		ctxFreqPlot.beginPath();
-		// make x axis
-		ctxFreqPlot.moveTo(xOrigin - TRIG_AXIS/8, yOrigin);
-		ctxFreqPlot.lineTo(xOrigin + TRIG_AXIS, yOrigin);
-		ctxFreqPlot.fillStyle = 'black';
-		ctxFreqPlot.font = '15px Arial';
-		ctxFreqPlot.fillText("t (sec)", xOrigin + TRIG_AXIS - 30 , yOrigin + 30);
-		ctxFreqPlot.stroke()	
-		// draw y axis
-		ctxFreqPlot.beginPath();
-		ctxFreqPlot.moveTo(xOrigin, yOrigin + MAX_AMP_AXIS);
-		ctxFreqPlot.lineTo(xOrigin, yOrigin - MAX_AMP_AXIS);
-		ctxFreqPlot.fillStyle = 'black';
-		ctxFreqPlot.font = '20px Arial';
-		ctxFreqPlot.fillText("S=sin(2\u03c0 f t)", 10, yOrigin - MAX_AMP_AXIS - 10);
-		ctxFreqPlot.stroke();
-		// make arrows for Angle-Sin graph
-		leftArrow(ctxFreqPlot, xOrigin - TRIG_AXIS/8, yOrigin);
-		rightArrow(ctxFreqPlot, xOrigin + TRIG_AXIS, yOrigin);
-		upArrow(ctxFreqPlot, xOrigin, yOrigin - MAX_AMP_AXIS);
-		downArrow(ctxFreqPlot, xOrigin, yOrigin + MAX_AMP_AXIS);  
-		
-		// draw y axis tick marks for other amplitudes, we will do 0.1 ticks up to 1,
-		const SHORT_TICK_LEN = 5
-		for(let i=1; i<= 10; i++){ 
-			ctxFreqPlot.beginPath();
-			// y axis sin
-			ctxFreqPlot.moveTo(xOrigin - SHORT_TICK_LEN, yOrigin - 0.1 * i * CIRC_RAD);
-			ctxFreqPlot.lineTo(xOrigin + SHORT_TICK_LEN, yOrigin - 0.1 * i * CIRC_RAD);
-			ctxFreqPlot.stroke();
-		}
-		// label 0.5 and 1.0 on each y sin and y cos axis
-		ctxFreqPlot.font = '10px Arial';
-		// y sin axis ticks
-		ctxFreqPlot.fillText("0.5", xOrigin - 20, yOrigin - 0.1 * 5 * CIRC_RAD);	
-		ctxFreqPlot.fillText("1.0", xOrigin - 20, yOrigin - 0.1 * 10 * CIRC_RAD);
-		
-		// x sine axis time ticks
-		for(let i=1; i<= 20; i++){ 
-			ctxFreqPlot.beginPath();
-			// y axis sin
-			let xLoc = xOrigin + i * PIX_PER_MINOR_TICK;
-			ctxFreqPlot.moveTo(xLoc, yOrigin );
-			if (i%5 == 0) {
-				// major axis tick
-				ctxFreqPlot.lineTo(xLoc, yOrigin + 2 * SHORT_TICK_LEN);
-				// time is now i*maxTime/20
-				ctxFreqPlot.fillText(String(i*maxTime/20), xLoc - 2, yOrigin + 2 * SHORT_TICK_LEN + 5);
-			} else {
-				// minor axis tick
-				ctxFreqPlot.lineTo(xLoc, yOrigin + SHORT_TICK_LEN);
-			}			
-			ctxFreqPlot.stroke();
-		}
-	}
+
 	// draw sin axis off to right and a little above
 	const UPPER_Y_ORIGIN = 180;
 	const UPPER_X_ORIGIN = 60;
 	const LOWER_Y_ORIGIN = 500;
 	const LOWER_X_ORIGIN = 60;
-	drawSineAxis(UPPER_X_ORIGIN, UPPER_Y_ORIGIN, EXPIRATION_TIME_SEC);
-	drawSineAxis(LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPIRATION_TIME_SEC/10);
+	drawSineAxis(ctxFreqPlot, UPPER_X_ORIGIN, UPPER_Y_ORIGIN, EXPIRATION_TIME_SEC, PIX_PER_MINOR_TICK);
+	drawSineAxis(ctxFreqPlot, LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPIRATION_TIME_SEC/10, PIX_PER_MINOR_TICK);
 	//*****************
 	// draw lines inbetween plots to show lower plot is expanded time of upper plot
-	ctxFreqPlot.beginPath();
-	ctxFreqPlot.moveTo(UPPER_X_ORIGIN, UPPER_Y_ORIGIN);
-	ctxFreqPlot.lineTo(LOWER_X_ORIGIN, LOWER_Y_ORIGIN - MAX_AMP_AXIS - 10);
-	ctxFreqPlot.setLineDash([5, 10])
-	ctxFreqPlot.strokeStyle = 'red';
-	ctxFreqPlot.fillStyle = 'red';
-	ctxFreqPlot.font = '15px Arial';
-	ctxFreqPlot.fillText("2 sec expanded", UPPER_X_ORIGIN + 10, UPPER_Y_ORIGIN + MAX_AMP_AXIS + 20);
-	ctxFreqPlot.stroke();
-	ctxFreqPlot.beginPath();
-	ctxFreqPlot.moveTo(UPPER_X_ORIGIN + 2*PIX_PER_MINOR_TICK, UPPER_Y_ORIGIN);
-	ctxFreqPlot.lineTo(LOWER_X_ORIGIN  + 20*PIX_PER_MINOR_TICK, LOWER_Y_ORIGIN);
-	ctxFreqPlot.stroke();
-	// go back to background color
-	ctxFreqPlot.strokeStyle = 'black';
-	ctxFreqPlot.fillStyle = 'black';
-	ctxFreqPlot.setLineDash([])
-	//*****************
+	let startPt = {start:[UPPER_X_ORIGIN,UPPER_Y_ORIGIN], stop:[LOWER_X_ORIGIN, LOWER_Y_ORIGIN - MAX_AMP_AXIS - 10]};
+	let endPt = {start:[UPPER_X_ORIGIN + 2*PIX_PER_MINOR_TICK, UPPER_Y_ORIGIN], stop: [LOWER_X_ORIGIN  + 20*PIX_PER_MINOR_TICK, LOWER_Y_ORIGIN]};
+	drawExpansionLines(ctxFreqPlot, startPt, endPt,"2 sec expanded");
+	
+	//*** Now it looks good, snapshot this so we can go back after drawing temporary things on it
 	sineAxisBkgd = ctxFreqPlot.getImageData(0, 0, freqCanvas.width, freqCanvas.height);
 	
 	//********************************************************
@@ -292,7 +223,7 @@ $(function() {
 		// put circle up at numeric count down timer
 	    ctxUnitCircle.arc(110, 20, 18, 0, Math.PI * 2, true); 
 	    ctxUnitCircle.stroke();
-	    arbArrow(ctxUnitCircle, POINT_TO_TIME, "lime");
+	    new Arrow(ctxUnitCircle, POINT_TO_TIME, "lime","", 2).draw();
 	    
 		let arrow_to_graph_time;
 		// decide whether to put circle on upper or lower plot
@@ -328,7 +259,7 @@ $(function() {
 			}
 		}
 		// plot arrow to the place on x axis that is period
-		arbArrow(ctxFreqPlot, arrow_to_graph_time, "lime");
+		new Arrow(ctxFreqPlot, arrow_to_graph_time, "lime","", 2).draw();
 		
 		// go back to defaults
 		ctxUnitCircle.strokeStyle = "black";
@@ -344,13 +275,13 @@ $(function() {
 			// generating the slowest frequency, clicking on all dots
 			// Once they start clicking on yellow dots, they dont need this help anymore
 			$('#FirstHelp_DT1').css("visibility", "visible");
-			arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "red", "Start here");
+			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","Start here", 2).draw();
 		}
 		else if ((numFreqGenSoFar == 1) && (ptsClickedOnCircle == 0)) {
 			// user has done 1st slow freq.  Show them it can be done faster.
 			// Once they start clicking on yellow dots, they dont need this help anymore
 			$('#FirstHelp_DT1').css("visibility", "visible");
-			arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "red", "Start here");
+			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","Start here", 2).draw();
 		}
 		else if ((numFreqGenSoFar == 2) && (ptsClickedOnCircle == 0)) {
 			// user has done two freq.  Show them it can be done faster.
@@ -362,17 +293,8 @@ $(function() {
 			$('#FirstHelp_DT1').css("visibility", "hidden");
 		}
 		if (numFreqGenSoFar >= 2) {
-			arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "red", "End here");
+			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","End here", 2).draw();
 		}
-	});
-	freqCanvas.addEventListener("mousemove",(e)=> {
-		// delete this
-		let rect = freqCanvas.getBoundingClientRect();
-		const pos = {
-			  x: e.clientX - rect.left,
-			  y: e.clientY - rect.top
-			};	
-		console.log("the current position is (" + pos.x + " , " + pos.y + ")");
 	});
 
     //********************************************************
@@ -524,17 +446,17 @@ $(function() {
 						// point user to click on every yellow dot
 						if (ptsClickedOnCircle >= TOTAL_NUM_DOTS) {
 							// should never get to be more than TOTAL_NUM_DOTS...
-							arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "red", "End here");
+							new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","End here", 2).draw();
 						} else {
-							arbArrow(ctxUnitCircle, ARROW_HELPERS[ptsClickedOnCircle], "red");
+							new Arrow(ctxUnitCircle, ARROW_HELPERS[ptsClickedOnCircle], "red","", 2).draw();
 						}
 					} else if (numFreqGenSoFar == 1) {
 						// point user to click on every other yellow dot
 						if (2*ptsClickedOnCircle >= TOTAL_NUM_DOTS) {
 							// should never get to be more than TOTAL_NUM_DOTS...
-							arbArrow(ctxUnitCircle, ARROW_HELPERS[0], "red", "End here");
+							new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","End here", 2).draw();
 						} else {
-							arbArrow(ctxUnitCircle, ARROW_HELPERS[2*ptsClickedOnCircle], "red");
+							new Arrow(ctxUnitCircle, ARROW_HELPERS[2*ptsClickedOnCircle], "red","", 2).draw();
 						}
 					} 
 										
