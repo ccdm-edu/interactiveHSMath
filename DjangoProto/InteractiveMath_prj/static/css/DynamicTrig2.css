@@ -49,47 +49,40 @@ This is the style sheet for the DynamicTrig2.html page
 /* these are the children of CircleValues_DT2 */
 /* start button z-index must outrank the todo/expln box so it can be active */
 
-#ClearOldFreq_DT2{
-	position: absolute;
-	left: 0px;
-	top: 60px;
-	z-index: 20;
-}
-
 #time_DT2{
 	position: absolute;
-	left: 100px;
+	left: px;
 	top: 40px;
 }
 #timeVal_DT2{
 	position: absolute;
-	left: 100px;
+	left: 0px;
 	top: 60px;	
 }
-#thetaLabel_DT2 {
+#cyclesLabel_DT2 {
 	position: absolute;
-	left: 200px;
+	left: 100px;
 	top: 40px;
 }
-#theta_DT2 {
+#cycles_DT2 {
 	position: absolute;
-	left: 200px;
+	left: 100px;
 	top: 60px;
 }
-#LastFrequenciesLabel_DT2{
+#periodLabel_DT2{
 	position: absolute;
-	left: 300px;
+	left: 200px;
 	top: 40px;
 }
-#LastFrequencies_DT2{
+#period_DT2{
 	position: absolute;
-	left: 300px;
+	left: 200px;
 	top: 60px;
 }
 #UserNotices_DT2{
 	position: absolute;
-	left: 0px;
-	top: 130px;
+	left: 200px;
+	top: 90px;
 }
 /* arrange the freq input labels, slider, curr val and associated go button*/
 #FreqLabel_DT2{
