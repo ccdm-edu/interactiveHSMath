@@ -51,7 +51,7 @@ This is the style sheet for the DynamicTrig2.html page
 
 #time_DT2{
 	position: absolute;
-	left: px;
+	left: 0px;
 	top: 40px;
 }
 #timeVal_DT2{
@@ -81,37 +81,46 @@ This is the style sheet for the DynamicTrig2.html page
 }
 #UserNotices_DT2{
 	position: absolute;
-	left: 200px;
-	top: 90px;
+	left: 240px;
+	top: 70px;
+	width: 150px;
 }
-/* arrange the freq input labels, slider, curr val and associated go button*/
-#FreqLabel_DT2{
+#SampPerPeriodLabel_DT2{
 	position: absolute;
 	left: 0px;
 	top: 90px;
 }
+#SampPerPeriod_DT2{
+	position: absolute;
+	left: 0px;
+	top: 110px;
+}
+		
+/* arrange the freq input labels, slider, curr val and associated go button*/
+#FreqLabel_DT2{
+	position: absolute;
+	left: 0px;
+	top: 140px;
+}
 #currFreqVal_DT2{
 	position: absolute;
 	left: 100px;
-	top: 90px;
+	top: 140px;
 }
 /* inputs must have max z index so they are user inputable, else they fall behind invisible canvas */
 #FreqSlider_DT2{
 	position: absolute;
 	left: 0px;
-	top: 110px;
+	top: 160px;
 	z-index: 20;
 }
 #GoFreq_DT2{
 	position: absolute;
 	left: 150px;
-	top: 110px;
+	top: 160px;
 	z-index: 20;
 }
-/* arrow from explanation to freq circle indicator */
-#ExplnFreqMark_DT2{
-	color: lime
-}
+
 
 /***************************/
 /* create canvas for expandable unit circle, position = relative lets the footer float to bottom for all parent elements.

@@ -9,19 +9,21 @@
 {% block body_block %}
 	<div id ="headerAndCtl_DT2">
 		<input type="button" id="ToDo_or_expln_DT2" value="Explain">
-		<h1 id="HeaderTrig_DT2" >Trig Functions Need Speed</h1>
+		<h1 id="HeaderTrig_DT2" >Trig Functions Need For Speed</h1>
 	</div>
 	<div id="HelpBox_DT2">
 	 	<textarea readonly id="LongTextBox_DT2" rows = '4' cols = "50">Help is here </textarea>
 	</div>
 	<div id="CircleValues_DT2">	
-		<label id = "time_DT2" data-toggle="tooltip" data-placement="right" title="Total time that phase is accumulating"><b>Time (sec)</b></label>
+		<label id = "time_DT2" data-toggle="tooltip" data-placement="right" title="Total time that phase is accumulating (0.5 sec accuracy)"><b>Time (sec)</b></label>
 		<p id="timeVal_DT2">0</p>
 		<label id="cyclesLabel_DT2" data-toggle="tooltip" data-placement="right" title="Number of times phase passed 360"><b>Cycles</b></label>
 		<p id="cycles_DT2"> 0 </p>
-		<label id = "periodLabel_DT2" data-toggle="tooltip" data-placement="right" title="Compare to green circle in plots to right"><b>T (period in sec, 1/frequency)</b></label>
+		<label id = "periodLabel_DT2" data-toggle="tooltip" data-placement="right" title="Time to complete one cycle.  Approx (Time/cycles)"><b>T (period in sec, 1/frequency)</b></label>
 		<p id="period_DT2">0 </p>
 		<p id="UserNotices_DT2" ></p>	
+		<p id="SampPerPeriodLabel_DT2"><b>Samples Per Period</b></p>
+		<p id="SampPerPeriod_DT2"></p>
 		<label id="FreqLabel_DT2"><b>Frequency:</b></label><span id="currFreqVal_DT2">000</span> 
 		<input id="FreqSlider_DT2" type="range" step="0.1" value="1" min="1" max="10" data-placement="left" data-toggle="tooltip" title="click on slider and use arrows for greater precision">
 		<input type="button" id="GoFreq_DT2" value="Go" ata-toggle="tooltip" data-placement="right" title="Adjust freq slider at any time">
