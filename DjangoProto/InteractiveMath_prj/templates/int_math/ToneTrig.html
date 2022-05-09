@@ -109,6 +109,25 @@
 	 	</div>
  	</div>
 	
+	<!-- Put up a brief "HOW TO use this page" modal window -->
+	<div class="modal fade" id="admodal" role="dialog" tabindex="-1">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h1>What to do here</h1>
+					<ul>
+					<li>Listen to a sine wave tone by hitting Start Tone button</li>
+					<li>Compare to a musical instrument playing a note by clicking on rainbow clef pull down menu  
+				    <img src="{% static 'images/MusicMenu.svg' %}" height = "60" width="30" alt = "Rainbow musical clef"> </li>					
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<!--  when clicked, this will dismiss the modal -->
+					<button class="btn btn-success" data-dismiss="modal" type="button">Got it!</button><br class="visible-xs">	
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
 	<br>
 	<br>

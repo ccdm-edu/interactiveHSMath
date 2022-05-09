@@ -17,9 +17,10 @@ This is the style sheet for ToneTrig.html
    cannot be modified, which holds the bot state for the server of this particular client.  If the client asks for 
    something and the bot test has not
    passed, the request will be rejected. */
-/*#botCheckTestNeeded{
-	display: none;
-}*/
+   /* display block overrides the none so need to force with important */
+#botCheckTestNeeded{
+	display: none !important;
+}
 /*****************************************************************/
 /* This handles the header and "play music again" button that comes and goes as needed */
 #allowNotePlay {

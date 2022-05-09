@@ -634,5 +634,21 @@ $(function() {
 			console.error("Error in JSON file " + status + error);
 			alert("Error in JSON file " + status + error);
 		})
+		
+	//***********************************
+	//initial user help via pop up modal window
+	//***********************************	
+	// after 1 sec, put up a modal window that explains what to do.  Very short/simple.  Will only
+	// happen once per session
+	if (!sessionStorage.adModal) {
+		setTimeout(function() {
+			$('#admodal').find('.item').first().addClass('active');
+		    $('#admodal').modal({
+		    	backdrop: 'static',
+	    		keyboard: false
+		    });
+		}, 1000);
+	    sessionStorage.adModal = 1;
+    }
 
 })
