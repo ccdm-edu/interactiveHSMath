@@ -121,7 +121,6 @@ This is the style sheet for the DynamicTrig2.html page
 	z-index: 20;
 }
 
-
 /***************************/
 /* create canvas for expandable unit circle, position = relative lets the footer float to bottom for all parent elements.
 We use negative value for top since we want some overlap*/
@@ -151,7 +150,23 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	 margin-right: 0 px;
 	 padding-right: 0 px;
 }
-/*************Dynamic Help**************/
+/* arrange label for two graphs*/
+/* arrange equation for chosen sine wave to be right over the graph */
+#sinEqtnLabelHI_DT2{
+	position: absolute;
+	top: -30px;
+	left: 480px;
+	font-size: 20px;
+	font-weight: bold;
+}
+#sinEqtnLabelLO_DT2{
+	position: absolute;
+	top: 290px;
+	left: 480px;
+	font-size: 20px;
+	font-weight: bold;
+}
+/*************Dynamic Help **************/
 #FirstHelp_DT2 {
 	position: relative;
 	width: 200px;

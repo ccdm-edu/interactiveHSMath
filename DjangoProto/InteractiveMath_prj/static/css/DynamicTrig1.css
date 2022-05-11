@@ -130,6 +130,22 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	 margin-right: 0 px;
 	 padding-right: 0 px;
 }
+/* add labels for the graphs, will be updated on dynamic trig page 2 */
+#sinEqtnLabelHI_DT1{
+	position: absolute;
+	top: -30px;
+	left: 480px;
+	font-size: 20px;
+	font-weight: bold;
+}
+#sinEqtnLabelLO_DT1{
+	position: absolute;
+	top: 290px;
+	left: 480px;
+	font-size: 20px;
+	font-weight: bold;
+}
+
 /*************Dynamic Help**************/
 /*I don't really understand why the values of left, top are what they are.... */
 #FirstHelp_DT1 {

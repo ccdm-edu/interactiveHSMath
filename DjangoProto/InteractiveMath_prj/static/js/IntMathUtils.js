@@ -23,6 +23,12 @@
 	const isInside = (point, circle, radius) => {
 		return ((point.x-circle.x) ** 2 + (point.y - circle.y) ** 2) <= (radius) ** 2;
 	};
+	//*************************************************
+	// constants for special characters in Javascript
+	//*************************************************
+	const PI = "\u03c0";
+	const MULT_DOT = "\u22C5";
+	const THETA = "\u03b8";
 	
 	//*************************************************
 	//***  Draw the unit circle plus yellow dots used in Static Trig and Dynamic Trig pages
@@ -120,8 +126,6 @@
 		twoDCtx.moveTo(xOrigin, yOrigin + MAX_AMP_AXIS);
 		twoDCtx.lineTo(xOrigin, yOrigin - MAX_AMP_AXIS);
 		twoDCtx.fillStyle = 'black';
-		twoDCtx.font = '20px Arial';
-		twoDCtx.fillText("S=sin(2\u03c0 f t)", 10, yOrigin - MAX_AMP_AXIS - 10);
 		twoDCtx.stroke();
 		// make arrows for Angle-Sin graph
 		new AxisArrow(twoDCtx, [xOrigin - TRIG_AXIS/8, yOrigin], "L").draw();

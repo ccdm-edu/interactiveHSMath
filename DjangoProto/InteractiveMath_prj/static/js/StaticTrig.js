@@ -56,13 +56,13 @@ $(function() {
 	ctxExpandableUnitCircle.lineTo(TRIG_X_ORIGIN + TRIG_AXIS, SIN_Y_ORIGIN);
 	ctxExpandableUnitCircle.fillStyle = 'black';
 	ctxExpandableUnitCircle.font = '20px Arial';
-	ctxExpandableUnitCircle.fillText("\u03b8", TRIG_X_ORIGIN + TRIG_AXIS, SIN_Y_ORIGIN);	
+	ctxExpandableUnitCircle.fillText(THETA, TRIG_X_ORIGIN + TRIG_AXIS, SIN_Y_ORIGIN);	
 	// draw y axis
 	ctxExpandableUnitCircle.moveTo(TRIG_X_ORIGIN, SIN_Y_ORIGIN + MAX_AMP_AXIS);
 	ctxExpandableUnitCircle.lineTo(TRIG_X_ORIGIN, SIN_Y_ORIGIN - MAX_AMP_AXIS);
 	ctxExpandableUnitCircle.fillStyle = 'blue';
 	ctxExpandableUnitCircle.font = '20px Arial';
-	ctxExpandableUnitCircle.fillText("y=f(\u03b8)=r\u22C5sin(\u03b8)", TRIG_X_ORIGIN - 150, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);
+	ctxExpandableUnitCircle.fillText("y=f("+THETA+")=r"+MULT_DOT+"sin("+THETA+")", TRIG_X_ORIGIN - 150, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);
 	ctxExpandableUnitCircle.stroke();
 	ctxExpandableUnitCircle.closePath();
 	// make arrows for Angle-Sin graph
@@ -102,13 +102,13 @@ $(function() {
 	ctxExpandableUnitCircle.fillStyle = 'black';
 	ctxExpandableUnitCircle.strokeStyle = "black";
 	ctxExpandableUnitCircle.font = '20px Arial';
-	ctxExpandableUnitCircle.fillText("\u03b8", TRIG_X_ORIGIN + TRIG_AXIS, COS_Y_ORIGIN);	
+	ctxExpandableUnitCircle.fillText(THETA, TRIG_X_ORIGIN + TRIG_AXIS, COS_Y_ORIGIN);	
 	// draw y axis
 	ctxExpandableUnitCircle.moveTo(TRIG_X_ORIGIN, COS_Y_ORIGIN + MAX_AMP_AXIS);
 	ctxExpandableUnitCircle.lineTo(TRIG_X_ORIGIN, COS_Y_ORIGIN - MAX_AMP_AXIS);
 	ctxExpandableUnitCircle.fillStyle = 'red';
 	ctxExpandableUnitCircle.font = '20px Arial';
-	ctxExpandableUnitCircle.fillText("x=f(\u03b8)=r\u22C5cos(\u03b8)", TRIG_X_ORIGIN - 150, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);	
+	ctxExpandableUnitCircle.fillText("x=f("+THETA+")=r"+MULT_DOT+"cos("+THETA+")", TRIG_X_ORIGIN - 150, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);	
 	
 	ctxExpandableUnitCircle.stroke();
 	ctxExpandableUnitCircle.closePath();	
@@ -123,24 +123,23 @@ $(function() {
 	// thetaGraph is indexed by the yellow dots on the circle (16 in total) and represents the angle on a sine/cos graph
 	// in pixels from the origin
 	let thetaGraph = [];
-	let pi = "\u03c0"
 	thetaGraph[0] = {pix: 0, num: "", den: ""};
-	thetaGraph[1] = {pix: FULL_THETA_PIX/12, num:pi, den: "6"};  // pi/6 angle
-	thetaGraph[2] = {pix: FULL_THETA_PIX/8, num:pi, den: "4"};   // pi/4
-	thetaGraph[3] = {pix: FULL_THETA_PIX/6, num:pi, den: "3"};  // pi/3
-	thetaGraph[4] = {pix: FULL_THETA_PIX/4, num: pi, den: "2"};  // pi/2
-	thetaGraph[5] = {pix: FULL_THETA_PIX/4 + FULL_THETA_PIX/12, num: "2" + pi, den: "3"};  // pi/2 + pi/6
-	thetaGraph[6] = {pix: FULL_THETA_PIX/4 + FULL_THETA_PIX/8, num: "3" + pi, den: "4"};  // pi/2 + pi/4
-	thetaGraph[7] = {pix: FULL_THETA_PIX/4 + FULL_THETA_PIX/6, num: "5" + pi, den: "6"};  // pi/2 + pi/3
-	thetaGraph[8] = {pix: FULL_THETA_PIX/2, num: pi, den: ""};  // pi
-	thetaGraph[9] = {pix: FULL_THETA_PIX/2 + FULL_THETA_PIX/12, num: "7" + pi, den: "6"};  // pi + pi/6
-	thetaGraph[10] = {pix: FULL_THETA_PIX/2 + FULL_THETA_PIX/8, num: "5" + pi, den: "4"};  // pi + pi/4
-	thetaGraph[11] = {pix: FULL_THETA_PIX/2 + FULL_THETA_PIX/6, num: "4" + pi, den: "3"};  // pi + pi/3
-	thetaGraph[12] = {pix: 3*FULL_THETA_PIX/4, num: "3" + pi, den: "2"};  // 3pi/2 
-	thetaGraph[13] = {pix: 3*FULL_THETA_PIX/4 + FULL_THETA_PIX/12, num: "5" + pi, den: "3"};  // 3pi/2 + pi/6 = 5pi/3
-	thetaGraph[14] = {pix: 3*FULL_THETA_PIX/4 + FULL_THETA_PIX/8, num: "7" + pi, den: "4"};  //  3pi/2 + pi/4 = 7pi/4
-	thetaGraph[15] = {pix: 3*FULL_THETA_PIX/4 + FULL_THETA_PIX/6, num: "11" + pi, den: "6"};  //  3pi/2 + pi/3 = 11pi/6
-	thetaGraph[16] = {pix: FULL_THETA_PIX, num: "2" + pi, den: ""};  //  2pi
+	thetaGraph[1] = {pix: FULL_THETA_PIX/12, num:PI, den: "6"};  // pi/6 angle
+	thetaGraph[2] = {pix: FULL_THETA_PIX/8, num:PI, den: "4"};   // pi/4
+	thetaGraph[3] = {pix: FULL_THETA_PIX/6, num:PI, den: "3"};  // pi/3
+	thetaGraph[4] = {pix: FULL_THETA_PIX/4, num: PI, den: "2"};  // pi/2
+	thetaGraph[5] = {pix: FULL_THETA_PIX/4 + FULL_THETA_PIX/12, num: "2" + PI, den: "3"};  // pi/2 + pi/6
+	thetaGraph[6] = {pix: FULL_THETA_PIX/4 + FULL_THETA_PIX/8, num: "3" + PI, den: "4"};  // pi/2 + pi/4
+	thetaGraph[7] = {pix: FULL_THETA_PIX/4 + FULL_THETA_PIX/6, num: "5" + PI, den: "6"};  // pi/2 + pi/3
+	thetaGraph[8] = {pix: FULL_THETA_PIX/2, num: PI, den: ""};  // pi
+	thetaGraph[9] = {pix: FULL_THETA_PIX/2 + FULL_THETA_PIX/12, num: "7" + PI, den: "6"};  // pi + pi/6
+	thetaGraph[10] = {pix: FULL_THETA_PIX/2 + FULL_THETA_PIX/8, num: "5" + PI, den: "4"};  // pi + pi/4
+	thetaGraph[11] = {pix: FULL_THETA_PIX/2 + FULL_THETA_PIX/6, num: "4" + PI, den: "3"};  // pi + pi/3
+	thetaGraph[12] = {pix: 3*FULL_THETA_PIX/4, num: "3" + PI, den: "2"};  // 3pi/2 
+	thetaGraph[13] = {pix: 3*FULL_THETA_PIX/4 + FULL_THETA_PIX/12, num: "5" + PI, den: "3"};  // 3pi/2 + pi/6 = 5pi/3
+	thetaGraph[14] = {pix: 3*FULL_THETA_PIX/4 + FULL_THETA_PIX/8, num: "7" + PI, den: "4"};  //  3pi/2 + pi/4 = 7pi/4
+	thetaGraph[15] = {pix: 3*FULL_THETA_PIX/4 + FULL_THETA_PIX/6, num: "11" + PI, den: "6"};  //  3pi/2 + pi/3 = 11pi/6
+	thetaGraph[16] = {pix: FULL_THETA_PIX, num: "2" + PI, den: ""};  //  2pi
 
 			
 	// add tick marks to sin/cos axes, no need to mark 0 degrees
@@ -466,7 +465,7 @@ $(function() {
 			if ( (temp >= MIN_AMP) && (temp <= MAX_AMP) ) {
 				amp = temp;
 				if (temp != 1.0) {
-					ampStr = amp.toString().concat("\u22C5");
+					ampStr = amp.toString().concat(MULT_DOT);
 				} else {
 					//no need to show mpy by 1
 					ampStr = "";
@@ -662,7 +661,7 @@ $(function() {
 				ctxExpandableUnitCircle.strokeStyle = 'green'; 
 				ctxExpandableUnitCircle.fillStyle = 'green';
 				ctxExpandableUnitCircle.font = '20px Arial';
-				ctxExpandableUnitCircle.fillText("\u03b8", CIRC_X0 + ANGLE_IND, CIRC_Y0 - ANGLE_IND/4);	
+				ctxExpandableUnitCircle.fillText(THETA, CIRC_X0 + ANGLE_IND, CIRC_Y0 - ANGLE_IND/4);	
 				ctxExpandableUnitCircle.stroke();
 				ctxExpandableUnitCircle.closePath();
 				
