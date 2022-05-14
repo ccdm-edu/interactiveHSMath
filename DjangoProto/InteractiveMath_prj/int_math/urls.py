@@ -10,6 +10,7 @@ app_name = 'int_math'
 # avoiding hardcoding {%url 'Rango:name' %}
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
+    path('MusicSineIntro/', views.MusicTrigView.as_view(), name='MusicSineIntro'),
     path('StaticTrig/', views.StaticTrigView.as_view(), name='StaticTrig'),
     path('DynamicTrig1/', views.DynamicTrig1View.as_view(), name='DynamicTrig1'),
     path('DynamicTrig2/', views.DynamicTrig2View.as_view(), name='DynamicTrig2'),

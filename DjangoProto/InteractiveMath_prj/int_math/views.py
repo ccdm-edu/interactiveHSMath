@@ -171,7 +171,15 @@ class IndexView(View):
                         }        
         response = render(request, 'int_math/index.html', context=context_dict)
         return response
-    
+
+class MusicTrigView(View):
+    def get(self, request):
+        context_dict = {'page_tab_header': 'MusicalTrig',
+                        'topic': Topic.objects.get(name="Trig"),
+                        }
+        response = render(request, 'int_math/MusicSineIntro.html', context=context_dict)
+        return response
+        
 class StaticTrigView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'StaticTrig',
