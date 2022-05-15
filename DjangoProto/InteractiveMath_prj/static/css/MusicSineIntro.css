@@ -1,0 +1,23 @@
+/********************************
+Style sheet for the musical intro to sine wave page
+*********************************/
+h1{
+	text-align: center;
+}
+#TrumpetMusicalScale{
+	position: relative;
+	top: 100px;
+	width: auto;
+}
+#colorfulClef{
+	position: absolute;
+	top: 0px;
+	left: 20px;
+	height: 200px;
+	width: 200px;
+}
+#
+.wholeNote{
+	height: 30px;
+	width: 30px;
+}
