@@ -43,7 +43,6 @@ This is the style sheet for the DynamicTrig1.html page
 #CircleValues_DT1 {
 	position: relative;
 	left: 0px;
-	/*top: 100; */
 	top: 100px;
 }
 /* these are the children of CircleValues_DT1 */

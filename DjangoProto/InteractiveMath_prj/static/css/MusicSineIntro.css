@@ -1,6 +1,15 @@
 /********************************
-Style sheet for the musical intro to sine wave page
+Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 *********************************/
+/* create global var for this html */
+:root{
+	--HIGHEST_Y: 206px;
+	--LOWEST_X: 200px;
+	--DELTA_Y: 20px;  /* half a note */
+	--DELTA_X: 80px;
+	--OFF_TO_SIDE_X: 40px;
+	--OFF_TO_SIDE_Y: 10px;
+}
 h1{
 	text-align: center;
 }
@@ -12,12 +21,86 @@ h1{
 #colorfulClef{
 	position: absolute;
 	top: 0px;
-	left: 20px;
+	left: 0px;
 	height: 200px;
 	width: 200px;
 }
-#
+#ClefWithNotes{
+	position: absolute;
+	top: 0 px;
+	left: 10px;
+}
 .wholeNote{
+	position: absolute;
 	height: 30px;
 	width: 30px;
+}
+#wholeNote1{
+	top: var(--HIGHEST_Y);
+	left: var(--LOWEST_X);
+}
+#wholeNote2{
+	top: calc(var(--HIGHEST_Y) - var(--DELTA_Y));
+	left: calc(var(--LOWEST_X) + var(--DELTA_X));
+}
+#wholeNote3{
+	top: calc(var(--HIGHEST_Y) - 2 * var(--DELTA_Y));
+	left: calc(var(--LOWEST_X) + 2 * var(--DELTA_X));
+}
+#wholeNote4{
+	top: calc(var(--HIGHEST_Y) - 3 * var(--DELTA_Y));
+	left: calc(var(--LOWEST_X) + 3 * var(--DELTA_X));
+}
+#wholeNote5{
+	top: calc(var(--HIGHEST_Y) - 4 * var(--DELTA_Y));
+	left: calc(var(--LOWEST_X) + 4 * var(--DELTA_X));
+}
+#wholeNote6{
+	top: calc(var(--HIGHEST_Y) - 5 * var(--DELTA_Y));
+	left: calc(var(--LOWEST_X) + 5 * var(--DELTA_X));
+}
+#wholeNote7{
+	top: calc(var(--HIGHEST_Y) - 6 * var(--DELTA_Y));
+	left: calc(var(--LOWEST_X) + 6 * var(--DELTA_X));
+}
+#wholeNote8{
+	top: calc(var(--HIGHEST_Y) - 7 * var(--DELTA_Y));
+	left: calc(var(--LOWEST_X) + 7 * var(--DELTA_X));
+}
+.letterToNote{
+	position: absolute;
+	font-size: 20px;
+	font-weight: bold;
+}
+#LowCNote{
+	top:  calc(var(--HIGHEST_Y) + var(--OFF_TO_SIDE_Y));
+	left: calc( var(--LOWEST_X) + var(--OFF_TO_SIDE_X));
+}
+#DNote{
+	top:  calc(var(--HIGHEST_Y) - var(--DELTA_Y) + var(--OFF_TO_SIDE_Y));
+	left: calc( var(--LOWEST_X) + var(--DELTA_X) + var(--OFF_TO_SIDE_X));
+}
+#ENote{
+	top:  calc(var(--HIGHEST_Y) - 2 * var(--DELTA_Y) + var(--OFF_TO_SIDE_Y));
+	left: calc( var(--LOWEST_X) + 2 * var(--DELTA_X) + var(--OFF_TO_SIDE_X));
+}
+#FNote{
+	top:  calc(var(--HIGHEST_Y) - 3 * var(--DELTA_Y) + var(--OFF_TO_SIDE_Y));
+	left: calc( var(--LOWEST_X) + 3 * var(--DELTA_X) + var(--OFF_TO_SIDE_X));
+}
+#GNote{
+	top:  calc(var(--HIGHEST_Y) - 4 * var(--DELTA_Y) + var(--OFF_TO_SIDE_Y));
+	left: calc( var(--LOWEST_X) + 4 * var(--DELTA_X) + var(--OFF_TO_SIDE_X));
+}
+#ANote{
+	top:  calc(var(--HIGHEST_Y) - 5 * var(--DELTA_Y) + var(--OFF_TO_SIDE_Y));
+	left: calc( var(--LOWEST_X) + 5 * var(--DELTA_X) + var(--OFF_TO_SIDE_X));
+}
+#BNote{
+	top:  calc(var(--HIGHEST_Y) - 6 * var(--DELTA_Y) + var(--OFF_TO_SIDE_Y));
+	left: calc( var(--LOWEST_X) + 6 * var(--DELTA_X) + var(--OFF_TO_SIDE_X));
+}
+#CNote{
+	top:  calc(var(--HIGHEST_Y) - 7 * var(--DELTA_Y) + var(--OFF_TO_SIDE_Y));
+	left: calc( var(--LOWEST_X) + 7 * var(--DELTA_X) + var(--OFF_TO_SIDE_X));
 }

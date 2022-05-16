@@ -10,6 +10,10 @@
 	
 	<h1>Trig functions play the Trumpet B<span>&#9837;</span> Scale</h1>
 	<div id="TrumpetMusicalScale">
+		<!-- use the following to put a debug border around canvas: style="border:1px solid #000000;"  -->
+		<canvas id="ClefWithNotes" width=1000 height=250>
+			Your Browser does not support canvas tag, you are missing graph capability
+		</canvas>
 		<img id="colorfulClef" src="{% static 'images/Prismatic-Clef-Hearts-2.svg' %}" alt = "Clef to left of musical notes">
 		<img class="wholeNote" id="wholeNote1" src="{% static 'images/WholeNote.svg' %}" alt = "Low C whole note on Trumpet scale">
 		<img class="wholeNote" id="wholeNote2" src="{% static 'images/WholeNote.svg' %}" alt = "D whole note on Trumpet scale">
@@ -19,22 +23,29 @@
 		<img class="wholeNote" id="wholeNote6" src="{% static 'images/WholeNote.svg' %}" alt = "A whole note on Trumpet scale">
 		<img class="wholeNote" id="wholeNote7" src="{% static 'images/WholeNote.svg' %}" alt = "B whole note on Trumpet scale">
 		<img class="wholeNote" id="wholeNote8" src="{% static 'images/WholeNote.svg' %}" alt = "C whole note on Trumpet scale">
-		<p id="LowCNote">C</p>
-		<p id="DNote">D</p>
-		<p id="ENote">E</p>
-		<p id="FNote">F</p>
-		<p id="GNote">G</p>
-		<p id="ANote">A</p>
-		<p id="BNote">B</p>
-		<p id="CNote">C</p>
+		<p class="letterToNote" id="LowCNote">C</p>
+		<p class="letterToNote" id="DNote">D</p>
+		<p class="letterToNote" id="ENote">E</p>
+		<p class="letterToNote" id="FNote">F</p>
+		<p class="letterToNote" id="GNote">G</p>
+		<p class="letterToNote" id="ANote">A</p>
+		<p class="letterToNote" id="BNote">B</p>
+		<p class="letterToNote" id="CNote">C</p>
 		<!-- The canvas will be used to draw lines for notes, the clef, notes and text will drop on canvas -->
-		<canvas id="ClefWithNotes" width=600 height=550>
-			Your Browser does not support canvas tag, you are missing graph capability
-		</canvas>
 	</div>
 		
 
 	<br>
 	<br>	
+	
+	<!--  have to put another jquery library ref here, not sure why, its in the base -->	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script>
+		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
+	</script>
+	
+	<!-- Custom JS for this page -->
+	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	    
+	<script src="{% static 'js/MusicSineIntro.js' %}" crossorigin="anonymous"></script>	
 
 {% endblock %}
