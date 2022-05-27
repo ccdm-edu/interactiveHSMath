@@ -10,9 +10,12 @@
 	
 	<h1>Trig functions play the Trumpet B<span>&#9837;</span> Scale</h1>
 	<div id="TrumpetMusicalScale">
+		<!-- Two canvases that sit on top of each other, one is to measure clicks and other is to fill in notes with color when selected -->	
 		<!-- use the following to put a debug border around canvas: style="border:1px solid #000000;"  -->
 		<canvas id="ClefWithNotes" width=1000 height=250>
 			Your Browser does not support canvas tag, you are missing graph capability
+		</canvas>
+		<canvas id="NotesFilledIn" width=1000 height=250>
 		</canvas>
 		<img id="colorfulClef" src="{% static 'images/Prismatic-Clef-Hearts-2.svg' %}" alt = "Clef to left of musical notes">
 		<img class="wholeNote" id="wholeNote1" src="{% static 'images/WholeNote.svg' %}" alt = "Low C whole note on Trumpet scale">
@@ -32,6 +35,15 @@
 		<p class="letterToNote" id="BNote">B</p>
 		<p class="letterToNote" id="CNote">C</p>
 		<!-- The canvas will be used to draw lines for notes, the clef, notes and text will drop on canvas -->
+	</div>
+	<div id="SinusoidGraph">
+		<label id = "noteSelect">Note Played: </label>
+		<p id="noteSelectVal"> </p>
+		<label id = "FreqOfNote">Frequency (Hz):  </label>
+		<p id="FreqOfNoteVal"> </p>
+		<label id = "noteVolLabel">Volume (0 is mute):  </label>
+		<input id="noteVol" type="range" step="1" value="5" min="0" max="10" data-toggle="tooltip" data-placement="left" title="Volume of note played, zero is mute">
+		<label id = "EqtnOfNote">This will be the equation of note filled in by JS</label>
 	</div>
 		
 
