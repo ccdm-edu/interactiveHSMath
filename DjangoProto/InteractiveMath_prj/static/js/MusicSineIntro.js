@@ -36,6 +36,7 @@ $(function() {
 	ctxMusicCanvas.stroke();
 	ctxMusicCanvas.closePath();	
 	
+	// fill in the note when user selects it and set up freq/equation
 	var root = document.querySelector(':root');
 	var rootStyles = getComputedStyle(root);
 	// go to CSS, pull out scales values and pull off px suffix and convert to numbers
@@ -45,7 +46,6 @@ $(function() {
 	const SCALES_DELTA_X = parseInt(rootStyles.getPropertyValue('--DELTA_X').replace('px',''));
 	const SCALES_IMAGE_X_OFFSET = 5;  // location of image is about this much off of center of note in x in pixels
 	const SCALES_IMAGE_Y_OFFSET = 15; // location of image is about this much off of center of note in y in pixels
-	console.log(" 4 extracted constants are: " + SCALES_HIGHEST_Y + " , " + SCALES_LOWEST_X + " , " + SCALES_DELTA_Y + " , " + SCALES_DELTA_X);
 
 	// frequencies (freqHz) based on http://www.bitbrothers.com/~pbrown/Musical_Instruments/Trumpet/Trumpet_Tuning_Chart.pdf
 	const trumpetNotes = [
@@ -123,6 +123,9 @@ $(function() {
 		},
 		
 	];
+	// set up for outputing a tone of proper freq
+	let osc = new Tone.Oscillator(); 
+	
 	// NOW we have the background image done.  As users click on a point and new stuff happens, we always come back to 
 	// this point, so we save it to go back to it when we want to start over
 	let bkgdPlotNotes = ctxBkgdMusicCanvas.getImageData(0, 0, bkgdMusicCanvas.width, bkgdMusicCanvas.height);
@@ -142,8 +145,6 @@ $(function() {
 		Object.freeze(pos);
 		let cntr = 0;
 		
-		console.log('pos is (' + pos.x + ' , ' + pos.y + ')');
-
 		trumpetNotes.forEach(note => {
 			// not sure yet which dot the user clicked on, must search all
 			console.log('note is at (' + note.x + ' , ' + note.y + ') ');
@@ -161,7 +162,39 @@ $(function() {
 				// put up the freq info and equation and play note
 				$("#noteSelectVal").text(note.notePlayed);
 				$("#FreqOfNoteVal").text(note.freqHz + " Hz");
+				osc.toDestination().stop(); // turn off existing tone
+				if ('0' != $currVolume.val()) {
+					osc = new Tone.Oscillator({
+						frequency: note.freqHz, 
+						volume: tonejs_dB,
+						phase: 0,
+						type:"sine"});
+					osc.toDestination().start();
+				}
+
+					
+				$("#EqtnOfNote").text("y = sin(2 " + MULT_DOT + " " + PI + " " + MULT_DOT + " " + note.freqHz + " " + MULT_DOT + " t)");
 			}
 		});
+	});	
+	//***********************************
+	// this code is used as user adjusts volume, start out with default values
+	//***********************************
+	let $currVolume = $("#noteVol");
+	$("#noteVolValue").text($currVolume.val());
+	let tonejs_dB = -40 + 20.0 * Math.log10($currVolume.val());
+
+	// allow for user changes
+	$('#noteVol').on('input', function(){
+		$currVolume = $("#noteVol")
+		if ('0' === $currVolume.val()) {
+			$("#noteVolValue").text("Mute");
+			osc.toDestination().stop();
+		}
+		else {
+			$("#noteVolValue").text($currVolume.val());
+			tonejs_dB = -40 + 20.0 * Math.log10($currVolume.val());
+			osc.volume.value = tonejs_dB;
+		}
 	});
 })

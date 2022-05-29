@@ -42,6 +42,7 @@
 		<label id = "FreqOfNote">Frequency (Hz):  </label>
 		<p id="FreqOfNoteVal"> </p>
 		<label id = "noteVolLabel">Volume (0 is mute):  </label>
+		<p id = "noteVolValue"></p>
 		<input id="noteVol" type="range" step="1" value="5" min="0" max="10" data-toggle="tooltip" data-placement="left" title="Volume of note played, zero is mute">
 		<label id = "EqtnOfNote">This will be the equation of note filled in by JS</label>
 	</div>
@@ -56,6 +57,8 @@
 		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
 	</script>
 	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.73/Tone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 	<!-- Custom JS for this page -->
 	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	    
 	<script src="{% static 'js/MusicSineIntro.js' %}" crossorigin="anonymous"></script>	

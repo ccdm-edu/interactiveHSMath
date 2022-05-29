@@ -162,6 +162,12 @@ h1{
 	font-size: 15px;
 	font-weight: bold;	
 }
+#noteVolValue{
+	position: absolute;
+	left: 500px;
+	top: 0px;
+	font-size: 15px;	
+}
 #EqtnOfNote{
 	position: absolute;
 	left: 50px;
