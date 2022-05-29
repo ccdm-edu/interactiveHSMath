@@ -122,6 +122,11 @@ h1{
 	top: 330px;
 	width: 500px;
 }
+#PitchGraph{
+	position: absolute;
+	left: 0px;
+	top: 80px;
+}
 #noteSelect{
 	position: absolute;
 	left: 0px;
@@ -171,6 +176,6 @@ h1{
 #EqtnOfNote{
 	position: absolute;
 	left: 50px;
-	top: 100px;
+	top: 50px;
 	font-size: 15px;
 }

@@ -43,10 +43,13 @@
 		<p id="FreqOfNoteVal"> </p>
 		<label id = "noteVolLabel">Volume (0 is mute):  </label>
 		<p id = "noteVolValue"></p>
-		<input id="noteVol" type="range" step="1" value="5" min="0" max="10" data-toggle="tooltip" data-placement="left" title="Volume of note played, zero is mute">
-		<label id = "EqtnOfNote">This will be the equation of note filled in by JS</label>
+		<input id="noteVol" type="range" step="1" value="5" min="0" max="10" data-toggle="tooltip" data-placement="left" title="Turn on your speaker">
+		<label id = "EqtnOfNote"></label>
+		<!-- For debug to see where this canvas is, can add border around it with:  style="border:1px solid #000000;" -->
+		<canvas id="PitchGraph" width=500 height=200 style="border:1px solid #000000;">
+			Your Browser does not support canvas tag, you are missing graph capability
+		</canvas>
 	</div>
-		
 
 	<br>
 	<br>	

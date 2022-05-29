@@ -105,14 +105,6 @@ $(function() {
 	    sine_plot_1k_10k.update();  
 	};
 	
-	//want to round but leave value as number, not string, so toFixed() is out. 
-	//If x axis is a number, chart js will figure out grid lines/step size as needed
-	function roundFP(number, prec) {
-	    let tempnumber = number * Math.pow(10, prec);
-	    tempnumber = Math.round(tempnumber);
-	    return tempnumber / Math.pow(10, prec);
-	};
-	
 	function updateFreq() {
 		//min and max freq chosen depends on audio speakers used, my speakers can just barely respond at 100 Hz
 		$currFreq= $("#in-range-freq")   // get slider value
