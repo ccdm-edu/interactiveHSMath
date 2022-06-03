@@ -119,8 +119,8 @@ h1{
 ************************************************************/
 #SinusoidGraph{
 	position: relative;
-	top: 330px;
-	width: 500px;
+	top: 300px;
+	width: 650px;
 }
 #PitchGraph{
 	position: absolute;
@@ -155,27 +155,44 @@ h1{
 }
 #noteVolLabel{
 	position: absolute;
-	left: 350px;
+	left: 500px;
 	top: 0px;
 	font-size: 15px;
 	font-weight: bold;	
 }
 #noteVol{
 	position: absolute;
-	left: 350px;
+	left: 500px;
 	top: 30px;
 	font-size: 15px;
 	font-weight: bold;	
 }
 #noteVolValue{
 	position: absolute;
-	left: 500px;
+	left: 650px;
 	top: 0px;
 	font-size: 15px;	
 }
-#EqtnOfNote{
+#notesToPlayLabel{
 	position: absolute;
-	left: 50px;
-	top: 50px;
+	left: 150px;
+	top: 30px;
 	font-size: 15px;
+	font-weight: bold;
+}
+#notesToPlay{
+	position: absolute;
+	left: 200px;
+	top: 30px;
+	font-size: 12px;
+	width: 280px;
+	height: 20px;
+	border-width: 1px;
+	border-style: solid;
+}
+#dropdownMenuSong{
+	position: absolute;
+	left: 0px;
+	top: 30px;
+	font-size: 15px;	
 }

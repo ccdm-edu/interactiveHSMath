@@ -48,11 +48,12 @@ $(function() {
 	const SCALES_IMAGE_Y_OFFSET = 15; // location of image is about this much off of center of note in y in pixels
 
 	// frequencies (freqHz) based on http://www.bitbrothers.com/~pbrown/Musical_Instruments/Trumpet/Trumpet_Tuning_Chart.pdf
+	// notes and info from http://openmusictheory.com/pitches.html and https://bbtrumpet.com/blogs/Theory/naming-the-cs
 	const trumpetNotes = [
 		{
 			// lowest C
-			notePlayed: "C3",
-			freqHz: 311.13,
+			notePlayed: "C4",
+			freqHz: 233.08,
 			// position of center
 			x: SCALES_LOWEST_X + SCALES_IMAGE_X_OFFSET,
 			y: SCALES_HIGHEST_Y + SCALES_IMAGE_Y_OFFSET,
@@ -60,8 +61,8 @@ $(function() {
 		},
 		{
 			// D
-			notePlayed: "D3",
-			freqHz: 329.63,
+			notePlayed: "D4",
+			freqHz: 261.83,
 			// position of center
 			x: SCALES_LOWEST_X + SCALES_DELTA_X + SCALES_IMAGE_X_OFFSET,
 			y: SCALES_HIGHEST_Y - SCALES_DELTA_Y + SCALES_IMAGE_Y_OFFSET,
@@ -69,8 +70,8 @@ $(function() {
 		},
 		{
 			// E
-			notePlayed: "E3",
-			freqHz: 349.23,
+			notePlayed: "E4",
+			freqHz: 293.67,
 			// position of center
 			x: SCALES_LOWEST_X + 2 * SCALES_DELTA_X + SCALES_IMAGE_X_OFFSET,
 			y: SCALES_HIGHEST_Y - 2 * SCALES_DELTA_Y + SCALES_IMAGE_Y_OFFSET,
@@ -78,8 +79,8 @@ $(function() {
 		},
 		{
 			// F
-			notePlayed: "F3",
-			freqHz: 369.99,
+			notePlayed: "F4",
+			freqHz: 311.13,
 			// position of center
 			x: SCALES_LOWEST_X + 3 * SCALES_DELTA_X + SCALES_IMAGE_X_OFFSET,
 			y: SCALES_HIGHEST_Y - 3 * SCALES_DELTA_Y + SCALES_IMAGE_Y_OFFSET,
@@ -87,8 +88,8 @@ $(function() {
 		},
 		{
 			// G
-			notePlayed: "G3",
-			freqHz: 392.0,
+			notePlayed: "G4",
+			freqHz: 349.23,
 			// position of center
 			x: SCALES_LOWEST_X + 4 * SCALES_DELTA_X + SCALES_IMAGE_X_OFFSET,
 			y: SCALES_HIGHEST_Y - 4 * SCALES_DELTA_Y + SCALES_IMAGE_Y_OFFSET,
@@ -96,8 +97,8 @@ $(function() {
 		},
 		{
 			// A
-			notePlayed: "A3",
-			freqHz: 415.3,
+			notePlayed: "A4",
+			freqHz: 392.0,
 			// position of center
 			x: SCALES_LOWEST_X + 5 * SCALES_DELTA_X + SCALES_IMAGE_X_OFFSET,
 			y: SCALES_HIGHEST_Y - 5 * SCALES_DELTA_Y + SCALES_IMAGE_Y_OFFSET,
@@ -105,7 +106,7 @@ $(function() {
 		},
 		{
 			// B
-			notePlayed: "B3",
+			notePlayed: "B4",
 			freqHz: 440.0,
 			// position of center
 			x: SCALES_LOWEST_X + 6 * SCALES_DELTA_X + SCALES_IMAGE_X_OFFSET,
@@ -114,7 +115,7 @@ $(function() {
 		},
 		{
 			// C
-			notePlayed: "C4",
+			notePlayed: "C5",
 			freqHz: 466.16,
 			// position of center
 			x: SCALES_LOWEST_X + 7 * SCALES_DELTA_X + SCALES_IMAGE_X_OFFSET,
@@ -166,13 +167,14 @@ $(function() {
 				
 	    // update title to match new parameters
 	    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
-	    sine_plot_100_1k.options.title.text = "y = sin(2 " + MULT_DOT + " " + PI + " " + MULT_DOT + " " + selectedNote.freqHz + " " + MULT_DOT + " t)";
+	    sine_plot_100_1k.options.title.text = "y = sin(2 " + " * " + PI +  " * " + selectedNote.freqHz + " * " + " t)";
 	    
 		// now fill the arrays and push them to the plots
 		fillInArrays();   
 		// update 10 ms plot
-		sine_plot_100_1k.data.datasets[0].data.push(ampLong);	 
-
+		sine_plot_100_1k.data.datasets[0].data.push(ampLong);	
+		sine_plot_100_1k.data.datasets[0].borderColor = selectedNote.noteColor;
+		
 	    // make all these changes happen
 	    sine_plot_100_1k.update();	                    
 	};
@@ -186,7 +188,7 @@ $(function() {
 	}
 	//if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
 	const CHART_OPTIONS = {
-		maintainAspectRatio: false,  //uses the size it is given
+//		maintainAspectRatio: false,  //uses the size it is given.  For some reason, this doesn't work here
 		responsive: true,
 	    legend: {
 	        display: false // gets rid of dataset label/legend
@@ -213,7 +215,6 @@ $(function() {
 			}]
 		}
 	};
-	Object.freeze(CHART_OPTIONS);
 	let currTitle = {display: true, text: ''};
 	
 	const TOP_CHART = {...CHART_OPTIONS, title: currTitle };
@@ -226,7 +227,7 @@ $(function() {
 	            label: 'Tone Graph',
 	            data: ampLong,
 	            fill: false,
-	            borderColor: 'rgb(75, 192, 192)',
+	            borderColor: 'gold',
 	            }]
 	    },
 	    options: TOP_CHART
@@ -272,7 +273,6 @@ $(function() {
 				}	
 				selectedNote = note;
 				drawTone();
-				$("#EqtnOfNote").text("y = sin(2 " + MULT_DOT + " " + PI + " " + MULT_DOT + " " + note.freqHz + " " + MULT_DOT + " t)");
 			}
 		});
 	});	
@@ -298,5 +298,23 @@ $(function() {
 			osc.toDestination().start();
 			osc.volume.value = tonejs_dB;
 		}
+	});
+	//***********************************
+	// user selects a song and code puts up notes to hit on staff
+	//***********************************	
+	$( "#Song1" ).click(function() {
+  		//Twinkle Twinkle little star, how I wonder where you are
+  		$('#notesToPlay').text("C4,C4,G4,G4,A4,A4,G4,F4,F4,E4,E4,D4,D4,C4");
+  		$('#notesToPlay').height('20px');
+	});
+	$( "#Song2" ).click(function() {
+  		//Happy Birthday to you, Happy Birthday to you, Happy birthday dear 
+  		$('#notesToPlay').text("C4,C4,D4,C4,F4,E4, C4,C4,D4,C4,G4,F4, C4,C4,C5,A4,F4,E4,D4");
+  		$('#notesToPlay').height('40px');
+	});
+	$( "#Song3" ).click(function() {
+  		//Jingle Bells Jingle Bells, Jingle all the way
+  		$('#notesToPlay').text("E4,E4,E4,E4,E4,E4,E4,G4,C4,D4,E4");
+  		$('#notesToPlay').height('20px');
 	});
 })
