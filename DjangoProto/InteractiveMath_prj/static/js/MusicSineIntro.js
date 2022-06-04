@@ -124,6 +124,16 @@ $(function() {
 		},
 		
 	];
+	// Add text on the staff for the proper note		
+	$('#LowCNote').text(trumpetNotes[0].notePlayed);
+	$('#DNote').text(trumpetNotes[1].notePlayed);
+	$('#ENote').text(trumpetNotes[2].notePlayed);
+	$('#FNote').text(trumpetNotes[3].notePlayed);
+	$('#GNote').text(trumpetNotes[4].notePlayed);
+	$('#ANote').text(trumpetNotes[5].notePlayed);
+	$('#BNote').text(trumpetNotes[6].notePlayed);
+	$('#CNote').text(trumpetNotes[7].notePlayed);
+	
 	// set up for outputing a tone of proper freq
 	let osc = new Tone.Oscillator(); 
 	// all tones have the following in common
@@ -304,17 +314,23 @@ $(function() {
 	//***********************************	
 	$( "#Song1" ).click(function() {
   		//Twinkle Twinkle little star, how I wonder where you are
-  		$('#notesToPlay').text("C4,C4,G4,G4,A4,A4,G4,F4,F4,E4,E4,D4,D4,C4");
+  		$('#notesToPlay').text("C4,C4,G4,G4,A4,A4,G4 - F4,F4,E4,E4,D4,D4,C4");
   		$('#notesToPlay').height('20px');
+  		$('#notesToPlay').show();
+  		$('#notesToPlayLabel').text("Notes For Twinkle Twinkle tune:");
 	});
 	$( "#Song2" ).click(function() {
   		//Happy Birthday to you, Happy Birthday to you, Happy birthday dear 
-  		$('#notesToPlay').text("C4,C4,D4,C4,F4,E4, C4,C4,D4,C4,G4,F4, C4,C4,C5,A4,F4,E4,D4");
+  		$('#notesToPlay').text("C4,C4,D4,C4,F4,E4 - C4,C4,D4,C4,G4,F4 - C4,C4,C5,A4,F4,E4,D4");
   		$('#notesToPlay').height('40px');
+  		$('#notesToPlay').show();
+  		$('#notesToPlayLabel').text("Notes For Happy Birthday tune:");
 	});
 	$( "#Song3" ).click(function() {
   		//Jingle Bells Jingle Bells, Jingle all the way
   		$('#notesToPlay').text("E4,E4,E4,E4,E4,E4,E4,G4,C4,D4,E4");
   		$('#notesToPlay').height('20px');
+  		$('#notesToPlay').show();
+  		$('#notesToPlayLabel').text("Notes For Jingle Bells tune:");
 	});
 })

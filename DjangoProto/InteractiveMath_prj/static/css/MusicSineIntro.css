@@ -15,15 +15,48 @@ h1{
 }
 #TrumpetMusicalScale{
 	position: relative;
-	top: 50px;
+	top: 20px;
 	width: auto;
 }
+/* Initial instructions for user with animation */
+#initialInstrMusicTrigIntro{
+	position: absolute;
+	top: 50px;
+	left: 10px;
+	background-color: gold;
+	width: 160px;
+	height: 160px;
+	border: 5px solid orange;
+	border-radius: 50%;
+	padding: 30px;
+	margin: 20px;
+	text-align: center;
+	font-size: 15px;
+	font-weight: bold;
+	z-index: 15;  /* want this behind clef, in front of music */
+	/* animate this so it moves, hovers then moves on out */
+	animation-name: initMusicTrigInstr;
+	animation-duration: 6s;
+	/* start out with nothing then draw attention to it*/
+	animation-delay: 1s;
+	visibility: hidden;
+}
+/*instructions come from behind staff, sit in middle for a few sec, then flow off page */
+@keyframes initMusicTrigInstr {
+	0%		{left: 0px; top: -30px; visibility: visible;}
+	15%		{left: 300px; top: -30px;}
+	/* here we hold for awhile */
+	80%     {left: 300px; top: -30px;}
+	100%	{left: 1200px; top: -30px; visibility: hidden;} /* go off page and die */
+}
+
 #colorfulClef{
 	position: absolute;
 	top: -25px;
 	left: 0px;
 	height: 270px;
 	width: 200px;
+	z-index: 20;  /*want this in front*/
 }
 /* z index set so user clicking on whole notes sees the ClefWithNotes canvas xy axis of location */
 #ClefWithNotes{
@@ -119,7 +152,7 @@ h1{
 ************************************************************/
 #SinusoidGraph{
 	position: relative;
-	top: 300px;
+	top: 270px;
 	width: 650px;
 }
 #PitchGraph{
@@ -182,17 +215,35 @@ h1{
 }
 #notesToPlay{
 	position: absolute;
-	left: 200px;
-	top: 30px;
+	left: 150px;
+	top: 50px;
 	font-size: 12px;
-	width: 280px;
+	width: 300px;
 	height: 20px;
 	border-width: 1px;
 	border-style: solid;
+	display: none;
 }
+/* Make the tune selector button cycle through pretty colors */
 #dropdownMenuSong{
 	position: absolute;
 	left: 0px;
-	top: 30px;
-	font-size: 15px;	
+	top: 40px;
+	font-size: 15px;
+	font-weight: bold;
+	color: black;
+	background-color: red;
+	animation-name: tuneButtonLive;
+	animation-duration: 4s;
+	animation-iteration-count: infinite;
+}
+@keyframes tuneButtonLive {
+	0%		{background-color: red;}
+	15%		{background-color: orange;}
+	30% 	{background-color: gold;}
+	45%		{background-color: chartreuse;}
+	60%		{background-color: cyan;}
+	75%		{background-color: dodgerblue;}
+	90%		{background-color: mediumorchid;}
+	100%	{background-color: red;}
 }

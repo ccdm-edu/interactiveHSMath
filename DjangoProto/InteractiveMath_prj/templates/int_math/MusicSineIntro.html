@@ -6,8 +6,7 @@
 	{{ page_tab_header }}
 {% endblock %}
     
-{% block body_block %}
-	
+{% block body_block %}	
 	<h1>Trig functions play the Trumpet B<span>&#9837;</span> Scale</h1>
 	<div id="TrumpetMusicalScale">
 		<!-- Two canvases that sit on top of each other, one is to measure clicks and other is to fill in notes with color when selected -->	
@@ -26,16 +25,22 @@
 		<img class="wholeNote" id="wholeNote6" src="{% static 'images/WholeNote.svg' %}" alt = "A whole note on Trumpet scale">
 		<img class="wholeNote" id="wholeNote7" src="{% static 'images/WholeNote.svg' %}" alt = "B whole note on Trumpet scale">
 		<img class="wholeNote" id="wholeNote8" src="{% static 'images/WholeNote.svg' %}" alt = "C whole note on Trumpet scale">
-		<p class="letterToNote" id="LowCNote">C</p>
-		<p class="letterToNote" id="DNote">D</p>
-		<p class="letterToNote" id="ENote">E</p>
-		<p class="letterToNote" id="FNote">F</p>
-		<p class="letterToNote" id="GNote">G</p>
-		<p class="letterToNote" id="ANote">A</p>
-		<p class="letterToNote" id="BNote">B</p>
-		<p class="letterToNote" id="CNote">C</p>
+		<p class="letterToNote" id="LowCNote"></p>
+		<p class="letterToNote" id="DNote"></p>
+		<p class="letterToNote" id="ENote"></p>
+		<p class="letterToNote" id="FNote"></p>
+		<p class="letterToNote" id="GNote"></p>
+		<p class="letterToNote" id="ANote"></p>
+		<p class="letterToNote" id="BNote"></p>
+		<p class="letterToNote" id="CNote"></p>
 		<!-- The canvas will be used to draw lines for notes, the clef, notes and text will drop on canvas -->
+		<!-- Initial instructions will come in from left, stif for a few sec and go off to right -->
+		<ol id = "initialInstrMusicTrigIntro">
+			<li>Turn ON your speaker</li>
+	  		<li>Click some notes</li>
+		</ol>
 	</div>
+	
 	<div id="SinusoidGraph">
 		<label id = "noteSelect">Note Played: </label>
 		<p id="noteSelectVal"> </p>
@@ -45,7 +50,7 @@
 		<p id = "noteVolValue"></p>
 		<input id="noteVol" type="range" step="1" value="5" min="0" max="10" data-toggle="tooltip" data-placement="right" title="Turn on your speaker">
 		<!-- For debug to see where this canvas is, can add border around it with:  style="border:1px solid #000000;" -->
-		<p id = "notesToPlayLabel" data-toggle="tooltip" data-placement="right" title="Play these notes in order">Notes:</p>
+		<p id = "notesToPlayLabel" data-toggle="tooltip" data-placement="right" title="Play these notes in order"></p>
 		<p id = "notesToPlay" ></p>
 		<div class="dropdown">
 			<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuSong" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -64,6 +69,7 @@
 
 	<br>
 	<br>	
+
 	
 	<!--  have to put another jquery library ref here, not sure why, its in the base -->	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
