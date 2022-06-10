@@ -506,7 +506,6 @@ $(function() {
     //***********************************
 	//initialize text TO DO and explanation sections of this page
 	//***********************************	
-    //*** turn off text until user needs it
     $('#TryThis_help_DT1').css("visibility", "hidden");  
     let dynamicTrig1ToDo_text = $("#TryThis_help_DT1").text();
     $("#LongTextBox_DT1").text(dynamicTrig1ToDo_text);

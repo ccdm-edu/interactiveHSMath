@@ -285,6 +285,8 @@ $(function() {
 				drawTone();
 			}
 		});
+		// Now that user is getting into page, put up the audio intro "click me" verbiage */
+		$("#verbalIntro").css('visibility', 'visible');
 	});	
 	//***********************************
 	// user adjusts volume, start out with default values
@@ -332,5 +334,91 @@ $(function() {
   		$('#notesToPlay').height('20px');
   		$('#notesToPlay').show();
   		$('#notesToPlayLabel').text("Notes For Jingle Bells tune:");
+	});
+	//***********************************
+	// User clicks on either image or the words around the image to get the verbal intro
+	//***********************************	
+	function playVerbalIntro() {
+		// turn off whatever note is already playing 
+		osc.toDestination().stop();
+		let context;
+		let helpAudio;
+		// Safari has implemented AudioContext as webkitAudioContext so need next LOC
+		window.AudioContext = window.AudioContext || window.webkitAudioContext;
+		context = new AudioContext();			
+
+		// get musical note for first time, server knows the filename in its code
+		// I don't think we need a csrf token for this ajax post.  1.  there is already a session ID required for this
+		// request 2.  Nothing is stored to database, request must be a code for filename we have or else get error back
+		// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
+	    $.ajax({url:  '../audio_help/',
+	    		type: 'GET',
+	    	  	data:  {help: "sineMusicIntro"},
+	    	  	// if all is ok, return a blob, which we will convert to arrayBuffer, else return text cuz its an error
+	    	  	xhr: function () {
+        			let xhr = new XMLHttpRequest();
+        			xhr.onreadystatechange = function () {
+                		if (xhr.readyState == 2) {
+                			// send() was called and headers and status are returned
+                    		if (xhr.status == 200) {
+                        		xhr.responseType = "blob";
+                    		} else {
+                        		xhr.responseType = "text";
+                    		}
+                		}
+        			};
+        			return xhr;
+    			},
+			})
+			.done(function(data, statusText, jqXHR) {
+				// DO, rewrite this with promise syntax  https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/decodeAudioData
+				// By definition, to get here means request is done and successful, (status = 4 and 200)
+				let blobTune = new Blob([data], { 'type': 'audio/mpeg' });  // this must match what we send over
+				console.log('file size is ' + blobTune.size + ' type is ' + blobTune.type);				
+		
+				blobTune.arrayBuffer().then(blob2array => 
+					{ // done converting blob to arrayBuffer, promise complete, convert blob2array to buffer
+					context.decodeAudioData(blob2array, function(buffer) {
+						// to get here means asynchronous mp3 decode is complete and successful
+						console.log("finished decoding mp3");
+						try {
+							console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate );
+							helpAudio = context.createBufferSource();
+							helpAudio.buffer = context.createBuffer(1, buffer.length , buffer.sampleRate);
+							helpAudio.connect(context.destination);
+							// auto play the recording
+							helpAudio.start(0);
+						} catch(e) {
+							// most likely not enough space to createBuffer
+							console.error(e);
+							alert("Failed note file setup, error is " + e);
+						}
+																									
+						// decodeAudioData is async and doesn't support promises, can't use try/catch for errors
+						},function(err) { alert("err(decodeAudioData) on file for: Audio help for music trig intro" + " error =" + err); } )
+					}, reason => {
+						console.error("conversion of blob to arraybuffer failed");
+				});
+
+			})  // done with success (done) function
+			.fail(function(jqXHR, exception) {
+					if (jqXHR.status == 403) {
+						alert("Need to pass bot test to access server file.  No file for YOU!");  
+					} else if (jqXHR.status == 404) {
+						alert("File not found.  See Administrator");
+					} else {
+						alert("ERROR:  return status is " + jqXHR.status );
+						console.error(jqXHR)
+					}
+			});   // done with ajax
+		// when talk is done, turn back on whatever the user was doing
+		osc.toDestination().start();
+    };	
+    
+	$("#staticTrumpeter").click(function() {
+		playVerbalIntro();
+	});
+	$("#verbalIntro").click(function() {
+		playVerbalIntro();
 	});
 })

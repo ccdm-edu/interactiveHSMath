@@ -441,15 +441,24 @@ $(function() {
 	//*********************************************************
 	// Setup the user buttons
 	//*********************************************************
+	
+	//Set up words for the TO DO and Explanation boxes as user chooses
+	//***********************************	
+    $('#TryThis_help_ST').css("visibility", "hidden");  
+    let staticTrigToDo_text = $("#TryThis_help_ST").text();
+    $("#LongTextBox_ST").text(staticTrigToDo_text);
+    $("#Explain_help_ST").css("visibility", "hidden");
+    let staticTrigExpln_text = $("#Explain_help_ST").text();
+
 	// User can choose a TO DO set for the text box or an explanation, this code is the implementation
 	$('#ToDo_or_expln_ST').on('click', function(event){
 		if ("Explain" == $("#ToDo_or_expln_ST").prop("value")) {
 			// currently showing the Try This text.  Move into explanation text
-			$("#LongTextBox_ST").text(staticTrigExpln);
+			$("#LongTextBox_ST").text(staticTrigExpln_text);
 			$("#ToDo_or_expln_ST").prop("value", "Try This");
 		} else {
 			// currently showing the Explanation text, move into TO DO  text
-			$("#LongTextBox_ST").text(staticTrigToDo);
+			$("#LongTextBox_ST").text(staticTrigToDo_text);
 			$("#ToDo_or_expln_ST").prop("value", "Explain");
 		}
     });
@@ -686,26 +695,7 @@ $(function() {
 		    cntr = cntr + 1;
 		});
 	});
-	
-	//***********************************
-	//initialize data fields for this page using config json file
-	//***********************************	
-	$.getJSON(urlInitValJson)
-		.done(function(data,status,xhr) {
-			//xhr has good stuff like status, responseJSON, statusText, progress
-			if (status === 'success') {				
-				staticTrigToDo = data.todo;
-				staticTrigExpln = data.expln;
-				$("#LongTextBox_ST").text(staticTrigToDo);
-				$("#ToDo_or_expln_ST").prop("value", "Explain");
-			}
-			else {
-				console.log("config json file request returned with status = " + status);
-			}
-		})
-		.fail(function(data, status, error) {
-			console.log("Error in JSON file " + status + error);
-			alert("Error in JSON file " + status + error);
-		})
+
+
 
 })
