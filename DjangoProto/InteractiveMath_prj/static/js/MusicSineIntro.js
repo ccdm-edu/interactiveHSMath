@@ -339,8 +339,12 @@ $(function() {
 	// User clicks on either image or the words around the image to get the verbal intro
 	//***********************************	
 	function playVerbalIntro() {
-		// turn off whatever note is already playing 
+		// turn off whatever note is already playing  and set up staff to initial state
 		osc.toDestination().stop();
+		ctxBkgdMusicCanvas.putImageData(bkgdPlotNotes, 0, 0);
+		$("#noteSelectVal").text("");
+		$("#FreqOfNoteVal").text("");
+				
 		let context;
 		let helpAudio;
 		// Safari has implemented AudioContext as webkitAudioContext so need next LOC
@@ -351,9 +355,8 @@ $(function() {
 		// I don't think we need a csrf token for this ajax post.  1.  there is already a session ID required for this
 		// request 2.  Nothing is stored to database, request must be a code for filename we have or else get error back
 		// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
-	    $.ajax({url:  '../audio_help/',
+	    $.ajax({url:  '../../static/AudioExpln/SineMusicIntro.MP3',
 	    		type: 'GET',
-	    	  	data:  {help: "sineMusicIntro"},
 	    	  	// if all is ok, return a blob, which we will convert to arrayBuffer, else return text cuz its an error
 	    	  	xhr: function () {
         			let xhr = new XMLHttpRequest();
@@ -384,7 +387,7 @@ $(function() {
 						try {
 							console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate );
 							helpAudio = context.createBufferSource();
-							helpAudio.buffer = context.createBuffer(1, buffer.length , buffer.sampleRate);
+							helpAudio.buffer = buffer;
 							helpAudio.connect(context.destination);
 							// auto play the recording
 							helpAudio.start(0);
@@ -411,8 +414,7 @@ $(function() {
 						console.error(jqXHR)
 					}
 			});   // done with ajax
-		// when talk is done, turn back on whatever the user was doing
-		osc.toDestination().start();
+		// leave things as they were when user first started, all is in beginning state
     };	
     
 	$("#staticTrumpeter").click(function() {

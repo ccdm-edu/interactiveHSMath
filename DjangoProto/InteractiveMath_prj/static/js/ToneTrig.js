@@ -393,8 +393,10 @@ $(function() {
 	// source reference
 	let sourceNote;
 	let context;
-			
+	
+	//****************************************************************	
 	// if user selects a musical note, and then clicks "play note" need to play it
+	//****************************************************************
 	$('#allowNotePlay').on('click', function(event){
 		if (typeof noteIsOnNow == "undefined")  {
 			// First time in, 

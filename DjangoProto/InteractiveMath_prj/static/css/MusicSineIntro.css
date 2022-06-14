@@ -10,12 +10,15 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	--OFF_TO_SIDE_X: 40px;
 	--OFF_TO_SIDE_Y: 10px;
 }
-h1{
+h1, h2{
 	text-align: center;
+}
+h2{
+	font-size: 20px;
 }
 #TrumpetMusicalScale{
 	position: relative;
-	top: 20px;
+	top: 0px;
 	width: auto;
 }
 /* Initial instructions for user with animation */
@@ -158,7 +161,7 @@ h1{
 #PitchGraph{
 	position: absolute;
 	left: 0px;
-	top: 80px;
+	top: 70px;
 }
 #noteSelect{
 	position: absolute;
@@ -248,7 +251,9 @@ h1{
 	90%		{background-color: mediumorchid;}
 	100%	{background-color: red;}
 }
+/*******************************************************/
 /* image indicator that will start an audio introduction of this math section */
+/*******************************************************/
 #staticTrumpeter{
 	position: absolute;
 	top: -100px;

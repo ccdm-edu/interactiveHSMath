@@ -19,7 +19,8 @@ from django.conf.global_settings import SECURE_SSL_REDIRECT, SECURE_HSTS_SECONDS
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 STATIC_DIR = os.path.join(BASE_DIR,"static")
 STATIC_MUSIC_DIR = os.path.join(STATIC_DIR, 'MusicNotes')
-STATICFILES_DIRS = [STATIC_DIR, STATIC_MUSIC_DIR,]
+STATIC_AUDIO_HELP_DIR = os.path.join(STATIC_DIR, 'AudioExpln')
+STATICFILES_DIRS = [STATIC_DIR, STATIC_MUSIC_DIR,STATIC_AUDIO_HELP_DIR]
 
 RECAPTCHA_SECRET_KEY = os.environ.get('G_RECAPTCHA_V3_SECRET_KEY')
 
