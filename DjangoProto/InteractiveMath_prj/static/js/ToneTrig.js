@@ -266,7 +266,7 @@ $(function() {
 		currTuneState = selectItem;
 		$("#LongTextBox_TT").text(tuneToDo[currTuneState]);
 		$("#ToDo_or_expln_TT").prop("value", "Explain");
-		$("#musicalActivity").text(tuneTitle[currTuneState]);
+		$("#musicalActivity").html(tuneTitle[currTuneState]);
 		if (currTuneState === DEFAULT_TONE) {
 			// no instruments to play, its tone only.  No need for a play tone button
 			$("#allowNotePlay").hide();
@@ -618,7 +618,7 @@ $(function() {
 				});
 				$("#LongTextBox_TT").text(tuneToDo[currTuneState]);
 				$("#ToDo_or_expln_TT").prop("value", "Explain");
-				$("#musicalActivity").text(tuneTitle[currTuneState]);
+				$("#musicalActivity").html(tuneTitle[currTuneState]);
 			}
 			else {
 				console.log("config json file request returned with status = " + status);

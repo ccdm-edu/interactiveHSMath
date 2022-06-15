@@ -341,9 +341,15 @@ $(function() {
 	function playVerbalIntro() {
 		// turn off whatever note is already playing  and set up staff to initial state
 		osc.toDestination().stop();
+		// deselect note
 		ctxBkgdMusicCanvas.putImageData(bkgdPlotNotes, 0, 0);
 		$("#noteSelectVal").text("");
 		$("#FreqOfNoteVal").text("");
+		// clear out graph and associated equation
+		sine_plot_100_1k.options.title.text = "";
+		ampLong.length = 0;  // zero out data and push to graph
+		sine_plot_100_1k.data.datasets[0].data.push(ampLong);
+		sine_plot_100_1k.update();	
 				
 		let context;
 		let helpAudio;

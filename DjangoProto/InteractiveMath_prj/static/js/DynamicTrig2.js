@@ -14,6 +14,8 @@ $(function() {
 	const PIX_PER_MINOR_TICK = 17;
 	const MAX_AMP_AXIS = CIRC_RAD + 10;
 	const PERIOD_COLOR = 'lime';
+	const SINE_COLOR = "blue";
+	const RADIUS_VECTOR_COLOR = "PaleTurquoise"
 	
 	const ANGLE_PER_PT_RAD = Math.PI/6;
 	const TOTAL_NUM_DOTS = 2.0 * Math.PI/ANGLE_PER_PT_RAD;
@@ -42,7 +44,6 @@ $(function() {
 	};
 	$("#currFreqVal_DT2").text($("#FreqSlider_DT2").val() + " Hz");
 	[ind, inc, phaseOffsetInRad] = findSampToSkip(currFreq);
-	//console.log("currfreq is " + currFreq + " index is " + ind + " increment val is " + inc);
 
 	
 	//*******************************************************
@@ -82,7 +83,7 @@ $(function() {
     	ctxUnitCircle.beginPath();
 		// create dots for user clickable phase accumulation
 		ctxUnitCircle.arc(x, y, DOT_RADIUS, 0, 2 * Math.PI, true);
-		ctxUnitCircle.fillStyle = 'green';
+		ctxUnitCircle.fillStyle = SINE_COLOR;
 		ctxUnitCircle.fill();
 		ctxUnitCircle.stroke();
 		ctxUnitCircle.closePath();
@@ -137,7 +138,7 @@ $(function() {
 		return Math.round(CIRC_RAD*Math.sin(2* Math.PI * j * currFreq + phaseInRad));
 	}
 	function drawOneSineSet(x_orig, y_orig, maxTimePlot){
-		ctxFreqPlot.strokeStyle = "PaleTurquoise";
+		ctxFreqPlot.strokeStyle = RADIUS_VECTOR_COLOR;
 		let T = 1/currFreq;
 		const TOT_PIX_X_AXIS = PIX_PER_MINOR_TICK * 20; // we do 20 minor ticks regardless of plot
 		let numPts = 40 + 10*maxTimePlot/T;  // higher freq gets more points on plot
@@ -182,7 +183,7 @@ $(function() {
 			}
 			phaseInRad +=  inc * ANGLE_PER_PT_RAD;
 			if (phaseInRad >= TWO_PI_RAD) {
-				// a cycle has completed, update labels and circle around T on graph
+				// a cycle has completed, update labels and circle around T on appropriate graph
 				phaseInRad = phaseInRad % TWO_PI_RAD;
 				numCycles++;
 				// update the two numeric values, number of cycles and period
@@ -210,7 +211,7 @@ $(function() {
 				}			
 			}
 			
-			// draw line from axis to sine sample on both plots, on higher sample rates, we put a 
+			// draw line from axis to sine sample on both graphs to the right, on higher sample rates, we put a 
 			// phase offset in there for initial point but we can't show t=0 with phase offset else
 			// period T in green won't match value calculate and nonengineers will get confused.  This
 			// simplifies things even if its slightly inaccurate.
@@ -223,7 +224,7 @@ $(function() {
 				let xcoord = Math.round(UPPER_X_ORIGIN + timeInS*20*PIX_PER_MINOR_TICK);
 				ctxFreqPlot.beginPath();
 				ctxFreqPlot.lineWidth = 1.0
-				ctxFreqPlot.strokeStyle = 'green';
+				ctxFreqPlot.strokeStyle = SINE_COLOR;
 				let point_y = UPPER_Y_ORIGIN;
 				ctxFreqPlot.moveTo(xcoord, UPPER_Y_ORIGIN);
 				ctxFreqPlot.lineTo(xcoord, Math.round(UPPER_Y_ORIGIN - sampY ));
@@ -232,7 +233,7 @@ $(function() {
 				// draw a tiny dot for the sample on the curve
 			    ctxFreqPlot.beginPath();
 				ctxFreqPlot.arc(xcoord,  Math.round(UPPER_Y_ORIGIN - sampY ), 3, 0, 2 * Math.PI, true);
-				ctxFreqPlot.fillStyle = 'green';
+				ctxFreqPlot.fillStyle = SINE_COLOR;
 				ctxFreqPlot.fill();
 				ctxFreqPlot.stroke();
 				ctxFreqPlot.closePath();
@@ -242,7 +243,7 @@ $(function() {
 				let xcoord = Math.round(LOWER_X_ORIGIN + (timeInS/EXPANDED_TIME)*20*PIX_PER_MINOR_TICK);
 				ctxFreqPlot.beginPath();
 				ctxFreqPlot.lineWidth = 1.0
-				ctxFreqPlot.strokeStyle = 'green';
+				ctxFreqPlot.strokeStyle = SINE_COLOR;
 				let point_y = UPPER_Y_ORIGIN;
 				ctxFreqPlot.moveTo(xcoord, LOWER_Y_ORIGIN);
 				ctxFreqPlot.lineTo(xcoord, Math.round(LOWER_Y_ORIGIN - sampY));
@@ -251,7 +252,7 @@ $(function() {
 				// draw a tiny dot for the sample on the curve
 			    ctxFreqPlot.beginPath();
 				ctxFreqPlot.arc(xcoord,  Math.round(LOWER_Y_ORIGIN - sampY ), 3, 0, 2 * Math.PI, true);
-				ctxFreqPlot.fillStyle = 'green';
+				ctxFreqPlot.fillStyle = SINE_COLOR;
 				ctxFreqPlot.fill();
 				ctxFreqPlot.stroke();
 				ctxFreqPlot.closePath();
@@ -265,17 +266,16 @@ $(function() {
 			ctxUnitCircle.beginPath();
 			ctxUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
 			ctxUnitCircle.lineTo(sample[ind].x, sample[ind].y);
-			ctxUnitCircle.strokeStyle = 'green';
-			ctxUnitCircle.fillStyle = 'green';
+			ctxUnitCircle.strokeStyle = RADIUS_VECTOR_COLOR;
 			ctxUnitCircle.lineWidth = 3.0
 			ctxUnitCircle.stroke();
 			ctxUnitCircle.closePath();
 
 			// draw the vertical sine portion on the unit circle
+			ctxUnitCircle.beginPath();
 			ctxUnitCircle.moveTo(sample[ind].x, sample[ind].y);
 			ctxUnitCircle.lineTo(sample[ind].x, CIRC_Y0);
-			ctxUnitCircle.strokeStyle = 'green';
-			ctxUnitCircle.fillStyle = 'green';
+			ctxUnitCircle.strokeStyle = SINE_COLOR;
 			ctxUnitCircle.lineWidth = 1.0
 			ctxUnitCircle.stroke();
 			ctxUnitCircle.closePath();
@@ -293,15 +293,16 @@ $(function() {
     let clockIsRunning = false;
     $('#GoFreq_DT2').on('click', function(event) {
 		//This will keep going until user hits stop
-		if ("Go" == $('#GoFreq_DT2').prop("value")) {
+		if ("GO" == $('#GoFreq_DT2').prop("value")) {
 			// user is asking to Go, set up sampling/freq plots
 			// go back to bare plots before we redo everything
 			ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
 			// plot new freq sin graphs
 			drawOneSineSet(UPPER_X_ORIGIN, UPPER_Y_ORIGIN, MAX_TIME_SEC);
 			drawOneSineSet(LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPANDED_TIME);
-			// allow user to stop
+			// allow user to stop, change color of button to pale red
 			$('#GoFreq_DT2').prop('value', 'Stop');
+			$('#GoFreq_DT2').css('background-color', 'hsl(0,100%,80%)');
 			//do the sampling and update time/phase plots
 			clockIsRunning = true;
 			// reset sampling index to original values
@@ -313,9 +314,25 @@ $(function() {
 		    if (startInterval) clearInterval(startInterval);
     		clockIsRunning = false;
 			// allow user to adjust freq and go again
-			$('#GoFreq_DT2').prop('value', 'Go');
+			$('#GoFreq_DT2').prop('value', 'GO');
+			$('#GoFreq_DT2').css('background-color', currentGreen);
 		}
     });
+    
+    // make a nice blinky green to attract attention on the go button and a red background when its stop
+    let blinkyInterval;
+    const PALE_GREEN = 'hsl(120, 100%, 80%)';
+    const FULL_GREEN = 'hsl(120, 100%, 50%)';
+    let currentGreen = FULL_GREEN;
+    // initialize GO button to green shade
+    $('#GoFreq_DT2').css('background-color', currentGreen);
+    blinkyInterval = setInterval(function(){
+    	if (!clockIsRunning) {
+    		// do a blinky light between two different green shades on GO button
+    		$('#GoFreq_DT2').css('background-color', currentGreen);
+    		currentGreen = (currentGreen == PALE_GREEN) ? FULL_GREEN : PALE_GREEN;
+    	}
+    }, 500);
 	
 	//***********************************
 	//*** put up user TO DO or explanation text
