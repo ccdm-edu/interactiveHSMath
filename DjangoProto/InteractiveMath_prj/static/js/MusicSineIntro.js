@@ -337,7 +337,8 @@ $(function() {
 	});
 	//***********************************
 	// User clicks on either image or the words around the image to get the verbal intro
-	//***********************************	
+	//***********************************
+	let helpAudio;	
 	function playVerbalIntro() {
 		// turn off whatever note is already playing  and set up staff to initial state
 		osc.toDestination().stop();
@@ -352,7 +353,6 @@ $(function() {
 		sine_plot_100_1k.update();	
 				
 		let context;
-		let helpAudio;
 		// Safari has implemented AudioContext as webkitAudioContext so need next LOC
 		window.AudioContext = window.AudioContext || window.webkitAudioContext;
 		context = new AudioContext();			
@@ -397,6 +397,13 @@ $(function() {
 							helpAudio.connect(context.destination);
 							// auto play the recording
 							helpAudio.start(0);
+							// this just needs to be somewhere where helpAudio is defined to be saved for later
+							helpAudio.onended = () => 
+							{
+								// no longer playing the audio intro, either by user stop or natural completion
+								verbalIntroIsPlaying = false;
+								$("#verbalIntro").html("Click on me,<br><br>I've got something to say.");
+							};
 						} catch(e) {
 							// most likely not enough space to createBuffer
 							console.error(e);
@@ -422,11 +429,26 @@ $(function() {
 			});   // done with ajax
 		// leave things as they were when user first started, all is in beginning state
     };	
-    
+    let verbalIntroIsPlaying = false;
+    function playOrStopVerbalIntro(){
+    	// dont want to play multiple time delayed versions of audio with multiple clicks
+		if (!verbalIntroIsPlaying) {
+			$("#verbalIntro").html("Click on me<br><br> to stop talking");
+			playVerbalIntro();
+			verbalIntroIsPlaying = true;
+		} else {
+			// turn off the existing audio
+			helpAudio.stop(0);
+			verbalIntroIsPlaying = false;
+			$("#verbalIntro").html("Click on me,<br><br>I've got something to say.");
+		}
+
+	};
+
 	$("#staticTrumpeter").click(function() {
-		playVerbalIntro();
+		playOrStopVerbalIntro();
 	});
 	$("#verbalIntro").click(function() {
-		playVerbalIntro();
+		playOrStopVerbalIntro();
 	});
 })
