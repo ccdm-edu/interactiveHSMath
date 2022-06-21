@@ -250,8 +250,7 @@ $(function() {
 			this.mp3Data = this.mp3Data.slice(plotFirstPt, plotFirstPt + NUM_PTS_PLOT_LONG + 1);
 		}
 		
-		getGraphArray(graphIndx) {
-		// graphIndx 0 is the 10ms timespan upper plot, index 1 is 1 ms timespan lower plot, 
+		getGraphArray() {
 		// musical data only plotted on upper plot (loses meaning on lower plot)
 			let graphArray = [];
 			// count up time on the graph
@@ -260,20 +259,11 @@ $(function() {
 			let currIndxMp3 = 0;
 			let numPtsPlot;
 			let graphTs;
-			if (graphIndx === 0) {
-				// plotting for the 10 ms graph
-				numPtsPlot = NUM_PTS_PLOT_LONG;
-				graphTs = samplePeriodLong;
-			} else {
-				if (graphIndx === 1) { 
-					// plotting for the 1 ms graph
-					numPtsPlot = NUM_PTS_PLOT_SHORT;
-					graphTs = samplePeriodShort;
-				} else {
-					// coding error
-					console.error("unexpected value for graph index in getGraphArray, value was " + graphIndx);
-				}
-			}	
+
+			// plotting for the 10 ms graph
+			numPtsPlot = NUM_PTS_PLOT_LONG;
+			graphTs = samplePeriodLong;
+
 			// want to illustrate that sine wave at pitch freq is the periodicity of musical note waveform
 			// To enhance visualization, phase up the buffer so that we "start" at zero crossing of steepest ascent/descent
 			// we will then feed this "new" buffer into the sample rate converter for plotting
@@ -284,24 +274,13 @@ $(function() {
 				tG = graphTs * i;
 				let tM = currIndxMp3 * this.samplePeriodMp3;
 				let tMp1 = tM + this.samplePeriodMp3;
-				if (graphIndx === 0) {
-					// This if for top graph over longer time interval
-					if ( (tG - tM) > (tMp1 - tG) ) {
-						currIndxMp3 = currIndxMp3 + 1;
-					}
-					// mp3 scales so max value is 1, rescale so it will fit this graph
-					graphArray[i] = this.mp3Data[currIndxMp3];
-				} else {
-					// not well tested, lower graph proved to be a distraction
-					if (tG >= tMp1) {
-						currIndxMp3 = currIndxMp3 + 1;
-						tM = currIndxMp3 * this.samplePeriodMp3;
-						tMp1 = tM + this.samplePeriodMp3;
-					}
-					let slope = (this.mp3Data[currIndxMp3 + 1] - this.mp3Data[currIndxMp3])/this.samplePeriodMp3;
-					// mp3 scales so max value is 1, rescale so it will fit this graph
-					graphArray[i] = this.mp3Data[currIndxMp3] + slope * (tG - tM) ;
+				
+				// This if for top graph over longer time interval
+				if ( (tG - tM) > (tMp1 - tG) ) {
+					currIndxMp3 = currIndxMp3 + 1;
 				}
+				// mp3 scales so max value is 1, rescale so it will fit this graph
+				graphArray[i] = this.mp3Data[currIndxMp3];
 			}
 			// compare expected with actual graph sample rate/ mp3 file sample rate
 			let approxSampRatio = numPtsPlot/currIndxMp3;
@@ -435,7 +414,7 @@ $(function() {
 									}
 																
 									// get array of values for both plots. Actually no need for short plot for low freq waveforms
-									tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray(0);
+									tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray();
 									
 									// set up tone to approximate the fundamental freq of musical instrument
 									let newToneFreq = tuneFundamentalFreq[currTuneState];
