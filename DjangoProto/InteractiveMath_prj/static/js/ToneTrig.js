@@ -22,7 +22,6 @@ $(function() {
 	let tuneBuffer = [];  // array of AudioBuffer for currTuneState 1 through N, all musical notes, used to play full mp3 file
 	let tuneOffset = []; // determines when plotting will begin in mp3 file, index is currTuneState
 	let tuneFundamentalFreq = []; // initialize tone for closest approx
-	let tuneFundamentalPhase =[];
 	let tuneGraphLong = [[]];  // holds an array, per note, of graphing points for long graph (10ms)
 	let tuneGraphShort = [[]];    // holds an array, per note, of graphing points for short graph (1ms)
 	let noteFilePoint = [];   // array for every instrument of InstrumentNote, will determine next point using multirate sample rate conversion
@@ -139,20 +138,118 @@ $(function() {
 	//***********************************
 	//  Classes 
 	//***********************************
-	// this class is just for drawing the musical note on the graph
+	// this class is just for drawing the musical note on the graph, we save only a tiny chunk of buffer
 	class InstrumentNote {
-		constructor(buffer, tuneState) {
+		constructor(buffer, tuneState, noteFreq) {
 			this.samplePeriodMp3 = 1/buffer.sampleRate;
-			// only save what we need to recreate plot
-			this.mp3Data = buffer.getChannelData(0).slice(tuneOffset[tuneState], tuneOffset[tuneState] + NUM_PTS_PLOT_LONG + 1);
+			// only save what we need to recreate plot and adds some more to handle extra needed to phase up to sine wave
+			// so client can see how well the musical tone matches up to its pitch sine wave
+			// calculate estimate of the number of points needed to show 1 period of musical note at the buffer sample rate
+			this.POINTS_IN_NOTE_PERIOD = buffer.sampleRate / noteFreq;
+			// 1.5 adds some points to search the period for "zero phase" before changing sample rate to plot
+			const PHASE_UP_POINTS = 1.5 * this.POINTS_IN_NOTE_PERIOD;
+			console.log(" we calculate phase up pts as " + PHASE_UP_POINTS);
+			this.mp3Data = buffer.getChannelData(0).slice(tuneOffset[tuneState], tuneOffset[tuneState] + NUM_PTS_PLOT_LONG + PHASE_UP_POINTS + 1);
 			this.currTuneState = tuneState;  
 			if (tuneState === DEFAULT_TONE) {
 				console.error(" This should never be called for the synthesized tone, only for mp3 files");
 			}
+			this.sinePhase = 0;  //This is only for increasing ascending slopes, if we find descending, choose 180
+		}
+		
+		// Web Audio opens the given mp3 file and resamples it according to the destination's desired sample rate
+		// For example, all the mp3 files are at 44.1k and this is fine for many desktops but laptops seem to want
+		// 48k and resample the buffer to get that.  If I want to phase up the mp3, I need to find best place to start
+		// given we don't know sample rate apriori.  Want to find best "zero phase starting point" for musical note 
+		// and then resample upward for good plotting
+		findStartPhase(){
+			// start at begin of buffer and search for 1.5 * POINTS_IN_NOTE_PERIOD points for interval with
+			// largest change in Y that crosses zero axis, and is monotonic
+			// search zone must be long enough so that if we start midsection of a steep ascent/descent, we pick up full interval at end
+			const NUM_PTS_SEARCH = Math.trunc(this.POINTS_IN_NOTE_PERIOD * 1.25);  
+			let bestInterval = {startPt: 0, endPt: 0, deltaY: 0, justB4CrossPt: 0, rising: false};
+			let monotonicInc = false;  // positive slope
+			let monotonicDec = false;	// negative slope
+			let startPt = 0;
+			let endPt = 0;
+			// we'll keep track of rough extimate of zero crossing and improve when sample rate increases for graphing
+			let justB4Crossing = 0;
+				
+			for (let i = 0; i < NUM_PTS_SEARCH; i++) {
+				if (this.mp3Data[i+1] > this.mp3Data[i]) {
+					// slope is positive and we are INCREASING
+					monotonicInc = true;
+					if (monotonicDec) {
+						// we were decreasing, now we are increasing, do we want to save this last interval?
+						// the interval must cross X axis
+						if ( Math.sign(this.mp3Data[startPt]) != Math.sign(this.mp3Data[endPt]) ){
+							let currDeltaY = this.mp3Data[startPt] - this.mp3Data[endPt];
+							if (currDeltaY > bestInterval.deltaY ) {
+								// this is either the best interval or the first
+								bestInterval.startPt = startPt;
+								bestInterval.endPt = endPt;  
+								bestInterval.deltaY = currDeltaY;
+								bestInterval.justB4CrossPt = justB4Crossing;
+								bestInterval.rising = false;
+								// ok, now its saved, lets keep looking for better
+							}
+						}
+						startPt = i;
+						justB4Crossing = 0;
+						monotonicDec = false;
+						// need to check if this was the highest delta y
+					} else {
+						// we were increasing and still are
+						endPt = i + 1;
+						// did we pass through x axis?
+						if ( (justB4Crossing == 0) && (Math.sign(this.mp3Data[startPt]) != Math.sign(this.mp3Data[i+1])) ) {
+							// only want to catch this the first time
+							justB4Crossing = i;
+						}							
+					}
+				} else {
+					// slope is negative and we are DECREASING
+					monotonicDec = true;
+					if (monotonicInc){
+						// we were increasing, we are now decreasing, do we want to save this last interval?
+						// the interval must cross X axis
+						if ( Math.sign(this.mp3Data[startPt]) != Math.sign(this.mp3Data[endPt]) ){
+							let currDeltaY = this.mp3Data[endPt] - this.mp3Data[startPt];
+							if (currDeltaY > bestInterval.deltaY ) {
+								// this is either the best interval or the first
+								bestInterval.startPt = startPt;
+								bestInterval.endPt = endPt; 
+								bestInterval.deltaY = currDeltaY;
+								bestInterval.justB4CrossPt = justB4Crossing;
+								bestInterval.rising = true;
+								// ok, now its saved, lets keep looking for better
+							}
+						}
+						startPt = i;
+						justB4Crossing = 0;
+						monotonicInc = false;
+						// need to check if this was the highest delta y
+					} else {
+						// we were decreasing and still are
+						endPt = i+1;
+						if ( (justB4Crossing == 0) && (Math.sign(this.mp3Data[startPt]) != Math.sign(this.mp3Data[i+1])) ) {
+							// only want to catch this the first time
+							justB4Crossing = i;
+						}
+					}
+				}
+			}
+					
+			// if we are matching to an ascending plot, use sine phase of 0, else its descending and use 180
+			(bestInterval.rising) ? this.sinePhase = 0: this.sinePhase = 180;
+			
+			// truncate the buffer so we start just before the zero crossing
+			this.mp3Data = this.mp3Data.slice(bestInterval.justB4CrossPt, bestInterval.justB4CrossPt + NUM_PTS_PLOT_LONG + 1);
 		}
 		
 		getGraphArray(graphIndx) {
-		// graphIndx 0 is the 10ms timespan, index 1 is 1 ms timespan
+		// graphIndx 0 is the 10ms timespan upper plot, index 1 is 1 ms timespan lower plot, 
+		// musical data only plotted on upper plot (loses meaning on lower plot)
 			let graphArray = [];
 			// count up time on the graph
 			let tG = 0.0;
@@ -174,18 +271,25 @@ $(function() {
 					console.error("unexpected value for graph index in getGraphArray, value was " + graphIndx);
 				}
 			}	
+			// want to illustrate that sine wave at pitch freq is the periodicity of musical note waveform
+			// To enhance visualization, phase up the buffer so that we "start" at zero crossing of steepest ascent/descent
+			// we will then feed this "new" buffer into the sample rate converter for plotting
+			this.findStartPhase();
+			
 			// using nearest neighbor approximation for arbitrary sample rate conversion of MP3 rate to graph rate
 			for (let i = 0; i <= numPtsPlot; i++) {
 				tG = graphTs * i;
 				let tM = currIndxMp3 * this.samplePeriodMp3;
 				let tMp1 = tM + this.samplePeriodMp3;
 				if (graphIndx === 0) {
+					// This if for top graph over longer time interval
 					if ( (tG - tM) > (tMp1 - tG) ) {
 						currIndxMp3 = currIndxMp3 + 1;
 					}
 					// mp3 scales so max value is 1, rescale so it will fit this graph
 					graphArray[i] = this.mp3Data[currIndxMp3];
 				} else {
+					// not well tested, lower graph proved to be a distraction
 					if (tG >= tMp1) {
 						currIndxMp3 = currIndxMp3 + 1;
 						tM = currIndxMp3 * this.samplePeriodMp3;
@@ -320,7 +424,7 @@ $(function() {
 										tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate);
 										buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
 										// setup the class from which we will get points to graph the note
-										noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState);
+										noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState, tuneFundamentalFreq[currTuneState]);
 									} catch(e) {
 										// most likely not enough space to createBuffer
 										console.error(e);
@@ -336,10 +440,9 @@ $(function() {
 									$("#in-range-freq").val(newToneFreq);
 									updateFreq();
 									
-									// setup tone so approximate fundamental phase of musical instrment
-									let newTonePhase = tuneFundamentalPhase[currTuneState];
-									$("#currPhaseLabel").text(newTonePhase);
-									$("#in-range-phase").val(newTonePhase);
+									// we set up signal so it looks best at zero phase
+									$("#currPhaseLabel").text(noteFilePoint[currTuneState].sinePhase.toString());
+									$("#in-range-phase").val(noteFilePoint[currTuneState].sinePhase);
 									updatePhase();
 							
 									// update graphs
@@ -377,10 +480,9 @@ $(function() {
 				$("#in-range-freq").val(newToneFreq);
 				updateFreq();
 				
-				// setup tone so approximate fundamental phase of musical instrment
-				let newTonePhase = tuneFundamentalPhase[currTuneState];
-				$("#currPhaseLabel").text(newTonePhase);
-				$("#in-range-phase").val(newTonePhase);
+				// we set up musical note for zero phase as we line it up with associated pitch sine
+				$("#currPhaseLabel").text("0");
+				$("#in-range-phase").val(0);
 				updatePhase();
 				
 				// update graphs with stored musical tone data (we've done this before)
@@ -614,7 +716,6 @@ $(function() {
 					tuneTitle[index] = paramSet.title;
 					tuneOffset[index] = parseInt(paramSet.tuneOffset);
 					tuneFundamentalFreq[index] = parseInt(paramSet.fundamentalHz);
-					tuneFundamentalPhase[index] = parseInt(paramSet.fundamentalPhase);
 				});
 				$("#LongTextBox_TT").text(tuneToDo[currTuneState]);
 				$("#ToDo_or_expln_TT").prop("value", "Explain");
