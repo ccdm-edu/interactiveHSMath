@@ -16,6 +16,8 @@ $(function() {
 	let dynamicTrig1Expln;
 	let dynamicTrig1ToDo;
 	
+	const SECOND_USER_BOX_POP_HELP = "Do it again, but this time skip dots.  The red arrows will lead you.  GO FAST!";	
+	
 	const EXPIRATION_TIME_SEC = 20
 	// When user first enters page, they need to know what dots to hit to create desired
 	// effect, slow frequency that increases through these arrows that prompt the user
@@ -280,6 +282,7 @@ $(function() {
 		else if ((numFreqGenSoFar == 1) && (ptsClickedOnCircle == 0)) {
 			// user has done 1st slow freq.  Show them it can be done faster.
 			// Once they start clicking on yellow dots, they dont need this help anymore
+			$('#FirstHelp_DT1').text(SECOND_USER_BOX_POP_HELP);
 			$('#FirstHelp_DT1').css("visibility", "visible");
 			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","Start here", 2).draw();
 		}
