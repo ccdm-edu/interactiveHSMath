@@ -148,13 +148,11 @@ $(function() {
 			this.POINTS_IN_NOTE_PERIOD = buffer.sampleRate / noteFreq;
 			// 1.5 adds some points to search the period for "zero phase" before changing sample rate to plot
 			const PHASE_UP_POINTS = 1.5 * this.POINTS_IN_NOTE_PERIOD;
-			console.log(" we calculate phase up pts as " + PHASE_UP_POINTS);
 			this.mp3Data = buffer.getChannelData(0).slice(tuneOffset[tuneState], tuneOffset[tuneState] + NUM_PTS_PLOT_LONG + PHASE_UP_POINTS + 1);
 			this.currTuneState = tuneState;  
 			if (tuneState === DEFAULT_TONE) {
 				console.error(" This should never be called for the synthesized tone, only for mp3 files");
 			}
-			this.sinePhase = 0;  //This is only for increasing ascending slopes, if we find descending, choose 180
 		}
 		
 		// Web Audio opens the given mp3 file and resamples it according to the destination's desired sample rate
@@ -239,12 +237,17 @@ $(function() {
 					}
 				}
 			}
-					
-			// if we are matching to an ascending plot, use sine phase of 0, else its descending and use 180
-			(bestInterval.rising) ? this.sinePhase = 0: this.sinePhase = 180;
-			
-			// truncate the buffer so we start just before the zero crossing
-			this.mp3Data = this.mp3Data.slice(bestInterval.justB4CrossPt, bestInterval.justB4CrossPt + NUM_PTS_PLOT_LONG + 1);
+								
+			// Truncate the buffer so we start just before the zero crossing.  If the interval we are matching is ascending,
+			// we are already at zero phase. If interval is descending, need to move back by T/2.  Better to be early than
+			// late so when we get better precision on zero crossing, we will further perfect the starting point
+			let plotFirstPt = bestInterval.justB4CrossPt;
+			let riseFallState = (bestInterval.rising)?"rising":"falling";
+			console.log("For this musical note, interval chosen is " + riseFallState);
+			if (!bestInterval.rising) {
+				plotFirstPt = bestInterval.justB4CrossPt + Math.trunc(this.POINTS_IN_NOTE_PERIOD/2); 
+			}
+			this.mp3Data = this.mp3Data.slice(plotFirstPt, plotFirstPt + NUM_PTS_PLOT_LONG + 1);
 		}
 		
 		getGraphArray(graphIndx) {
@@ -441,8 +444,8 @@ $(function() {
 									updateFreq();
 									
 									// we set up signal so it looks best at zero phase
-									$("#currPhaseLabel").text(noteFilePoint[currTuneState].sinePhase.toString());
-									$("#in-range-phase").val(noteFilePoint[currTuneState].sinePhase);
+									$("#currPhaseLabel").text('0');
+									$("#in-range-phase").val(0);
 									updatePhase();
 							
 									// update graphs
@@ -504,7 +507,6 @@ $(function() {
 			// First time in, 
 			noteIsOnNow = false;
 		};			
-		console.log("Just before we USE it, newly created buffer len = " + tuneBuffer[currTuneState].length);
 		if (tuneBuffer == null || tuneBuffer[currTuneState] == null) {
 			// should never happen, decode and copy should finish before we get here with normal user (non robot)
 			let prob;
