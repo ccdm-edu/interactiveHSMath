@@ -18,15 +18,22 @@
 	
 	
 	<div class="home_expln">
-		<p>In tutoring high school students for several years, I have found many who have complained that they have to "memorize all these stupid, useless equations".  
-		As an engineer, I want to explain how these "stupid" equations are found through out the their world and are the building blocks of technology.  This site
-		is designed to give high schoolers a taste of what college students learn in a <span id="blinkingColor">fun </span>and interactive way.  We take the stuff students
-		have to know for their exams and tie it to cool stuff, like Music, like cell phones, like drones.  Look through the tabs, you'll see it in action.
+		<p>This website is designed to tie the "boring" stuff that high school students "have" to learn in Algebra 1 and 2 and Geometry to the real world in a way that is <span id="blinkingColor">fun </span>and interactive.  
+		We tie trig functions to music, imaginary numbers to cell phones, geometry to drones.  Look through the tabs, you'll see it in action.
 		<br></br>
 		<noscript>Since this site is interactive, Javascript <font size="+2">MUST </font>be enabled to fully experience the site.
 		You do not have Javascript enabled in your browser. <br></br></noscript>
-
-		This site is intended to cover Algebra 2 and Geometry, eventually.  Only one person is writing code for this site so progress is
+		{% if using_safari %}
+			<br></br>
+			<b> You are using Safari, this site needs alot more work/testing to be Safari ready.  Please use latest version of Chrome.  </b>
+		{% endif %}
+		{% if is_mobile %}
+			<br></br>
+			<b> You are using a mobile device.  This site works best with the larger canvas of a desktop or laptop (or perhaps notebook).  
+			Eventually it may become mobile friendly but today is not your day.  Please use on a desktop/laptop.  </b>
+			<br></br>
+		{% endif %}		
+		Only one person is writing code for this site so progress is
 		slow.  As of now, it is tested only on Chrome web browser and generally works under Firefox and is flaky under Safari.  It looks best on a laptop/desktop/notebook, untested on mobile devices.  Enjoy!
 		</p>
 	</div>
