@@ -115,3 +115,11 @@ This is the style sheet for ToneTrig.html
 }
 
 /*****************************************************************/
+/* credits to float at the bottom */
+#artistCredits{
+	position: relative;
+	top: 550px;
+}
+#image_credit_chromTrebClef{
+	position: absolute;
+}

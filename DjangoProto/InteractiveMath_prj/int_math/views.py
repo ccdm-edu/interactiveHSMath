@@ -175,10 +175,6 @@ class IndexView(View):
         if 'safari' in user_agent.browser.family.lower(): 
             usingSafari = True;
         isMobile = user_agent.is_mobile;
-        print(" and is mobile is " )
-        print(isMobile);
-        print(" using safari is ");
-        print(usingSafari);
         context_dict = {'page_tab_header': 'Home',
                         'topic': None,
                         'using_safari': usingSafari,

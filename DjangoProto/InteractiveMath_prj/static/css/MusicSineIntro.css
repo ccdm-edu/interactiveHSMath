@@ -270,3 +270,23 @@ h2{
 	width: 150px;
 	visibility: hidden; /* will turn on when user has clicked on something on page so as not to overwhelm */
 }
+	
+/* credits to float at the bottom */
+#artistCredits{
+	position: relative;
+	top: 620px;
+}
+#image_credit_clefHearts{
+	position: absolute;
+	top: 10px;
+}
+#image_credit_trumpeter{
+	position: absolute;	
+	top: 20px;
+}
+#image_credit_wholeNote{
+	position: absolute;	
+	top: 30px;
+}
+
+		
