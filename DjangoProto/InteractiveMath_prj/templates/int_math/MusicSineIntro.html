@@ -47,9 +47,10 @@
 		<p id="noteSelectVal"> </p>
 		<label id = "FreqOfNote">Frequency (Hz):  </label>
 		<p id="FreqOfNoteVal"> </p>
-		<label id = "noteVolLabel">Volume (0 is mute):  </label>
+		<label id = "noteVolLabel">Volume:  </label>
 		<p id = "noteVolValue"></p>
-		<input id="noteVol" type="range" step="1" value="5" min="0" max="10" data-toggle="tooltip" data-placement="right" title="Turn on your speaker">
+		<input id="noteVol" type="range" step="1" value="5" min="1" max="100" data-toggle="tooltip" data-placement="right" title="Turn on your speaker">
+		<input type="button" id="VolOnOff" value="Silence" data-toggle="tooltip" data-placement="right" title="">
 		<!-- For debug to see where this canvas is, can add border around it with:  style="border:1px solid #000000;" -->
 		<p id = "notesToPlayLabel" data-toggle="tooltip" data-placement="right" title="Play these notes in order"></p>
 		<p id = "notesToPlay" ></p>

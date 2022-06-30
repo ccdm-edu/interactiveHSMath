@@ -209,10 +209,17 @@ h2{
 	top: 0px;
 	font-size: 15px;	
 }
+#VolOnOff{
+	position: absolute;
+	width: 80px;
+	top: 60px;
+	left: 550px;
+	z-index: 10;
+}
 #notesToPlayLabel{
 	position: absolute;
 	left: 150px;
-	top: 30px;
+	top: 25px;
 	font-size: 15px;
 	font-weight: bold;
 }

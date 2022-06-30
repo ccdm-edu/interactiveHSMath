@@ -247,9 +247,11 @@ $(function() {
 	//***********************************
 	// user interacts with the trumpet notes
 	//***********************************
-	const NOTE_RADIUS = 20;  // radius of whole note is 10px, this gives a little slop
+	// Radius of whole note is 10px, this gives a little slop.  Users said 20 wasn't quite enough, especially for 
+	// touch screen.  Can't go any larger else notes will overlap.
+	const NOTE_RADIUS = 30;  
 	const COLOR_RADIUS = 8; 
-	let selectedNote;
+	let selectedNote = null;
     musicCanvas.addEventListener('click', (e) => {
 		// need to convert canvas coord into bitmap coord
 		let rect = musicCanvas.getBoundingClientRect();
@@ -276,12 +278,18 @@ $(function() {
 				// put up the freq info and equation and play note
 				$("#noteSelectVal").text(note.notePlayed);
 				$("#FreqOfNoteVal").text(note.freqHz + " Hz");
-				osc.toDestination().stop(); // turn off existing tone
-				if ('0' != $currVolume.val()) {
-					osc.frequency.value = note.freqHz;
-					osc.toDestination().start();
-				}	
+				// we want a blip between notes as user "plays a simple song", 
+				osc.toDestination().stop(); // turn off existing tone to add a "blip" into the sound 
+				osc.frequency.value = note.freqHz;
+				setTimeout(function(){
+					// put a blip in the note change
+					if (!volumeOff) {
+						//play only if volume is on, we know note is selected
+						osc.toDestination().start();
+					}	
+				},100);
 				selectedNote = note;
+				$("#VolOnOff").prop("title", "");  // note is selected, no need to pester the user
 				drawTone();
 			}
 		});
@@ -298,19 +306,50 @@ $(function() {
 
 	// allow for user changes
 	$('#noteVol').on('input', function(){
-		$currVolume = $("#noteVol")
-		if ('0' === $currVolume.val()) {
-			$("#noteVolValue").text("Mute");
-			osc.toDestination().stop();
-		}
-		else {
-			$("#noteVolValue").text($currVolume.val());
-			tonejs_dB = -40 + 20.0 * Math.log10($currVolume.val());
-			//if it was previously in mute, may need to be restarted again
-			osc.toDestination().start();
-			osc.volume.value = tonejs_dB;
-		}
+		$currVolume = $("#noteVol");
+		$("#noteVolValue").text($currVolume.val());
+		tonejs_dB = -40 + 20.0 * Math.log10($currVolume.val());
+		osc.volume.value = tonejs_dB;
 	});
+	//***********************************
+	// user turns on and off sound
+	//***********************************
+	let volumeOff = false;
+	const TURN_SOUND_OFF = "Silence";
+	const TURN_SOUND_ON = "Sound";
+	const SILENT_COLOR = "Lavender";
+	const SOUND_COLOR = "LavenderBlush";
+	// at powerup, button is a mute for volume
+	$("#VolOnOff").prop("value", TURN_SOUND_OFF);
+	$("#VolOnOff").css('background-color',SILENT_COLOR);
+	// Handle user button interaction
+	$('#VolOnOff').on('click', function(event){
+		// if sound is on, button will say TURN_SOUND_OFF and vice versa
+		volumeOff = (TURN_SOUND_OFF == $('#VolOnOff').attr("value")) ? false: true;
+		if (null != selectedNote) {
+			// user has selected note, let volume be on/off
+			if (volumeOff) {
+				// turn on tone				
+				osc.toDestination().start();
+				// here we change color/text on button
+				$("#VolOnOff").prop("value", TURN_SOUND_OFF);
+				$("#VolOnOff").css('background-color',SILENT_COLOR);
+				volumeOff = false;
+			} else {
+				// sound is on, we turn it off, leave sliders alone
+				osc.toDestination().stop();
+				// here we change color/text on button
+				$("#VolOnOff").prop("value", TURN_SOUND_ON);
+				$("#VolOnOff").css('background-color', SOUND_COLOR);
+				volumeOff = true;
+			}
+		} else {
+			//user has not selected a note yet, since cursor over volume button, tell them to select a note
+			$("#VolOnOff").prop("title", "Select note from above scales first");
+		}	
+	});
+		
+			
 	//***********************************
 	// user selects a song and code puts up notes to hit on staff
 	//***********************************	
@@ -336,7 +375,7 @@ $(function() {
   		$('#notesToPlayLabel').text("Notes For Jingle Bells tune:");
 	});
 	//***********************************
-	// User clicks on either image or the words around the image to get the verbal intro
+	// User clicks on either image or the words around the image to get the audio intro
 	//***********************************
 	let helpAudio;	
 	function playVerbalIntro() {
@@ -351,6 +390,7 @@ $(function() {
 		ampLong.length = 0;  // zero out data and push to graph
 		sine_plot_100_1k.data.datasets[0].data.push(ampLong);
 		sine_plot_100_1k.update();	
+		selectedNote = null;  // dont want to play any notes since notes deselected
 				
 		let context;
 		// Safari has implemented AudioContext as webkitAudioContext so need next LOC

@@ -67,6 +67,11 @@ We use negative value for top since we want some overlap*/
 	top: var(--VALUE_Y_1);
 	z-index: 9;
 }
+#unitCircNotify{
+	position: absolute;
+	left: var(--LABEL_X_VAL1);
+	top: 82px;
+}
 #xyValueLabel {
 	position: absolute;
 	left: var(--LABEL_X_VAL2);

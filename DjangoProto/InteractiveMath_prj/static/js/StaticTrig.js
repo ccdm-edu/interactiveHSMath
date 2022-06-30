@@ -60,9 +60,6 @@ $(function() {
 	// draw y axis
 	ctxExpandableUnitCircle.moveTo(TRIG_X_ORIGIN, SIN_Y_ORIGIN + MAX_AMP_AXIS);
 	ctxExpandableUnitCircle.lineTo(TRIG_X_ORIGIN, SIN_Y_ORIGIN - MAX_AMP_AXIS);
-	ctxExpandableUnitCircle.fillStyle = 'blue';
-	ctxExpandableUnitCircle.font = '20px Arial';
-	ctxExpandableUnitCircle.fillText("y=f("+THETA+")=r"+MULT_DOT+"sin("+THETA+")", TRIG_X_ORIGIN - 150, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);
 	ctxExpandableUnitCircle.stroke();
 	ctxExpandableUnitCircle.closePath();
 	// make arrows for Angle-Sin graph
@@ -106,10 +103,6 @@ $(function() {
 	// draw y axis
 	ctxExpandableUnitCircle.moveTo(TRIG_X_ORIGIN, COS_Y_ORIGIN + MAX_AMP_AXIS);
 	ctxExpandableUnitCircle.lineTo(TRIG_X_ORIGIN, COS_Y_ORIGIN - MAX_AMP_AXIS);
-	ctxExpandableUnitCircle.fillStyle = 'red';
-	ctxExpandableUnitCircle.font = '20px Arial';
-	ctxExpandableUnitCircle.fillText("x=f("+THETA+")=r"+MULT_DOT+"cos("+THETA+")", TRIG_X_ORIGIN - 150, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);	
-	
 	ctxExpandableUnitCircle.stroke();
 	ctxExpandableUnitCircle.closePath();	
 	
@@ -430,6 +423,24 @@ $(function() {
 	  		// make a dash seg and then skip and redo again.  
 	    	ctxExpandableUnitCircle.lineTo(TRIG_X_ORIGIN + i + DASH_SEG_PIX, COS_Y_ORIGIN - yHi); 
 	  	}
+	  	ctxExpandableUnitCircle.fillStyle = 'blue';
+		ctxExpandableUnitCircle.font = '20px Arial';
+	  	if (1.0 == amp) {
+			// user is still using unit circle, get rid of the "r" so they won't get confused
+			ctxExpandableUnitCircle.fillText("f("+THETA+")=sin("+THETA+")", TRIG_X_ORIGIN - 110, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);
+			ctxExpandableUnitCircle.stroke(); 
+			ctxExpandableUnitCircle.fillStyle = 'red';
+			ctxExpandableUnitCircle.fillText("f("+THETA+")=cos("+THETA+")", TRIG_X_ORIGIN - 110, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);	
+			ctxExpandableUnitCircle.stroke(); 
+	  	} else {
+			// user has selected an "advanced" circle, show r values here
+			ctxExpandableUnitCircle.fillText("f("+THETA+")=r"+MULT_DOT+"sin("+THETA+")", TRIG_X_ORIGIN - 130, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);
+			ctxExpandableUnitCircle.stroke(); 
+			ctxExpandableUnitCircle.fillStyle = 'red';
+			ctxExpandableUnitCircle.stroke(); 
+			ctxExpandableUnitCircle.fillText("f("+THETA+")=r"+MULT_DOT+"cos("+THETA+")", TRIG_X_ORIGIN - 130, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);	
+		}					
+	  	
 		ctxExpandableUnitCircle.stroke(); 
 		
 		// NOW we have the background image done.  As users click on a point and new stuff happens, we always come back to 
@@ -463,6 +474,9 @@ $(function() {
 		}
     });
     
+    //***********************************
+    // User changes amplitude of unit circle
+    //***********************************
     // fix the max/min values of amplitude(R) input so HTML matches js code
     $("#ampCirc").attr("max", MAX_AMP.toString());  
     $("#ampCirc").attr("min", MIN_AMP.toString());  
@@ -475,9 +489,11 @@ $(function() {
 				amp = temp;
 				if (temp != 1.0) {
 					ampStr = amp.toString().concat(MULT_DOT);
+					$("#unitCircNotify").text("");
 				} else {
 					//no need to show mpy by 1
 					ampStr = "";
+					$("#unitCircNotify").text("Unit Circle");
 				}
 				// since user might have typed in a value that is close but not allowed, put in the value we chose
 				$("#ampCirc").text(amp.toString());
@@ -489,9 +505,13 @@ $(function() {
 				redrawNewAmp();
 			} else {
 				console.log("Somehow, the user entered in a number outside expected range");
+				// force the value back to 1.0
+				$("#ampCirc").prop("value", 1.0);
 			}
 		} else {
 			console.log("User entered in a noninteger value which will be ignored");
+			// force the value back to 1.0
+			$("#ampCirc").prop("value", 1.0);
 		}
 	});
 	
