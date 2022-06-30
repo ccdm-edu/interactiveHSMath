@@ -631,6 +631,7 @@ $(function() {
 	//***********************************
 	// this code is used as user interacts with the yellow dots on main circle
 	//***********************************
+	$('#xyEqtn').text('= (cos'+THETA+', sin'+THETA+')');
 	circleDotsCanvas.addEventListener('click', (e) => {
 		// need to convert canvas coord into bitmap coord
 		let rect = circleDotsCanvas.getBoundingClientRect();
@@ -695,6 +696,12 @@ $(function() {
 				ctxExpandableUnitCircle.closePath();
 				
 				// put the labels up for this selection
+				if (1.0 == amp){
+					$('#xyEqtn').text('= (cos'+THETA+', sin'+THETA+')');
+				} else {
+					$('#xyEqtn').text('= (r'+MULT_DOT+'cos'+THETA+', r'+MULT_DOT+'sin'+THETA+')');
+				}
+				$('#xyEqtn').text
 				$('#xyFilledIn').text("= (" + ampStr + "cos" + dot.thetaRad + " , " + ampStr + "sin" + dot.thetaRad + ") ");
 				$('#xyExactValue').text(dot.xyExact);
 				$('#xyValueDecimal').text(dot.xyApproxDecimal);

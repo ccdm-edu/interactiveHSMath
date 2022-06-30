@@ -112,8 +112,9 @@ $(function() {
 	const UPPER_X_ORIGIN = 60;
 	const LOWER_Y_ORIGIN = 500;
 	const LOWER_X_ORIGIN = 60;
-	drawSineAxis(ctxFreqPlot, UPPER_X_ORIGIN, UPPER_Y_ORIGIN, MAX_TIME_SEC, PIX_PER_MINOR_TICK);
-	drawSineAxis(ctxFreqPlot, LOWER_X_ORIGIN, LOWER_Y_ORIGIN, MAX_TIME_SEC/5,PIX_PER_MINOR_TICK);
+	// 4 is number of major axis wanted on graph
+	drawSineAxis(ctxFreqPlot, UPPER_X_ORIGIN, UPPER_Y_ORIGIN, MAX_TIME_SEC, PIX_PER_MINOR_TICK, 4);
+	drawSineAxis(ctxFreqPlot, LOWER_X_ORIGIN, LOWER_Y_ORIGIN, MAX_TIME_SEC/5,PIX_PER_MINOR_TICK, 4);
 	// add labels above the graph S=sin(2*pi*f*t)
 	$("#sinEqtnLabelHI_DT2").text("S=sin(2" + MULT_DOT + PI + MULT_DOT + "f" + MULT_DOT + "t)");
 	$("#sinEqtnLabelLO_DT2").text("S=sin(2" + MULT_DOT + PI + MULT_DOT + "f" + MULT_DOT + "t)");

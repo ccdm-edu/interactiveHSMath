@@ -36,7 +36,7 @@
 	//The params will be defined every time user changes amplitude of circle 	
 	const CIRC_RAD = 120;
 	const AXIS_OVERLAP = 40;
-	const DOT_RADIUS = 7;
+	const DOT_RADIUS = 10;
 	const ANGLE_IND = 30;
 	
 	function drawTrigCircle(ctxExpandableUnitCircle, x_center, y_center, halfAxis) {
@@ -110,7 +110,7 @@
 		twoDCtx.setLineDash([])
 	}
 	//*** Draw the custom axis for sine with tick marks
-	function drawSineAxis(twoDCtx, xOrigin, yOrigin, maxTime, pix_per_minor_tick) {
+	function drawSineAxis(twoDCtx, xOrigin, yOrigin, maxTime, pix_per_minor_tick, num_major_ticks) {
 		const TRIG_AXIS = 420;  
 		const MAX_AMP_AXIS = CIRC_RAD + 10; 
 		twoDCtx.beginPath();
@@ -149,7 +149,9 @@
 		twoDCtx.fillText("1.0", xOrigin - 20, yOrigin - 0.1 * 10 * CIRC_RAD);
 		
 		// x sine axis time ticks
-		for(let i=1; i<= 20; i++){ 
+		// 5 small ticks per major ticks,  user specifies number of major ticks
+		let tot_num_ticks = 5 * num_major_ticks;
+		for(let i=1; i<= tot_num_ticks; i++){ 
 			twoDCtx.beginPath();
 			// y axis sin
 			let xLoc = xOrigin + i * pix_per_minor_tick;
@@ -158,7 +160,7 @@
 				// major axis tick
 				twoDCtx.lineTo(xLoc, yOrigin + 2 * SHORT_TICK_LEN);
 				// time is now i*maxTime/20
-				twoDCtx.fillText(String(i*maxTime/20), xLoc - 2, yOrigin + 2 * SHORT_TICK_LEN + 5);
+				twoDCtx.fillText(String(i*maxTime/tot_num_ticks), xLoc - 2, yOrigin + 2 * SHORT_TICK_LEN + 5);
 			} else {
 				// minor axis tick
 				twoDCtx.lineTo(xLoc, yOrigin + SHORT_TICK_LEN);

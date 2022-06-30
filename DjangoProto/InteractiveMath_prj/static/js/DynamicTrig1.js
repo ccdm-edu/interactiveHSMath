@@ -18,7 +18,7 @@ $(function() {
 	
 	const SECOND_USER_BOX_POP_HELP = "Do it again, but this time skip dots.  The red arrows will lead you.  GO FAST!";	
 	
-	const EXPIRATION_TIME_SEC = 20
+	const EXPIRATION_TIME_SEC = 30
 	// When user first enters page, they need to know what dots to hit to create desired
 	// effect, slow frequency that increases through these arrows that prompt the user
 	// Each set represents one of the dots, starting at 0/360 phase, next set is 30 degrees, etc
@@ -106,7 +106,7 @@ $(function() {
 	let numFreqGenSoFar = 0;
 	const ANGLE_PER_PT_RAD = Math.PI/6;
 	const TOTAL_NUM_DOTS = 2.0 * Math.PI/ANGLE_PER_PT_RAD;
-	let ptsClickedOnCircle = 0;
+	let ptsClickedOnCircle = 0;  // when user starts clicking, help changes
 			
 	//********************************************************
 	// Start drawing the "unit circle" with all touch sensitive angle-dots around it
@@ -158,7 +158,7 @@ $(function() {
 	} else {
     	console.log('Cannot obtain Sin/Cos unit circle context');
 	}	
-	const PIX_PER_MINOR_TICK = 17;
+	const PIX_PER_MINOR_TICK = 13;
 	const MAX_AMP_AXIS = CIRC_RAD + 10;
 
 	// draw sin axis off to right and a little above
@@ -166,8 +166,9 @@ $(function() {
 	const UPPER_X_ORIGIN = 60;
 	const LOWER_Y_ORIGIN = 500;
 	const LOWER_X_ORIGIN = 60;
-	drawSineAxis(ctxFreqPlot, UPPER_X_ORIGIN, UPPER_Y_ORIGIN, EXPIRATION_TIME_SEC, PIX_PER_MINOR_TICK);
-	drawSineAxis(ctxFreqPlot, LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPIRATION_TIME_SEC/10, PIX_PER_MINOR_TICK);
+	const NUM_MAJOR_TICK = EXPIRATION_TIME_SEC/5; // Its hardcoded in IntMathUtils 5 minor ticks per major tick
+	drawSineAxis(ctxFreqPlot, UPPER_X_ORIGIN, UPPER_Y_ORIGIN, EXPIRATION_TIME_SEC, PIX_PER_MINOR_TICK, NUM_MAJOR_TICK);
+	drawSineAxis(ctxFreqPlot, LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPIRATION_TIME_SEC/10, PIX_PER_MINOR_TICK, NUM_MAJOR_TICK);
 	//*****************
 	// draw lines inbetween plots to show lower plot is expanded time of upper plot
 	let startPt = {start:[UPPER_X_ORIGIN,UPPER_Y_ORIGIN], stop:[LOWER_X_ORIGIN, LOWER_Y_ORIGIN - MAX_AMP_AXIS - 10]};
@@ -193,7 +194,8 @@ $(function() {
 				return Math.round(CIRC_RAD*Math.sin(2* Math.PI * j * currFreq));
 			}
 			
-			const TOT_PIX_X_AXIS = PIX_PER_MINOR_TICK * 20; // we do 20 minor ticks regardless of plot
+			// a minor tick represents 1 sec
+			const TOT_PIX_X_AXIS = PIX_PER_MINOR_TICK * EXPIRATION_TIME_SEC;
 			let numPts = 40 + 10*maxTimePlot/T;  // higher freq gets more points on plot
 			let pixPerPt = TOT_PIX_X_AXIS/numPts;
 			let timeInc = maxTimePlot/numPts;  // each point covers this much time
@@ -218,14 +220,15 @@ $(function() {
 	//********************************************************
 	// Add temporary circles and verbiage to show user their new period/freq
 	//********************************************************
+	const SHOW_FREQ_COLOR = "DarkOrchid";
 	function showUserPeriod(latestPeriod){
 		ctxUnitCircle.beginPath();
 		ctxUnitCircle.lineWidth = 2.0
-		ctxUnitCircle.strokeStyle = "lime";
+		ctxUnitCircle.strokeStyle = SHOW_FREQ_COLOR;
 		// put circle up at numeric count down timer
 	    ctxUnitCircle.arc(110, 20, 18, 0, Math.PI * 2, true); 
 	    ctxUnitCircle.stroke();
-	    new Arrow(ctxUnitCircle, POINT_TO_TIME, "lime","", 2).draw();
+	    new Arrow(ctxUnitCircle, POINT_TO_TIME, SHOW_FREQ_COLOR,"", 2).draw();
 	    
 		let arrow_to_graph_time;
 		// decide whether to put circle on upper or lower plot
@@ -234,7 +237,7 @@ $(function() {
 			let xcoord = Math.round(UPPER_X_ORIGIN + latestPeriod*PIX_PER_MINOR_TICK);
 			ctxFreqPlot.beginPath();
 			ctxFreqPlot.lineWidth = 2.0
-			ctxFreqPlot.strokeStyle = "lime";
+			ctxFreqPlot.strokeStyle = SHOW_FREQ_COLOR;
 			let point_y = UPPER_Y_ORIGIN;
 			ctxFreqPlot.arc(xcoord, UPPER_Y_ORIGIN, 15, 0, Math.PI * 2, true);
 			ctxFreqPlot.stroke();
@@ -249,7 +252,7 @@ $(function() {
 			let xcoord = Math.round(LOWER_X_ORIGIN  + 10*latestPeriod*PIX_PER_MINOR_TICK);
 			ctxFreqPlot.beginPath();
 			ctxFreqPlot.lineWidth = 2.0
-			ctxFreqPlot.strokeStyle = "lime";
+			ctxFreqPlot.strokeStyle = SHOW_FREQ_COLOR;
 			let point_y = LOWER_Y_ORIGIN
 			ctxFreqPlot.arc(xcoord, LOWER_Y_ORIGIN, 15, 0, Math.PI * 2, true);
 			ctxFreqPlot.stroke();
@@ -261,7 +264,7 @@ $(function() {
 			}
 		}
 		// plot arrow to the place on x axis that is period
-		new Arrow(ctxFreqPlot, arrow_to_graph_time, "lime","", 2).draw();
+		new Arrow(ctxFreqPlot, arrow_to_graph_time, SHOW_FREQ_COLOR,"", 2).draw();
 		
 		// go back to defaults
 		ctxUnitCircle.strokeStyle = "black";
@@ -317,9 +320,11 @@ $(function() {
 	Object.freeze(FREQ_COLORS);
 	const LATEST_FREQ_TEXT = "   <- Most Recent";
 	const EARLIEST_FREQ_TEXT = "   <- Least Recent";
-	const GREEN_CIRCLE_EXPLN = "<p id='ExplnFreqMark'>Look at the two green circles.  They both reflect the time it took you to <br>accumulate 360 degrees of phase.  This is the period (T) of the waveform.  <br>The frequency of the waveform is 1/T.  Pull out your calculator and confirm!</p>";
+	const FREQ_CIRCLE_EXPLN = "<p id='ExplnFreqMark' style='color:" + SHOW_FREQ_COLOR + "'>Look at the two circles.  They both reflect the time it took you to <br>accumulate 360 degrees of phase.  This is the period (T) of the waveform.  <br>The frequency of the waveform is 1/T.  Pull out your calculator and confirm!</p>";
 	
+	//********************************************************
 	//*** start the timer and stop it on expiration or if user hits 360 degrees of phase
+	let stopTimerNow = false;
 	function startFreqMeas(){
         timerStarted = true;
         countTime =0;
@@ -329,7 +334,7 @@ $(function() {
     		countTime++;
     		$('#timeVal_DT1').text(roundFP(countTime * 0.1, 1)); 
     		$('#theta_DT1').text(String(accumPhase));
-    		if (countTime/10 == EXPIRATION_TIME_SEC) {
+    		if ( (countTime/10 == EXPIRATION_TIME_SEC) || (stopTimerNow) ) {
     			//After EXPIRATION_TIME_SEC sec, end the experiment
         		if (startInterval) clearInterval(startInterval);
         		timerStarted = false;
@@ -337,7 +342,13 @@ $(function() {
         		lastIndexClicked = 0;
         		$('#ClearOldFreq_DT1').prop('disabled', false);
         		$('#theta_DT1').text(String(accumPhase));
-        		$('#UserNotices_DT1').html('Time expired for accumulating 360 degrees of phase.  <br>As you click yellow dots going around counter clock wise, <br>dont forget to hit 360 degrees as your last point.');
+        		if (stopTimerNow) {
+        			// get rid of time value 
+        			$('#timeVal_DT1').text('');
+        		} else {
+        			$('#UserNotices_DT1').html('Time expired for accumulating 360 degrees of phase.  <br>As you click yellow dots going around counter clock wise, <br>dont forget to hit 360 degrees as your last point.');
+        		}
+        		stopTimerNow = false;  // Time's up or user stopped timer, either way, reset for next use
         	}
         	if (accumPhase >= 360) {
         		// then this frequency sampling is done, show results to user
@@ -345,6 +356,7 @@ $(function() {
         		timerStarted = false;
         		// minColorInd keeps track of where we start in freq color range
         		let minColorInd = 0;
+        		// Only save so many old freq, if hit the max, delete the oldest to add the newest
         		if (freqMeasured.length == MAX_FREQ){
         			// kill first element
         			freqMeasured.shift();
@@ -368,13 +380,13 @@ $(function() {
         		$('#LastFrequencies_DT1').html(freqText);
         		// give user feedback on their performance
         		if (lastFreq == 0) {
-        			$('#UserNotices_DT1').html('Nice work, lets try another one' + GREEN_CIRCLE_EXPLN);
+        			$('#UserNotices_DT1').html('Nice work, lets try another one' + FREQ_CIRCLE_EXPLN);
         		} else {
         			let perDiff = roundFP((currFreq - lastFreq) * 100 / lastFreq, 1);
         			if (perDiff > 0) {
-        				$('#UserNotices_DT1').html('This time your frequency was higher by ' + perDiff + '%' + GREEN_CIRCLE_EXPLN);
+        				$('#UserNotices_DT1').html('This time your frequency was higher by ' + perDiff + '%' + FREQ_CIRCLE_EXPLN);
         			} else {
-        				$('#UserNotices_DT1').html('This time your frequency was lower by ' + (-perDiff) + '%' + GREEN_CIRCLE_EXPLN);
+        				$('#UserNotices_DT1').html('This time your frequency was lower by ' + (-perDiff) + '%' + FREQ_CIRCLE_EXPLN);
         			}
         		}
         		lastFreq = currFreq;
@@ -386,15 +398,21 @@ $(function() {
         	}
     	}, 100);	
 	}
+	
+	//********************************************************
 	// this function used when user hits clear or start over
 	function clearPage() {
+		// if the clock is running, stop it
 		// go back to bare plots and no freq
 		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
 		ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
 		freqMeasured = [];
 		$('#LastFrequencies_DT1').text('');
 		$('#UserNotices_DT1').text('');
+		stopTimerNow = true;  // in case timer is running, stop it
 	}
+	
+	//********************************************************
     //*** user clicks the Clear button
     $('#ClearOldFreq_DT1').on('click', function(event) {
 		clearPage();
@@ -409,6 +427,7 @@ $(function() {
 		ptsClickedOnCircle = 0;
     }); 
     
+    //********************************************************
 	//*** user clicks a yellow dot
 	const ANGLE_PER_PT_DEG = ANGLE_PER_PT_RAD * 180 / Math.PI;
     circleDotsCanvas.addEventListener('click', (e) => {	
@@ -493,7 +512,7 @@ $(function() {
 			ind = ind + 1;
 		});	
 	});
-    
+    //********************************************************
 	//*** User can choose a TO DO set for the text box or an explanation, this code is the implementation
 	$('#ToDo_or_expln_DT1').on('click', function(event){
 		if ("Explain" == $("#ToDo_or_expln_DT1").prop("value")) {
@@ -514,8 +533,5 @@ $(function() {
     $("#LongTextBox_DT1").text(dynamicTrig1ToDo_text);
     $("#Explain_help_DT1").css("visibility", "hidden");
     let dynamicTrig1Expln_text = $("#Explain_help_DT1").text();
-    
-    
-
 
 })
