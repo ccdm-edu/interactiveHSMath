@@ -151,7 +151,7 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	position: relative;
 	width: 200px;
 	border: 1px solid black;
-	padding: 10px;
+	padding: 5px;
 	background-color: pink;
 	font-family: Arial;
 	font-size: 15px;
@@ -159,5 +159,18 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	left: 110px;
 	top: 430px;
 	z-index: 10;
-	visibility: hidden;
+	visibility: visible;
+	animation-name: showFirstBlinkyHelp;
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
+	/* start out with nothing then draw attention to it*/
+	animation-delay: 1s;
+}
+
+
+/* grow the box and move so lettering and position doesn't change  */
+@keyframes showFirstBlinkyHelp {
+	0%		{border: 1px solid black;}
+	50%		{border: 10px solid black; width: 218px; left: 100px; top: 420px;} 
+	100%	{border: 1px solid black; width: 200px; left: 110px; top: 430px;}
 }

@@ -16,7 +16,9 @@ $(function() {
 	let dynamicTrig1Expln;
 	let dynamicTrig1ToDo;
 	
-	const SECOND_USER_BOX_POP_HELP = "Do it again, but this time skip dots.  The red arrows will lead you.  GO FAST!";	
+	const SECOND_USER_BOX_POP_HELP = "Do it again, but this time skip half the dots.  The red arrows will lead you.  GO FAST!";	
+	const THIRD_USER_BOX_POP_HELP = "Another try, but this time skip most of the dots.  The red arrows will lead you.  GO FAST!";
+	const FOURTH_USER_BOX_POP_HELP = "Start at any dot OTHER THAN end point, move counter clockwise, skip as many as you want, end at red arrow";
 	
 	const EXPIRATION_TIME_SEC = 30
 	// When user first enters page, they need to know what dots to hit to create desired
@@ -172,8 +174,9 @@ $(function() {
 	//*****************
 	// draw lines inbetween plots to show lower plot is expanded time of upper plot
 	let startPt = {start:[UPPER_X_ORIGIN,UPPER_Y_ORIGIN], stop:[LOWER_X_ORIGIN, LOWER_Y_ORIGIN - MAX_AMP_AXIS - 10]};
-	let endPt = {start:[UPPER_X_ORIGIN + 2*PIX_PER_MINOR_TICK, UPPER_Y_ORIGIN], stop: [LOWER_X_ORIGIN  + 20*PIX_PER_MINOR_TICK, LOWER_Y_ORIGIN]};
-	drawExpansionLines(ctxFreqPlot, startPt, endPt,"2 sec expanded");
+	const NUM_MINOR_TICKS = EXPIRATION_TIME_SEC/10;  // lower plot is 1/10 of upper plot duration
+	let endPt = {start:[UPPER_X_ORIGIN + NUM_MINOR_TICKS*PIX_PER_MINOR_TICK, UPPER_Y_ORIGIN], stop: [LOWER_X_ORIGIN  + EXPIRATION_TIME_SEC*PIX_PER_MINOR_TICK, LOWER_Y_ORIGIN]};
+	drawExpansionLines(ctxFreqPlot, startPt, endPt,NUM_MINOR_TICKS.toString() + " sec expanded");
 	
 	//*** Now it looks good, snapshot this so we can go back after drawing temporary things on it
 	sineAxisBkgd = ctxFreqPlot.getImageData(0, 0, freqCanvas.width, freqCanvas.height);
@@ -273,8 +276,11 @@ $(function() {
     //********************************************************
 	// Initial User Assistance: First direct user to create slow frequency and 
 	// later direct them to create second faster frequency. After that, they are on their own.
+	// Cant use "mousemove"/hover as that concept is lost on tablets
 	//********************************************************
-    circleDotsCanvas.addEventListener("mousemove", (e) => {
+	// initial condition
+	new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","Start here", 2).draw();
+    function updateContextSensHelp() {
 		if ((numFreqGenSoFar == 0) && (ptsClickedOnCircle == 0)) {
 			// user is wandering around aimlessly trying to figure out how to get started.  Start them
 			// generating the slowest frequency, clicking on all dots
@@ -293,15 +299,22 @@ $(function() {
 			// user has done two freq.  Show them it can be done faster.
 			// Once they start clicking on yellow dots, they dont need this help anymore
 			$('#FirstHelp_DT1').css("visibility", "visible");
-			$("#FirstHelp_DT1").text("Start at any dot, move counter clockwise, skip as many as you want, end at red arrow");
+			$("#FirstHelp_DT1").text(THIRD_USER_BOX_POP_HELP);
+			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","Start here", 2).draw();
+		}
+		else if ((numFreqGenSoFar == 3) && (ptsClickedOnCircle == 0)) {
+			// user has done three freq.  Show them it can be done faster.
+			// Once they start clicking on yellow dots, they dont need this help anymore
+			$('#FirstHelp_DT1').css("visibility", "visible");
+			$("#FirstHelp_DT1").text(FOURTH_USER_BOX_POP_HELP);
 		}
 		else {
 			$('#FirstHelp_DT1').css("visibility", "hidden");
 		}
-		if (numFreqGenSoFar >= 2) {
+		if (numFreqGenSoFar >= 3) {
 			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","End here", 2).draw();
 		}
-	});
+	};
 
     //********************************************************
 	// User Interaction clicking yellow dots:  Start counting time and collecting phase
@@ -349,6 +362,7 @@ $(function() {
         			$('#UserNotices_DT1').html('Time expired for accumulating 360 degrees of phase.  <br>As you click yellow dots going around counter clock wise, <br>dont forget to hit 360 degrees as your last point.');
         		}
         		stopTimerNow = false;  // Time's up or user stopped timer, either way, reset for next use
+        		startOverContextSensHelp();  
         	}
         	if (accumPhase >= 360) {
         		// then this frequency sampling is done, show results to user
@@ -382,11 +396,11 @@ $(function() {
         		if (lastFreq == 0) {
         			$('#UserNotices_DT1').html('Nice work, lets try another one' + FREQ_CIRCLE_EXPLN);
         		} else {
-        			let perDiff = roundFP((currFreq - lastFreq) * 100 / lastFreq, 1);
-        			if (perDiff > 0) {
-        				$('#UserNotices_DT1').html('This time your frequency was higher by ' + perDiff + '%' + FREQ_CIRCLE_EXPLN);
+        			let hzDiff = roundFP((currFreq - lastFreq), 3);
+        			if (hzDiff > 0) {
+        				$('#UserNotices_DT1').html('This time your frequency was higher by ' + hzDiff + ' Hertz (Hz)' + FREQ_CIRCLE_EXPLN);
         			} else {
-        				$('#UserNotices_DT1').html('This time your frequency was lower by ' + (-perDiff) + '%' + FREQ_CIRCLE_EXPLN);
+        				$('#UserNotices_DT1').html('This time your frequency was lower by ' + (-hzDiff) + ' Hertz (Hz)' + FREQ_CIRCLE_EXPLN);
         			}
         		}
         		lastFreq = currFreq;
@@ -398,39 +412,13 @@ $(function() {
         	}
     	}, 100);	
 	}
-	
-	//********************************************************
-	// this function used when user hits clear or start over
-	function clearPage() {
-		// if the clock is running, stop it
-		// go back to bare plots and no freq
-		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
-		ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
-		freqMeasured = [];
-		$('#LastFrequencies_DT1').text('');
-		$('#UserNotices_DT1').text('');
-		stopTimerNow = true;  // in case timer is running, stop it
-	}
-	
-	//********************************************************
-    //*** user clicks the Clear button
-    $('#ClearOldFreq_DT1').on('click', function(event) {
-		clearPage();
-    });
-    //*** user wants to start over with the handholding help that first directs them to hit 
-    // every dot (getting a lower freq) then every other dot (getting a higher freq) then do it your
-    // way and max out freq
-    $('#StartOver_DT1').on('click', function(event) {
-    	$('#StartOver_DT1').css("visibility", "hidden");
-    	clearPage();
-    	numFreqGenSoFar = 0;
-		ptsClickedOnCircle = 0;
-    }); 
     
     //********************************************************
 	//*** user clicks a yellow dot
 	const ANGLE_PER_PT_DEG = ANGLE_PER_PT_RAD * 180 / Math.PI;
     circleDotsCanvas.addEventListener('click', (e) => {	
+    	//user is active, get rid of help until they are done
+    	$('#FirstHelp_DT1').css("visibility", "hidden");
     	// now the timer has started, collect phase
     	// need to convert canvas coord into bitmap coord
 		let rect = circleDotsCanvas.getBoundingClientRect();
@@ -480,10 +468,21 @@ $(function() {
 						} else {
 							new Arrow(ctxUnitCircle, ARROW_HELPERS[2*ptsClickedOnCircle], "red","", 2).draw();
 						}
-					} 
+					} else if (numFreqGenSoFar == 2) {
+						// point user to click on every third yellow dot
+						if (3*ptsClickedOnCircle >= TOTAL_NUM_DOTS) {
+							// should never get to be more than TOTAL_NUM_DOTS...
+							new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","End here", 2).draw();
+						} else {
+							new Arrow(ctxUnitCircle, ARROW_HELPERS[3*ptsClickedOnCircle], "red","", 2).draw();
+						}
+					} else {
+						// user is just clicking at least two samples/cycle and needs to know where to end
+						new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","End here", 2).draw();
+					}
 										
 				} else if (ind == 0 && lastIndexClicked !=0) {
-					// we are on last point used to generate this freq.  User is done with this frequency
+					// user clicked last point used to generate this freq.  User is done with this frequency
 					// do clean up and prep for next freq
 					accumPhase = 360;
 					// all done, reset to start again
@@ -502,6 +501,7 @@ $(function() {
 					ctxUnitCircle.lineWidth = 3.0
 					ctxUnitCircle.stroke();
 					ctxUnitCircle.closePath();
+					updateContextSensHelp();  // update context sensitive help for user
 				
 				}		
 				// if timer not on, turn it on
@@ -512,6 +512,42 @@ $(function() {
 			ind = ind + 1;
 		});	
 	});
+		
+	//********************************************************
+	// this function used when user hits clear or start over
+	function clearPage() {
+		// if the clock is running, stop it
+		// go back to bare plots and no freq
+		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
+		ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
+		freqMeasured = [];
+		$('#LastFrequencies_DT1').text('');
+		$('#UserNotices_DT1').text('');
+		stopTimerNow = true;  // in case timer is running, stop it
+	}
+	
+	//********************************************************
+    //*** user clicks the Clear button
+    $('#ClearOldFreq_DT1').on('click', function(event) {
+		clearPage();
+    });
+    //*** user wants to start over with the handholding help that first directs them to hit 
+    // every dot (getting a lower freq) then every other dot (getting a higher freq) then do it your
+    // way and max out freq
+    function startOverContextSensHelp() {
+        $('#StartOver_DT1').css("visibility", "hidden");
+    	clearPage();
+    	numFreqGenSoFar = 0;
+		ptsClickedOnCircle = 0;
+		// chances are first help is obsolete now.. start over
+		$('#FirstHelp_DT1').css("visibility", "hidden");
+		// initial condition
+		new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","Start here", 2).draw();
+		updateContextSensHelp();
+    }
+    $('#StartOver_DT1').on('click', function(event) {
+		startOverContextSensHelp();
+    }); 
     //********************************************************
 	//*** User can choose a TO DO set for the text box or an explanation, this code is the implementation
 	$('#ToDo_or_expln_DT1').on('click', function(event){
