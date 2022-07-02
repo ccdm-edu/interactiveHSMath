@@ -45,8 +45,26 @@
 	
 	<div id="FirstHelp_DT1">
 	<!--  will dynamically add elements here -->
-		<p> Click the yellow dot with red arrow labeled Start Here.  Then follow the red arrows as they appear. <br> GO FAST!</p>
+		<p></p>
 	</div>
+	
+	<!-- Tell user there is a timer counting their phase accumulation, they need to keep up -->
+	<div class="modal fade" id="expiremodal" role="dialog" tabindex="-1">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h1>Time Expired!</h1>
+					<p>The purpose of this page is to accumulate 360&#176 phase within 30 seconds of time.  The faster you do it, the higher the frequency of the sine wave. 
+					 Frequency = 1/T where T is how long it takes you to make a complete 360&#176 turn around the circle. 
+					 <br><b>We are going to start over. Follow the pop up box and go as fast as you can</b></p>
+				</div>
+				<div class="modal-footer">
+					<!--  when clicked, this will dismiss the modal -->
+					<button class="btn btn-success" data-dismiss="modal" type="button">Got it!</button><br class="visible-xs">	
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  
 	At the bottom it doesn't consume space from other elements but it does give search engines a clue what page is all about. -->

@@ -16,6 +16,7 @@ $(function() {
 	let dynamicTrig1Expln;
 	let dynamicTrig1ToDo;
 	
+	const FIRST_USER_BOX_POP_HELP = "Click the yellow dot with red arrow labeled Start Here.  Then follow the red arrows as they appear. GO FAST!";
 	const SECOND_USER_BOX_POP_HELP = "Do it again, but this time skip half the dots.  The red arrows will lead you.  GO FAST!";	
 	const THIRD_USER_BOX_POP_HELP = "Another try, but this time skip most of the dots.  The red arrows will lead you.  GO FAST!";
 	const FOURTH_USER_BOX_POP_HELP = "Start at any dot OTHER THAN end point, move counter clockwise, skip as many as you want, end at red arrow";
@@ -280,11 +281,15 @@ $(function() {
 	//********************************************************
 	// initial condition
 	new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","Start here", 2).draw();
+	$('#FirstHelp_DT1').text(FIRST_USER_BOX_POP_HELP);
+	
     function updateContextSensHelp() {
+    console.log("numFreq = " + numFreqGenSoFar + "ptsClickedOnCircle = " +ptsClickedOnCircle);
 		if ((numFreqGenSoFar == 0) && (ptsClickedOnCircle == 0)) {
 			// user is wandering around aimlessly trying to figure out how to get started.  Start them
 			// generating the slowest frequency, clicking on all dots
 			// Once they start clicking on yellow dots, they dont need this help anymore
+			$('#FirstHelp_DT1').text(FIRST_USER_BOX_POP_HELP);
 			$('#FirstHelp_DT1').css("visibility", "visible");
 			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","Start here", 2).draw();
 		}
@@ -298,8 +303,8 @@ $(function() {
 		else if ((numFreqGenSoFar == 2) && (ptsClickedOnCircle == 0)) {
 			// user has done two freq.  Show them it can be done faster.
 			// Once they start clicking on yellow dots, they dont need this help anymore
-			$('#FirstHelp_DT1').css("visibility", "visible");
 			$("#FirstHelp_DT1").text(THIRD_USER_BOX_POP_HELP);
+			$('#FirstHelp_DT1').css("visibility", "visible");
 			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","Start here", 2).draw();
 		}
 		else if ((numFreqGenSoFar == 3) && (ptsClickedOnCircle == 0)) {
@@ -355,14 +360,17 @@ $(function() {
         		lastIndexClicked = 0;
         		$('#ClearOldFreq_DT1').prop('disabled', false);
         		$('#theta_DT1').text(String(accumPhase));
-        		if (stopTimerNow) {
-        			// get rid of time value 
-        			$('#timeVal_DT1').text('');
-        		} else {
-        			$('#UserNotices_DT1').html('Time expired for accumulating 360 degrees of phase.  <br>As you click yellow dots going around counter clock wise, <br>dont forget to hit 360 degrees as your last point.');
-        		}
+    			// get rid of time value 
+    			$('#timeVal_DT1').text('');
+    			startOverContextSensHelp();  // this needs to be before stopTimeNow set to false
         		stopTimerNow = false;  // Time's up or user stopped timer, either way, reset for next use
-        		startOverContextSensHelp();  
+        		//******************
+				// Get users attention and explain situation so they can fix it next time out       		
+	        	$('#expiremodal').find('.item').first().addClass('active');
+			    $('#expiremodal').modal({
+			    	backdrop: 'static',
+		    		keyboard: false
+			    });	 
         	}
         	if (accumPhase >= 360) {
         		// then this frequency sampling is done, show results to user
@@ -531,6 +539,8 @@ $(function() {
     $('#ClearOldFreq_DT1').on('click', function(event) {
 		clearPage();
     });
+
+	//********************************************************    
     //*** user wants to start over with the handholding help that first directs them to hit 
     // every dot (getting a lower freq) then every other dot (getting a higher freq) then do it your
     // way and max out freq
@@ -548,6 +558,7 @@ $(function() {
     $('#StartOver_DT1').on('click', function(event) {
 		startOverContextSensHelp();
     }); 
+    
     //********************************************************
 	//*** User can choose a TO DO set for the text box or an explanation, this code is the implementation
 	$('#ToDo_or_expln_DT1').on('click', function(event){
