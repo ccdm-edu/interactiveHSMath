@@ -22,8 +22,7 @@ $(function() {
 	let tuneBuffer = [];  // array of AudioBuffer for currTuneState 1 through N, all musical notes, used to play full mp3 file
 	let tuneOffset = []; // determines when plotting will begin in mp3 file, index is currTuneState
 	let tuneFundamentalFreq = []; // initialize tone for closest approx
-	let tuneGraphLong = [[]];  // holds an array, per note, of graphing points for long graph (10ms)
-	let tuneGraphShort = [[]];    // holds an array, per note, of graphing points for short graph (1ms)
+	let tuneGraphLong = [[]];  // holds an array, per musical note, of graphing points for long graph (10ms)
 	let noteFilePoint = [];   // array for every instrument of InstrumentNote, will determine next point using multirate sample rate conversion
 	// DO need to handle the currTuneState = tone and we don't plot that one this way...
 	
@@ -57,13 +56,11 @@ $(function() {
 				// arbitrary fixed amplification factor put on mp3 signals for ease in plotting.  Changing
 				// amplitude only changes tone volume, not the mp3 musical note volume
 				ampLongCurrNote[i] = 10 * tuneGraphLong[currTuneState][i];	
-
 			}	
 		}
 		for (i=0; i<=NUM_PTS_PLOT_SHORT; i++) {
 			ampShort[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodShort + $currPhase.val() / 360.0) );
 			timeMsShort[i] = roundFP(i * samplePeriodShort * 1000, 2);				
-
 		}	
 
 	};
@@ -88,11 +85,12 @@ $(function() {
 	    
 	    // update title to match new parameters
 	    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
-	    let currTitleText = 'y = ' + $currAmp.val() + ' * sin{ 2 * \u03C0 * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }';
+	    let currTitleText = 'Pitch tone y = ' + $currAmp.val() + ' * sin{ 2 * \u03C0 * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }';
 	    sine_plot_100_1k.options.title.text = currTitleText;
 		
 		// now fill the arrays and push them to the plots
 		fillInArrays();   
+
 		// update 10 ms plot
 		sine_plot_100_1k.data.datasets[0].data.push(ampLong);	 
 		// update 1 ms plot
@@ -117,18 +115,6 @@ $(function() {
 	function updatePhase() {
 		$currPhase = $("#in-range-phase")
 		$("#currPhaseLabel").text($currPhase.val());
-		// LATER:  move this to jquery popups, doesn't work well in safari
-		switch (parseInt($currPhase.val())) {
-			case 180:
-				//alert('Hey Look!  phase = 180 is a negative sine wave! \nsin(a+180) = sin(a)cos(180) + cos(a)sin(180)\n                  = sin(a) * -1       + cos(a) * 0 \n                  = -sin(a)');
-				break;
-			case 270:
-				//alert('Hey Look!  phase = 270 is a negative cosine wave! \nsin(a+270) = sin(a)cos(270) + cos(a)sin(270)\n                  = sin(a) * 0       + cos(a) * -1 \n                  = -cos(a)');
-				break;
-			case 360:
-				//alert('Hey Look!  phase = 360 = 0 is a sine wave! \nWhy?  Because 360 degrees = 2 pi takes you back to the beginning at zero');
-				break;
-		}
 		if (ToneIsOnNow==true) {
 			osc.phase = $currPhase.val();
 			// if tone isn't on, don't have to change anything...
@@ -356,6 +342,10 @@ $(function() {
 		if (currTuneState === DEFAULT_TONE) {
 			// no instruments to play, its tone only.  No need for a play tone button
 			$("#allowNotePlay").hide();
+			// get rid of any musical note legends
+			sine_plot_100_1k.data.datasets[1].label = "";
+			sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,255,255)'; // white for legend (invisible)
+			
 			// update graphs, to eliminate musical note if present
 			drawTone()
 		} else {	
@@ -425,13 +415,18 @@ $(function() {
 									// we set up signal so it looks best at zero phase
 									$("#currPhaseLabel").text('0');
 									$("#in-range-phase").val(0);
-									updatePhase();
+									updatePhase();  
 							
+									// change the musical note legends
+									let instrArray = tuneState[currTuneState].split("_");
+									sine_plot_100_1k.data.datasets[1].label = tuneInstrument[currTuneState] + " plays " + instrArray[instrArray.length - 1];
+									sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,165,0)'
+					
 									// update graphs
 									drawTone()
 									// we have new instrument mp3, allow play
 									$("#allowNotePlay").show(); 
-									
+																		
 									// decodeAudioData is async and doesn't support promises, can't use try/catch for errors
 									},function(err) { alert("err(decodeAudioData) on file for: " + tuneInstrument[currTuneState] + " error =" + err); } )
 								}, reason => {
@@ -568,7 +563,7 @@ $(function() {
 		maintainAspectRatio: false,  //uses the size it is given
 		responsive: true,
 	    legend: {
-	        display: false // gets rid of dataset label/legend
+	        display: true // gets rid of dataset label/legend
 	     },
 		elements:{
 			point:{
@@ -590,10 +585,11 @@ $(function() {
 					labelString: 'y amplitude'
 				}
 			}]
-		}
+		},
+
 	};
 	Object.freeze(CHART_OPTIONS);
-	let currTitle = {display: true, text: 'y = ' + $currAmp.val() + ' * sin{ 2 * pi * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }'};
+	let currTitle = {display: true, text: 'Pitch tone y = ' + $currAmp.val() + ' * sin{ 2 * pi * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }'};
 	
 	const TOP_CHART = {...CHART_OPTIONS, title: currTitle };
 	let sine_plot_100_1k = new Chart(ctxLong, {
@@ -601,16 +597,17 @@ $(function() {
 	    data: {
 	    	labels: timeMsLong,
 	        datasets: [{
-	            label: 'Tone Graph',
+	            label: 'Pitch tone (sine wave)',
 	            data: ampLong,
 	            fill: false,
 	            borderColor: 'rgb(75, 192, 192)',
 	            },
+	            // this will be the musical note data
 	            {
-	            label: 'Musical Tone',
+	            label: '',
 	            data: ampLongCurrNote,
 	            fill: false,
-	            borderColor: 'rgb(255,165,0)',
+	            borderColor: 'rgb(255,255,255)',  // set it to white, cheezy way to null the legend till needed
 	            }]
 	    },
 	    options: TOP_CHART
@@ -623,7 +620,7 @@ $(function() {
 	    	labels: timeMsShort,
 	    	//borderColor: 'rgb(255, 165, 0)', this is orange
 	        datasets: [{
-	            label: 'Tone Graph',
+	            label: 'Pitch Tone (sine wave)',
 	            data: ampShort,
 	            fill: false,
 	            borderColor: 'rgb(75, 192, 192)',

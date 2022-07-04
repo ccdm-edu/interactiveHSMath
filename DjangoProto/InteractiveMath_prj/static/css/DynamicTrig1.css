@@ -146,7 +146,6 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 }
 
 /*************Dynamic Help**************/
-/*I don't really understand why the values of left, top are what they are.... */
 #FirstHelp_DT1 {
 	position: relative;
 	width: 200px;

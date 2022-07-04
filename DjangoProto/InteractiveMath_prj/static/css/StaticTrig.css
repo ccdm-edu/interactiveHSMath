@@ -117,7 +117,7 @@ We use negative value for top since we want some overlap*/
 
 /*************Dynamic Help**************/
 /*I don't really understand why the values of left, top are what they are.... */
-#FirstHelp {
+#FirstHelp_ST {
 	position: relative;
 	width: 200px;
 	border: 1px solid black;
@@ -129,8 +129,18 @@ We use negative value for top since we want some overlap*/
 	left: 120px;
 	top: -350px;
 	z-index: 10;
-	visibility: hidden;
+	visibility: visible;
+	animation-name: showBeginnerBlinkyHelp;
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
+	/* start out with nothing then draw attention to it*/
+	animation-delay: 1s;
 }
 
-
+/* grow the box and move so lettering and position doesn't change  */
+@keyframes showBeginnerBlinkyHelp {
+	0%		{border: 1px solid black;}
+	50%		{border: 10px solid black; width: 218px; left: 110px; top: -360px;} 
+	100%	{border: 1px solid black; width: 200px; left: 120px; top: -350px;}
+}
 		
