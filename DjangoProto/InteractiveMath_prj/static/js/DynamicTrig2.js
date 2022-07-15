@@ -13,7 +13,7 @@ $(function() {
 	const MAX_TIME_SEC = 1.0  // 1Hz is min freq, max time on upper graph
 	const PIX_PER_MINOR_TICK = 17;
 	const MAX_AMP_AXIS = CIRC_RAD + 10;
-	const PERIOD_COLOR = 'lime';
+	const PERIOD_COLOR = 'DarkOrchid';
 	const SINE_COLOR = "blue";
 	const RADIUS_VECTOR_COLOR = "PaleTurquoise"
 	
@@ -172,7 +172,7 @@ $(function() {
 		let timeIntMs = roundFP(1000/(currFreq*samplesPerPeriod), 1);		
 		//console.log(" sample time in ms is " + timeIntMs + " samples per period is " + samplesPerPeriod);
 		const TIC_IN_HALF_SEC = Math.round(500/timeIntMs);
-		$('#UserNotices_DT2').html('T matches green circle on graphs to right');
+		$('#UserNotices_DT2').html('T matches purple circle on graphs to right');
 		$('#UserNotices_DT2').css('color', PERIOD_COLOR);
 		$('#SampPerPeriod_DT2').html(samplesPerPeriod); // inc is fixed per sine freq
         startInterval = setInterval(function(){

@@ -1,6 +1,14 @@
 /***********************
 This is the style sheet for ToneTrig.html
 ************************/
+/* create global var for this html */
+:root{
+	--LEFT_EDGE_PLOT: 54px;
+	--TOP_EDGE_PLOT: 64px;
+	--WIDTH_466HZ: 159px;
+	--HEIGHT_TONE_PLOT: 140px;
+}
+
 #headerAndCtl_TT {
 	position: relative;
 }
@@ -90,6 +98,43 @@ This is the style sheet for ToneTrig.html
 	width:800px;
 }
 
+/* checkerbox to show periodicity**/
+.Period_Tone {
+	position: absolute;
+	top: var(--TOP_EDGE_PLOT);
+	width: var(--WIDTH_466HZ);
+	height: var(--HEIGHT_TONE_PLOT);
+	border-style: solid;
+	border-width: 1px;
+}
+.First_Period{
+	left: var(--LEFT_EDGE_PLOT);
+	border-color: red;
+}
+.Second_Period{
+	left: calc(var(--LEFT_EDGE_PLOT) + var(--WIDTH_466HZ));
+	borde-color: blue;	
+}
+.Third_Period{
+	left: calc(var(--LEFT_EDGE_PLOT) + 2 * var(--WIDTH_466HZ));
+	border-color: red;
+}
+.Fourth_Period{
+	left: calc(var(--LEFT_EDGE_PLOT) + 3 * var(--WIDTH_466HZ));
+	border-color: blue;
+}
+#Period_Text1{
+	position: absolute;
+	left: calc(var(--LEFT_EDGE_PLOT) + 50px);
+	top: calc(var(--TOP_EDGE_PLOT) + 160px);
+	color: red;
+}
+#Period_Text2{
+	position: absolute;
+	left: calc(var(--LEFT_EDGE_PLOT) + var(--WIDTH_466HZ) + 50px);
+	top: calc(var(--TOP_EDGE_PLOT) + 190px);
+	color: blue;
+}
 /* we allow the time expand lines to write on this canvas */
 #sine_plotsLong{
     position:absolute; 

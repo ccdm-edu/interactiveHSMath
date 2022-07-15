@@ -49,7 +49,7 @@
 		<p id="FreqOfNoteVal"> </p>
 		<label id = "noteVolLabel">Volume:  </label>
 		<p id = "noteVolValue"></p>
-		<input id="noteVol" type="range" step="1" value="5" min="1" max="100" data-toggle="tooltip" data-placement="right" title="Turn on your speaker">
+		<input id="noteVol" type="range" step="1" value="20" min="1" max="100" data-toggle="tooltip" data-placement="right" title="Turn on your speaker">
 		<input type="button" id="VolOnOff" value="Silence" data-toggle="tooltip" data-placement="right" title="">
 		<!-- For debug to see where this canvas is, can add border around it with:  style="border:1px solid #000000;" -->
 		<p id = "notesToPlayLabel" data-toggle="tooltip" data-placement="right" title="Play these notes in order"></p>
@@ -68,7 +68,8 @@
 			Your Browser does not support canvas tag, you are missing graph capability
 		</canvas>
 		<img id="staticTrumpeter" src="{% static 'images/trumpter.svg' %}" alt = "Jazz Trumpeter, click to get audio explanation">
-		<p id="verbalIntro">Click on me,<br><br>I've got something to say.</p>
+		<p id="verbalIntro">Click on me,<br><br>I have something to say.</p>
+		<img id="trumpetersNotes" src="{% static 'images/TrumpeterNotes.svg' %}" alt = "animation: notes leave trumpeter's instrument">
 		<!--  IMAGE credits, images from openclipart.org -->
 	</div>
 

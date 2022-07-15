@@ -95,6 +95,7 @@ div#tooltip:hover .tooltiptext {
 #sendServerLoc{
 	display: none;
 }
+
 /************all pages, footer **************************/
 /* I don't fully understand all this but if I put a bottom spec, on dynamictrig page, it places it up near
 the top, like it has no idea where bottom is. I know static and tone trig page css aren't done quite right but

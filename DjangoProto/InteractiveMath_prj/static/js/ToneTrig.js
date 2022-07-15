@@ -120,6 +120,80 @@ $(function() {
 			// if tone isn't on, don't have to change anything...
 		}	
 	}
+	//--------------------------------------------------------------------------------------------------------------------
+	function DrawExpansionLinesBtwnGraphs() {
+		// CONSTANTS FOR DRAWING LINES BETWEEN GRAPHS
+		const ZERO = 20;  // about where the zero axis ends up on the canvas
+		const ONE_MS = 48;
+		const CNV_W = ctxExpandTime.canvas.scrollWidth; 
+		const CNV_H = ctxExpandTime.canvas.scrollHeight; 
+		// I have no idea why I need this crazy fudge factor on  width of canvas, but it works
+		// I think javascript and css treat sizes differently
+		const END = CNV_W /2.69;
+		const ARW = 5;   // what seems to be good for number of pixels for arrow
+		ctxExpandTime.lineWidth = 1;
+		
+		// draw a line from 0 ms to 0 ms
+		ctxExpandTime.beginPath();
+		ctxExpandTime.moveTo(ZERO, 0);
+		ctxExpandTime.lineTo(ZERO, CNV_H);
+		// left arrow
+		ctxExpandTime.moveTo(ZERO - ARW, CNV_H - ARW);
+		ctxExpandTime.lineTo(ZERO, CNV_H);
+		// right arrow
+		ctxExpandTime.moveTo(ZERO + ARW, CNV_H - ARW);
+		ctxExpandTime.lineTo(ZERO, CNV_H);
+		
+		
+		// draw line from 1 ms to 1 ms
+		ctxExpandTime.moveTo(ONE_MS, 0);
+		ctxExpandTime.lineTo(END, CNV_H - ARW);
+		// bottom arrow
+		ctxExpandTime.moveTo(END - ARW, CNV_H);
+		ctxExpandTime.lineTo(END, CNV_H - ARW)
+		//top arrow
+		ctxExpandTime.moveTo(END - ARW, CNV_H - 3*ARW)
+		ctxExpandTime.lineTo(END, CNV_H - ARW)
+		ctxExpandTime.stroke();
+		ctxExpandTime.closePath();
+		
+		ctxExpandTime.font = "20px Arial";
+		ctxExpandTime.fillText("1ms", 40, CNV_H/2.5);
+		ctxExpandTime.fillText("expanded", 40, CNV_H/2.5 + 20);
+	}
+	//--------------------------------------------------------------------------------------------------------------------
+	//***********************************
+	// show periodicity as musical instrument comes up with the pitch freq
+	//***********************************
+	// go to CSS, pull out scales values and pull off px suffix and convert to numbers	
+	var root = document.querySelector(':root');
+	var rootStyles = window.getComputedStyle(root);
+	function showPeriodicity(freqSelect){
+		if (233 == freqSelect) {
+			// delete the expansion lines to make room for these periodicity indicators/verbiage
+			ctxExpandTime.putImageData(backgroundPlot, 0, 0);
+			// go to CSS, pull out scales values and pull off px suffix and convert to numbers
+			const SHORT_T = parseInt(rootStyles.getPropertyValue('--WIDTH_466HZ').replace('px', ''));
+			const DOUBLE_T = 2 * SHORT_T;
+			$('.Period_Tone').css("width", DOUBLE_T + 'px');
+			// only need the first two boxes, turn off the last two
+			$('.Third_Period').css("visibility", "hidden");
+			$('.Fourth_Period').css("visibility", "hidden");
+			// move the second box over by the new width of longer period
+			const NEW_PERIOD_BOX_LEFT = parseInt(rootStyles.getPropertyValue('--LEFT_EDGE_PLOT').replace('px', '')) + DOUBLE_T;
+			$('.Second_Period').css("left", NEW_PERIOD_BOX_LEFT + 'px');
+			//change the period wording
+			$("#Period_Text1").html('Period T <br>= 1/Frequency <br>= 1/(233 Hz) <br>= 4.29 ms');
+			$('#Period_Text2').css("left", (NEW_PERIOD_BOX_LEFT + SHORT_T) + 'px');
+			$("#Period_Text2").html('T = 4.29 ms');
+		} else if (466 == freqSelect) {
+		//	$('.Period_Tone').css("width", parseInt(rootStyles.getPropertyValue('--WIDTH_466HZ')));
+			let currInt = rootStyles.getPropertyValue('--WIDTH_466HZ');
+			console.log('Its 466 and we will send width of ' + currInt);
+		} else console.log(' Coding error, unexpected input freq to showPeriodicity as ' + freqSelect);
+		
+	}	
+	
 
 	//***********************************
 	//  Classes 
@@ -474,7 +548,8 @@ $(function() {
 	let context;
 	
 	//****************************************************************	
-	// if user selects a musical note, and then clicks "play note" need to play it
+	// if user selects a musical note from a specific instrument, and 
+	// then clicks "play note" need to play mp3
 	//****************************************************************
 	$('#allowNotePlay').on('click', function(event){
 		if (typeof noteIsOnNow == "undefined")  {
@@ -539,24 +614,18 @@ $(function() {
 	//***********************************
 
 	let ctxLong, ctxShort, ctxExpandTime;
+	// prepare to draw the 10ms plot at top
     if ( $("#sine_plotsLong").length ) {
     	ctxLong = $("#sine_plotsLong").get(0).getContext('2d');
 	} else {
     	console.error('Cannot obtain sin_plotsLo context');
 	};
+	// prepare to draw the 1ms plot below the top 10 ms plot
     if ( $("#sine_plotsShort").length ) {
     	ctxShort = $("#sine_plotsShort").get(0).getContext('2d');
 	} else {
     	console.error('Cannot obtain sin_plotsHi context');
 	};
-	// draw explanatory lines between the charts
-	//https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
-	if ( $("#timeExpand").length ) {
-    	ctxExpandTime = $("#timeExpand").get(0).getContext('2d');
-	} else {
-    	console.error('Cannot obtain timeExpand context');
-	};	
-
 			
 	//if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
 	const CHART_OPTIONS = {
@@ -570,14 +639,12 @@ $(function() {
 				radius: 1     // to get rid of individual points
 			}
 		},
-		scales: {
-	
+		scales: {	
 			xAxes: [{
 				scaleLabel: {
 					display: true,
 					labelString: 't (milliseconds)'
 				},
-	
 			}],
 			yAxes: [{
 				scaleLabel: {
@@ -586,9 +653,8 @@ $(function() {
 				}
 			}]
 		},
-
 	};
-	Object.freeze(CHART_OPTIONS);
+	Object.freeze(CHART_OPTIONS);  // to make it truly const
 	let currTitle = {display: true, text: 'Pitch tone y = ' + $currAmp.val() + ' * sin{ 2 * pi * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }'};
 	
 	const TOP_CHART = {...CHART_OPTIONS, title: currTitle };
@@ -612,7 +678,7 @@ $(function() {
 	    },
 	    options: TOP_CHART
 	});
-	Object.freeze(TOP_CHART);
+	Object.freeze(TOP_CHART);  //to make it truly const
 	// if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
 	let sine_plot_1k_10k = new Chart(ctxShort, {
 	    type: 'line',
@@ -628,50 +694,29 @@ $(function() {
 	    },
 	    options: CHART_OPTIONS
 	});
+	 
+	// With the graphs drawn, prepare to draw explanatory lines between the charts
+	//https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
+	if ( $("#timeExpand").length ) {
+    	ctxExpandTime = $("#timeExpand").get(0).getContext('2d');
+	} else {
+    	console.error('Cannot obtain timeExpand context');
+	};	
 	
-	//--------------------------------------------------------------------------------------------------------------------
-	// CONSTANTS FOR DRAWING LINES BETWEEN GRAPHS
-	const ZERO = 20;  // about where the zero axis ends up on the canvas
-	const ONE_MS = 48;
-	const CNV_W = ctxExpandTime.canvas.scrollWidth; 
-	const CNV_H = ctxExpandTime.canvas.scrollHeight; 
-	// I have no idea why I need this crazy fudge factor on  width of canvas, but it works
-	// I think javascript and css treat sizes differently
-	const END = CNV_W /2.69;
-	const ARW = 5;   // what seems to be good for number of pixels for arrow
-	ctxExpandTime.lineWidth = 1;
+	// keep a snapshot of two plots before the expansion lines inbetween show up
+	// When we move to musical instruments, the 1ms plot on bottom is irrelevant but want the space used
+	// to indicate "1ms expansion" to show periodicity
+    let backgroundPlot; 
+    let expandTimeCanvas = $("#timeExpand").get(0);
+	backgroundPlot = ctxExpandTime.getImageData(0, 0, expandTimeCanvas.width, expandTimeCanvas.height);
 	
-	// draw a line from 0 ms to 0 ms
-	ctxExpandTime.beginPath();
-	ctxExpandTime.moveTo(ZERO, 0);
-	ctxExpandTime.lineTo(ZERO, CNV_H);
-	// left arrow
-	ctxExpandTime.moveTo(ZERO - ARW, CNV_H - ARW);
-	ctxExpandTime.lineTo(ZERO, CNV_H);
-	// right arrow
-	ctxExpandTime.moveTo(ZERO + ARW, CNV_H - ARW);
-	ctxExpandTime.lineTo(ZERO, CNV_H);
+	// on power up, draw the expansion lines between graphs
+	DrawExpansionLinesBtwnGraphs();
 	
 	
-	// draw line from 1 ms to 1 ms
-	ctxExpandTime.moveTo(ONE_MS, 0);
-	ctxExpandTime.lineTo(END, CNV_H - ARW);
-	// bottom arrow
-	ctxExpandTime.moveTo(END - ARW, CNV_H);
-	ctxExpandTime.lineTo(END, CNV_H - ARW)
-	//top arrow
-	ctxExpandTime.moveTo(END - ARW, CNV_H - 3*ARW)
-	ctxExpandTime.lineTo(END, CNV_H - ARW)
-	ctxExpandTime.stroke();
-	ctxExpandTime.closePath();
-	
-	ctxExpandTime.font = "20px Arial";
-	ctxExpandTime.fillText("1ms", 40, CNV_H/2.5);
-	ctxExpandTime.fillText("expanded", 40, CNV_H/2.5 + 20);
-	//--------------------------------------------------------------------------------------------------------------------
-	
+	showPeriodicity(233);
 	//***********************************
-	//initialize default values for tone
+	//initialize values for tone as page first comes up
 	//***********************************
 	fillInArrays();
 	drawTone();

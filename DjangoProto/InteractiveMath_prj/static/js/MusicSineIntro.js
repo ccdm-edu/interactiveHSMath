@@ -38,7 +38,7 @@ $(function() {
 	
 	// fill in the note when user selects it and set up freq/equation
 	var root = document.querySelector(':root');
-	var rootStyles = getComputedStyle(root);
+	var rootStyles = window.getComputedStyle(root);
 	// go to CSS, pull out scales values and pull off px suffix and convert to numbers
 	const SCALES_HIGHEST_Y = parseInt(rootStyles.getPropertyValue('--HIGHEST_Y').replace('px',''));
 	const SCALES_LOWEST_X = parseInt(rootStyles.getPropertyValue('--LOWEST_X').replace('px',''));
@@ -177,7 +177,7 @@ $(function() {
 				
 	    // update title to match new parameters
 	    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
-	    sine_plot_100_1k.options.title.text = "y = sin(2 " + " * " + PI +  " * " + selectedNote.freqHz + " * " + " t)";
+	    sine_plot_100_1k.options.title.text = "y = sin(2 " + MULT_DOT + PI +  MULT_DOT + selectedNote.freqHz + MULT_DOT + " t)";
 	    
 		// now fill the arrays and push them to the plots
 		fillInArrays();   
@@ -209,13 +209,11 @@ $(function() {
 			}
 		},
 		scales: {
-	
 			xAxes: [{
 				scaleLabel: {
 					display: true,
 					labelString: 't (milliseconds)'
 				},
-	
 			}],
 			yAxes: [{
 				scaleLabel: {
@@ -293,7 +291,7 @@ $(function() {
 				drawTone();
 			}
 		});
-		// Now that user is getting into page, put up the audio intro "click me" verbiage */
+		// Now that user is getting into page, put up the audio intro "click me" verbiage
 		$("#verbalIntro").css('visibility', 'visible');
 	});	
 	//***********************************
@@ -359,6 +357,8 @@ $(function() {
   		$('#notesToPlay').height('20px');
   		$('#notesToPlay').show();
   		$('#notesToPlayLabel').text("Notes For Twinkle Twinkle tune:");
+  		// make the notes come out of trumpet to get the users attention at this point
+		$("#trumpetersNotes").css('visibility', 'visible');
 	});
 	$( "#Song2" ).click(function() {
   		//Happy Birthday to you, Happy Birthday to you, Happy birthday dear 
@@ -366,6 +366,8 @@ $(function() {
   		$('#notesToPlay').height('40px');
   		$('#notesToPlay').show();
   		$('#notesToPlayLabel').text("Notes For Happy Birthday tune:");
+  		// make the notes come out of trumpet to get the users attention at this point
+		$("#trumpetersNotes").css('visibility', 'visible');
 	});
 	$( "#Song3" ).click(function() {
   		//Jingle Bells Jingle Bells, Jingle all the way
@@ -373,6 +375,8 @@ $(function() {
   		$('#notesToPlay').height('20px');
   		$('#notesToPlay').show();
   		$('#notesToPlayLabel').text("Notes For Jingle Bells tune:");
+  		// make the notes come out of trumpet to get the users attention at this point
+		$("#trumpetersNotes").css('visibility', 'visible');
 	});
 	//***********************************
 	// User clicks on either image or the words around the image to get the audio intro
