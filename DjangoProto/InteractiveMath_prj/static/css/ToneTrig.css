@@ -110,18 +110,22 @@ This is the style sheet for ToneTrig.html
 .First_Period{
 	left: var(--LEFT_EDGE_PLOT);
 	border-color: red;
+	visibility: hidden;
 }
 .Second_Period{
 	left: calc(var(--LEFT_EDGE_PLOT) + var(--WIDTH_466HZ));
-	borde-color: blue;	
+	border-color: blue;	
+	visibility: hidden;
 }
 .Third_Period{
 	left: calc(var(--LEFT_EDGE_PLOT) + 2 * var(--WIDTH_466HZ));
 	border-color: red;
+	visibility: hidden;
 }
 .Fourth_Period{
 	left: calc(var(--LEFT_EDGE_PLOT) + 3 * var(--WIDTH_466HZ));
 	border-color: blue;
+	visibility: hidden;
 }
 #Period_Text1{
 	position: absolute;

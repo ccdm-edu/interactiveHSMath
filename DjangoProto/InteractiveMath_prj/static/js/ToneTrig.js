@@ -135,6 +135,7 @@ $(function() {
 		
 		// draw a line from 0 ms to 0 ms
 		ctxExpandTime.beginPath();
+		ctxExpandTime.strokeStyle = "black";	
 		ctxExpandTime.moveTo(ZERO, 0);
 		ctxExpandTime.lineTo(ZERO, CNV_H);
 		// left arrow
@@ -154,46 +155,181 @@ $(function() {
 		//top arrow
 		ctxExpandTime.moveTo(END - ARW, CNV_H - 3*ARW)
 		ctxExpandTime.lineTo(END, CNV_H - ARW)
-		ctxExpandTime.stroke();
-		ctxExpandTime.closePath();
-		
+
+		ctxExpandTime.fillStyle = "black";
 		ctxExpandTime.font = "20px Arial";
 		ctxExpandTime.fillText("1ms", 40, CNV_H/2.5);
 		ctxExpandTime.fillText("expanded", 40, CNV_H/2.5 + 20);
+		ctxExpandTime.stroke();
+		ctxExpandTime.closePath();
 	}
 	//--------------------------------------------------------------------------------------------------------------------
 	//***********************************
 	// show periodicity as musical instrument comes up with the pitch freq
 	//***********************************
+		
 	// go to CSS, pull out scales values and pull off px suffix and convert to numbers	
 	var root = document.querySelector(':root');
 	var rootStyles = window.getComputedStyle(root);
+	let LEFT_EDGE_X = parseInt(rootStyles.getPropertyValue('--LEFT_EDGE_PLOT').replace('px', ''));
+	let LEFT_EDGE_Y = parseInt(rootStyles.getPropertyValue('--TOP_EDGE_PLOT').replace('px', ''));
 	function showPeriodicity(freqSelect){
+		// delete the expansion lines to make room for these periodicity indicators/verbiage
+		ctxExpandTime.putImageData(backgroundPlot, 0, 0);
+		// set up constants to be used to draw arrows and signposts
+		const LEFT_X = 20;
+		const MARKER_Y_UP = LEFT_EDGE_Y - 100;
+		const MARKER_Y_DOWN = LEFT_EDGE_Y + 45;
+		$('#Period_Text1').css("visibility", "visible");			
+		$('#Period_Text2').css("visibility", "visible");
 		if (233 == freqSelect) {
-			// delete the expansion lines to make room for these periodicity indicators/verbiage
-			ctxExpandTime.putImageData(backgroundPlot, 0, 0);
 			// go to CSS, pull out scales values and pull off px suffix and convert to numbers
 			const SHORT_T = parseInt(rootStyles.getPropertyValue('--WIDTH_466HZ').replace('px', ''));
 			const DOUBLE_T = 2 * SHORT_T;
 			$('.Period_Tone').css("width", DOUBLE_T + 'px');
 			// only need the first two boxes, turn off the last two
+			$('.First_Period').css("visibility", "visible");			
+			$('.Second_Period').css("visibility", "visible");
 			$('.Third_Period').css("visibility", "hidden");
 			$('.Fourth_Period').css("visibility", "hidden");
 			// move the second box over by the new width of longer period
-			const NEW_PERIOD_BOX_LEFT = parseInt(rootStyles.getPropertyValue('--LEFT_EDGE_PLOT').replace('px', '')) + DOUBLE_T;
+			const NEW_PERIOD_BOX_LEFT = LEFT_EDGE_X + DOUBLE_T;
 			$('.Second_Period').css("left", NEW_PERIOD_BOX_LEFT + 'px');
 			//change the period wording
-			$("#Period_Text1").html('Period T <br>= 1/Frequency <br>= 1/(233 Hz) <br>= 4.29 ms');
+			$("#Period_Text1").html('Period T <br>= 1/Frequency = 1/(233 Hz) = 4.29 ms');
 			$('#Period_Text2').css("left", (NEW_PERIOD_BOX_LEFT + SHORT_T) + 'px');
 			$("#Period_Text2").html('T = 4.29 ms');
-		} else if (466 == freqSelect) {
-		//	$('.Period_Tone').css("width", parseInt(rootStyles.getPropertyValue('--WIDTH_466HZ')));
-			let currInt = rootStyles.getPropertyValue('--WIDTH_466HZ');
-			console.log('Its 466 and we will send width of ' + currInt);
+			// create X and Y of two "signposts"
+			const SECOND_233_X = LEFT_X + 120 - 2;  // move it over a touch so you can see it easier
+			const THIRD_233_X = SECOND_233_X + 2;  // move it over a touch so you can see it easier
+			const FOURTH_233_X = THIRD_233_X + 120 - 2;  // move it over a touch so you can see it easier
+			// Need to make vertical lines to show where Period hits on graph
+			ctxExpandTime.beginPath();
+			ctxExpandTime.moveTo(LEFT_X, MARKER_Y_UP);	
+			ctxExpandTime.lineTo(LEFT_X, MARKER_Y_DOWN);
+			ctxExpandTime.strokeStyle = "red";
+		    ctxExpandTime.lineWidth = 1;  // no I don't know why the width is way wider than this... guess i dont care here
+			// make end of period lines in red
+			ctxExpandTime.moveTo(SECOND_233_X, MARKER_Y_UP);
+			ctxExpandTime.lineTo(SECOND_233_X, MARKER_Y_DOWN);
+			// make straight line between arrows
+			ctxExpandTime.moveTo(LEFT_X, LEFT_EDGE_Y);
+			ctxExpandTime.lineTo(SECOND_233_X, LEFT_EDGE_Y);
+			ctxExpandTime.stroke();
+			// make period lines in blue for second period
+			ctxExpandTime.beginPath();
+			ctxExpandTime.moveTo(THIRD_233_X, MARKER_Y_UP);
+			ctxExpandTime.lineTo(THIRD_233_X, MARKER_Y_DOWN);	
+			ctxExpandTime.strokeStyle = "blue";		
+			ctxExpandTime.stroke();
+			ctxExpandTime.moveTo(FOURTH_233_X, MARKER_Y_UP);
+			ctxExpandTime.lineTo(FOURTH_233_X, MARKER_Y_DOWN);
+			// make straight line between arrows
+			ctxExpandTime.moveTo(THIRD_233_X, LEFT_EDGE_Y);
+			ctxExpandTime.lineTo(FOURTH_233_X, LEFT_EDGE_Y);
+			ctxExpandTime.stroke();
+			ctxExpandTime.closePath();
+			// Need to make red/blue arrows for each period text
+			new AxisArrow(ctxExpandTime, [LEFT_X, LEFT_EDGE_Y], 'L',"red").draw();
+			new AxisArrow(ctxExpandTime, [SECOND_233_X, LEFT_EDGE_Y], 'R',"red").draw();
+			new AxisArrow(ctxExpandTime, [THIRD_233_X, LEFT_EDGE_Y], 'L',"blue").draw();
+			new AxisArrow(ctxExpandTime, [FOURTH_233_X, LEFT_EDGE_Y], 'R',"blue").draw();
+			
+		} else if (466 == freqSelect) {			
+			// go to CSS, pull out scales values and pull off px suffix and convert to numbers
+			const SHORT_T = parseInt(rootStyles.getPropertyValue('--WIDTH_466HZ').replace('px', ''));
+			const DOUBLE_T = 2 * SHORT_T;
+			$('.Period_Tone').css("width", SHORT_T + 'px');
+			// need to show all 4 boxes of period
+			$('.First_Period').css("visibility", "visible");			
+			$('.Second_Period').css("visibility", "visible");
+			$('.Third_Period').css("visibility", "visible");
+			$('.Fourth_Period').css("visibility", "visible");
+			// move the second box over by the new width of longer period
+			const NEW_PERIOD_BOX_LEFT = LEFT_EDGE_X + SHORT_T;
+			$('.Second_Period').css("left", NEW_PERIOD_BOX_LEFT + 'px');
+			//change the period wording
+			$("#Period_Text1").html('Period T <br>= 1/Frequency<br><br>= 1/(466 Hz) <br>= 2.15 ms');
+			$('#Period_Text2').css("left", (NEW_PERIOD_BOX_LEFT + 40) + 'px');
+			$("#Period_Text2").html('T = 2.15 ms');
+
+			const SECOND_233_X = LEFT_X + 60 - 1;  // move it over a touch so you can see it easier
+			const THIRD_233_X = SECOND_233_X + 1;  // move it over a touch so you can see it easier
+			const FOURTH_233_X = THIRD_233_X + 60 - 1;
+			// Need to make vertical lines to show where Period hits on graph
+			ctxExpandTime.beginPath();
+			ctxExpandTime.moveTo(LEFT_X, MARKER_Y_UP);	
+			ctxExpandTime.lineTo(LEFT_X, MARKER_Y_DOWN);
+			ctxExpandTime.strokeStyle = "red";
+		    ctxExpandTime.lineWidth = 1;  // no I don't know why the width is way wider than this... guess i dont care here
+			// make end of period lines in red
+			ctxExpandTime.moveTo(SECOND_233_X, MARKER_Y_UP);
+			ctxExpandTime.lineTo(SECOND_233_X, MARKER_Y_DOWN);
+			// make straight line between arrows
+			ctxExpandTime.moveTo(LEFT_X, LEFT_EDGE_Y);
+			ctxExpandTime.lineTo(SECOND_233_X, LEFT_EDGE_Y);
+			ctxExpandTime.stroke();
+			// make period lines in blue for second period
+			ctxExpandTime.beginPath();
+			ctxExpandTime.moveTo(THIRD_233_X, MARKER_Y_UP);
+			ctxExpandTime.lineTo(THIRD_233_X, MARKER_Y_DOWN);	
+			ctxExpandTime.strokeStyle = "blue";		
+			ctxExpandTime.stroke();
+			ctxExpandTime.moveTo(FOURTH_233_X, MARKER_Y_UP);
+			ctxExpandTime.lineTo(FOURTH_233_X, MARKER_Y_DOWN);
+			// make straight line between arrows
+			ctxExpandTime.moveTo(THIRD_233_X, LEFT_EDGE_Y);
+			ctxExpandTime.lineTo(FOURTH_233_X, LEFT_EDGE_Y);
+			ctxExpandTime.stroke();
+			ctxExpandTime.closePath();
+			// Need to make red/blue arrows for each period text
+			new AxisArrow(ctxExpandTime, [LEFT_X, LEFT_EDGE_Y], 'L',"red").draw();
+			new AxisArrow(ctxExpandTime, [SECOND_233_X, LEFT_EDGE_Y], 'R',"red").draw();
+			new AxisArrow(ctxExpandTime, [THIRD_233_X, LEFT_EDGE_Y], 'L',"blue").draw();
+			new AxisArrow(ctxExpandTime, [FOURTH_233_X, LEFT_EDGE_Y], 'R',"blue").draw();
+			
+			
+			
 		} else console.log(' Coding error, unexpected input freq to showPeriodicity as ' + freqSelect);
 		
 	}	
 	
+	function updatePlotsUserAides() {
+		// we set up musical note for zero phase as we line it up with associated pitch sine
+		$("#currPhaseLabel").text("0");
+		$("#in-range-phase").val(0);
+		updatePhase();
+		
+		// set up tone to approximate the fundamental freq of musical instrument
+		let newToneFreq = tuneFundamentalFreq[currTuneState];
+		$("#currFreqLabel").text(newToneFreq);   // and put it on the label as string
+		$("#in-range-freq").val(newToneFreq);
+		updateFreq();
+		
+		// we set up signal so it looks best at zero phase
+		$("#currPhaseLabel").text('0');
+		$("#in-range-phase").val(0);
+		updatePhase();  
+		
+		// change the musical note legends
+		let instrArray = tuneState[currTuneState].split("_");
+		sine_plot_100_1k.data.datasets[1].label = tuneInstrument[currTuneState] + " plays " + instrArray[instrArray.length - 1];
+		sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,165,0)'
+
+		// update graphs
+		drawTone()
+		// we have new instrument mp3, allow play
+		$("#allowNotePlay").show(); 
+		
+		// get rid of all old periodicity stuff, that overlays graphs, selectively turn on as needed later on	
+		$('.First_Period').css("visibility", "hidden");			
+		$('.Second_Period').css("visibility", "hidden");
+		$('.Third_Period').css("visibility", "hidden");
+		$('.Fourth_Period').css("visibility", "hidden");
+
+		// add periodicity as per the pitch freq (only two allowed here, 233 and 466)
+		showPeriodicity(tuneFundamentalFreq[currTuneState]);
+	}
 
 	//***********************************
 	//  Classes 
@@ -311,7 +447,7 @@ $(function() {
 		}
 		
 		getGraphArray() {
-		// musical data only plotted on upper plot (loses meaning on lower plot)
+		// musical data only plotted on upper plot (looses meaning on lower plot since freq soo low)
 			let graphArray = [];
 			// count up time on the graph
 			let tG = 0.0;
@@ -416,9 +552,22 @@ $(function() {
 		if (currTuneState === DEFAULT_TONE) {
 			// no instruments to play, its tone only.  No need for a play tone button
 			$("#allowNotePlay").hide();
+			
 			// get rid of any musical note legends
 			sine_plot_100_1k.data.datasets[1].label = "";
 			sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,255,255)'; // white for legend (invisible)
+			
+			// clean up any Periodicity arrows/text if left over from musical notes and redraw expansion lines
+			ctxExpandTime.putImageData(backgroundPlot, 0, 0);
+			// get rid of all old periodicity stuff, in case its present
+			$('.First_Period').css("visibility", "hidden");			
+			$('.Second_Period').css("visibility", "hidden");
+			$('.Third_Period').css("visibility", "hidden");
+			$('.Fourth_Period').css("visibility", "hidden");
+			$("#Period_Text1").css("visibility", "hidden");			
+			$('#Period_Text2').css("visibility", "hidden");
+			// on power up, draw the expansion lines between graphs
+			DrawExpansionLinesBtwnGraphs();
 			
 			// update graphs, to eliminate musical note if present
 			drawTone()
@@ -480,27 +629,9 @@ $(function() {
 									// get array of values for both plots. Actually no need for short plot for low freq waveforms
 									tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray();
 									
-									// set up tone to approximate the fundamental freq of musical instrument
-									let newToneFreq = tuneFundamentalFreq[currTuneState];
-									$("#currFreqLabel").text(newToneFreq);   // and put it on the label as string
-									$("#in-range-freq").val(newToneFreq);
-									updateFreq();
-									
-									// we set up signal so it looks best at zero phase
-									$("#currPhaseLabel").text('0');
-									$("#in-range-phase").val(0);
-									updatePhase();  
-							
-									// change the musical note legends
-									let instrArray = tuneState[currTuneState].split("_");
-									sine_plot_100_1k.data.datasets[1].label = tuneInstrument[currTuneState] + " plays " + instrArray[instrArray.length - 1];
-									sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,165,0)'
-					
-									// update graphs
-									drawTone()
-									// we have new instrument mp3, allow play
-									$("#allowNotePlay").show(); 
-																		
+									// clean up the signal params and graphs and user aides for new instrument
+									updatePlotsUserAides();
+																	
 									// decodeAudioData is async and doesn't support promises, can't use try/catch for errors
 									},function(err) { alert("err(decodeAudioData) on file for: " + tuneInstrument[currTuneState] + " error =" + err); } )
 								}, reason => {
@@ -523,21 +654,10 @@ $(function() {
 				);   // done with ajax
 	
         	} else {
-				// we have new instrument mp3, allow play
-				$("#allowNotePlay").show(); 
-				// set up tone to approximate the fundamental freq of musical instrument
-				let newToneFreq = tuneFundamentalFreq[currTuneState];
-				$("#currFreqLabel").text(newToneFreq);   // and put it on the label as string
-				$("#in-range-freq").val(newToneFreq);
-				updateFreq();
-				
-				// we set up musical note for zero phase as we line it up with associated pitch sine
-				$("#currPhaseLabel").text("0");
-				$("#in-range-phase").val(0);
-				updatePhase();
-				
-				// update graphs with stored musical tone data (we've done this before)
-				drawTone();
+				// we already have this instrument cached
+				// clean up the signal params and graphs and user aides for new instrument
+				updatePlotsUserAides();
+
 			}
 		};
     });		
@@ -713,8 +833,6 @@ $(function() {
 	// on power up, draw the expansion lines between graphs
 	DrawExpansionLinesBtwnGraphs();
 	
-	
-	showPeriodicity(233);
 	//***********************************
 	//initialize values for tone as page first comes up
 	//***********************************

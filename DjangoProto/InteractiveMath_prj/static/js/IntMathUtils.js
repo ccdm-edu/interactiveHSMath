@@ -211,7 +211,7 @@
 	};
 	class AxisArrow extends Arrow {
 		// point is a [x,y] pair and direction is a character for left, right, up, down
-		constructor(twoD_ctx, point, direction)
+		constructor(twoD_ctx, point, direction, color="black")
 		{	
 			const ARROW_LEN = 10;
 			let t1;
@@ -241,7 +241,7 @@
 			};
 			// axis arrows do the axis line someewhere else, just make two arrow ends
 			let arrowLoc = {point: point, tip1: t1, tip2: t2, end: point};
-			super(twoD_ctx, arrowLoc, "black", "",1);
+			super(twoD_ctx, arrowLoc, color, "",1);
 		}
 		draw() {
 			super.draw();
