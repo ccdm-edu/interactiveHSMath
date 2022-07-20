@@ -34,7 +34,8 @@ This is the style sheet for ToneTrig.html
 	display: none !important;
 }
 /*****************************************************************/
-/* This handles the header and "play music again" button that comes and goes as needed */
+/* This handles the header and "play music mp3 again" button on upper left shown as Plan Note button
+ that comes and goes as user loads music notes*/
 #allowNotePlay {
 	position: absolute;
 	display: none;
@@ -76,7 +77,7 @@ This is the style sheet for ToneTrig.html
           margin-left:20px;	
           margin-right:20px;	
 }
-/* item 3, tone controls */
+/* item 3, tone controls, freq, amplitude, phase*/
 #toneChanges {
 	    position: absolute;
 	    left: 500px;
@@ -84,6 +85,7 @@ This is the style sheet for ToneTrig.html
 		border: 1px solid black;"
 		float: right;
 }
+
 /*****************************************************************/
 /* arrange the expansion lines between the two graphs for max understandability */
 #overlapExpansionLines{

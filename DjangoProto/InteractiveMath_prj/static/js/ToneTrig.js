@@ -36,6 +36,9 @@ $(function() {
 	let ampLongCurrNote = [];  // what is plotted
 	let timeMsShort = [];
 	let ampShort = [];
+	
+	const GO_COLOR = "LightGreen";
+	const STOP_COLOR = "LightPink";
 
 	const NUM_PTS_PLOT_SHORT = 200;
 	const NUM_PTS_PLOT_LONG = 1000;
@@ -511,6 +514,7 @@ $(function() {
 		updatePhase();
 	});
 	
+	$('#start-stop-button').css('background-color', GO_COLOR);  // initial value
 	// handle user clicking on/off the tone on/off button
 	$('#start-stop-button').on('click', function(){
 		if (typeof ToneIsOnNow == "undefined")  {
@@ -531,10 +535,12 @@ $(function() {
 					type:"sine"});
 			osc.toDestination().start();	
 			$("#start-stop-button").prop("value", "Stop Tone");
+			$('#start-stop-button').css('background-color', STOP_COLOR);
 			ToneIsOnNow = true;
 		} else {
 			osc.toDestination().stop();
 			$("#start-stop-button").prop("value", "Start Tone");
+			$('#start-stop-button').css('background-color', GO_COLOR);
 			ToneIsOnNow = false;
 		}
 	});
@@ -671,6 +677,7 @@ $(function() {
 	// if user selects a musical note from a specific instrument, and 
 	// then clicks "play note" need to play mp3
 	//****************************************************************
+	$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
 	$('#allowNotePlay').on('click', function(event){
 		if (typeof noteIsOnNow == "undefined")  {
 			// First time in, 
@@ -700,16 +707,19 @@ $(function() {
 				sourceNote.start(0); 
 				noteIsOnNow = true;
 				$("#allowNotePlay").prop("value", "Stop Note");
+				$("#allowNotePlay").css("background-color", STOP_COLOR);
 			} else {
 	        	// someone is tired of listening to our lovely tuning note
 	        	sourceNote.stop(0); 
 				noteIsOnNow = false;
 				$("#allowNotePlay").prop("value", "Play Note");
+				$("#allowNotePlay").css("background-color", GO_COLOR);
 			}
 			sourceNote.onended = () => {
 				// no longer playing the note, either by user stop or natural completion
 				noteIsOnNow = false;
 				$("#allowNotePlay").prop("value", "Play Note");
+				$("#allowNotePlay").css("background-color", GO_COLOR);
 			}
         }
     });	

@@ -11,11 +11,16 @@ def populate():
     #first we will create the subtopics for each topic. For trig, we land on the Origin page but then URL constructed relative
     # to that page so need .. to get to pages on same level
     trig_subtopics = [
-        {'title': 'Trig Functions Make Music', 'url':'../MusicSineIntro'},
-        {'title': 'Simple Sine Cosine', 'url':'../StaticTrig'},
+        {'title': 'Trig functions make music', 'url':'../MusicSineIntro'},
+        {'title': 'Simple sine cosine', 'url':'../StaticTrig'},
         {'title':'Sine meets time', 'url':'../DynamicTrig1'},
         {'title':'Sine goes faster', 'url':'../DynamicTrig2'},
-        {'title': 'Sine Cosine Tones and Musical Notes', 'url':'../ToneTrig'}]
+        {'title': 'Sine/cosine tones and musical notes', 'url':'../ToneTrig'},
+        {'title': 'Summary of sine/cosine in music', 'url':'../MusicSineSummary'}]
+    
+    trigIdent_subtopics = [
+        {'title': 'Trig identities explained', 'url':'../TrigIdentity'},
+        {'title': 'Sum identity tunes your instrument', 'url':'../TrigIdent_Tune'}]
     
     imag_num_subtopics = [
         {'title':'Imag Num topic 1', 'url':'#ImagNumTopic1'},
@@ -40,7 +45,8 @@ def populate():
          
         ]
     
-    topics = {'Trig': [{'topic': trig_subtopics}],
+    topics = {'TrigFunct': [{'topic': trig_subtopics}],
+              'TrigIdent': [{'topic': trigIdent_subtopics}],
             'Imag_num': [{'topic': imag_num_subtopics}],
             'You': [{'topic': people_subtopics}]
             }

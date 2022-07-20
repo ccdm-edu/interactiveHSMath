@@ -97,7 +97,7 @@ class ChkUsrIsRobotView(BSModalFormView):
             print(f'curr_stat = {curr_stat}')
 
         context_dict = {'page_tab_header': 'ToneTrig',
-                        'topic': Topic.objects.get(name="Trig"),
+                        'topic': Topic.objects.get(name="TrigFunct"),
                         'botChkTstNeed': botCheckNeeded,
                         }
         # next url is encoded in this POST request, if failure, go back home, youre screwed
@@ -186,7 +186,7 @@ class IndexView(View):
 class MusicTrigView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'MusicalTrig',
-                        'topic': Topic.objects.get(name="Trig"),
+                        'topic': Topic.objects.get(name="TrigFunct"),
                         }
         response = render(request, 'int_math/MusicSineIntro.html', context=context_dict)
         return response
@@ -194,7 +194,7 @@ class MusicTrigView(View):
 class StaticTrigView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'StaticTrig',
-                        'topic': Topic.objects.get(name="Trig"),
+                        'topic': Topic.objects.get(name="TrigFunct"),
                         }
         response = render(request, 'int_math/StaticTrig.html', context=context_dict)
         return response
@@ -202,7 +202,7 @@ class StaticTrigView(View):
 class DynamicTrig1View(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'DynamicTrig',
-                        'topic': Topic.objects.get(name="Trig"),
+                        'topic': Topic.objects.get(name="TrigFunct"),
                         }
         response = render(request, 'int_math/DynamicTrig1.html', context=context_dict)
         return response
@@ -210,9 +210,17 @@ class DynamicTrig1View(View):
 class DynamicTrig2View(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'DynamicTrig',
-                        'topic': Topic.objects.get(name="Trig"),
+                        'topic': Topic.objects.get(name="TrigFunct"),
                         }
         response = render(request, 'int_math/DynamicTrig2.html', context=context_dict)
+        return response
+    
+class TrigSummaryView(View):
+    def get(self, request):
+        context_dict = {'page_tab_header': 'Summary',
+                        'topic': Topic.objects.get(name="TrigFunct"),
+                        }
+        response = render(request, 'int_math/MusicSineSummary.html', context=context_dict)
         return response
 
 class ToneTrigView(View):
@@ -225,7 +233,7 @@ class ToneTrigView(View):
             # else, no session established, set it up so robot check test required
             botCheckNeeded = True
         context_dict = {'page_tab_header': 'ToneTrig',
-                        'topic': Topic.objects.get(name="Trig"),
+                        'topic': Topic.objects.get(name="TrigFunct"),
                         'botChkTstNeed': botCheckNeeded,
                         }
         response = render(request, 'int_math/ToneTrig.html', context=context_dict)
@@ -272,7 +280,15 @@ class AckView(View):
 class TrigIDView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'Trig ID',
-                        'topic': Topic.objects.get(name="Trig"),
+                        'topic': Topic.objects.get(name="TrigIdent"),
                         }
         response = render(request, 'int_math/TrigIdentity.html', context=context_dict)
-        return response          
+        return response     
+    
+class TrigIDTuneView(View):
+    def get(self, request):
+        context_dict = {'page_tab_header': 'Inst Tune',
+                        'topic': Topic.objects.get(name="TrigIdent"),
+                        }
+        response = render(request, 'int_math/TrigIdent_Tune.html', context=context_dict)
+        return response       
