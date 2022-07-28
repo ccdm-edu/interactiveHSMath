@@ -7,11 +7,60 @@
 {% endblock %}
     
 {% block body_block %}
+	<h1>Sine and Cosine Make Music</h1>
+	<h2>Summary</h2>
+
+	{% if botChkTstNeed %}
 	
-	Under Construction, Trig summary
+		<button type="button" class="btn btn-primary" id="kloodgeToGetBotModal">
+			  <span class="fa fa-plus fa-sm"></span>
+			  startBotModal
+		</button>
+		
+		<!-- When user requests large file from server, put up modal window to ensure user is not a bot, if it isn't already done by now -->
+		<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content"></div>
+			</div>
+		</div>
+	
+	
+	{% else %}
+		<video height='480' width='640' controls poster="{% static 'images/MusicMenu.svg' %}">
+			<source src="{% static 'VideoExpln/MusicSineSummary.mp4' %}" type="video/mp4">
+			Your browser does not support the Video tag of html5, time for a browser upgrade!		
+		</video>
+	{% endif %}
 	
 
 	<br>
 	<br>	
 
+	<!--  have to put another jquery library ref here, not sure why, its in the base -->	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+	<script>
+		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
+	</script>
+	
+	<!-- To be able to add modal window for robot check -->
+	<script src="{% static 'js/jquery-bootstrap-modal-forms-min.js' %}" crossorigin="anonymous"></script>
+	
+	<!-- Custom JS for this page -->
+	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	
+    <script src="{% static 'js/RobotChk.js' %}" crossorigin="anonymous"></script>
+    <script src="{% static 'js/MusicSineSummary.js' %}" crossorigin="anonymous"></script>	
+    
+    <script type="text/javascript">
+    $.getScript("../../../static/js/jquery-bootstrap-modal-forms-min.js", function() {
+    	// we also have to wait until we are SURE the proper file has loaded before doing all this
+		// This has to be here for django to render properly, cannot be in js file
+		{% if botChkTstNeed %}
+			$('#kloodgeToGetBotModal').modalForm({
+				//we put a next param on the url to indicate we want to come back to this spot when modal window done
+		        formURL: "{% url 'int_math:bot_check' %}?next={% url 'int_math:MusicSineSummary' %}"
+		    });
+		{% endif %}
+	});
+	</script>
+	
 {% endblock %}

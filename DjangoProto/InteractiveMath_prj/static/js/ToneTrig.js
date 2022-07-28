@@ -290,9 +290,7 @@ $(function() {
 			new AxisArrow(ctxExpandTime, [SECOND_233_X, LEFT_EDGE_Y], 'R',"red").draw();
 			new AxisArrow(ctxExpandTime, [THIRD_233_X, LEFT_EDGE_Y], 'L',"blue").draw();
 			new AxisArrow(ctxExpandTime, [FOURTH_233_X, LEFT_EDGE_Y], 'R',"blue").draw();
-			
-			
-			
+						
 		} else console.log(' Coding error, unexpected input freq to showPeriodicity as ' + freqSelect);
 		
 	}	

@@ -214,14 +214,6 @@ class DynamicTrig2View(View):
                         }
         response = render(request, 'int_math/DynamicTrig2.html', context=context_dict)
         return response
-    
-class TrigSummaryView(View):
-    def get(self, request):
-        context_dict = {'page_tab_header': 'Summary',
-                        'topic': Topic.objects.get(name="TrigFunct"),
-                        }
-        response = render(request, 'int_math/MusicSineSummary.html', context=context_dict)
-        return response
 
 class ToneTrigView(View):
     def get(self, request):
@@ -237,6 +229,22 @@ class ToneTrigView(View):
                         'botChkTstNeed': botCheckNeeded,
                         }
         response = render(request, 'int_math/ToneTrig.html', context=context_dict)
+        return response
+    
+class TrigSummaryView(View):
+    def get(self, request):
+        #check session cookie (which expires after soom time--default 15 days) to see if bot test passed
+        try: 
+            # If session is established, use it
+            botCheckNeeded = not request.session['notABot']
+        except:
+            # else, no session established, set it up so robot check test required
+            botCheckNeeded = True
+        context_dict = {'page_tab_header': 'Summary',
+                        'topic': Topic.objects.get(name="TrigFunct"),
+                        'botChkTstNeed': botCheckNeeded,
+                        }
+        response = render(request, 'int_math/MusicSineSummary.html', context=context_dict)
         return response
     
 class ImagNumView(View):

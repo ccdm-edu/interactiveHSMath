@@ -1,0 +1,8 @@
+/********************************
+Style sheet (.css) for the musical summary page
+*********************************/
+/* need to handle kloodge of bootstrap/jquery/django library on modal windows, can only start up on a click but I
+want to start up on page load if robot test not passed yet */
+#kloodgeToGetBotModal{
+	visibility: hidden;
+}

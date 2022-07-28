@@ -42,13 +42,15 @@ $(function() {
 	// which will change as user changes amplitude
 	//****
 
-	const SIN_Y_ORIGIN = 150;
+	const COS_Y_ORIGIN = 150;
 	const TRIG_X_ORIGIN = 550;
-	const COS_Y_ORIGIN = 455;
+	const SIN_Y_ORIGIN = 455;
 	const TRIG_AXIS = 420; 
 	const MAX_AMP_AXIS = MAX_AMP * CIRC_RAD + 10;  // needs to be at least MAX_AMP*CIRC_RAD to match the circle values
 	// full theta pix is the number of pixels between 0 and 2pi for both graphs
 	const FULL_THETA_PIX = TRIG_AXIS - 50;
+	const SINE_COLOR = 'red';
+	const COS_COLOR = 'blue';
 	// draw sin axis off to right and a little above
 	// draw x axis
 	ctxExpandableUnitCircle.beginPath();
@@ -392,30 +394,17 @@ $(function() {
 			  ctxExpandableUnitCircle.closePath();
 			  
 		});
-		// draw dashed amplitude bar for sine curve, depends on amplitude chosen
-		ctxExpandableUnitCircle.beginPath();
-		ctxExpandableUnitCircle.strokeStyle = "blue";
-		const DASH_SEG_PIX = 3;
+		// draw dashed amplitude bar for top cos curve, depends on amplitude chosen
 		function calcSine(j) {
 			return Math.round((amp * CIRC_RAD)*Math.sin(2* Math.PI * j/FULL_THETA_PIX));
 		}
-		for(let i=0; i<FULL_THETA_PIX; i=i+2*DASH_SEG_PIX){ // Loop from left side to create dashed sin curve
-	    	let yLo = calcSine(i); 
-	    	let yHi = calcSine(i+DASH_SEG_PIX);
-	    	// remember, on bitmap, y increases as you go from top to bottom
-	  		ctxExpandableUnitCircle.moveTo(TRIG_X_ORIGIN + i, SIN_Y_ORIGIN - yLo); 
-	  		// make a dash seg and then skip and redo again.  
-	    	ctxExpandableUnitCircle.lineTo(TRIG_X_ORIGIN + i + DASH_SEG_PIX, SIN_Y_ORIGIN - yHi); 
-	  	}
-		ctxExpandableUnitCircle.stroke(); 
-		
-		// draw dashed amplitude bar for cosine curve, depends on amplitude chosen
-		ctxExpandableUnitCircle.beginPath();
-		ctxExpandableUnitCircle.strokeStyle = "red";
 		function calcCos(j) {
 			return Math.round((amp * CIRC_RAD)*Math.cos(2* Math.PI * j/FULL_THETA_PIX));
 		}
-		for(let i=0; i<FULL_THETA_PIX; i=i+2*DASH_SEG_PIX){ // Loop from left side to create dashed cos curve
+		ctxExpandableUnitCircle.beginPath();
+		ctxExpandableUnitCircle.strokeStyle = COS_COLOR;
+		const DASH_SEG_PIX = 3;
+		for(let i=0; i<FULL_THETA_PIX; i=i+2*DASH_SEG_PIX){ // Loop from left side to create dashed sin curve
 	    	let yLo = calcCos(i); 
 	    	let yHi = calcCos(i+DASH_SEG_PIX);
 	    	// remember, on bitmap, y increases as you go from top to bottom
@@ -423,22 +412,36 @@ $(function() {
 	  		// make a dash seg and then skip and redo again.  
 	    	ctxExpandableUnitCircle.lineTo(TRIG_X_ORIGIN + i + DASH_SEG_PIX, COS_Y_ORIGIN - yHi); 
 	  	}
-	  	ctxExpandableUnitCircle.fillStyle = 'blue';
+		ctxExpandableUnitCircle.stroke(); 
+		
+		// draw dashed amplitude bar for bottom sine curve, depends on amplitude chosen
+		ctxExpandableUnitCircle.beginPath();
+		ctxExpandableUnitCircle.strokeStyle = SINE_COLOR;
+		for(let i=0; i<FULL_THETA_PIX; i=i+2*DASH_SEG_PIX){ // Loop from left side to create dashed cos curve
+	    	let yLo = calcSine(i); 
+	    	let yHi = calcSine(i+DASH_SEG_PIX);
+	    	// remember, on bitmap, y increases as you go from top to bottom
+	  		ctxExpandableUnitCircle.moveTo(TRIG_X_ORIGIN + i, SIN_Y_ORIGIN - yLo); 
+	  		// make a dash seg and then skip and redo again.  
+	    	ctxExpandableUnitCircle.lineTo(TRIG_X_ORIGIN + i + DASH_SEG_PIX, SIN_Y_ORIGIN - yHi); 
+	  	}
+	  	// draw in the equation for sine/cos curves
+	  	ctxExpandableUnitCircle.fillStyle = COS_COLOR;
 		ctxExpandableUnitCircle.font = '20px Arial';
 	  	if (1.0 == amp) {
 			// user is still using unit circle, get rid of the "r" so they won't get confused
-			ctxExpandableUnitCircle.fillText("f("+THETA+")=sin("+THETA+")", TRIG_X_ORIGIN - 110, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);
+			ctxExpandableUnitCircle.fillText("f("+THETA+")=cos("+THETA+")", TRIG_X_ORIGIN - 110, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);
 			ctxExpandableUnitCircle.stroke(); 
-			ctxExpandableUnitCircle.fillStyle = 'red';
-			ctxExpandableUnitCircle.fillText("f("+THETA+")=cos("+THETA+")", TRIG_X_ORIGIN - 110, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);	
+			ctxExpandableUnitCircle.fillStyle = SINE_COLOR;
+			ctxExpandableUnitCircle.fillText("f("+THETA+")=sin("+THETA+")", TRIG_X_ORIGIN - 110, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);	
 			ctxExpandableUnitCircle.stroke(); 
 	  	} else {
 			// user has selected an "advanced" circle, show r values here
-			ctxExpandableUnitCircle.fillText("f("+THETA+")=r"+MULT_DOT+"sin("+THETA+")", TRIG_X_ORIGIN - 130, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);
+			ctxExpandableUnitCircle.fillText("f("+THETA+")=r"+MULT_DOT+"cos("+THETA+")", TRIG_X_ORIGIN - 130, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);
 			ctxExpandableUnitCircle.stroke(); 
-			ctxExpandableUnitCircle.fillStyle = 'red';
+			ctxExpandableUnitCircle.fillStyle = SINE_COLOR;
 			ctxExpandableUnitCircle.stroke(); 
-			ctxExpandableUnitCircle.fillText("f("+THETA+")=r"+MULT_DOT+"cos("+THETA+")", TRIG_X_ORIGIN - 130, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);	
+			ctxExpandableUnitCircle.fillText("f("+THETA+")=r"+MULT_DOT+"sin("+THETA+")", TRIG_X_ORIGIN - 130, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);	
 		}					
 	  	
 		ctxExpandableUnitCircle.stroke(); 
@@ -584,14 +587,14 @@ $(function() {
 			// place the sine line
 			ctxExpandableUnitCircle.beginPath();
 			ctxExpandableUnitCircle.lineWidth = 3.0;
-			ctxExpandableUnitCircle.strokeStyle = 'blue';
+			ctxExpandableUnitCircle.strokeStyle = SINE_COLOR;
 			ctxExpandableUnitCircle.moveTo(sinLineMovement[ind].begin_x, sinLineMovement[ind].begin_y);
 			ctxExpandableUnitCircle.lineTo(sinLineMovement[ind].end_x, sinLineMovement[ind].end_y);
 			ctxExpandableUnitCircle.stroke();
 			// place the cosine line
 			ctxExpandableUnitCircle.beginPath();
 			ctxExpandableUnitCircle.lineWidth = 3.0;
-			ctxExpandableUnitCircle.strokeStyle = 'red';
+			ctxExpandableUnitCircle.strokeStyle = COS_COLOR;
 			ctxExpandableUnitCircle.moveTo(cosLineMovement[ind].begin_x, cosLineMovement[ind].begin_y);
 			ctxExpandableUnitCircle.lineTo(cosLineMovement[ind].end_x, cosLineMovement[ind].end_y);
 			ctxExpandableUnitCircle.stroke();
@@ -646,8 +649,8 @@ $(function() {
 				ctxExpandableUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
 				ctxExpandableUnitCircle.lineTo(dot.x, CIRC_Y0);
 				ctxExpandableUnitCircle.lineWidth = 3.0;
-				ctxExpandableUnitCircle.strokeStyle = 'red'; 
-				ctxExpandableUnitCircle.fillStyle = 'red';
+				ctxExpandableUnitCircle.strokeStyle = COS_COLOR; 
+				ctxExpandableUnitCircle.fillStyle = COS_COLOR;
 				ctxExpandableUnitCircle.font = '20px Arial';
 				ctxExpandableUnitCircle.stroke();
 				ctxExpandableUnitCircle.closePath();
@@ -657,8 +660,8 @@ $(function() {
 				ctxExpandableUnitCircle.moveTo(dot.x, CIRC_Y0);
 				ctxExpandableUnitCircle.lineTo(dot.x, dot.y);
 				ctxExpandableUnitCircle.lineWidth = 3.0;
-				ctxExpandableUnitCircle.strokeStyle = 'blue';
-				ctxExpandableUnitCircle.fillStyle = 'blue';
+				ctxExpandableUnitCircle.strokeStyle = SINE_COLOR;
+				ctxExpandableUnitCircle.fillStyle = SINE_COLOR;
 				ctxExpandableUnitCircle.font = '20px Arial';	
 				ctxExpandableUnitCircle.stroke();
 				ctxExpandableUnitCircle.closePath();
