@@ -80,16 +80,22 @@
 		<p id="image_credit_trumpeter"> <a href = "https://openclipart.org/detail/295170/trumpter">Trumpeter image </a>by Zarateman</p>
 		<p id="image_credit_wholeNote"> <a href = "https://openclipart.org/detail/140893/whole-note">Whole Note image </a>by Chandler Isaac Klebs</p>
 	</div>
-	<!--  have to put another jquery library ref here, not sure why, its in the base -->	
+	<!-- Bootstrap core JavaScript,jquery must be before bootstrap -->	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script>
+		<!-- in case can't get from google, load from local -->
 		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
 	</script>
-	
+	<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+	<!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
+	<script>feather.replace()</script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.73/Tone.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 	<!-- Custom JS for this page -->
 	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	    
 	<script src="{% static 'js/MusicSineIntro.js' %}" crossorigin="anonymous"></script>	
+	
+
 
 {% endblock %}

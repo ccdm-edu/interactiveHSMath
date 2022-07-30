@@ -225,6 +225,10 @@ $(function() {
 	// Add temporary circles and verbiage to show user their new period/freq
 	//********************************************************
 	const SHOW_FREQ_COLOR = "DarkOrchid";
+	const NEXT_PT_COLOR = "red";
+	const NEXT_PT_TXT = "Click Here";
+	const BEGIN_TEXT = "Start Here";
+	const END_TEXT = "End Here";
 	function showUserPeriod(latestPeriod){
 		ctxUnitCircle.beginPath();
 		ctxUnitCircle.lineWidth = 2.0
@@ -280,7 +284,7 @@ $(function() {
 	// Cant use "mousemove"/hover as that concept is lost on tablets
 	//********************************************************
 	// initial condition
-	new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","Start here", 2).draw();
+	new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,BEGIN_TEXT, 2).draw();
 	$('#FirstHelp_DT1').text(FIRST_USER_BOX_POP_HELP);
 	
     function updateContextSensHelp() {
@@ -291,21 +295,21 @@ $(function() {
 			// Once they start clicking on yellow dots, they dont need this help anymore
 			$('#FirstHelp_DT1').text(FIRST_USER_BOX_POP_HELP);
 			$('#FirstHelp_DT1').css("visibility", "visible");
-			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","Start here", 2).draw();
+			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,BEGIN_TEXT, 2).draw();
 		}
 		else if ((numFreqGenSoFar == 1) && (ptsClickedOnCircle == 0)) {
 			// user has done 1st slow freq.  Show them it can be done faster.
 			// Once they start clicking on yellow dots, they dont need this help anymore
 			$('#FirstHelp_DT1').text(SECOND_USER_BOX_POP_HELP);
 			$('#FirstHelp_DT1').css("visibility", "visible");
-			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","Start here", 2).draw();
+			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,BEGIN_TEXT, 2).draw();
 		}
 		else if ((numFreqGenSoFar == 2) && (ptsClickedOnCircle == 0)) {
 			// user has done two freq.  Show them it can be done faster.
 			// Once they start clicking on yellow dots, they dont need this help anymore
 			$("#FirstHelp_DT1").text(THIRD_USER_BOX_POP_HELP);
 			$('#FirstHelp_DT1').css("visibility", "visible");
-			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","Start here", 2).draw();
+			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,BEGIN_TEXT, 2).draw();
 		}
 		else if ((numFreqGenSoFar == 3) && (ptsClickedOnCircle == 0)) {
 			// user has done three freq.  Show them it can be done faster.
@@ -317,7 +321,7 @@ $(function() {
 			$('#FirstHelp_DT1').css("visibility", "hidden");
 		}
 		if (numFreqGenSoFar >= 3) {
-			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","End here", 2).draw();
+			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,END_TEXT, 2).draw();
 		}
 	};
 
@@ -464,29 +468,29 @@ $(function() {
 						// point user to click on every yellow dot
 						if (ptsClickedOnCircle >= TOTAL_NUM_DOTS) {
 							// should never get to be more than TOTAL_NUM_DOTS...
-							new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","End here", 2).draw();
+							new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,END_TEXT, 2).draw();
 						} else {
-							new Arrow(ctxUnitCircle, ARROW_HELPERS[ptsClickedOnCircle], "red","", 2).draw();
+							new Arrow(ctxUnitCircle, ARROW_HELPERS[ptsClickedOnCircle], NEXT_PT_COLOR, NEXT_PT_TXT, 2).draw();
 						}
 					} else if (numFreqGenSoFar == 1) {
 						// point user to click on every other yellow dot
 						if (2*ptsClickedOnCircle >= TOTAL_NUM_DOTS) {
 							// should never get to be more than TOTAL_NUM_DOTS...
-							new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","End here", 2).draw();
+							new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,END_TEXT, 2).draw();
 						} else {
-							new Arrow(ctxUnitCircle, ARROW_HELPERS[2*ptsClickedOnCircle], "red","", 2).draw();
+							new Arrow(ctxUnitCircle, ARROW_HELPERS[2*ptsClickedOnCircle], NEXT_PT_COLOR, NEXT_PT_TXT, 2).draw();
 						}
 					} else if (numFreqGenSoFar == 2) {
 						// point user to click on every third yellow dot
 						if (3*ptsClickedOnCircle >= TOTAL_NUM_DOTS) {
 							// should never get to be more than TOTAL_NUM_DOTS...
-							new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","End here", 2).draw();
+							new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,END_TEXT, 2).draw();
 						} else {
-							new Arrow(ctxUnitCircle, ARROW_HELPERS[3*ptsClickedOnCircle], "red","", 2).draw();
+							new Arrow(ctxUnitCircle, ARROW_HELPERS[3*ptsClickedOnCircle], NEXT_PT_COLOR, NEXT_PT_TXT, 2).draw();
 						}
 					} else {
 						// user is just clicking at least two samples/cycle and needs to know where to end
-						new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","End here", 2).draw();
+						new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,END_TEXT, 2).draw();
 					}
 										
 				} else if (ind == 0 && lastIndexClicked !=0) {
@@ -552,7 +556,7 @@ $(function() {
 		// chances are first help is obsolete now.. start over
 		$('#FirstHelp_DT1').css("visibility", "hidden");
 		// initial condition
-		new Arrow(ctxUnitCircle, ARROW_HELPERS[0], "red","Start here", 2).draw();
+		new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,BEGIN_TEXT, 2).draw();
 		updateContextSensHelp();
     }
     $('#StartOver_DT1').on('click', function(event) {
@@ -580,5 +584,17 @@ $(function() {
     $("#LongTextBox_DT1").text(dynamicTrig1ToDo_text);
     $("#Explain_help_DT1").css("visibility", "hidden");
     let dynamicTrig1Expln_text = $("#Explain_help_DT1").text();
+    
+    
+    
+    
+    
+    
+    
+    $("#AdvancedTopics_DT1").draggable({
+      handle: ".modal-header"
+  });
+    
+ 
 
 })

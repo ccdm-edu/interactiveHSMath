@@ -203,7 +203,19 @@
 			this.TwoDContext.strokeStyle = this.Color;
 			this.TwoDContext.fillStyle = this.Color;
 			this.TwoDContext.font = '20px Arial';
-			this.TwoDContext.fillText(this.Text, this.End[0] + 5, this.End[1] + 5);	
+			if (this.End[0] < this.Point[0]) {
+				// then on the left side of hemisphere, need to place text further off to left ([0] is x coord )
+				if (this.End[1] < this.Point[1]) {
+					// are in quadrant 2, upper left side
+					console.log(" quadrant 2");
+					this.TwoDContext.fillText(this.Text, this.End[0] -15, this.End[1] - 10);	
+				} else {
+					this.TwoDContext.fillText(this.Text, this.End[0] -15, this.End[1] + 15);
+				}
+			} else {
+				// text goes off to right of arrow since on right hemisphere 
+				this.TwoDContext.fillText(this.Text, this.End[0] + 5, this.End[1] + 5);	
+			}
 			this.TwoDContext.lineWidth = this.Linewidth;
 			this.TwoDContext.stroke();
 			this.TwoDContext.closePath();
