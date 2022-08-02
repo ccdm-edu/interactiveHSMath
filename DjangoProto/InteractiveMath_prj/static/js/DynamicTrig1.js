@@ -588,7 +588,7 @@ $(function() {
  	//***********************************
  	// Javascript for advanced popup window that is draggable and has expln/todo stuff
  	
-    $("#AdvancedTopics_DT1").draggable();  // allows any part of window to be dragged
+    $("#AdvancedTopics").draggable();  // allows any part of window to be dragged
 	$(".tabs").click(function(){
 	    
 	    $(".tabs").removeClass("active");
@@ -598,27 +598,13 @@ $(function() {
 	    $(this).children("h6").addClass("font-weight-bold");
 	    $(this).addClass("active");
 	
-	    //current_fs = $(".active");
-	
-	    next_fs = $(this).attr('id');
+	    let current_fs = $(".active");
+		// create ID number of new fieldset
+	    let next_fs = $(this).attr('id');
 	    next_fs = "#" + next_fs + "1";
-	
+		// unshow all fieldsets and show the new one
 	    $("fieldset").removeClass("show");
 	    $(next_fs).addClass("show");
-	
-		// see JQuery animate function, animate(properties, options),  Under options, step is a function
-		// that modifies the tween object before it is set. It alters the animation as it is occurring
-	   // current_fs.animate({}, {
-	   //     step: function() {
-	   //         current_fs.css({
-	   //             'display': 'none',
-	   //             'position': 'relative'
-	   //         });
-	   //         next_fs.css({
-	   //             'display': 'block'
-	   //         });
-	   //     }
-		//});
     
 	});   
  

@@ -17,14 +17,15 @@
 	</div>
 	
 	<!--  dont want this popup to exclude all other activity, its a supplement -->	
-	<a href="#AdvancedTopics_DT1" data-backdrop="false" data-toggle="modal">Advanced (popup)</a>
+	<a href="#AdvancedTopics" data-backdrop="false" data-toggle="modal">Advanced (popup)</a>
 
 	<!--  advanced topics popup window that can move and be reduced and brought up again and doesn't interfere with action on page -->
-	<div id="AdvancedTopics_DT1" class="modal fade modaless" >
+	<div id="AdvancedTopics" class="modal fade modaless" >
 	    <div class="modal-dialog">
 	        <div class="modal-content border-primary">
 	        	<!--  decided to skip the header here in favor of a tab layout -->
 				<div class="modal-header row d-flex justify-content-between mx-1 mx-sm-3 mb-0 pb-0 border-0">
+					<h5 class="modal-title">Advanced Topics:</h5>
 					<div class="tabs active" id="tab01">
 					    <h6 class="font-weight-bold">Try This</h6>
 					</div>
@@ -107,7 +108,7 @@
 	
 	<!-- Tell user there is a timer counting their phase accumulation, they need to keep up -->
 	<div class="modal fade" id="expiremodal" role="dialog" tabindex="-1">
-		<div class="modal-dialog" role="document">
+		<div class="modal-dialog modal-dialog-scrollable" role="document">
 			<div class="modal-content">
 				<div class="modal-body">
 					<h1>Time Expired!</h1>
@@ -137,7 +138,6 @@
 		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
 	</script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-	
 	<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
 			
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>

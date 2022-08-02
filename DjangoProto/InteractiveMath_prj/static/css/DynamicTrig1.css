@@ -14,15 +14,19 @@ This is the style sheet for the DynamicTrig1.html page
 	left: 10px;
 }
 /* pull this out when we do modal on all pages */
-.modal
-{
-    overflow: auto; /* to add scroll bars as needed */
-}
 .modal-dialog{
-    margin-right: 0;
-    margin-left: 0;
+	max-height:85%;  
+	margin-top: 50px; 
+	margin-bottom:50px;
+    overflow-y: initial !important;  /* makes scrollbars */
 }
-.modalless{
+.modal-body{
+	background-color: #F0FFFF;  /* pale blue*/
+	/* makes scrollbars */
+    height: 250px;  
+    overflow-y: auto;
+}
+#AdvancedTopics.modalless{
     top:10%;
     left:50%;
     bottom:auto;
@@ -38,49 +42,27 @@ fieldset.show {
     display: block;
 }
 
-select:focus, input:focus {
-    -moz-box-shadow: none !important;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-    border: 1px solid #2196F3 !important;
-    outline-width: 0 !important;
-    font-weight: 400;
-}
-
-button:focus {
-    -moz-box-shadow: none !important;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-    outline-width: 0;
-}
-
 .tabs {
-    margin: 2px 5px 0px 5px;
+	/* margin: top right bottom left */
+    margin: 5px 10px 0px 10px;
+    padding-left: 20px;
     padding-bottom: 10px;
     cursor: pointer;
 }
-/* make a blue line under the selected tab or a tab you are hovering on*/
-.tabs:hover, .tabs.active {
-    border-bottom: 1px solid #2196F3;
+/* make a pretty line under the selected tab or a tab you are hovering over*/
+.tabs:hover {
+	border-bottom: 2px solid #7FFFD4;  /* aqua green */
 }
-
+.tabs.active {
+    border-bottom: 2px solid #2196F3;  /* aqua blue */
+}
 a:hover {
     text-decoration: none;
-    color: #1565C0;
-}
-
-.box {
-    margin-bottom: 10px;
-    border-radius: 5px;
-    padding: 10px;
-}
-
-.modal-backdrop { 
-    background-color: #64B5F6;
+    color: #1565C0;  /* darker blue */
 }
 
 .line {
-    background-color: #CFD8DC;
+    background-color: #CFD8DC;  /* light grey */
     height: 1px;
     width: 100%;
 }
@@ -91,13 +73,7 @@ a:hover {
     }
 }
 
-
-
-
-
-
-
-
+/* end of modal pages*/
 
 
 /* text header of page activity*/
