@@ -585,16 +585,42 @@ $(function() {
     $("#Explain_help_DT1").css("visibility", "hidden");
     let dynamicTrig1Expln_text = $("#Explain_help_DT1").text();
     
+ 	//***********************************
+ 	// Javascript for advanced popup window that is draggable and has expln/todo stuff
+ 	
+    $("#AdvancedTopics_DT1").draggable();  // allows any part of window to be dragged
+	$(".tabs").click(function(){
+	    
+	    $(".tabs").removeClass("active");
+	    $(".tabs h6").removeClass("font-weight-bold");    
+	    $(".tabs h6").addClass("text-muted");    
+	    $(this).children("h6").removeClass("text-muted");
+	    $(this).children("h6").addClass("font-weight-bold");
+	    $(this).addClass("active");
+	
+	    //current_fs = $(".active");
+	
+	    next_fs = $(this).attr('id');
+	    next_fs = "#" + next_fs + "1";
+	
+	    $("fieldset").removeClass("show");
+	    $(next_fs).addClass("show");
+	
+		// see JQuery animate function, animate(properties, options),  Under options, step is a function
+		// that modifies the tween object before it is set. It alters the animation as it is occurring
+	   // current_fs.animate({}, {
+	   //     step: function() {
+	   //         current_fs.css({
+	   //             'display': 'none',
+	   //             'position': 'relative'
+	   //         });
+	   //         next_fs.css({
+	   //             'display': 'block'
+	   //         });
+	   //     }
+		//});
     
-    
-    
-    
-    
-    
-    $("#AdvancedTopics_DT1").draggable({
-      handle: ".modal-header"
-  });
-    
+	});   
  
 
 })

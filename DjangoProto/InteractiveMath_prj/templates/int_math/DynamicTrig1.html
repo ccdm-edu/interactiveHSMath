@@ -19,26 +19,56 @@
 	<!--  dont want this popup to exclude all other activity, its a supplement -->	
 	<a href="#AdvancedTopics_DT1" data-backdrop="false" data-toggle="modal">Advanced (popup)</a>
 
-<div id="AdvancedTopics_DT1" class="modal fade modaless" >
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                 <h4 class="modal-title">Advanced Topics - Stuff to do</h4>
-                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Lotsa text here, not sure what or how</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">I'm done</button>
-                <button type="button" class="btn btn-primary">Other Button</button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
+	<!--  advanced topics popup window that can move and be reduced and brought up again and doesn't interfere with action on page -->
+	<div id="AdvancedTopics_DT1" class="modal fade modaless" >
+	    <div class="modal-dialog">
+	        <div class="modal-content border-primary">
+	        	<!--  decided to skip the header here in favor of a tab layout -->
+				<div class="modal-header row d-flex justify-content-between mx-1 mx-sm-3 mb-0 pb-0 border-0">
+					<div class="tabs active" id="tab01">
+					    <h6 class="font-weight-bold">Try This</h6>
+					</div>
+					<div class="tabs" id="tab02">
+					    <h6 class="text-muted ">Explanation</h6>
+					</div>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+                <div class="line"></div>
+	            <div class="modal-body">	            
+	                <fieldset class="show" id="tab011">
+		                <p>Try This:  Lotsa text here, not sure what or how.Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how</p>
+                    </fieldset>
+                    <fieldset id="tab021">
+		                <p>Explanation: Lotsa text here, not sure what or how.Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how
+		                Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how.  Lotsa text here, not sure what or how</p>
+                    </fieldset>         
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-primary" data-dismiss="modal">I'm done</button>
+	            </div>
+	        </div>
+	        <!-- /.modal-content -->
+	    </div>
+	    <!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
 
   
   
@@ -115,6 +145,7 @@
 	<script>feather.replace()</script>
 	
 	<!-- Custom JS for this page -->
+	<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
 	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	    
 	<script src="{% static 'js/DynamicTrig1.js' %}" crossorigin="anonymous"></script>	 
 	
