@@ -588,7 +588,10 @@ $(function() {
  	//***********************************
  	// Javascript for advanced popup window that is draggable and has expln/todo stuff
  	
-    $("#AdvancedTopics").draggable();  // allows any part of window to be dragged
+    $("#AdvancedTopics").draggable({
+    	//need to mousedown inside window to move it, else mousing down near the window will also move it
+    	handle: ".modal-content"
+    });  
 	$(".tabs").click(function(){
 	    
 	    $(".tabs").removeClass("active");

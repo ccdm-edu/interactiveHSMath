@@ -14,6 +14,10 @@ This is the style sheet for the DynamicTrig1.html page
 	left: 10px;
 }
 /* pull this out when we do modal on all pages */
+.modal-open  /* need this to keep the scroll bars on underlying webpage when modal is up */
+{
+    overflow: scroll; 
+}
 .modal-dialog{
 	max-height:85%;  
 	margin-top: 50px; 
@@ -22,26 +26,24 @@ This is the style sheet for the DynamicTrig1.html page
 }
 .modal-body{
 	background-color: #F0FFFF;  /* pale blue*/
-	/* makes scrollbars */
+	/* makes scrollbars when set fixed height and overflow-y*/
     height: 250px;  
     overflow-y: auto;
 }
-#AdvancedTopics.modalless{
+/* how to make bootstraps modal windows nonmodal (or modeless) */
+.modalless{
     top:10%;
     left:50%;
     bottom:auto;
     right:auto;
     margin-left:-300px; /* I don't get this */
 }
-
 fieldset {
     display: none;
 }
-
 fieldset.show {
     display: block;
 }
-
 .tabs {
 	/* margin: top right bottom left */
     margin: 5px 10px 0px 10px;
