@@ -13,6 +13,12 @@ This is the style sheet for the DynamicTrig1.html page
 	position: absolute;
 	left: 10px;
 }
+/*******************************************************************************************/
+/*Advanced Topics "modal-that-is-really-a-dialog" window param cuz i wanna use bootstrap */
+:root{
+	--ADV_TOPIC_WINDOW_HEIGHT: 250px;
+	--ADV_TOPIC_WINDOW_WIDTH: 480px;
+}
 /* pull this out when we do modal on all pages */
 .modal-open  /* need this to keep the scroll bars on underlying webpage when modal is up */
 {
@@ -24,19 +30,33 @@ This is the style sheet for the DynamicTrig1.html page
 	margin-bottom:50px;
     overflow-y: initial !important;  /* makes scrollbars */
 }
+.modal-content{
+	border-width: 3px;  /*thickerer border around modal window. border-primary class makes it blue */
+}
 .modal-body{
 	background-color: #F0FFFF;  /* pale blue*/
 	/* makes scrollbars when set fixed height and overflow-y*/
-    height: 250px;  
+    height: var(--ADV_TOPIC_WINDOW_HEIGHT);  
+    width: var(--ADV_TOPIC_WINDOW_WIDTH);
     overflow-y: auto;
 }
 /* how to make bootstraps modal windows nonmodal (or modeless) */
-.modalless{
+/*.modalless{  */
+#AdvancedTopics {
+	/* top,left,bottom and right will position window near top, centered */
     top:10%;
     left:50%;
     bottom:auto;
     right:auto;
-    margin-left:-300px; /* I don't get this */
+    /* want to squeeze down the space modal consumes to just the window itself so users can still play with site and read modal */
+    /* yes, i realize that violates defn of modal but I really should have used jquery ui dialog since bootstrap has nothing similar */
+    margin: 1px 1px 1px 1px;
+    padding: 1px 1px 1px 1px !important; /* padding right gets overridden by .modal to 17px, get rid of it anyway*/
+    width: 35%;
+    height: 85%;*
+    /*height: var(--ADV_TOPIC_WINDOW_HEIGHT);  
+    width: var(--ADV_TOPIC_WINDOW_WIDTH); */
+    overflow-y: hidden; /* gets rid of scrollbars at the top div level */
 }
 fieldset {
     display: none;
