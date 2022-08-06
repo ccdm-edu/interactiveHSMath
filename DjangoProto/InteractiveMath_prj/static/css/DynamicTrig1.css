@@ -16,8 +16,8 @@ This is the style sheet for the DynamicTrig1.html page
 /*******************************************************************************************/
 /*Advanced Topics "modal-that-is-really-a-dialog" window param cuz i wanna use bootstrap */
 :root{
-	--ADV_TOPIC_WINDOW_HEIGHT: 250px;
-	--ADV_TOPIC_WINDOW_WIDTH: 480px;
+	--ADV_TOPIC_WINDOW_HEIGHT: 350px;  /*250px;*/
+	--ADV_TOPIC_WINDOW_WIDTH: 500px; /*480px; */
 }
 /* pull this out when we do modal on all pages */
 .modal-open  /* need this to keep the scroll bars on underlying webpage when modal is up */
@@ -25,23 +25,34 @@ This is the style sheet for the DynamicTrig1.html page
     overflow: scroll; 
 }
 .modal-dialog{
-	max-height:85%;  
-	margin-top: 50px; 
-	margin-bottom:50px;
+	margin: 0px 0px 0px 0px !important;  /* else margins will be huge as default, still get large right margin */
     overflow-y: initial !important;  /* makes scrollbars */
 }
 .modal-content{
 	border-width: 3px;  /*thickerer border around modal window. border-primary class makes it blue */
+	height: var(--ADV_TOPIC_WINDOW_HEIGHT);  
+    width: var(--ADV_TOPIC_WINDOW_WIDTH); 
+}
+/* squeeze it all as much as possible, bootstrap will try to expand it */
+.modal-header{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+/* squeeze it all as much as possible, bootstrap will try to expand it */
+.modal-footer{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding-top: 0px;
+	padding-bottom: 0px;
 }
 .modal-body{
 	background-color: #F0FFFF;  /* pale blue*/
-	/* makes scrollbars when set fixed height and overflow-y*/
-    height: var(--ADV_TOPIC_WINDOW_HEIGHT);  
-    width: var(--ADV_TOPIC_WINDOW_WIDTH);
+	/* overflow-y makes scrollbars when set fixed height at model content level*/
     overflow-y: auto;
 }
 /* how to make bootstraps modal windows nonmodal (or modeless) */
-/*.modalless{  */
 #AdvancedTopics {
 	/* top,left,bottom and right will position window near top, centered */
     top:10%;
@@ -52,10 +63,13 @@ This is the style sheet for the DynamicTrig1.html page
     /* yes, i realize that violates defn of modal but I really should have used jquery ui dialog since bootstrap has nothing similar */
     margin: 1px 1px 1px 1px;
     padding: 1px 1px 1px 1px !important; /* padding right gets overridden by .modal to 17px, get rid of it anyway*/
-    width: 35%;
-    height: 85%;*
-    /*height: var(--ADV_TOPIC_WINDOW_HEIGHT);  
-    width: var(--ADV_TOPIC_WINDOW_WIDTH); */
+   /* width: 35%;
+    height: 85%;*/
+    /* scale > 1 keeps window from getting chopped off but does create 'dead' space around window that
+    blocks out user from the page interaction.  Need to override bootstrap which sets these to 100%
+    blocking out all user interaction with page when window up (cuz i want a dialog,not a modal) */
+    height: calc(1.0 * var(--ADV_TOPIC_WINDOW_HEIGHT));  
+    width: calc(1.0 * var(--ADV_TOPIC_WINDOW_WIDTH) ); 
     overflow-y: hidden; /* gets rid of scrollbars at the top div level */
 }
 fieldset {
