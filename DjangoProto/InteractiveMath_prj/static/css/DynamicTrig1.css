@@ -16,43 +16,20 @@ This is the style sheet for the DynamicTrig1.html page
 /*******************************************************************************************/
 /*Advanced Topics "modal-that-is-really-a-dialog" window param cuz i wanna use bootstrap */
 :root{
-	--ADV_TOPIC_WINDOW_HEIGHT: 350px;  /*250px;*/
-	--ADV_TOPIC_WINDOW_WIDTH: 500px; /*480px; */
-}
-/* pull this out when we do modal on all pages */
-.modal-open  /* need this to keep the scroll bars on underlying webpage when modal is up */
-{
-    overflow: scroll; 
-}
-.modal-dialog{
-	margin: 0px 0px 0px 0px !important;  /* else margins will be huge as default, still get large right margin */
-    overflow-y: initial !important;  /* makes scrollbars */
-}
-.modal-content{
-	border-width: 3px;  /*thickerer border around modal window. border-primary class makes it blue */
-	height: var(--ADV_TOPIC_WINDOW_HEIGHT);  
-    width: var(--ADV_TOPIC_WINDOW_WIDTH); 
-}
-/* squeeze it all as much as possible, bootstrap will try to expand it */
-.modal-header{
-	margin-top: 5px;
-	margin-bottom: 5px;
-	padding-top: 0px;
-	padding-bottom: 0px;
-}
-/* squeeze it all as much as possible, bootstrap will try to expand it */
-.modal-footer{
-	margin-top: 5px;
-	margin-bottom: 5px;
-	padding-top: 0px;
-	padding-bottom: 0px;
-}
-.modal-body{
-	background-color: #F0FFFF;  /* pale blue*/
-	/* overflow-y makes scrollbars when set fixed height at model content level*/
-    overflow-y: auto;
+	--ADV_TOPIC_WINDOW_HEIGHT: 350px;  
+	--ADV_TOPIC_WINDOW_WIDTH: 500px; 
 }
 /* how to make bootstraps modal windows nonmodal (or modeless) */
+.modal-open  /* need this to keep the scroll bars on underlying webpage when modal is up */
+{
+	/*here is where the padding-right 17px comes from if i want to eliminate... */
+	/* this class gets put at the body level (tippy top) when modal opens) */
+    overflow: scroll; 
+}
+a:hover {
+    text-decoration: none;
+    color: #1565C0;  /* darker blue */
+}
 #AdvancedTopics {
 	/* top,left,bottom and right will position window near top, centered */
     top:10%;
@@ -63,8 +40,6 @@ This is the style sheet for the DynamicTrig1.html page
     /* yes, i realize that violates defn of modal but I really should have used jquery ui dialog since bootstrap has nothing similar */
     margin: 1px 1px 1px 1px;
     padding: 1px 1px 1px 1px !important; /* padding right gets overridden by .modal to 17px, get rid of it anyway*/
-   /* width: 35%;
-    height: 85%;*/
     /* scale > 1 keeps window from getting chopped off but does create 'dead' space around window that
     blocks out user from the page interaction.  Need to override bootstrap which sets these to 100%
     blocking out all user interaction with page when window up (cuz i want a dialog,not a modal) */
@@ -72,13 +47,43 @@ This is the style sheet for the DynamicTrig1.html page
     width: calc(1.0 * var(--ADV_TOPIC_WINDOW_WIDTH) ); 
     overflow-y: hidden; /* gets rid of scrollbars at the top div level */
 }
-fieldset {
+#AdvancedTopics > .modal-dialog{
+	margin: 0px 0px 0px 0px !important;  /* else margins will be huge as default, still get large right margin */
+    overflow-y: initial !important;  /* makes scrollbars */
+}
+#AdvancedTopics > .modal-dialog > .modal-content{
+	border-width: 3px;  /*thickerer border around modal window. border-primary class makes it blue */
+	/* need to set size so that it won't take up all space vertically when verbiage is long--prefer
+	scroll bars on modal-body*/
+	height: var(--ADV_TOPIC_WINDOW_HEIGHT);  
+    width: var(--ADV_TOPIC_WINDOW_WIDTH); 
+}
+/* squeeze it all as much as possible, bootstrap will try to expand it */
+#AdvancedTopics > .modal-dialog > .modal-content > .modal-header{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+/* squeeze it all as much as possible, bootstrap will try to expand it */
+#AdvancedTopics > .modal-dialog > .modal-content > .modal-footer{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+#AdvancedTopics > .modal-dialog > .modal-content > .modal-body{
+	background-color: #F0FFFF;  /* pale blue*/
+	/* overflow-y makes scrollbars when set fixed height at model content level*/
+    overflow-y: auto;
+}
+#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > fieldset {
     display: none;
 }
-fieldset.show {
+#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > fieldset.show {
     display: block;
 }
-.tabs {
+#AdvancedTopics > .modal-dialog > .modal-content > .modal-header > .tabs {
 	/* margin: top right bottom left */
     margin: 5px 10px 0px 10px;
     padding-left: 20px;
@@ -86,27 +91,16 @@ fieldset.show {
     cursor: pointer;
 }
 /* make a pretty line under the selected tab or a tab you are hovering over*/
-.tabs:hover {
+#AdvancedTopics > .modal-dialog > .modal-content > .modal-header > .tabs:hover {
 	border-bottom: 2px solid #7FFFD4;  /* aqua green */
 }
-.tabs.active {
+#AdvancedTopics > .modal-dialog > .modal-content > .modal-header > .tabs.active {
     border-bottom: 2px solid #2196F3;  /* aqua blue */
 }
-a:hover {
-    text-decoration: none;
-    color: #1565C0;  /* darker blue */
-}
-
-.line {
+#AdvancedTopics > .modal-dialog > .modal-content > .line {
     background-color: #CFD8DC;  /* light grey */
     height: 1px;
     width: 100%;
-}
-
-@media screen and (max-width: 768px) {
-    .tabs h6 {
-        font-size: 12px;
-    }
 }
 
 /* end of modal pages*/
