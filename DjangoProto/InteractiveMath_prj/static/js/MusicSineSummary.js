@@ -11,5 +11,8 @@ $(function() {
 		console.log(" about to click the button");
 		$('#kloodgeToGetBotModal').trigger('click');
 	});
+	
+	//need to not have every css load on every page, when that is fixed, can get rid of this
+	$('a[href="#AdvancedTopics"]').css('visibility', 'hidden');
 
 })

@@ -563,53 +563,8 @@ $(function() {
 		startOverContextSensHelp();
     }); 
     
-    //********************************************************
-	//*** User can choose a TO DO set for the text box or an explanation, this code is the implementation
-	$('#ToDo_or_expln_DT1').on('click', function(event){
-		if ("Explain" == $("#ToDo_or_expln_DT1").prop("value")) {
-			// currently showing the Try This text.  Move into explanation text
-			$("#LongTextBox_DT1").text(dynamicTrig1Expln_text);
-			$("#ToDo_or_expln_DT1").prop("value", "Try This");
-		} else {
-			// currently showing the Explanation text, move into TO DO  text
-			$("#LongTextBox_DT1").text(dynamicTrig1ToDo_text);
-			$("#ToDo_or_expln_DT1").prop("value", "Explain");
-		}
-    }); 
-    //***********************************
-	//initialize text TO DO and explanation sections of this page
-	//***********************************	
-    $('#TryThis_help_DT1').css("visibility", "hidden");  
-    let dynamicTrig1ToDo_text = $("#TryThis_help_DT1").text();
-    $("#LongTextBox_DT1").text(dynamicTrig1ToDo_text);
-    $("#Explain_help_DT1").css("visibility", "hidden");
-    let dynamicTrig1Expln_text = $("#Explain_help_DT1").text();
-    
- 	//***********************************
- 	// Javascript for advanced popup window that is draggable and has expln/todo stuff
- 	
-    $("#AdvancedTopics").draggable({
-    	//need to mousedown inside window to move it, else mousing down near the window will also move it
-    	handle: ".modal-content"
-    });  
-	$(".tabs").click(function(){
-	    
-	    $(".tabs").removeClass("active");
-	    $(".tabs h6").removeClass("font-weight-bold");    
-	    $(".tabs h6").addClass("text-muted");    
-	    $(this).children("h6").removeClass("text-muted");
-	    $(this).children("h6").addClass("font-weight-bold");
-	    $(this).addClass("active");
-	
-	    let current_fs = $(".active");
-		// create ID number of new fieldset
-	    let next_fs = $(this).attr('id');
-	    next_fs = "#" + next_fs + "1";
-		// unshow all fieldsets and show the new one
-	    $("fieldset").removeClass("show");
-	    $(next_fs).addClass("show");
-    
-	});   
+
+
  
 
 })

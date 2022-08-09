@@ -8,12 +8,9 @@
     
 {% block body_block %}
 	<div id ="headerAndCtl_ST">
-		<input type="button" id="ToDo_or_expln_ST" value="Explain">
 		<h1 id="HeaderTrig_ST">Where do sine waves come from?</h1>
 	</div>
-	<div id="HelpBox_ST">
-	 	<textarea readonly id="LongTextBox_ST" rows = '4' cols = "50">Help is here </textarea>
-	</div>
+
 
 	<div id="CircleValues">	
 		<label id="ampCircLabel"><b>Amplitude (r)</b></label>
@@ -44,9 +41,9 @@
 	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  
 	At the bottom it doesn't consume space from other elements but it does give search engines a clue what page is all about. -->
-	<p id="TryThis_help_ST">TRY THIS:  Click on one of the yellow dots. Try changing Amplitude (r) from a unit circle.  Your choices are limited only because the plots need to fit on a page and be readable.
+	<p class="AdvTopic_ToDo">TRY THIS:  Click on one of the yellow dots. Try changing Amplitude (r) from a unit circle.  Your choices are limited only because the plots need to fit on a page and be readable.
 	</p>
-	<p id = "Explain_help_ST">EXPLANATION:  When you click on a dot, it is the equivalent of selecting a phase and that phase has a sine and cosine value as reflected in the plots on the right.  When you change r from its default value of 1 (unit circle) the (x,y) values and rcos, rsin values also change.
+	<p class="AdvTopic_Expln">EXPLANATION:  When you click on a dot, it is the equivalent of selecting a phase and that phase has a sine and cosine value as reflected in the plots on the right.  When you change r from its default value of 1 (unit circle) the (x,y) values and rcos, rsin values also change.
 	</p>
 	
 	<!-- Bootstrap core JavaScript,jquery must be before bootstrap -->
@@ -54,6 +51,9 @@
 	<script>
 		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
 	</script>
+	<!--  jquery ui needed for advanced topic draggable window -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+	
 	<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
 			
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>

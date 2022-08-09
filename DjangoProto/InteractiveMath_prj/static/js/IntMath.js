@@ -48,4 +48,35 @@ $(function () {
     		sessionStorage.removeItem("activePage");
     	}
 	});
+	
+	//***********************************
+ 	// Javascript for advanced popup window that is draggable and has expln/todo stuff
+ 	
+    $("#AdvancedTopics").draggable({
+    	//need to mousedown inside window to move it, else mousing down near the window will also move it
+    	handle: ".modal-content"
+    });  
+    
+	$("#AdvancedTopics>.modal-dialog>.modal-content>.modal-header>.tabs").click(function(){    
+	    $(".tabs").removeClass("active");
+	    $(".tabs h6").removeClass("font-weight-bold");    
+	    $(".tabs h6").addClass("text-muted");    
+	    $(this).children("h6").removeClass("text-muted");
+	    $(this).children("h6").addClass("font-weight-bold");
+	    $(this).addClass("active");
+	
+	    let current_fs = $(".active");
+		// create ID number of new fieldset
+	    let next_fs = $(this).attr('id');
+	    next_fs = "#" + next_fs + "1";
+		// unshow all fieldsets and show the new one
+	    $("fieldset").removeClass("show");
+	    $(next_fs).addClass("show");
+	});   
+	
+	// Change text on both tabs of advanced text drop down to match the stuff thats hidden in html under class 
+	console.log($(".AdvTopic_ToDo").text());
+	$("#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab011 > p").text($(".AdvTopic_ToDo").text());
+	$("#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab021 > p").text($(".AdvTopic_Expln").text());
+	
 });

@@ -17,7 +17,7 @@ This is the style sheet for the StaticTrig.html page
 We use negative value for top since we want some overlap*/
 #AmpSinCosCircle{
 	 position:relative; 
-	 top:-50px; 
+	 top:0px; 
 	 left: 10px;
 }
 /***************************/
@@ -25,10 +25,6 @@ We use negative value for top since we want some overlap*/
 #headerAndCtl_ST {
 	position: relative;
 	top: 0px;
-}
-#ToDo_or_expln_ST {
-	position: absolute;
-	left: 10px;
 }
 /* text header of page activity*/
 #HeaderTrig_ST {
@@ -39,16 +35,7 @@ We use negative value for top since we want some overlap*/
 	font-size: 32px;
 	width: 100%
 }
-/***************************/
-/* item 2, explanation of current activity in read only box,  Need this box to be above the canvas so sidebars active */ 
-#LongTextBox_ST {
-	position: relative;
-	left: 50px;
-	top: 30px;
-	background-color:white; 
-	z-index: 10;
-	resize: none;
-}
+
 /************Params that define circle***************/
 /* arrange all the parms that feed into or get info out of circle */
 #CircleValues {
@@ -127,7 +114,7 @@ We use negative value for top since we want some overlap*/
 	font-size: 15px;
 	font-weight: bold;
 	left: 120px;
-	top: -350px;
+	top: -300px;
 	z-index: 10;
 	visibility: visible;
 	animation-name: showBeginnerBlinkyHelp;
@@ -140,7 +127,7 @@ We use negative value for top since we want some overlap*/
 /* grow the box and move so lettering and position doesn't change  */
 @keyframes showBeginnerBlinkyHelp {
 	0%		{border: 1px solid black;}
-	50%		{border: 10px solid black; width: 218px; left: 110px; top: -360px;} 
-	100%	{border: 1px solid black; width: 200px; left: 120px; top: -350px;}
+	50%		{border: 10px solid black; width: 218px; left: 110px; top: -310px;} 
+	100%	{border: 1px solid black; width: 200px; left: 120px; top: -300px;}
 }
 		

@@ -334,21 +334,6 @@ $(function() {
     		currentGreen = (currentGreen == PALE_GREEN) ? FULL_GREEN : PALE_GREEN;
     	}
     }, 500);
-	
-	//***********************************
-	//*** put up user TO DO or explanation text
-	//*** User can choose a TO DO set for the text box or an explanation, this code is the implementation	
-	$('#ToDo_or_expln_DT2').on('click', function(event){
-		if ("Explain" == $("#ToDo_or_expln_DT2").prop("value")) {
-			// currently showing the Try This text.  Move into explanation text
-			$("#LongTextBox_DT2").text(dynamicTrig1Expln_text);
-			$("#ToDo_or_expln_DT2").prop("value", "Try This");
-		} else {
-			// currently showing the Explanation text, move into TO DO  text
-			$("#LongTextBox_DT2").text(dynamicTrig1ToDo_text);
-			$("#ToDo_or_expln_DT2").prop("value", "Explain");
-		}
-    }); 
     
     //***********************************
     //*** Change label on freq slider and adjust the tone as appropriate
@@ -375,15 +360,5 @@ $(function() {
 			startFreqSample();
 		}
 	});
-    //***********************************
-	//initialize text TO DO and explanation sections of this page
-	//***********************************	
-    //*** turn off text until user needs it
-    $('#TryThis_help_DT2').css("visibility", "hidden");  
-    let dynamicTrig1ToDo_text = $("#TryThis_help_DT2").text();
-    $("#LongTextBox_DT2").text(dynamicTrig1ToDo_text);
-    $("#Explain_help_DT2").css("visibility", "hidden");
-    let dynamicTrig1Expln_text = $("#Explain_help_DT2").text();
- 
 
 })

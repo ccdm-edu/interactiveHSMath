@@ -495,4 +495,6 @@ $(function() {
 	$("#verbalIntro").click(function() {
 		playOrStopVerbalIntro();
 	});
+	
+	
 })

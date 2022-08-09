@@ -9,10 +9,6 @@ This is the style sheet for the DynamicTrig2.html page
 	top: 0px;
 	width: auto;
 }
-#ToDo_or_expln_DT2 {
-	position: absolute;
-	left: 10px;
-}
 /* text header of page activity*/
 #HeaderTrig_DT2 {
 	position: absolute;
@@ -22,21 +18,7 @@ This is the style sheet for the DynamicTrig2.html page
 	font-size: 32px;
 	resize: none;
 }
-/***************************/
-/* item 2, explanation of current activity in read only box,  Need this box to be above the canvas so sidebars active */ 
-#HelpBox_DT2 {
-	position: relative;
-	left: 50px;
-	top: 30px;
-}
-#LongTextBox_DT2 {
-		  position: absolute;
-          left: 0px;
-          top: 0px;
-          background-color:white; 
-          z-index: 10;
-          resize: none;
-}
+
 /************Params that describe and control activity***************/
 
 /* this is the parent for a series of controls/labels */

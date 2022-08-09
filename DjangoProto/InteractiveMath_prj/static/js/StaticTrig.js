@@ -42,9 +42,9 @@ $(function() {
 	// which will change as user changes amplitude
 	//****
 
-	const COS_Y_ORIGIN = 150;
+	const COS_Y_ORIGIN = 200;
 	const TRIG_X_ORIGIN = 550;
-	const SIN_Y_ORIGIN = 455;
+	const SIN_Y_ORIGIN = 505;
 	const TRIG_AXIS = 420; 
 	const MAX_AMP_AXIS = MAX_AMP * CIRC_RAD + 10;  // needs to be at least MAX_AMP*CIRC_RAD to match the circle values
 	// full theta pix is the number of pixels between 0 and 2pi for both graphs
@@ -455,27 +455,6 @@ $(function() {
 	//*********************************************************
 	// Setup the user buttons
 	//*********************************************************
-	
-	//Set up words for the TO DO and Explanation boxes as user chooses
-	//***********************************	
-    $('#TryThis_help_ST').css("visibility", "hidden");  
-    let staticTrigToDo_text = $("#TryThis_help_ST").text();
-    $("#LongTextBox_ST").text(staticTrigToDo_text);
-    $("#Explain_help_ST").css("visibility", "hidden");
-    let staticTrigExpln_text = $("#Explain_help_ST").text();
-
-	// User can choose a TO DO set for the text box or an explanation, this code is the implementation
-	$('#ToDo_or_expln_ST').on('click', function(event){
-		if ("Explain" == $("#ToDo_or_expln_ST").prop("value")) {
-			// currently showing the Try This text.  Move into explanation text
-			$("#LongTextBox_ST").text(staticTrigExpln_text);
-			$("#ToDo_or_expln_ST").prop("value", "Try This");
-		} else {
-			// currently showing the Explanation text, move into TO DO  text
-			$("#LongTextBox_ST").text(staticTrigToDo_text);
-			$("#ToDo_or_expln_ST").prop("value", "Explain");
-		}
-    });
     
     //***********************************
     // User changes amplitude of unit circle

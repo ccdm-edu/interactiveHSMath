@@ -320,7 +320,7 @@ $(function() {
 		// update graphs
 		drawTone()
 		// we have new instrument mp3, allow play
-		$("#allowNotePlay").show(); 
+		$("#allowNotePlay").css("visibility", "visible"); 
 		
 		// get rid of all old periodicity stuff, that overlays graphs, selectively turn on as needed later on	
 		$('.First_Period').css("visibility", "hidden");			
@@ -546,16 +546,21 @@ $(function() {
 	//whenever any of the tone params change, redraw both graphs and update
 	$("#toneChanges").on('input',drawTone);
 	
+	// update advanced topics modal tab text
+	let todo_tab_element = "#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab011 > p";
+	let expln_tab_element = "#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab021 > p";
+		
 	// Handle user selecting the musical note drop down menu
 	$('#InstrumentDropDownMenu .dropdown-menu li a').on('click', function(event){
 		let selectItem = $('#InstrumentDropDownMenu .dropdown-menu li a').index($(this));
 		currTuneState = selectItem;
-		$("#LongTextBox_TT").text(tuneToDo[currTuneState]);
-		$("#ToDo_or_expln_TT").prop("value", "Explain");
+		// update advanced modal window
+		$(todo_tab_element).text(tuneToDo[currTuneState]);
+		$(expln_tab_element).text(tuneExpln[currTuneState]);
 		$("#musicalActivity").html(tuneTitle[currTuneState]);
 		if (currTuneState === DEFAULT_TONE) {
 			// no instruments to play, its tone only.  No need for a play tone button
-			$("#allowNotePlay").hide();
+			$("#allowNotePlay").css("visibility", "hidden");
 			
 			// get rid of any musical note legends
 			sine_plot_100_1k.data.datasets[1].label = "";
@@ -721,21 +726,6 @@ $(function() {
 			}
         }
     });	
-
-	//*****
-	// User can choose a TO DO set for the text box or an explanation, this code is the implementation
-	//*****
-	$('#ToDo_or_expln_TT').on('click', function(event){
-		if ("Explain" == $("#ToDo_or_expln_TT").prop("value")) {
-			// currently showing the Try This text.  Move into explanation text
-			$("#LongTextBox_TT").text(tuneExpln[currTuneState]);
-			$("#ToDo_or_expln_TT").prop("value", "Try This");
-		} else {
-			// currently showing the explanation text.  Move into Try This text
-			$("#LongTextBox_TT").text(tuneToDo[currTuneState]);
-			$("#ToDo_or_expln_TT").prop("value", "Explain");
-		}
-    });	
 		
 	//***********************************
 	//  Immediate execution here
@@ -858,16 +848,25 @@ $(function() {
 			//xhr has good stuff like status, responseJSON, statusText, progress
 			if (status === 'success') {				
 				$.each(data.TestNote, function(index, paramSet) {
-					tuneState[index] = (paramSet.instrument).replace(" ","_") + "_" + paramSet.musicalNote;
-					tuneExpln[index] = paramSet.expln;		
-					tuneToDo[index]= paramSet.todo;			
-					tuneInstrument[index] = paramSet.instrument;
-					tuneTitle[index] = paramSet.title;
-					tuneOffset[index] = parseInt(paramSet.tuneOffset);
-					tuneFundamentalFreq[index] = parseInt(paramSet.fundamentalHz);
+					// set the params for all the instruments
+					tuneState[index+1] = (paramSet.instrument).replace(" ","_") + "_" + paramSet.musicalNote;
+					tuneExpln[index+1] = paramSet.expln;		
+					tuneToDo[index+1]= paramSet.todo;			
+					tuneInstrument[index+1] = paramSet.instrument;
+					tuneTitle[index+1] = paramSet.title;
+					tuneOffset[index+1] = parseInt(paramSet.tuneOffset);
+					tuneFundamentalFreq[index+1] = parseInt(paramSet.fundamentalHz);
 				});
-				$("#LongTextBox_TT").text(tuneToDo[currTuneState]);
-				$("#ToDo_or_expln_TT").prop("value", "Explain");
+
+				// set the params if we go back to default tone
+				tuneState[DEFAULT_TONE] = "Synthesized_all";
+				tuneExpln[DEFAULT_TONE] = $(".AdvTopic_Expln").text();		
+				tuneToDo[DEFAULT_TONE]= $(".AdvTopic_ToDo").text();			
+				tuneInstrument[DEFAULT_TONE] = "Synthesized";
+				tuneTitle[DEFAULT_TONE] = "Sine Waves play Audio Tones";
+				tuneOffset[DEFAULT_TONE] = "0";
+				tuneFundamentalFreq[DEFAULT_TONE] = "";
+				
 				$("#musicalActivity").html(tuneTitle[currTuneState]);
 			}
 			else {

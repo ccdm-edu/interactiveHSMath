@@ -90,14 +90,51 @@
                 </nav>
                 
                 <main role="main" class="col-md-9  ml-sm-auto col-lg-10 px-4">		
-	                    {% block body_block %}
-	                    {% endblock %}
-	                    
-	                    <!-- FOOTER -->
-	                    <footer>
-	                        <p class="float-right"><a href="#">Back to top</a></p>
-	                        <p class="id_site">&copy; 2021 Interactable Math &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
-	                    </footer>
+                	<!--  advanced topics popup window that can move and be reduced and brought up again and doesn't interfere with action on page -->
+					<a href="#AdvancedTopics" data-backdrop="false" data-toggle="modal">Advanced (popup)</a>	
+
+				<div id="AdvancedTopics" class="modal fade">
+				    <div class="modal-dialog">
+				        <div class="modal-content border-primary">
+				        	<!-- next el uses bootstrap flex to arrange elements (https://getbootstrap.com/docs/4.3/utilities/flex/) -->
+				        	<!-- First3 classes arrange elements, the mx etc sets margins -->
+							<div class="modal-header row d-flex justify-content-between mx-1 mx-sm-3 mb-0 pb-0" data-toggle="tooltip" data-placement="top" title="Drag me around as needed">
+								<h5 class="modal-title">Advanced Topics:</h5>
+								<div class="tabs active" id="tab01">
+								    <h6 class="font-weight-bold">Try This</h6>
+								</div>
+								<div class="tabs" id="tab02">
+								    <h6 class="text-muted ">Explanation</h6>
+								</div>
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							</div>
+			                <div class="line"></div>
+				            <div class="modal-body">	            
+				                <fieldset class="show" id="tab011">
+					                <p>To Do: </p>
+			                    </fieldset>
+			                    <fieldset id="tab021">
+					                <p>Explanation: </p>
+			                    </fieldset>         
+				            </div>
+				            <div class="modal-footer">
+				                <button type="button" class="btn btn-primary" data-dismiss="modal">I'm done</button>
+				            </div>
+				        </div>
+				        <!-- /.modal-content -->
+				    </div>
+				    <!-- /.modal-dialog -->
+				</div>
+				<!-- /.modal -->
+                  
+                    {% block body_block %}
+                    {% endblock %}
+                    
+                    <!-- FOOTER -->
+                    <footer>
+                        <p class="float-right"><a href="#">Back to top</a></p>
+                        <p class="id_site">&copy; 2021 Interactable Math &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+                    </footer>
                 </main>
             </div>
         </div>
