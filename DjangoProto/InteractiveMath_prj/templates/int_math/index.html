@@ -63,6 +63,10 @@
 	
 	<!-- custom JS for this page -->
 	<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
+	<script>
+		//need to not have every css load on every page, when that is fixed, can get rid of this
+		$('a[href="#AdvancedTopics"]').css('visibility', 'hidden');
+	</script>
 
 {% endblock %}
 

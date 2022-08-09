@@ -365,16 +365,17 @@ $(function() {
         		$('#ClearOldFreq_DT1').prop('disabled', false);
         		$('#theta_DT1').text(String(accumPhase));
     			// get rid of time value 
-    			$('#timeVal_DT1').text('');
+    			$('#timeVal_DT1').text('0');
     			startOverContextSensHelp();  // this needs to be before stopTimeNow set to false
         		stopTimerNow = false;  // Time's up or user stopped timer, either way, reset for next use
-        		//******************
-				// Get users attention and explain situation so they can fix it next time out       		
-	        	$('#expiremodal').find('.item').first().addClass('active');
-			    $('#expiremodal').modal({
-			    	backdrop: 'static',
-		    		keyboard: false
-			    });	 
+        		if (countTime/10 == EXPIRATION_TIME_SEC) {
+					// Get users attention and explain situation so they can fix it next time out       		
+		        	$('#expiremodal').find('.item').first().addClass('active');
+				    $('#expiremodal').modal({
+				    	backdrop: 'static',
+			    		keyboard: false
+				    });	 
+			    }
         	}
         	if (accumPhase >= 360) {
         		// then this frequency sampling is done, show results to user
@@ -533,9 +534,13 @@ $(function() {
 		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
 		ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
 		freqMeasured = [];
+		$('#timeVal_DT1').text('0');
+		$('#theta_DT1').text('0');
 		$('#LastFrequencies_DT1').text('');
 		$('#UserNotices_DT1').text('');
-		stopTimerNow = true;  // in case timer is running, stop it
+		// initial condition
+		new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR, BEGIN_TEXT, 2).draw();
+		if (timerStarted) stopTimerNow = true;  // in case timer is running, stop it
 	}
 	
 	//********************************************************
@@ -555,8 +560,6 @@ $(function() {
 		ptsClickedOnCircle = 0;
 		// chances are first help is obsolete now.. start over
 		$('#FirstHelp_DT1').css("visibility", "hidden");
-		// initial condition
-		new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,BEGIN_TEXT, 2).draw();
 		updateContextSensHelp();
     }
     $('#StartOver_DT1').on('click', function(event) {
