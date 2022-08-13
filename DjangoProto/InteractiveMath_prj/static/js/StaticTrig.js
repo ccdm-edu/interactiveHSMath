@@ -592,7 +592,7 @@ $(function() {
 	//***********************************
 	// this code is used as user interacts with the yellow dots on main circle
 	//***********************************
-	$('#xyEqtn').text('= (cos'+THETA+', sin'+THETA+')');
+	$('#xyEqtn').html('= (<span style="color:blue">cos'+THETA+'</span>, <span style="color:red">sin'+THETA+'</span>)');
 	let userHasStarted = false;
 	circleDotsCanvas.addEventListener('click', (e) => {
 		// need to convert canvas coord into bitmap coord

@@ -101,9 +101,33 @@ We use negative value for top since we want some overlap*/
 	top: var(--VALUE_Y_1);
 
 }
-
+/* decorate the quadrant identifiers for plot */
+.quadIdentifiers {
+	position: relative;
+	font-size: 30px;
+	font-weight: bold;
+	color: green;
+	top: -400px;  /* so we can place it up and over canvas */
+}
+#quad1_ID{
+	position: absolute;
+	left: 350px;
+}
+#quad2_ID{
+	position: absolute;
+	left: 50px;
+}
+#quad3_ID{
+	position: absolute;
+	left: 50px;
+	top: 300px;
+}
+#quad4_ID{
+	position: absolute;
+	left: 350px;
+	top: 300px;
+}
 /*************Dynamic Help**************/
-/*I don't really understand why the values of left, top are what they are.... */
 #FirstHelp_ST {
 	position: relative;
 	width: 200px;
@@ -114,7 +138,7 @@ We use negative value for top since we want some overlap*/
 	font-size: 15px;
 	font-weight: bold;
 	left: 120px;
-	top: -300px;
+	top: -300px;    /* top value is neg so we can place it over top of canvass */
 	z-index: 10;
 	visibility: visible;
 	animation-name: showBeginnerBlinkyHelp;
