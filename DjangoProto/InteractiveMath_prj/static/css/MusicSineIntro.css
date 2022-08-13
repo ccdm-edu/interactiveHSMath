@@ -18,8 +18,7 @@ h2{
 }
 #TrumpetMusicalScale{
 	position: relative;
-	top: 10px;
-	left: -20px;
+	top: 0px;
 	width: auto;
 }
 /* Initial instructions for user with animation */
@@ -206,7 +205,7 @@ h2{
 }
 #noteVolValue{
 	position: absolute;
-	left: 580px;
+	left: 650px;
 	top: 0px;
 	font-size: 15px;	
 }
@@ -273,8 +272,8 @@ h2{
 	position: absolute;
 	font-family: 'Brush Script MT', cursive;
 	font-size: 25px;
-	top: -35px;
-	left: 710px;
+	top: -30px;
+	left: 730px;
 	width: 150px;
 	visibility: hidden; /* will turn on when user has clicked on something on page so as not to overwhelm */
 }
@@ -297,7 +296,7 @@ h2{
 	40% 	{left: 660px; clip-path: polygon(0 100%, 0 0, 100% 0%, 100% 100% );}
 	80%	    {left: 580px; clip-path: polygon(60% 100%, 60% 0, 100% 0%, 100% 100%);}
 	100%    {left: 540px; clip-path: polygon(90% 100%, 90% 0, 100% 0%, 100% 100%);}
-}
+}	
 /* credits to float at the bottom */
 #artistCredits{
 	position: relative;

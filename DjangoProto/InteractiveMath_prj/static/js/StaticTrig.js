@@ -472,11 +472,14 @@ $(function() {
 				if (temp != 1.0) {
 					ampStr = amp.toString().concat(MULT_DOT);
 					$("#unitCircNotify").text("");
+					$('#xyEqtn').html('= (<span style="color:blue">r'+ MULT_DOT + 'cos'+THETA+'</span>, <span style="color:red">r'+ MULT_DOT + 'sin'+THETA+'</span>)');
 				} else {
 					//no need to show mpy by 1
 					ampStr = "";
 					$("#unitCircNotify").text("Unit Circle");
+					$('#xyEqtn').html('= (<span style="color:blue">cos'+THETA+'</span>, <span style="color:red">sin'+THETA+'</span>)');
 				}
+				
 				// since user might have typed in a value that is close but not allowed, put in the value we chose
 				$("#ampCirc").text(amp.toString());
 				// since amplitude changed, need to clear out old values for xy and theta
@@ -658,11 +661,11 @@ $(function() {
 				
 				// put the labels up for this selection
 				if (1.0 == amp){
-					$('#xyEqtn').text('= (cos'+THETA+', sin'+THETA+')');
+					$('#xyEqtn').html('= (<span style="color:blue">cos'+THETA+'</span>, <span style="color:red">sin'+THETA+'</span>)');
 				} else {
-					$('#xyEqtn').text('= (r'+MULT_DOT+'cos'+THETA+', r'+MULT_DOT+'sin'+THETA+')');
+					$('#xyEqtn').html('= (<span style="color:blue">r'+ MULT_DOT + 'cos'+THETA+'</span>, <span style="color:red">r'+ MULT_DOT + 'sin'+THETA+'</span>)');
+					
 				}
-				$('#xyEqtn').text
 				$('#xyFilledIn').text("= (" + ampStr + "cos" + dot.thetaRad + " , " + ampStr + "sin" + dot.thetaRad + ") ");
 				$('#xyExactValue').text(dot.xyExact);
 				$('#xyValueDecimal').text(dot.xyApproxDecimal);
