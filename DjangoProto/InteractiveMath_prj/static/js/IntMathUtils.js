@@ -207,7 +207,7 @@
 				// then on the left side of hemisphere, need to place text further off to left ([0] is x coord )
 				if (this.End[1] < this.Point[1]) {
 					// are in quadrant 2, upper left side
-					console.log(" quadrant 2");
+					//console.log(" quadrant 2");
 					this.TwoDContext.fillText(this.Text, this.End[0] -15, this.End[1] - 10);	
 				} else {
 					this.TwoDContext.fillText(this.Text, this.End[0] -15, this.End[1] + 15);

@@ -5,27 +5,7 @@
 //JQuery, dont do this script until document DOM objects are loaded and ready
 const demoEventTypes = ["CLICK_ON_CANVAS", "PLAY_AUDIO", "CLICK_ON_ELEMENT", "ANNOTATION"];
 
-function startDemo(scriptOfDemo) {
-	let currentSegment = 0;
-	scriptOfDemo.forEach(segment => {
-		console.log('name of segment ' + currentSegment + ' is ' + segment.segmentName);
-		segment.segmentActivities.forEach(activity => {
-			switch (activity.segmentActivity) {
-				case (demoEventTypes[0]):
-					moveCursorImgOnCanvas(activity.segmentParams);
-					break;
-				case (demoEventTypes[1]):
-					playAudio(activity.segmentParams);
-					break;
-				default:
-			}
-		});
-	});
-};
-
-function moveCursorImgOnCanvas(segmentParams){
-	
-	// pull up the canvas that overlays all activity for the demo
+function getDemoCtx() {
 	let ctxDemoCanvas;
 	let demoCanvas =  $("#funTutorial_DT1").get(0);  // later on, this will be used to clear the canvas
 	// get ready to start drawing on this canvas, first get the context
@@ -34,6 +14,65 @@ function moveCursorImgOnCanvas(segmentParams){
 	} else {
     	console.log('Cannot obtain demo canvas context');
 	}
+	return {ctx: ctxDemoCanvas, width: demoCanvas.width, height: demoCanvas.height};
+};
+
+function startDemo(scriptOfDemo) {
+	let currentSegment = 0;
+	scriptOfDemo.forEach(segment => {
+		console.log('name of segment ' + currentSegment + ' is ' + segment.segmentName);
+		let delIndex = 0;  // delay index, index of items that need ever increasing delay
+		let ctxDemoCanvas = getDemoCtx();
+		// background plot is the appearance before this segment operates and will return to this value
+		let backgroundPlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);
+		let annotatePlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);  // this is used during the segment
+		// make sure the canvas for demo is at top layer so all activity is visible
+		$('#funTutorial_DT1').css('z-index',100);
+		segment.segmentActivities.forEach(activity => {
+			switch (activity.segmentActivity) {
+				case (demoEventTypes[0]):
+					// CLICK_ON_CANVAS
+					// all these actions get sent to the EventLoop simultaneously, want to slow down for user
+					setTimeout(function(){
+						if (delIndex > 0) {
+							// get rid of old cursor, we are adding a new one
+							ctxDemoCanvas.ctx.putImageData(annotatePlot, 0, 0);
+						}
+						moveCursorImgOnCanvas(activity.segmentParams);
+					}, delIndex * activity.segmentParams.waitTimeMillisec);
+					delIndex = delIndex + 1;
+					break;
+				case (demoEventTypes[1]):
+					// PLAY_AUDIO
+					playAudio(activity.segmentParams);
+					break;
+				case (demoEventTypes[2]):
+					// CLICK_ON_ELEMENT
+					break;
+				case (demoEventTypes[3]):
+					// ANNOTATION
+					drawAnnotation(activity.segmentParams);
+					// want to keep annotation for awhile so save it
+					annotatePlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);
+					break;
+				default:
+			}
+		});
+		// segment is over, go back to the backgound we had before this segment, need to time this to end of segment so it 
+		// queues up right out of EventLoop
+		setTimeout(function(){
+			ctxDemoCanvas.ctx.putImageData(backgroundPlot, 0, 0);
+			console.log('executing return to normal');
+			// when done, ensure demo canvas is back to background so user can interact with dots again
+			$('#funTutorial_DT1').css('z-index',-1);
+		}, segment.segmentMaxDurationMillisec);
+	});
+};
+
+function moveCursorImgOnCanvas(segmentParams){
+	
+	// pull up the canvas that overlays all activity for the demo
+	let ctxDemoCanvas = getDemoCtx().ctx;
 	
 	// pull out the special demo cursor icon and place on proper location
 	let demoCursor = new Image();
@@ -46,14 +85,11 @@ function moveCursorImgOnCanvas(segmentParams){
 		ctxDemoCanvas.drawImage(demoCursor, xyPt.x - CURSOR_DIM, xyPt.y, CURSOR_DIM,CURSOR_DIM);
 	};
 	
-	// click on the event and wait a second to mimic a user doing this so its not too fast for demo
+	// click on the event 
 	let rect = segmentParams.canvas.getBoundingClientRect();  // need to create mouse event on canvas that correxponds to dot on associated canvas
-	console.log('inside autodemo, client x is ' + (xyPt.x + rect.left) + 'rect.left is ' + rect.left);
 	const clickCanvasPt = new CustomEvent('click', {detail: {xVal:xyPt.x, yVal: xyPt.y }});
 	//execute event on element
 	segmentParams.canvas.dispatchEvent(clickCanvasPt);
-
-
 };
 
 function playAudio(segmentParams){
@@ -90,15 +126,15 @@ function playAudio(segmentParams){
 			// DO, rewrite this with promise syntax  https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/decodeAudioData
 			// By definition, to get here means request is done and successful, (status = 4 and 200)
 			let blobTune = new Blob([data], { 'type': 'audio/mpeg' });  // this must match what we send over
-			console.log('file size is ' + blobTune.size + ' type is ' + blobTune.type);				
+			//console.log('file size is ' + blobTune.size + ' type is ' + blobTune.type);				
 	
 			blobTune.arrayBuffer().then(blob2array => 
 				{ // done converting blob to arrayBuffer, promise complete, convert blob2array to buffer
 				context.decodeAudioData(blob2array, function(buffer) {
 					// to get here means asynchronous mp3 decode is complete and successful
-					console.log("finished decoding mp3");
+					//console.log("finished decoding mp3");
 					try {
-						console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate );
+						//console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate );
 						helpAudio = context.createBufferSource();
 						helpAudio.buffer = buffer;
 						helpAudio.connect(context.destination);
@@ -135,4 +171,13 @@ function playAudio(segmentParams){
 		});   // done with ajax
 	// leave things as they were when user first started, all is in beginning state
 };
-    	
+function drawAnnotation(segmentParams) {
+	// pull up the canvas that overlays all activity for the demo
+	let ctxDemoCanvas = getDemoCtx().ctx;
+	ctxDemoCanvas.beginPath();
+	ctxDemoCanvas.lineWidth = 3.0
+	ctxDemoCanvas.strokeStyle = segmentParams.color;
+	// put circle up at numeric count down timer
+    ctxDemoCanvas.arc(segmentParams.circleCenter.x, segmentParams.circleCenter.y, segmentParams.circleCenter.radius, 0, Math.PI * 2, true); 
+    ctxDemoCanvas.stroke();
+};  	

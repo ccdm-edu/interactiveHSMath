@@ -291,7 +291,6 @@ $(function() {
 	$('#FirstHelp_DT1').text(FIRST_USER_BOX_POP_HELP);
 	
     function updateContextSensHelp() {
-    console.log("numFreq = " + numFreqGenSoFar + "ptsClickedOnCircle = " +ptsClickedOnCircle);
 		if ((numFreqGenSoFar == 0) && (ptsClickedOnCircle == 0)) {
 			// user is wandering around aimlessly trying to figure out how to get started.  Start them
 			// generating the slowest frequency, clicking on all dots
@@ -453,7 +452,6 @@ $(function() {
 			  y: e.clientY - rect.top
 			};	
 		} else { console.log('ERROR:  unexpected event: ' + e);}
-		console.log('click event is at location (' + e.clientX + ',' + e.clientY);
 		Object.freeze(pos);
 		let ind = 0;
 		littleDotCenter.forEach(dot => {
@@ -587,26 +585,102 @@ $(function() {
 	//********************************************************	
 	//*** user clicks the start demo button
     $('#startAutoDemo').on('click', function(event) {
-    	// make sure the canvas for demo is at top layer so all activity is visible
-		$('#funTutorial_DT1').css('z-index',100);
 		startDemo(SCRIPT_AUTO_DEMO);
-		// when done, ensure demo canvas is back to background so user can interact with dots again
-		//$('#funTutorial_DT1').css('z-index',-1);
     });
     
 	const SCRIPT_AUTO_DEMO = [
-	{ segmentName: "Segment 1 super pooper name",
+	{ segmentName: "First frequency",
+	  segmentMaxDurationMillisec: 13000,
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/TestText.MP3'}
+			 	{filenameURL: '../../static/AudioExpln/DynamicTrig1_Seg0.MP3'}
+			},
+			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
+			{segmentActivity: "ANNOTATION",
+			 segmentParams: 
+			 	{circleCenter: {x: 110, y: 20, radius: 22}, 
+			 	 color: "red"}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
 			 	{xyCoord: littleDotCenter[0], 
-			 	 canvas: circleDotsCanvas}
-			}
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[1], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[2], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[3], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[4], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[5], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[6], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[7], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[8], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[9], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[10], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[11], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[0], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
 	  ]
 	}];
     
