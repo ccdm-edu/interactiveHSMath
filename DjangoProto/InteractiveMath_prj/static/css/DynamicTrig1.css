@@ -156,3 +156,24 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	50%		{border: 10px solid black; width: 218px; left: 100px; top: 420px;} 
 	100%	{border: 1px solid black; width: 200px; left: 110px; top: 430px;}
 }
+
+/*********************Tutorial demo type help******************/
+/* canvas */
+#funTutorial_DT1 {
+	 position: absolute;
+	 top: 50px;
+	 left: 0px;
+	 margin-left: 0 px;
+	 padding-left: 0 px;
+	 margin-right: 0 px;
+	 padding-right: 0 px;
+	 z-index: -1;
+}
+/****************All pages, demo image***************************/
+/* its there, but if the page wants it, must turn it on */
+#startAutoDemo{
+	position: absolute;
+	height: 100px;
+	left: 0px;
+	top: 20px;
+}

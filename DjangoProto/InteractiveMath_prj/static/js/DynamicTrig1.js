@@ -1,6 +1,9 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
+	// turn on help in upper left corner
+	$('#startAutoDemo').css('display', 'inline-block');
+	
 	let ctxUnitCircle;
 	let circleDotsCanvas =  $("#AmpSinCosCircle_DT1").get(0);  // later on, this will set the "background image" for animation
 	// get ready to start drawing on this canvas, first get the context
@@ -435,10 +438,22 @@ $(function() {
     	// now the timer has started, collect phase
     	// need to convert canvas coord into bitmap coord
 		let rect = circleDotsCanvas.getBoundingClientRect();
-		const pos = {
-		  x: e.clientX - rect.left,
-		  y: e.clientY - rect.top
-		};	
+		let pos;
+		if (e instanceof CustomEvent) {
+			// user is running automated demo
+			pos = {
+				x: e.detail.xVal,
+				y: e.detail.yVal
+			}
+		}
+		else if (e instanceof PointerEvent) {
+			// user clicked on the circle
+			pos = {
+			  x: e.clientX - rect.left,
+			  y: e.clientY - rect.top
+			};	
+		} else { console.log('ERROR:  unexpected event: ' + e);}
+		console.log('click event is at location (' + e.clientX + ',' + e.clientY);
 		Object.freeze(pos);
 		let ind = 0;
 		littleDotCenter.forEach(dot => {
@@ -565,6 +580,35 @@ $(function() {
     $('#StartOver_DT1').on('click', function(event) {
 		startOverContextSensHelp();
     }); 
+    
+    
+    //********************************************************
+	// create a "script" for the auto-demo tutorial, by now, all variables should be set
+	//********************************************************	
+	//*** user clicks the start demo button
+    $('#startAutoDemo').on('click', function(event) {
+    	// make sure the canvas for demo is at top layer so all activity is visible
+		$('#funTutorial_DT1').css('z-index',100);
+		startDemo(SCRIPT_AUTO_DEMO);
+		// when done, ensure demo canvas is back to background so user can interact with dots again
+		//$('#funTutorial_DT1').css('z-index',-1);
+    });
+    
+	const SCRIPT_AUTO_DEMO = [
+	{ segmentName: "Segment 1 super pooper name",
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: '../../static/AudioExpln/TestText.MP3'}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[0], 
+			 	 canvas: circleDotsCanvas}
+			}
+	  ]
+	}];
     
 
 

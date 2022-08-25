@@ -75,7 +75,6 @@ $(function () {
 	});   
 	
 	// Change text on both tabs of advanced text drop down to match the stuff thats hidden in html under class 
-	console.log($(".AdvTopic_ToDo").text());
 	$("#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab011 > p").text($(".AdvTopic_ToDo").text());
 	$("#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab021 > p").text($(".AdvTopic_Expln").text());
 	

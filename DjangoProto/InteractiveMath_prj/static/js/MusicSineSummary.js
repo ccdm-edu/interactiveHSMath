@@ -14,6 +14,5 @@ $(function() {
 	
 	//need to not have every css load on every page, when that is fixed, can get rid of this
 	$('a[href="#AdvancedTopics"]').css('display', 'none');
-	$('#startAutoDemo').css('display', 'none');
 
 })

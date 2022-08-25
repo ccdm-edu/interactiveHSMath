@@ -59,12 +59,7 @@ p#headerForSubtopics {
 	font-size: 30px;
 	font: papyrus;
 }
-/****************All pages, demo image***************************/
-#startAutoDemo{
-	position: relative;
-	height: 100px;
-	left: 0px;
-}
+
 /*******************All pages, advanced topic "modal" window ***********************/
 /*Advanced Topics "modal-that-is-really-a-dialog" window param cuz i wanna use bootstrap */
 :root{

@@ -401,7 +401,6 @@ $(function() {
 		window.AudioContext = window.AudioContext || window.webkitAudioContext;
 		context = new AudioContext();			
 
-		// get musical note for first time, server knows the filename in its code
 		// I don't think we need a csrf token for this ajax post.  1.  there is already a session ID required for this
 		// request 2.  Nothing is stored to database, request must be a code for filename we have or else get error back
 		// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
@@ -498,6 +497,5 @@ $(function() {
 	
 	//need to not have every css load on every page, when that is fixed, can get rid of this
 	$('a[href="#AdvancedTopics"]').css('display', 'none');
-	$('#startAutoDemo').css('display', 'none');
 	
 })
