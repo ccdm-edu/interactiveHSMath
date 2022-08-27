@@ -583,14 +583,10 @@ $(function() {
     //********************************************************
 	// create a "script" for the auto-demo tutorial, by now, all variables should be set
 	//********************************************************	
-	//*** user clicks the start demo button
-    $('#startAutoDemo').on('click', function(event) {
-		startDemo(SCRIPT_AUTO_DEMO);
-    });
     
 	const SCRIPT_AUTO_DEMO = [
 	{ segmentName: "First frequency",
-	  segmentMaxDurationMillisec: 13000,
+	  headStartForAudioMillisec: 10000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
@@ -682,9 +678,68 @@ $(function() {
 			 	 waitTimeMillisec: 1000}
 			},
 	  ]
-	}];
-    
+	},
+	{ segmentName: "Second faster frequency",
+	  headStartForAudioMillisec: 15000, // generally the audio is longer than the cursor/annotate activity
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: '../../static/AudioExpln/DynamicTrig1_Seg1.MP3'}
+			},
+			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[0], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[2], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[4], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[6], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[8], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[10], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[0], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
 
+	  ]
+	}
+	];
+    
+	//*** user clicks the start demo button
+	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
+    $('#startAutoDemo').on('click', function(event) {
+		demo.startDemo(1);
+    });
 
  
 
