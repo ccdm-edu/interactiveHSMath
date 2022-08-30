@@ -176,4 +176,16 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	height: 100px;
 	left: 0px;
 	top: 20px;
+	visibility: visible;
+}
+#autoDemoCtls{
+	border: 2px solid cyan;
+	border-radius: 10px;
+	visibility: hidden;
+	width: 380px;
+	margin: 7px 7px 7px 7px;
+}
+#autoDemoCtls h1{
+	text-align: center;
+	font-size: 18px;
 }

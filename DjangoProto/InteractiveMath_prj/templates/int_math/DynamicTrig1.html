@@ -11,6 +11,57 @@
 	<div id ="headerAndCtl_DT1">
 		<h1 id="HeaderTrig_DT1">Sine meets time and we get frequency</h1>
 		<img id="startAutoDemo" src="{% static 'images/autoDemoButton.svg' %}" alt = "Click here to start a demo of page">
+
+		<!--  make a play/pause button set from bootstrap icons -->
+		<div id="autoDemoCtls">
+		    <table>
+		    	<tr>
+		    		<td align="center">
+		    			<h1>Let's see how this page works!</h1>
+		    		</td>
+		    	</tr>
+				<tr align="center">
+					<td align="left">
+						Segment Name: <span id="segName"></span>
+					</td>
+				</tr>
+				<tr>
+					<td align="left">
+						<!--  max value of input will have to be set after JS runs to see how big the script is -->
+						Segment Number/Total Segments: 
+					</td>
+					<td align="left">
+						<input id="segNum" type="number" min="1" max="10" maxlength = '2' step="1" required data-toggle="tooltip" title="Select Demo segment to play">
+					</td>
+					<td align = "left">
+						<span id="totalSeg">/0</span>
+					</td>
+				</tr>
+				<tr align="center">
+					<td align='left'>
+						<div class="btn-group" id="autoDemoPlayPause">
+							<button type="button" class="btn btn-outline-secondary" id="playDemo" data-toggle="tooltip" title="Play this segment">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
+					  			<path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
+								</svg>
+					        </button>
+					        <button type="button" class="btn btn-outline-secondary" id="pauseDemo" data-toggle="tooltip" title="Pause this segment">
+					        	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause" viewBox="0 0 16 16">
+								<path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z"/>
+								</svg>
+							</button>
+				        </div>
+			        </td>
+			        <td align='right'>
+			        	<button type="button" class="btn btn-primary" id='dismissAutoDemo'>I'm done</button>
+			        </td>
+		        </tr>
+			</table>
+		</div>
+
+
+
+
 	</div>
 	
 	<div id="CircleValues_DT1">	

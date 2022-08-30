@@ -13,7 +13,7 @@ class AutoDemo {
 		let ctxDemoCanvas = this.getDemoCtx();
 		// background plot is the appearance before this segment operates and will return to this value			
 		this.backgroundPlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);
-		
+		this.currSeg = 0;  // start at beginnning unless user chooses otherwise.  Autodemo runs from 0 to Max-1 but user thinks its 1 to max
 	}
 	
 	// get the context of the canvas used for the demo
@@ -27,6 +27,14 @@ class AutoDemo {
 	    	console.log('Cannot obtain demo canvas context');
 		}
 		return {ctx: ctxDemoCanvas, width: demoCanvas.width, height: demoCanvas.height};
+	}
+	
+	setCurrSeg(newCurrSeg) {
+		// should never be an issue but better to check another time, otherwise, do nothing
+		if ( (newCurrSeg >= 0) && (newCurrSeg <= (this.fullScript.length - 1)) ) {
+			this.currSeg = newCurrSeg;
+			console.log('just set autodemo current segment to ' + this.currSeg);
+		}
 	}
 	
 	//****************************************
@@ -113,6 +121,10 @@ class AutoDemo {
 								console.log('audio clip is over now, executing return to normal screen');
 								let ctxDemoCanvas = thisObj.getDemoCtx();
 								ctxDemoCanvas.ctx.putImageData(thisObj.backgroundPlot, 0, 0);
+								// demo isn't over until audio is done, update to next segment
+								// increment segment value here and on screen.  User can change if they want
+								this.currSeg++;
+								$('#segNum').val(toString(this.currSeg + 1)); // user used to seeing seg start at 1
 								// when done, ensure demo canvas is back to background so user can interact with dots again
 								$('#funTutorial_DT1').css('z-index',-1);
 							};
@@ -159,7 +171,8 @@ class AutoDemo {
 	//****************************************
 	// So audio generally starts first and is longer than the cursor demo.  So we start audio, then wait segment.headStartForAudioMillisec
 	// and start the timed cursor demo	
-	startDemo(currSeg) {
+	startDemo() {
+		let currSeg = this.currSeg;
 		if ((currSeg >= 0) && (currSeg <= this.fullScript.length)) {
 			// valid segment number
 			let segment = this.fullScript[currSeg];

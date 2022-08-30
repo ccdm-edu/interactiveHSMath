@@ -735,10 +735,28 @@ $(function() {
 	}
 	];
     
-	//*** user clicks the start demo button
+	//*** user clicks the start demo button, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {
-		demo.startDemo(1);
+		//first get rid of "lets do the demo" image and put up the demo controls
+		$('#startAutoDemo').css('visibility', 'hidden');
+		$('#autoDemoCtls').css('visibility', 'visible');
+		// fill in the controls properly
+		$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
+		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
+		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
+		$('#segNum').val('1');  // default start at begin
+		$('#pauseDemo').addClass('disabled');  // when first start up, can only hit play
+    });
+    
+    //****************************************************************************
+    // User has interacted with autoDemo controls
+    //****************************************************************************
+
+	// User has selected play
+    $('#playDemo').on('click', function(){
+    	demo.setCurrSeg(parseInt( $('#segNum').val() ) - 1);
+    	demo.startDemo();
     });
 
  
