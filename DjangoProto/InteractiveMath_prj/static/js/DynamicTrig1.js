@@ -290,8 +290,9 @@ $(function() {
 	new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,BEGIN_TEXT, 2).draw();
 	$('#FirstHelp_DT1').text(FIRST_USER_BOX_POP_HELP);
 	
-    function updateContextSensHelp() {
-		if ((numFreqGenSoFar == 0) && (ptsClickedOnCircle == 0)) {
+    function updateContextSensHelp(numFreq) {
+    	console.log('entering update help with numfreq = ' + numFreq);
+		if ((numFreq == 0) && (ptsClickedOnCircle == 0)) {
 			// user is wandering around aimlessly trying to figure out how to get started.  Start them
 			// generating the slowest frequency, clicking on all dots
 			// Once they start clicking on yellow dots, they dont need this help anymore
@@ -299,21 +300,21 @@ $(function() {
 			$('#FirstHelp_DT1').css("visibility", "visible");
 			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,BEGIN_TEXT, 2).draw();
 		}
-		else if ((numFreqGenSoFar == 1) && (ptsClickedOnCircle == 0)) {
+		else if ((numFreq == 1) && (ptsClickedOnCircle == 0)) {
 			// user has done 1st slow freq.  Show them it can be done faster.
 			// Once they start clicking on yellow dots, they dont need this help anymore
 			$('#FirstHelp_DT1').text(SECOND_USER_BOX_POP_HELP);
 			$('#FirstHelp_DT1').css("visibility", "visible");
 			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,BEGIN_TEXT, 2).draw();
 		}
-		else if ((numFreqGenSoFar == 2) && (ptsClickedOnCircle == 0)) {
+		else if ((numFreq == 2) && (ptsClickedOnCircle == 0)) {
 			// user has done two freq.  Show them it can be done faster.
 			// Once they start clicking on yellow dots, they dont need this help anymore
 			$("#FirstHelp_DT1").text(THIRD_USER_BOX_POP_HELP);
 			$('#FirstHelp_DT1').css("visibility", "visible");
 			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,BEGIN_TEXT, 2).draw();
 		}
-		else if ((numFreqGenSoFar == 3) && (ptsClickedOnCircle == 0)) {
+		else if ((numFreq == 3) && (ptsClickedOnCircle == 0)) {
 			// user has done three freq.  Show them it can be done faster.
 			// Once they start clicking on yellow dots, they dont need this help anymore
 			$('#FirstHelp_DT1').css("visibility", "visible");
@@ -322,7 +323,7 @@ $(function() {
 		else {
 			$('#FirstHelp_DT1').css("visibility", "hidden");
 		}
-		if (numFreqGenSoFar >= 3) {
+		if (numFreq >= 3) {
 			new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR,END_TEXT, 2).draw();
 		}
 	};
@@ -527,7 +528,7 @@ $(function() {
 					ctxUnitCircle.lineWidth = 3.0
 					ctxUnitCircle.stroke();
 					ctxUnitCircle.closePath();
-					updateContextSensHelp();  // update context sensitive help for user
+					updateContextSensHelp(numFreqGenSoFar);  // update context sensitive help for user
 				
 				}		
 				// if timer not on, turn it on
@@ -566,17 +567,18 @@ $(function() {
     //*** user wants to start over with the handholding help that first directs them to hit 
     // every dot (getting a lower freq) then every other dot (getting a higher freq) then do it your
     // way and max out freq
-    function startOverContextSensHelp() {
+    function startOverContextSensHelp(segment = 0) {
         $('#StartOver_DT1').css("visibility", "hidden");
     	clearPage();
-    	numFreqGenSoFar = 0;
+    	numFreqGenSoFar = segment;  // segment in demo is how many freq one has generated
 		ptsClickedOnCircle = 0;
 		// chances are first help is obsolete now.. start over
 		$('#FirstHelp_DT1').css("visibility", "hidden");
-		updateContextSensHelp();
+		console.log('call update context sens help from strtover...');
+		updateContextSensHelp(segment);
     }
     $('#StartOver_DT1').on('click', function(event) {
-		startOverContextSensHelp();
+		startOverContextSensHelp(); // always start over from 0 for user button
     }); 
     
     
@@ -679,7 +681,7 @@ $(function() {
 			},
 	  ]
 	},
-	{ segmentName: "Second faster frequency",
+	{ segmentName: "Going twice as fast",
 	  headStartForAudioMillisec: 15000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
@@ -732,10 +734,55 @@ $(function() {
 			},
 
 	  ]
+	},
+	  { segmentName: "Going even faster",
+	  headStartForAudioMillisec: 15000, // generally the audio is longer than the cursor/annotate activity
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: '../../static/AudioExpln/DynamicTrig1_Seg2.MP3'}
+			},
+			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[0], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[3], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[6], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[9], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: littleDotCenter[0], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 1000}
+			},
+
+	  ]
 	}
 	];
-    
-	//*** user clicks the start demo button, iniitalize everything
+	
+    //****************************************************************************
+    // User initiates autoDemo activity
+    //****************************************************************************   
+	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {
 		//first get rid of "lets do the demo" image and put up the demo controls
@@ -745,8 +792,9 @@ $(function() {
 		$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
 		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
 		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
-		$('#segNum').val('1');  // default start at begin
-		$('#pauseDemo').addClass('disabled');  // when first start up, can only hit play
+		//$('#segNum').val('1');  // default start at begin
+		demo.setCurrSeg(1);  // default start at begin
+		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
     });
     
     //****************************************************************************
@@ -754,11 +802,32 @@ $(function() {
     //****************************************************************************
 
 	// User has selected play
-    $('#playDemo').on('click', function(){
-    	demo.setCurrSeg(parseInt( $('#segNum').val() ) - 1);
+    $('#playSegment').on('click', function(){	
+    	// activate pause and disable play
+    	$(this).prop('disabled', true);  // disable play once playing
+    	$('#stopSegment').prop('disabled', false);  // reactivate pause
+    	demo.setCurrSeg(parseInt($('#segNum').val()));
+    	// user may have chosen a segment out of order
+    	startOverContextSensHelp(demo.getCurrSeg()); 
     	demo.startDemo();
     });
-
+    
+    $('#stopSegment').on('click', function(){	
+    	demo.stopThisSegment();
+    	// change icons so play is now enabled and stop is disabled
+    	$(this).prop('disabled', true);  // disable play once playing
+    	$('#playSegment').prop('disabled', false);  // reactivate play
+    	// need to get the help set up for correct segment we think we are on
+    	startOverContextSensHelp(demo.getCurrSeg());  
+    });
+    
+    $('#dismissAutoDemo').on('click', function(){	
+    	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
+    	demo.stopThisSegment();  // may or may not be needed
+    	
+		$('#startAutoDemo').css('visibility', 'visible');
+		$('#autoDemoCtls').css('visibility', 'hidden');	
+    });
  
 
 })

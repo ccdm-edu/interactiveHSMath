@@ -14,6 +14,11 @@ class AutoDemo {
 		// background plot is the appearance before this segment operates and will return to this value			
 		this.backgroundPlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);
 		this.currSeg = 0;  // start at beginnning unless user chooses otherwise.  Autodemo runs from 0 to Max-1 but user thinks its 1 to max
+		this.helpAudio;  // placeholder, need access to this for start/stop/pause
+		// keep track of all events put on event loop so if we have to abort a segment, we can empty the event loop
+		this.eventLoopPtrs = [];
+		// audio done doesn't know if it just finished or user hit stop, need to keep track
+		this.userStopRequest = false;
 	}
 	
 	// get the context of the canvas used for the demo
@@ -30,11 +35,56 @@ class AutoDemo {
 	}
 	
 	setCurrSeg(newCurrSeg) {
-		// should never be an issue but better to check another time, otherwise, do nothing
-		if ( (newCurrSeg >= 0) && (newCurrSeg <= (this.fullScript.length - 1)) ) {
-			this.currSeg = newCurrSeg;
-			console.log('just set autodemo current segment to ' + this.currSeg);
+		// value newCurrSeg will be what user sees which is 1 to max.  value of this.currSeg is what we use 0 to max-1
+		// should always come in as an int but better to be sure and pull off the minus 1
+		if ($.isNumeric(newCurrSeg)) {
+			let temp = newCurrSeg - 1;			
+			// should never be an issue but better to check another time, otherwise, do nothing
+			if ( (temp >= 0) && (temp <= (this.fullScript.length - 1)) ) {
+				this.currSeg = temp;  // saved as integer
+				// ensure the text in input matches the new value
+				$('#segNum').val(this.currSeg+ 1);
+			} else {
+				console.log("ERROR, trying to set newCurrSeg to incorrect value of " + toString(newCurrSeg));
+			}
+		} else {
+			console.log(" CODING ERROR, setCurrSeg assumes input param is an integer but it is not");
 		}
+	}
+	
+	getCurrSeg() { 
+		return this.currSeg; // will be value from 0 to max-1 
+	}
+	
+	// shut down the current segment as quickly as possible and stay on this segment number.  Will restart
+	// when replay from begin of segment.
+	stopThisSegment() {
+	    console.log("user hit pause");
+		this.userStopRequest = true;  // dont add any new activity segments to pile
+		// clear EventLoop of all time queued demo events
+		this.eventLoopPtrs.forEach(timedEvent => {
+			clearTimeout(timedEvent);
+		});
+		// turn off the audio, need to tell code user is doing this and it is not "naturally finished" via userStopRequest
+		this.helpAudio.stop(0);
+	}
+
+	// the segment is over when the audio is over, time to clean up our toys to allow user to use site or play next seg
+	segmentOverCleanup(){	
+		let ctxDemoCanvas = this.getDemoCtx();
+		ctxDemoCanvas.ctx.putImageData(this.backgroundPlot, 0, 0);
+		// demo isn't over until audio is done, update to next segment
+		// increment segment value here and on screen.  User can change if they want
+		if (!this.userStopRequest) {
+			// audio completed without user intervention
+			this.currSeg= this.currSeg + 1;  // increment this.currSeg
+			this.setCurrSeg(this.currSeg + 1);  // since user sees 1 to max, not 0 to max-1
+		}
+		// turn on play button and turn off pause button
+		$('#playSegment').prop('disabled', false);  
+		$('#stopSegment').prop('disabled', true);  
+		// when done, ensure demo canvas is back to background so user can interact with dots again
+		$('#funTutorial_DT1').css('z-index',-1);
 	}
 	
 	//****************************************
@@ -72,7 +122,6 @@ class AutoDemo {
 		context = new AudioContext();	
 		let audioURL = segmentParams.filenameURL;
 		console.log('playing ' + audioURL);	
-		let helpAudio;	
 		let thisObj = this; // done and onended will think 'this' is the Window, need to tell it its the instantiation of AutoDemo
 		
 		// I don't think we need a csrf token for this ajax post.  1.  there is already a session ID required for this
@@ -109,24 +158,17 @@ class AutoDemo {
 						//console.log("finished decoding mp3");
 						try {
 							//console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate );
-							helpAudio = context.createBufferSource();
-							helpAudio.buffer = buffer;
-							helpAudio.connect(context.destination);
+							thisObj.helpAudio = context.createBufferSource();
+							thisObj.helpAudio.buffer = buffer;
+							thisObj.helpAudio.connect(context.destination);
 							// auto play the recording
-							helpAudio.start(0);
+							thisObj.helpAudio.start(0);
 							// this just needs to be somewhere where helpAudio is defined to be saved for later
-							helpAudio.onended = () => 
+							thisObj.helpAudio.onended = () => 
 							{
 								// no longer playing the audio intro, either by user stop or natural completion
 								console.log('audio clip is over now, executing return to normal screen');
-								let ctxDemoCanvas = thisObj.getDemoCtx();
-								ctxDemoCanvas.ctx.putImageData(thisObj.backgroundPlot, 0, 0);
-								// demo isn't over until audio is done, update to next segment
-								// increment segment value here and on screen.  User can change if they want
-								this.currSeg++;
-								$('#segNum').val(toString(this.currSeg + 1)); // user used to seeing seg start at 1
-								// when done, ensure demo canvas is back to background so user can interact with dots again
-								$('#funTutorial_DT1').css('z-index',-1);
+								thisObj.segmentOverCleanup();
 							};
 						} catch(e) {
 							// most likely not enough space to createBuffer
@@ -177,47 +219,56 @@ class AutoDemo {
 			// valid segment number
 			let segment = this.fullScript[currSeg];
 			console.log('name of segment ' + currSeg + ' is ' + segment.segmentName);
+			this.userStopRequest = false;  // in case coming here from a previous stop, user stop is history, lets play
 			let delIndex = 0;  // delay index, index of items that need ever increasing delay
 			let ctxDemoCanvas = this.getDemoCtx();
 			let annotatePlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);  // this is used during the segment
 			// make sure the canvas for demo is at top layer so all activity is visible
 			$('#funTutorial_DT1').css('z-index',100);
+
 			segment.segmentActivities.forEach(activity => {
 				let thisObj = this;
-				switch (activity.segmentActivity) {
-					case (demoEventTypes[0]):
-						// CLICK_ON_CANVAS
-						// all these actions get sent to the EventLoop simultaneously, want to slow down for user
-						setTimeout(function(){
-							if (delIndex > 0) {
-								// get rid of old cursor, we are adding a new one
-								ctxDemoCanvas.ctx.putImageData(annotatePlot, 0, 0);
-							};
-							// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
-							thisObj.moveCursorImgOnCanvas(activity.segmentParams);
-						}, delIndex * activity.segmentParams.waitTimeMillisec + segment.headStartForAudioMillisec);
-						delIndex = delIndex + 1;
-						break;
-					case (demoEventTypes[1]):
-						// PLAY_AUDIO
-						this.playAudio(activity.segmentParams);
-						break;
-					case (demoEventTypes[2]):
-						// CLICK_ON_ELEMENT
-						break;
-					case (demoEventTypes[3]):
-						// ANNOTATION
-						setTimeout(function(){
-							// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
-							thisObj.drawAnnotation(activity.segmentParams);
-							// want to keep annotation for awhile so save it
-							annotatePlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);
-						}, segment.headStartForAudioMillisec);					
-						break;
-					default:
-						console.log('SW error in autoDemo switch stmt');
-						break;
-				} // end of switch stmt
+				// this will almost certainly not pause the demo as all the activities will be launched off  immediately
+				// and execute when setTimeout expires...  but just in case user pauses immediately...
+				if (!this.userStopRequest) {
+					let temp;
+					switch (activity.segmentActivity) {
+						case (demoEventTypes[0]):
+							// CLICK_ON_CANVAS
+							// all these actions get sent to the EventLoop simultaneously, want to slow down for user
+							temp = setTimeout(function(){
+								if (delIndex > 0) {
+									// get rid of old cursor, we are adding a new one
+									ctxDemoCanvas.ctx.putImageData(annotatePlot, 0, 0);
+								};
+								// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
+								thisObj.moveCursorImgOnCanvas(activity.segmentParams);
+							}, delIndex * activity.segmentParams.waitTimeMillisec + segment.headStartForAudioMillisec);
+							delIndex = delIndex + 1;
+							this.eventLoopPtrs.push(temp);
+							break;
+						case (demoEventTypes[1]):
+							// PLAY_AUDIO
+							this.playAudio(activity.segmentParams);
+							break;
+						case (demoEventTypes[2]):
+							// CLICK_ON_ELEMENT
+							break;
+						case (demoEventTypes[3]):
+							// ANNOTATION
+							temp = setTimeout(function(){
+								// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
+								thisObj.drawAnnotation(activity.segmentParams);
+								// want to keep annotation for awhile so save it
+								annotatePlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);
+							}, segment.headStartForAudioMillisec);	
+							this.eventLoopPtrs.push(temp);				
+							break;
+						default:
+							console.log('SW error in autoDemo switch stmt');
+							break;
+					} // end of switch stmt
+				} // end of if not pause demo
 			});  // end of forEach activity
 		} else {console.log('Coding Error, incorrect segment number called out in startDemo of ' + currSeg)};
 	}

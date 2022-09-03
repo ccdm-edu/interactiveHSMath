@@ -172,8 +172,11 @@ $(function() {
 		let timeIntMs = roundFP(1000/(currFreq*samplesPerPeriod), 1);		
 		//console.log(" sample time in ms is " + timeIntMs + " samples per period is " + samplesPerPeriod);
 		const TIC_IN_HALF_SEC = Math.round(500/timeIntMs);
-		$('#UserNotices_DT2').html('T matches purple circle on graphs to right');
-		$('#UserNotices_DT2').css('color', PERIOD_COLOR);
+		if (currFreq >= 0.8) {
+			// else freq is too low and you can't see the purple circle for period
+			$('#UserNotices_DT2').html('T matches purple circle on graphs to right');
+			$('#UserNotices_DT2').css('color', PERIOD_COLOR);
+		}
 		$('#SampPerPeriod_DT2').html(samplesPerPeriod); // inc is fixed per sine freq
         startInterval = setInterval(function(){
     		let currPeriod = 1/currFreq;
