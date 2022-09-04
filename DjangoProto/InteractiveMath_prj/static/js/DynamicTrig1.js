@@ -291,7 +291,6 @@ $(function() {
 	$('#FirstHelp_DT1').text(FIRST_USER_BOX_POP_HELP);
 	
     function updateContextSensHelp(numFreq) {
-    	console.log('entering update help with numfreq = ' + numFreq);
 		if ((numFreq == 0) && (ptsClickedOnCircle == 0)) {
 			// user is wandering around aimlessly trying to figure out how to get started.  Start them
 			// generating the slowest frequency, clicking on all dots
@@ -360,7 +359,7 @@ $(function() {
     		$('#timeVal_DT1').text(roundFP(countTime * 0.1, 1)); 
     		$('#theta_DT1').text(String(accumPhase));
     		if ( (countTime/10 == EXPIRATION_TIME_SEC) || (stopTimerNow) ) {
-    			//After EXPIRATION_TIME_SEC sec, end the experiment
+    			//After EXPIRATION_TIME_SEC sec, end the experiment, first clear eventLoop
         		if (startInterval) clearInterval(startInterval);
         		timerStarted = false;
         		accumPhase = 0;
@@ -369,7 +368,7 @@ $(function() {
         		$('#theta_DT1').text(String(accumPhase));
     			// get rid of time value 
     			$('#timeVal_DT1').text('0');
-    			startOverContextSensHelp();  // this needs to be before stopTimeNow set to false
+    			startOverContextSensHelp(numFreqGenSoFar);  // this needs to be before stopTimeNow set to false
         		stopTimerNow = false;  // Time's up or user stopped timer, either way, reset for next use
         		if (countTime/10 == EXPIRATION_TIME_SEC) {
 					// Get users attention and explain situation so they can fix it next time out       		
@@ -566,7 +565,9 @@ $(function() {
 	//********************************************************    
     //*** user wants to start over with the handholding help that first directs them to hit 
     // every dot (getting a lower freq) then every other dot (getting a higher freq) then do it your
-    // way and max out freq
+    // way and max out freq.
+    // This method is called if user hits clear, start over buttons or if the demo is running and hits stop midsegment.
+    // in the latter case, this could get called more than once if the timer is running and needs to be stopped.
     function startOverContextSensHelp(segment = 0) {
         $('#StartOver_DT1').css("visibility", "hidden");
     	clearPage();
@@ -574,7 +575,6 @@ $(function() {
 		ptsClickedOnCircle = 0;
 		// chances are first help is obsolete now.. start over
 		$('#FirstHelp_DT1').css("visibility", "hidden");
-		console.log('call update context sens help from strtover...');
 		updateContextSensHelp(segment);
     }
     $('#StartOver_DT1').on('click', function(event) {
