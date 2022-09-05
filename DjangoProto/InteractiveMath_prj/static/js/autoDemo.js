@@ -61,12 +61,12 @@ class AutoDemo {
 	stopThisSegment() {
 	    console.log("user hit pause");
 		this.userStopRequest = true;  // dont add any new activity segments to pile
-		// clear EventLoop of all time queued demo events
+		// clear EventLoop of all time queued demo events, if all events are already done, no biggie
 		this.eventLoopPtrs.forEach(timedEvent => {
 			clearTimeout(timedEvent);
 		});
 		// turn off the audio, need to tell code user is doing this and it is not "naturally finished" via userStopRequest
-		this.helpAudio.stop(0);
+		if (this.helpAudio) this.helpAudio.stop(0);
 	}
 
 	// the segment is over when the audio is over, time to clean up our toys to allow user to use site or play next seg

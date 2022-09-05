@@ -7,6 +7,7 @@ This is the style sheet for the DynamicTrig1.html page
 #headerAndCtl_DT1 {
 	position: relative;
 	top: 0px;
+	left: 0px;
 	width: auto;
 }
 
@@ -14,7 +15,7 @@ This is the style sheet for the DynamicTrig1.html page
 #HeaderTrig_DT1 {
 	position: absolute;
 	border: 0px;
-	left: 400px;
+	left: 300px;
 	font-weight: bold;
 	font-size: 32px;
 	resize: none;
@@ -26,7 +27,7 @@ This is the style sheet for the DynamicTrig1.html page
 #CircleValues_DT1 {
 	position: relative;
 	left: 0px;
-	top: 100px;
+	top: 0px;
 }
 /* these are the children of CircleValues_DT1 */
 /* these button z-index must outrank the todo/expln box so it can be active */
@@ -89,7 +90,7 @@ We use negative value for top since we want some overlap*/
 #UnitCircleAndGraphCanvas{
 	position: relative;
 	left: 0px;
-	top: 100px;
+	top: 0px;
 }
 #AmpSinCosCircle_DT1{
 	 position: absolute;
@@ -139,7 +140,7 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	font-size: 15px;
 	font-weight: bold;
 	left: 110px;
-	top: 430px;
+	top: 330px;
 	z-index: 10;
 	visibility: visible;
 	animation-name: showFirstBlinkyHelp;
@@ -153,8 +154,8 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 /* grow the box and move so lettering and position doesn't change  */
 @keyframes showFirstBlinkyHelp {
 	0%		{border: 1px solid black;}
-	50%		{border: 10px solid black; width: 218px; left: 100px; top: 420px;} 
-	100%	{border: 1px solid black; width: 200px; left: 110px; top: 430px;}
+	50%		{border: 10px solid black; width: 218px; left: 100px; top: 320px;} 
+	100%	{border: 1px solid black; width: 200px; left: 110px; top: 330px;}
 }
 
 /*********************Tutorial demo type help******************/
