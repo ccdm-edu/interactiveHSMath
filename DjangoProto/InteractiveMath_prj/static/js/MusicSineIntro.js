@@ -1,6 +1,9 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
+	// put up autodemo image to introduce to students for future pages
+	$("#startAutoDemo").css('display', 'inline-block');
+		
 	let musicCanvas =  $("#ClefWithNotes").get(0);  // foreground to detect user clicks
 	let bkgdMusicCanvas = $("#NotesFilledIn").get(0);   // background to color in the notes when clicked
 	// get ready to start drawing on this canvas, first get the context
@@ -497,5 +500,92 @@ $(function() {
 	
 	//need to not have every css load on every page, when that is fixed, can get rid of this
 	$('a[href="#AdvancedTopics"]').css('display', 'none');
-	
+
+    //********************************************************
+	// create a "script" for the auto-demo tutorial, by now, all variables should be set
+	//********************************************************	
+    
+	const SCRIPT_AUTO_DEMO = [
+	{ segmentName: "Intro to Auto Demo",
+	  headStartForAudioMillisec: 10000, // generally the audio is longer than the cursor/annotate activity
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: '../../static/AudioExpln/SineMusicIntro_Seg0.mp3'}
+			},
+
+	  ]
+	},
+	{ segmentName: "Sine waves sound great",
+	  headStartForAudioMillisec: 15000, // generally the audio is longer than the cursor/annotate activity
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: '../../static/AudioExpln/MusicSineIntro_Seg1.mp3'}
+			},
+			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
+
+	  ]
+	}
+	];
+		
+    //****************************************************************************
+    // User initiates autoDemo activity
+    //****************************************************************************   
+	//*** user clicks the start demo image, iniitalize everything
+	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_MSIntro');  // give the demo the full script
+    $('#startAutoDemo').on('click', function(event) {
+		//first get rid of "lets do the demo" image and put up the demo controls
+		$('#startAutoDemo').css('display', 'none');
+		$('#autoDemoCtls').css('display', 'inline-block');
+		$('#autoDemoCtls').css('visibility', 'visible');
+		// fill in the controls properly
+		$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
+		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
+		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
+		//$('#segNum').val('1');  // default start at begin
+		demo.setCurrSeg(1);  // default start at begin
+		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
+    });
+    	
+    //****************************************************************************
+    // User has interacted with autoDemo controls
+    //****************************************************************************
+
+	// User has selected play
+    $('#playSegment').on('click', function(){	
+    	// activate pause and disable play
+    	$(this).prop('disabled', true);  // disable play once playing
+    	$('#stopSegment').prop('disabled', false);  // reactivate pause
+    	let currSeg = parseInt($('#segNum').val());
+    	demo.setCurrSeg(currSeg);
+    	demo.startDemo();
+    	// this is only true for this pages demo...
+    	if (1 == currSeg) {
+    		//we are doing intro to demos, show what advanced topic link looks like 
+    		$('a[href="#AdvancedTopics"]').css('display', 'block');
+    	} else {
+    		$('a[href="#AdvancedTopics"]').css('display', 'none');
+    	}
+    });
+    
+    $('#stopSegment').on('click', function(){	
+    	demo.stopThisSegment();
+    	// change icons so play is now enabled and stop is disabled
+    	$(this).prop('disabled', true);  // disable play once playing
+    	$('#playSegment').prop('disabled', false);  // reactivate play 
+    });
+    
+    $('#dismissAutoDemo').on('click', function(){	
+    	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
+    	demo.stopThisSegment();  // may or may not be needed
+    	
+		$('#startAutoDemo').css('display', 'inline-block');
+		$('#autoDemoCtls').css('display', 'none');
+		
+    });
+ 
+ 
 })

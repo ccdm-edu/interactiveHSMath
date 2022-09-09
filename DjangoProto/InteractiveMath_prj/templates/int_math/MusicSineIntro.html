@@ -12,11 +12,17 @@
 	<div id="TrumpetMusicalScale">
 		<!-- Two canvases that sit on top of each other, one is to measure clicks and other is to fill in notes with color when selected -->	
 		<!-- use the following to put a debug border around canvas: style="border:1px solid #000000;"  -->
-		<canvas id="ClefWithNotes" width=1000 height=250>
+		<canvas id="ClefWithNotes" width=1000 height=250 >
 			Your Browser does not support canvas tag, you are missing graph capability
 		</canvas>
 		<canvas id="NotesFilledIn" width=1000 height=250>
+			Your Browser does not support canvas tag, you are missing graph capability
 		</canvas>
+		<!--  to add border to canvas, add this at end style="border:1px solid #000000;" -->
+		<canvas id="funTutorial_MSIntro" width=1000 height=250> <!--  must match canvas above -->
+			Your Browser does not support canvas tag, you are missing graph capability
+		</canvas>	
+		
 		<img id="colorfulClef" src="{% static 'images/Prismatic-Clef-Hearts-2.svg' %}" alt = "Clef to left of musical notes">
 		<img class="wholeNote" id="wholeNote1" src="{% static 'images/WholeNote.svg' %}" alt = "Low C whole note on Trumpet scale">
 		<img class="wholeNote" id="wholeNote2" src="{% static 'images/WholeNote.svg' %}" alt = "D whole note on Trumpet scale">
@@ -86,6 +92,7 @@
 		<!-- in case can't get from google, load from local -->
 		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
 	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 	<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
 			
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
@@ -97,7 +104,8 @@
     
 	<!-- Custom JS for this page -->
 	<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
-	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	    
+	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	
+	<script src="{% static 'js/autoDemo.js' %}" crossorigin="anonymous"></script>	     
 	<script src="{% static 'js/MusicSineIntro.js' %}" crossorigin="anonymous"></script>	
 	
 

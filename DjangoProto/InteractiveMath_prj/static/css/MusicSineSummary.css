@@ -5,4 +5,10 @@ Style sheet (.css) for the musical summary page
 want to start up on page load if robot test not passed yet */
 #kloodgeToGetBotModal{
 	visibility: hidden;
+};
+#startAutoDemo{
+	display: none;
+};
+#autoDemoCtls {
+	display: none;
 }

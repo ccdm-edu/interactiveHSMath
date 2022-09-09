@@ -6,11 +6,12 @@
 const demoEventTypes = ["CLICK_ON_CANVAS", "PLAY_AUDIO", "CLICK_ON_ELEMENT", "ANNOTATION"];
 
 class AutoDemo {
-	constructor(multiSegScript) {
+	constructor(multiSegScript, stringIDOfCanvas) {
 		// This script is made up of many segments, which can be run independently.  Each segment has
 		// several steps consisting of (maybe) audio, event clicking, annotations etc
 		this.fullScript = multiSegScript;
-		let ctxDemoCanvas = this.getDemoCtx();
+		this.canvasID = '#' + stringIDOfCanvas;
+		let ctxDemoCanvas = this.getDemoCtx(this.canvasID);
 		// background plot is the appearance before this segment operates and will return to this value			
 		this.backgroundPlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);
 		this.currSeg = 0;  // start at beginnning unless user chooses otherwise.  Autodemo runs from 0 to Max-1 but user thinks its 1 to max
@@ -24,10 +25,11 @@ class AutoDemo {
 	// get the context of the canvas used for the demo
 	getDemoCtx() {
 		let ctxDemoCanvas;
-		let demoCanvas =  $("#funTutorial_DT1").get(0);  // later on, this will be used to clear the canvas
+		this.canvasID = this.canvasID;
+		let demoCanvas =  $(this.canvasID).get(0);  // later on, this will be used to clear the canvas
 		// get ready to start drawing on this canvas, first get the context
-		if ( $("#funTutorial_DT1").length ) {
-	    	ctxDemoCanvas = $("#funTutorial_DT1").get(0).getContext('2d');
+		if ( $(this.canvasID).length ) {
+	    	ctxDemoCanvas = $(this.canvasID).get(0).getContext('2d');
 		} else {
 	    	console.log('Cannot obtain demo canvas context');
 		}
@@ -84,7 +86,7 @@ class AutoDemo {
 		$('#playSegment').prop('disabled', false);  
 		$('#stopSegment').prop('disabled', true);  
 		// when done, ensure demo canvas is back to background so user can interact with dots again
-		$('#funTutorial_DT1').css('z-index',-1);
+		$(this.canvasID).css('z-index',-1);
 	}
 	
 	//****************************************
@@ -224,7 +226,7 @@ class AutoDemo {
 			let ctxDemoCanvas = this.getDemoCtx();
 			let annotatePlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);  // this is used during the segment
 			// make sure the canvas for demo is at top layer so all activity is visible
-			$('#funTutorial_DT1').css('z-index',100);
+			$(this.canvasID).css('z-index',100);
 
 			segment.segmentActivities.forEach(activity => {
 				let thisObj = this;

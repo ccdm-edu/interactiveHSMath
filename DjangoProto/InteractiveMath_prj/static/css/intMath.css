@@ -195,6 +195,30 @@ div#tooltip:hover .tooltiptext {
 #sendServerLoc{
 	display: none;
 }
+/*************all pages, auto demo controls and starting image **********************/
+/* its there, but if the page wants it, must turn it on */
+#autoDemo{
+	position: relative;
+}
+#startAutoDemo{
+	position: absolute;
+	height: 100px;
+	left: 0px;
+	top: 20px;
+	display: none;
+	z-index: 50;  /* needs to be max value */
+}
+#autoDemoCtls{
+	border: 2px solid cyan;
+	border-radius: 10px;
+	display: none;
+	width: 380px;
+	margin: 7px 7px 7px 7px;
+}
+#autoDemoCtls h1{
+	text-align: center;
+	font-size: 18px;
+}
 
 /************all pages, footer **************************/
 /* I don't fully understand all this but if I put a bottom spec, on dynamictrig page, it places it up near

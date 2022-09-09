@@ -117,7 +117,8 @@ class VerifyClientGiveFile(View):
                            'Clarinet': "DG_clarinet467.MP3", 
                            'Soprano Sax': "MS_SSax_midC.MP3", 
                            'Tenor Sax': "MS_TSax_midC.MP3",
-                           'Flute': "OS_flute_bflat_466.MP3"}
+                           'Flute': "OS_flute_bflat_466.MP3",
+                           'Human': "DGum_voice466.MP3"}
     def get(self, request):
         response = HttpResponse()
         resultFilename = ''

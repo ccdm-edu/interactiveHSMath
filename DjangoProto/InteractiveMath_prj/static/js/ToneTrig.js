@@ -314,7 +314,9 @@ $(function() {
 		
 		// change the musical note legends
 		let instrArray = tuneState[currTuneState].split("_");
-		sine_plot_100_1k.data.datasets[1].label = tuneInstrument[currTuneState] + " plays " + instrArray[instrArray.length - 1];
+		let musicVerb = " plays ";
+		if ("Human" == tuneInstrument[currTuneState]) { musicVerb = " sings "; }
+		sine_plot_100_1k.data.datasets[1].label = tuneInstrument[currTuneState] + musicVerb + instrArray[instrArray.length - 1];
 		sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,165,0)'
 
 		// update graphs

@@ -19,6 +19,10 @@
 		{"instrument": "Flute", "musicalNote": "B4flat", "title":"Sine Wave and Flute Play B4&#9837 note", "fundamentalHz": "466", "tuneOffset": "10000",
 		"todo": "TRY THIS:  Turn on your speaker.  Hit Start Tone and play the synthesized tone at 466 Hz.  Hit Play Note and play the flute mp3 recording which is very close to 466 Hz.  The flute is a C instrument and so it plays a slightly different note to match the other Bflat instruments.  ",
 		"expln": "EXPLANATION:  We are forcing a flute to match other Bflat instruments in pitch frequency of 466.16 Hz.  The orange line is the waveform created by the flute.  You can see the flute waveform is periodic, like the sine wave, and at (approximately) the same fundamental frequency as the sine wave."
+		},
+		{"instrument": "Human", "musicalNote": "B4flat", "title":"Sine Wave and Human sings B4&#9837 note", "fundamentalHz": "466", "tuneOffset": "8000",
+		"todo": "TRY THIS:  Turn on your speaker.  Hit Start Tone and play the synthesized tone at 466 Hz.  Hit Play Note and play the mp3 recording of human singing a note, which is very close to 466 Hz.  The human voice is a C instrument and so it plays a slightly different note to match the other Bflat instruments.  ",
+		"expln": "EXPLANATION:  Our singer is matching other Bflat instruments in pitch frequency of 466.16 Hz.  The orange line is the waveform created by the singer.  You can see the singer waveform is periodic, like the sine wave, and at (approximately) the same fundamental frequency as the sine wave."
 		}
 	]
 }

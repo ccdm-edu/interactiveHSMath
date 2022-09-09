@@ -2,7 +2,7 @@
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
 	// turn on help in upper left corner
-	$('#startAutoDemo').css('display', 'inline-block');
+	//$('#startAutoDemo').css('display', 'inline-block');
 	
 	let ctxUnitCircle;
 	let circleDotsCanvas =  $("#AmpSinCosCircle_DT1").get(0);  // later on, this will set the "background image" for animation
@@ -234,12 +234,14 @@ $(function() {
 	const BEGIN_TEXT = "Start Here";
 	const BEGIN_END_TEXT = "Start/End";
 	const END_TEXT = "End Here";
+	const TIMER_LOC_X = 110;
+	const TIMER_LOC_Y = 20;
 	function showUserPeriod(latestPeriod){
 		ctxUnitCircle.beginPath();
 		ctxUnitCircle.lineWidth = 2.0
 		ctxUnitCircle.strokeStyle = SHOW_FREQ_COLOR;
 		// put circle up at numeric count down timer
-	    ctxUnitCircle.arc(110, 20, 18, 0, Math.PI * 2, true); 
+	    ctxUnitCircle.arc(TIMER_LOC_X, TIMER_LOC_Y, 18, 0, Math.PI * 2, true); 
 	    ctxUnitCircle.stroke();
 	    new Arrow(ctxUnitCircle, POINT_TO_TIME, SHOW_FREQ_COLOR,"", 2).draw();
 	    
@@ -663,7 +665,7 @@ $(function() {
 			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
 			{segmentActivity: "ANNOTATION",
 			 segmentParams: 
-			 	{circleCenter: {x: 110, y: 20, radius: 22}, 
+			 	{circleCenter: {x: TIMER_LOC_X, y: TIMER_LOC_Y, radius: 22}, 
 			 	 color: "red"}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
@@ -884,7 +886,7 @@ $(function() {
     // User initiates autoDemo activity
     //****************************************************************************   
 	//*** user clicks the start demo image, iniitalize everything
-	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
+	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_DT1');  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {
 		//first get rid of "lets do the demo" image and put up the demo controls
 		$('#startAutoDemo').css('visibility', 'hidden');

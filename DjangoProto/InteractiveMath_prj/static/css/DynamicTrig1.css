@@ -1,7 +1,11 @@
 /***********************
 This is the style sheet for the DynamicTrig1.html page
 ************************/
-
+/* create global var for this html */
+:root{
+	--CANVAS_TOP: 50px;
+	--GRAPH_LABEL_TOP: 30px;
+}
 /***************************/
 /* put a label up and an expln/to do selector input box */
 #headerAndCtl_DT1 {
@@ -94,7 +98,7 @@ We use negative value for top since we want some overlap*/
 }
 #AmpSinCosCircle_DT1{
 	 position: absolute;
-	 top: 50px;
+	 top: var(--CANVAS_TOP); /* this needs to track its parents */
 	 left: 0px;  
 	 margin-left: 0 px;
 	 padding-left: 0 px;
@@ -106,7 +110,7 @@ clear and redraw at different times than the other canvas  We did position as ab
 it won't shove this to below the unit circle-- off to side prods user to expand screen */
 #FreqChange_DT1{
 	 position: absolute;
-	 top: -50px;
+	 top: 20px;
 	 left: 450px;
 	 margin-left: 0 px;
 	 padding-left: 0 px;
@@ -116,14 +120,14 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 /* add labels for the graphs, will be updated on dynamic trig page 2 */
 #sinEqtnLabelHI_DT1{
 	position: absolute;
-	top: -30px;
+	top: var(--GRAPH_LABEL_TOP);
 	left: 480px;
 	font-size: 20px;
 	font-weight: bold;
 }
 #sinEqtnLabelLO_DT1{
 	position: absolute;
-	top: 290px;
+	top: calc(var(--GRAPH_LABEL_TOP) + 330px);
 	left: 480px;
 	font-size: 20px;
 	font-weight: bold;
@@ -140,7 +144,7 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	font-size: 15px;
 	font-weight: bold;
 	left: 110px;
-	top: 330px;
+	top: 300px;   /* thisneeds to track animation below */
 	z-index: 10;
 	visibility: visible;
 	animation-name: showFirstBlinkyHelp;
@@ -154,39 +158,19 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 /* grow the box and move so lettering and position doesn't change  */
 @keyframes showFirstBlinkyHelp {
 	0%		{border: 1px solid black;}
-	50%		{border: 10px solid black; width: 218px; left: 100px; top: 320px;} 
-	100%	{border: 1px solid black; width: 200px; left: 110px; top: 330px;}
+	50%		{border: 10px solid black; width: 218px; left: 100px; top: 290px;} 
+	100%	{border: 1px solid black; width: 200px; left: 110px; top: 300px;}
 }
 
 /*********************Tutorial demo type help******************/
-/* canvas */
+/* canvas, needs to sit exactly on ampSinCosCircle_DT1 */
 #funTutorial_DT1 {
 	 position: absolute;
-	 top: 50px;
+	 top: var(--CANVAS_TOP);
 	 left: 0px;
 	 margin-left: 0 px;
 	 padding-left: 0 px;
 	 margin-right: 0 px;
 	 padding-right: 0 px;
 	 z-index: -1;
-}
-/****************All pages, demo image***************************/
-/* its there, but if the page wants it, must turn it on */
-#startAutoDemo{
-	position: absolute;
-	height: 100px;
-	left: 0px;
-	top: 20px;
-	visibility: visible;
-}
-#autoDemoCtls{
-	border: 2px solid cyan;
-	border-radius: 10px;
-	visibility: hidden;
-	width: 380px;
-	margin: 7px 7px 7px 7px;
-}
-#autoDemoCtls h1{
-	text-align: center;
-	font-size: 18px;
 }
