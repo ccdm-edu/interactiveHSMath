@@ -512,9 +512,30 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/SineMusicIntro_Seg0.mp3'}
+			 	{filenameURL: '../../static/AudioExpln/SineMusicIntro_Seg0.mp3',
+			 	waitTimeMillisec: 0}
 			},
-
+			{segmentActivity: "ANNOTATE_ELEMENT",
+			 segmentParams: 
+			 	{element: 'segNum', 
+			 	 color: "red",
+			 	 waitTimeMillisec: 5000}
+			},
+			{segmentActivity: "ANNOTATE_ELEMENT",
+			 segmentParams: 
+			 	{element: 'totalSeg', 
+			 	 color: "green",
+			 	 waitTimeMillisec: 5000}
+			},
+			{segmentActivity: "REMOVE_ALL_ANNOTATE_ELEMENT",
+			 segmentParams: 
+			 	{waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'segNum',
+			 	waitTimeMillisec: 2000}
+			},
 	  ]
 	},
 	{ segmentName: "Sine waves sound great",
@@ -545,7 +566,6 @@ $(function() {
 		$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
 		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
 		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
-		//$('#segNum').val('1');  // default start at begin
 		demo.setCurrSeg(1);  // default start at begin
 		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
     });
@@ -559,16 +579,16 @@ $(function() {
     	// activate pause and disable play
     	$(this).prop('disabled', true);  // disable play once playing
     	$('#stopSegment').prop('disabled', false);  // reactivate pause
-    	let currSeg = parseInt($('#segNum').val());
-    	demo.setCurrSeg(currSeg);
-    	demo.startDemo();
     	// this is only true for this pages demo...
+    	let currSeg = parseInt($('#segNum').val());
     	if (1 == currSeg) {
     		//we are doing intro to demos, show what advanced topic link looks like 
     		$('a[href="#AdvancedTopics"]').css('display', 'block');
     	} else {
     		$('a[href="#AdvancedTopics"]').css('display', 'none');
     	}
+    	demo.setCurrSeg(currSeg);
+    	demo.startDemo();
     });
     
     $('#stopSegment').on('click', function(){	
