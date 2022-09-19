@@ -525,16 +525,34 @@ $(function() {
 			 segmentParams: 
 			 	{element: 'totalSeg', 
 			 	 color: "green",
-			 	 waitTimeMillisec: 5000}
+			 	 waitTimeMillisec: 8000}
 			},
 			{segmentActivity: "REMOVE_ALL_ANNOTATE_ELEMENT",
 			 segmentParams: 
 			 	{waitTimeMillisec: 1000}
 			},
-			{segmentActivity: "CLICK_ON_ELEMENT", 
+			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'segNum',
-			 	waitTimeMillisec: 2000}
+			 	 action: "focus",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 16000}  // this is wait before you go on to next item
+			},
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'segNum',
+			 	 action: "focus",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	waitTimeMillisec: 8000}
+			},
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'AdvancedTopics',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest", so neg x is south east
+			 	 offset: {x: -200, y: 60},
+			 	waitTimeMillisec: 14000}  // this is wait before you go on to next item
 			},
 	  ]
 	},

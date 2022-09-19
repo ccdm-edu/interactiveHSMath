@@ -94,6 +94,7 @@ a:hover {
     width: calc(1.0 * var(--ADV_TOPIC_WINDOW_WIDTH) ); 
     overflow-y: hidden; /* gets rid of scrollbars at the top div level */
 }
+/* > is used to show parentage required for element */
 #AdvancedTopics > .modal-dialog{
 	margin: 0px 0px 0px 0px !important;  /* else margins will be huge as default, still get large right margin */
     overflow-y: initial !important;  /* makes scrollbars */

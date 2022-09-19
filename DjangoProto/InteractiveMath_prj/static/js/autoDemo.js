@@ -5,10 +5,11 @@
 //JQuery, dont do this script until document DOM objects are loaded and ready
 const demoEventTypes = ["CLICK_ON_CANVAS", 
 						"PLAY_AUDIO", 
-						"CLICK_ON_ELEMENT", 
+						"ACT_ON_ELEMENT", 
 						"ANNOTATION", 
 						"ANNOTATE_ELEMENT", 
-						"REMOVE_ALL_ANNOTATE_ELEMENT"];
+						"REMOVE_ALL_ANNOTATE_ELEMENT",
+						"REMOVE_ACT_ON_ELEMENT",];
 
 class AutoDemo {
 	constructor(multiSegScript, stringIDOfCanvas) {
@@ -66,7 +67,6 @@ class AutoDemo {
 	// shut down the current segment as quickly as possible and stay on this segment number.  Will restart
 	// when replay from begin of segment.
 	stopThisSegment() {
-	    console.log("user hit pause");
 		this.userStopRequest = true;  // dont add any new activity segments to pile
 		// clear EventLoop of all time queued demo events, if all events are already done, no biggie
 		this.eventLoopPtrs.forEach(timedEvent => {
@@ -236,7 +236,6 @@ class AutoDemo {
 		$newCanvas.css('left', leftOffsetStr);
 		
 		$newCanvas.appendTo("body");
-		console.log('annotate element color is ' + param.color);
 		// ensure the new little canvas was added properly, else this will fail
 		let newCanvasCtx = $('#' + currentID).get(0).getContext('2d');
 		newCanvasCtx.beginPath();
@@ -257,23 +256,51 @@ class AutoDemo {
 		}	
 	}
 	// user clicks on a DOM element that isn't on a DOM element
-	clickOnElement(param) {
+	actOnElement(param) {
 		// pull out the special demo cursor icon and place on proper location
 		let $demoCursor = $('<img>',{id:'demoCursorElID',src:'../../static/images/DemoCursor.svg'});
 		$demoCursor.css('position', 'absolute')
 		$demoCursor.appendTo("body");
 		let locEl = $('#' + param.element).offset();
 	    // location of item to be annotated is at locEl.top and locEl.left
-	    $('#demoCursorElID').css({ 'left': Math.round(locEl.left) + 'px', 'top': Math.round(locEl.top) + 'px' });
-
-
+	    let leftPos = Math.round(locEl.left) - param.offset.x;
+	    let topPos = Math.round(locEl.top) + param.offset.y;
+	    $('#demoCursorElID').css({ 'left': leftPos + 'px', 'top': topPos + 'px' });
+		if ("focus" == param.action) {
+			// focus shows off what it looks like when user clicks on input element
+			$('#' + param.element).focus();
+		} else {
+			// click
+			let currID = '#' + param.element;
+			console.log('clicking on element ' + currID + 'and length is ' + $(currID).length);
+			//$(currID).trigger('click');
+			//$(currID).get(0).click();   // try this with javascript function
+			//$("#AdvancedTopics>.modal-dialog").get(0).click();
+			//let href = $(currID).attr('href');
+			//console.log('href is ' + href);
+			//window.location.href = href;
+			//const clickHrefPt = new MouseEvent('click');
+		//execute event on element
+		//$(currID).get(0).dispatchEvent(clickHrefPt);
 		
-		// click on the event 
-//		let rect = segmentParams.canvas.getBoundingClientRect();  // need to create mouse event on canvas that correxponds to dot on associated canvas
-//		const clickCanvasPt = new CustomEvent('click', {detail: {xVal:xyPt.x, yVal: xyPt.y }});
-//		//execute event on element
-//		segmentParams.canvas.dispatchEvent(clickCanvasPt);
+
+			$('#AdvancedTopics').modal({backdrop: false});  // this stops the background from going dark when do modal show
+			$('#AdvancedTopics').modal('show');  // only thing that works
+			//$('#AdvancedTopics').addClass('show');  //doesn't work even though it adds the class
+		}
 	}
+	// lets undo all dom element focus
+	removeActOnElement(param) {
+		// get rid of demo cursor ID
+		$('#demoCursorElID').remove();
+		if ("focus" == param.action) {
+			// remove focus on element
+			$('#' + param.element).blur();
+		} else {
+			// not implemented
+		}
+	}
+		
 	//****************************************
 	// play specified segment of the script
 	//****************************************
@@ -312,7 +339,6 @@ class AutoDemo {
 								thisObj.moveCursorImgOnCanvas(activity.segmentParams);
 							}, nextItemBeginTime);
 							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
-					//delIndex * activity.segmentParams.waitTimeMillisec + segment.headStartForAudioMillisec);
 							this.eventLoopPtrs.push(temp);
 							break;
 						case (demoEventTypes[1]):
@@ -320,10 +346,10 @@ class AutoDemo {
 							this.playAudio(activity.segmentParams);
 							break;
 						case (demoEventTypes[2]):
-							// CLICK_ON_ELEMENT
+							// ACT_ON_ELEMENT
 							temp = setTimeout(function(){
 								// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
-								thisObj.clickOnElement(activity.segmentParams);
+								thisObj.actOnElement(activity.segmentParams);
 							}, nextItemBeginTime);	
 							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
 							this.eventLoopPtrs.push(temp);				
@@ -351,11 +377,19 @@ class AutoDemo {
 							break
 						case (demoEventTypes[5]):
 							// delete all ANNOTATE elements on page, since we had to add little canvases
-							console.log('will remove annotation in ' + nextItemBeginTime);
 							temp = setTimeout(function(){
 								// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
 								thisObj.removeAllAnnotateElement(annotateInd);
 								annotateInd = 0; // they are all gone now
+							}, nextItemBeginTime);	
+							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
+							this.eventLoopPtrs.push(temp);	
+							break
+						case (demoEventTypes[6]):
+							// remove cursor from screen
+							temp = setTimeout(function(){
+								// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
+								thisObj.removeActOnElement(activity.segmentParams);
 							}, nextItemBeginTime);	
 							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
 							this.eventLoopPtrs.push(temp);	
