@@ -2,7 +2,7 @@
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
 	// turn on help in upper left corner
-	//$('#startAutoDemo').css('display', 'inline-block');
+	$('#startAutoDemo').css('display', 'inline-block');
 	
 	let ctxUnitCircle;
 	let circleDotsCanvas =  $("#AmpSinCosCircle_DT1").get(0);  // later on, this will set the "background image" for animation
@@ -666,7 +666,8 @@ $(function() {
 			{segmentActivity: "ANNOTATION",
 			 segmentParams: 
 			 	{circleCenter: {x: TIMER_LOC_X, y: TIMER_LOC_Y, radius: 22}, 
-			 	 color: "red"}
+			 	 color: "red",
+			 	 waitTimeMillisec: 1000}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
@@ -889,7 +890,8 @@ $(function() {
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_DT1');  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {
 		//first get rid of "lets do the demo" image and put up the demo controls
-		$('#startAutoDemo').css('visibility', 'hidden');
+		$('#startAutoDemo').css('display', 'none');
+		$('#autoDemoCtls').css('display', 'inline-block');
 		$('#autoDemoCtls').css('visibility', 'visible');
 		// fill in the controls properly
 		$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
@@ -899,7 +901,7 @@ $(function() {
 		demo.setCurrSeg(1);  // default start at begin
 		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
     });
-    
+   
     //****************************************************************************
     // User has interacted with autoDemo controls
     //****************************************************************************
@@ -928,9 +930,8 @@ $(function() {
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
     	
-		$('#startAutoDemo').css('visibility', 'visible');
-		$('#autoDemoCtls').css('visibility', 'hidden');	
+		$('#startAutoDemo').css('display', 'inline-block');
+		$('#autoDemoCtls').css('display', 'none');
     });
  
-
 })

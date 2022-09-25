@@ -31,7 +31,7 @@ This is the style sheet for the DynamicTrig1.html page
 #CircleValues_DT1 {
 	position: relative;
 	left: 0px;
-	top: 0px;
+	top: var(--CANVAS_TOP);
 }
 /* these are the children of CircleValues_DT1 */
 /* these button z-index must outrank the todo/expln box so it can be active */
@@ -94,7 +94,7 @@ We use negative value for top since we want some overlap*/
 #UnitCircleAndGraphCanvas{
 	position: relative;
 	left: 0px;
-	top: 0px;
+	top: var(--CANVAS_TOP);
 }
 #AmpSinCosCircle_DT1{
 	 position: absolute;
@@ -137,14 +137,15 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 #FirstHelp_DT1 {
 	position: relative;
 	width: 200px;
-	border: 1px solid black;
+	/*	unlike border, outline doesn't consume space */
+	outline: 1px solid black;
 	padding: 5px;
 	background-color: pink;
 	font-family: Arial;
 	font-size: 15px;
 	font-weight: bold;
 	left: 110px;
-	top: 300px;   /* thisneeds to track animation below */
+	top: calc(320px + var(--CANVAS_TOP));  
 	z-index: 10;
 	visibility: visible;
 	animation-name: showFirstBlinkyHelp;
@@ -157,12 +158,22 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 
 /* grow the box and move so lettering and position doesn't change  */
 @keyframes showFirstBlinkyHelp {
-	0%		{border: 1px solid black;}
-	50%		{border: 10px solid black; width: 218px; left: 100px; top: 290px;} 
-	100%	{border: 1px solid black; width: 200px; left: 110px; top: 300px;}
+	0%		{outline: 1px solid black;}
+	50%		{outline: 10px solid black;  } 
+	100%	{outline: 1px solid black; }
 }
 
 /*********************Tutorial demo type help******************/
+#startAutoDemo{
+	visibility: visible;
+}
+#autoDemoCtls{
+	border: 2px solid cyan;
+	border-radius: 10px;
+	visibility: hidden; 
+	width: 380px;
+	margin: 7px 7px 7px 7px;
+}
 /* canvas, needs to sit exactly on ampSinCosCircle_DT1 */
 #funTutorial_DT1 {
 	 position: absolute;

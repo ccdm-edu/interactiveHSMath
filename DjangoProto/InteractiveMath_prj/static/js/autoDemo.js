@@ -9,7 +9,8 @@ const demoEventTypes = ["CLICK_ON_CANVAS",
 						"ANNOTATION", 
 						"ANNOTATE_ELEMENT", 
 						"REMOVE_ALL_ANNOTATE_ELEMENT",
-						"REMOVE_ACT_ON_ELEMENT",];
+						"REMOVE_ACT_ON_ELEMENT",
+						"SHOW_MODAL"];
 
 class AutoDemo {
 	constructor(multiSegScript, stringIDOfCanvas) {
@@ -52,9 +53,7 @@ class AutoDemo {
 				this.currSeg = temp;  // saved as integer
 				// ensure the text in input matches the new value
 				$('#segNum').val(this.currSeg+ 1);
-			} else {
-				console.log("ERROR, trying to set newCurrSeg to incorrect value of " + toString(newCurrSeg));
-			}
+			} 
 		} else {
 			console.log(" CODING ERROR, setCurrSeg assumes input param is an integer but it is not");
 		}
@@ -92,6 +91,8 @@ class AutoDemo {
 		$('#stopSegment').prop('disabled', true);  
 		// when done, ensure demo canvas is back to background so user can interact with dots again
 		$(this.canvasID).css('z-index',-1);
+		this.removeActOnElement();  // get rid of fake cursor on an element if it exists
+		if ('undefined' !== typeof this.ModalWindow) {this.ModalWindow.modal('hide');	}	// if a modal is showing, get rid of it
 	}
 	
 	//****************************************
@@ -117,6 +118,7 @@ class AutoDemo {
 		// click on the event 
 		let rect = segmentParams.canvas.getBoundingClientRect();  // need to create mouse event on canvas that correxponds to dot on associated canvas
 		const clickCanvasPt = new CustomEvent('click', {detail: {xVal:xyPt.x, yVal: xyPt.y }});
+		console.log('clicking on point (' + xyPt.x + ' , '+ xyPt.y + ')');
 		//execute event on element
 		segmentParams.canvas.dispatchEvent(clickCanvasPt);
 	}
@@ -255,11 +257,12 @@ class AutoDemo {
 			$(currentID).remove();
 		}	
 	}
-	// user clicks on a DOM element that isn't on a DOM element
+	// fake cursor to DOM element and allow focus on that element.
 	actOnElement(param) {
 		// pull out the special demo cursor icon and place on proper location
 		let $demoCursor = $('<img>',{id:'demoCursorElID',src:'../../static/images/DemoCursor.svg'});
-		$demoCursor.css('position', 'absolute')
+		$demoCursor.css('position', 'absolute');		
+		$demoCursor.css('zIndex', '2000');  // make sure cursor sits on top, bootstrap dropdown-menu show makes z index of 1000
 		$demoCursor.appendTo("body");
 		let locEl = $('#' + param.element).offset();
 	    // location of item to be annotated is at locEl.top and locEl.left
@@ -269,35 +272,41 @@ class AutoDemo {
 		if ("focus" == param.action) {
 			// focus shows off what it looks like when user clicks on input element
 			$('#' + param.element).focus();
-		} else {
+		} else if ("click" == param.action) {
 			// click
 			let currID = '#' + param.element;
 			console.log('clicking on element ' + currID + 'and length is ' + $(currID).length);
-			//$(currID).trigger('click');
-			//$(currID).get(0).click();   // try this with javascript function
-			//$("#AdvancedTopics>.modal-dialog").get(0).click();
-			//let href = $(currID).attr('href');
-			//console.log('href is ' + href);
-			//window.location.href = href;
-			//const clickHrefPt = new MouseEvent('click');
-		//execute event on element
-		//$(currID).get(0).dispatchEvent(clickHrefPt);
-		
-
-			$('#AdvancedTopics').modal({backdrop: false});  // this stops the background from going dark when do modal show
-			$('#AdvancedTopics').modal('show');  // only thing that works
-			//$('#AdvancedTopics').addClass('show');  //doesn't work even though it adds the class
+			$(currID).click();
+		} // else its do nothing or unimplemented
+	}
+	// we can't create a click event on a link that will bring up a modal, need to show modal explicitely
+	showModal(param) {
+		let currID = '#' + param.element;
+		if ($(currID).length > 0) {
+			// item exists
+			this.ModalWindow = $(currID);  // save so we can hide it later
+			$(currID).modal({backdrop: false});  // this stops the background from going dark when do modal show
+			$(currID).modal('show');  // only thing that works
+		} else {
+			console.log('FAILURE in showModal, element ' + currID + 'has length is ' + $(currID).length);
 		}
 	}
-	// lets undo all dom element focus
-	removeActOnElement(param) {
+	
+	// remove the big fake cursor
+	removeActOnElement(param = null) {
 		// get rid of demo cursor ID
 		$('#demoCursorElID').remove();
-		if ("focus" == param.action) {
-			// remove focus on element
-			$('#' + param.element).blur();
-		} else {
-			// not implemented
+			// remove focus on element, will do nothing if not in focus
+		if (null !== param) {
+			if ('undefined' !== param.action) {
+				if ('focus' == param.action) {
+					$('#' + param.element).blur();
+				} else if ('click' == param.action) {
+					// delayed action click
+					$('#' + param.element).click();
+					console.log('clicking on ' + '#' + param.element);
+				}  // else do nothing
+			}
 		}
 	}
 		
@@ -338,6 +347,7 @@ class AutoDemo {
 								// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
 								thisObj.moveCursorImgOnCanvas(activity.segmentParams);
 							}, nextItemBeginTime);
+							console.log('next time is ' + nextItemBeginTime);
 							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
 							this.eventLoopPtrs.push(temp);
 							break;
@@ -390,6 +400,15 @@ class AutoDemo {
 							temp = setTimeout(function(){
 								// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
 								thisObj.removeActOnElement(activity.segmentParams);
+							}, nextItemBeginTime);	
+							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
+							this.eventLoopPtrs.push(temp);	
+							break
+						case (demoEventTypes[7]):
+							// show a modal window, unfortunately, item.click doesn't work for such things
+							temp = setTimeout(function(){
+								// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
+								thisObj.showModal(activity.segmentParams);
 							}, nextItemBeginTime);	
 							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
 							this.eventLoopPtrs.push(temp);	

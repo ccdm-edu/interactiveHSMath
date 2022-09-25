@@ -256,10 +256,21 @@ $(function() {
     musicCanvas.addEventListener('click', (e) => {
 		// need to convert canvas coord into bitmap coord
 		let rect = musicCanvas.getBoundingClientRect();
-		const pos = {
-		  x: e.clientX - rect.left,
-		  y: e.clientY - rect.top
-		};	
+		let pos;
+		if (e instanceof CustomEvent) {
+			// user is running automated demo
+			pos = {
+				x: e.detail.xVal,
+				y: e.detail.yVal
+			}
+		}
+		else if (e instanceof PointerEvent) {
+			// user clicked on the circle
+			pos = {
+			  x: e.clientX - rect.left,
+			  y: e.clientY - rect.top
+			};	
+		} else { console.log('ERROR:  unexpected event: ' + e);}
 		Object.freeze(pos);
 		let cntr = 0;
 		
@@ -552,8 +563,14 @@ $(function() {
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest", so neg x is south east
 			 	 offset: {x: -200, y: 60},
-			 	waitTimeMillisec: 14000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
+			{segmentActivity: "SHOW_MODAL",
+			 segmentParams:
+			 	{element: 'AdvancedTopics',
+			 	waitTimeMillisec: 0},  // wait time doesn't matter here
+			 },
+			 
 	  ]
 	},
 	{ segmentName: "Sine waves sound great",
@@ -562,10 +579,92 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/MusicSineIntro_Seg1.mp3'}
+			 	{filenameURL: '../../static/AudioExpln/SineMusicIntro_Seg1.mp3'}
 			},
 			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
+			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[0],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 2000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[1],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 2000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[2],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 2000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[3],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 2000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[4],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 2000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[5],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 2000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[6],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 2000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[7],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 22000}
+			},
 
+			// here we click on play a tune and bring up twinkle twinkle notes
+			// first bring up drop down menu
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'dropdownMenuSong',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'dropdownMenuSong',
+			 	 action: "nothing",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	waitTimeMillisec: 1000}
+			},
+
+			// select desired song
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'Song1',
+			 	 action: "focus",  // linger a bit here so user sees what to do
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'Song1',
+			 	 action: "click",
+			 	waitTimeMillisec: 8000}
+			},
 	  ]
 	}
 	];
@@ -586,6 +685,7 @@ $(function() {
 		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
 		demo.setCurrSeg(1);  // default start at begin
 		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
+		
     });
     	
     //****************************************************************************
@@ -611,6 +711,8 @@ $(function() {
     
     $('#stopSegment').on('click', function(){	
     	demo.stopThisSegment();
+    	// get rid of adv topics link, was for demo only
+    	$('a[href="#AdvancedTopics"]').css('display', 'none');
     	// change icons so play is now enabled and stop is disabled
     	$(this).prop('disabled', true);  // disable play once playing
     	$('#playSegment').prop('disabled', false);  // reactivate play 
