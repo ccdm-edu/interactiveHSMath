@@ -118,7 +118,7 @@ class AutoDemo {
 		// click on the event 
 		let rect = segmentParams.canvas.getBoundingClientRect();  // need to create mouse event on canvas that correxponds to dot on associated canvas
 		const clickCanvasPt = new CustomEvent('click', {detail: {xVal:xyPt.x, yVal: xyPt.y }});
-		console.log('clicking on point (' + xyPt.x + ' , '+ xyPt.y + ')');
+		//console.log('clicking on point (' + xyPt.x + ' , '+ xyPt.y + ')');
 		//execute event on element
 		segmentParams.canvas.dispatchEvent(clickCanvasPt);
 	}
@@ -275,7 +275,7 @@ class AutoDemo {
 		} else if ("click" == param.action) {
 			// click
 			let currID = '#' + param.element;
-			console.log('clicking on element ' + currID + 'and length is ' + $(currID).length);
+			//console.log('clicking on element ' + currID + 'and length is ' + $(currID).length);
 			$(currID).click();
 		} // else its do nothing or unimplemented
 	}
@@ -304,7 +304,7 @@ class AutoDemo {
 				} else if ('click' == param.action) {
 					// delayed action click
 					$('#' + param.element).click();
-					console.log('clicking on ' + '#' + param.element);
+					//console.log('clicking on ' + '#' + param.element);
 				}  // else do nothing
 			}
 		}
@@ -321,7 +321,7 @@ class AutoDemo {
 			// valid segment number
 			let segment = this.fullScript[currSeg];
 			let annotateInd = 0;
-			console.log('name of segment ' + currSeg + ' is ' + segment.segmentName);
+			//console.log('name of segment ' + currSeg + ' is ' + segment.segmentName);
 			this.userStopRequest = false;  // in case coming here from a previous stop, user stop is history, lets play
 			let nextItemBeginTime = segment.headStartForAudioMillisec;  // delay index, index of items that need ever increasing delay
 			let ctxDemoCanvas = this.getDemoCtx();
@@ -347,7 +347,6 @@ class AutoDemo {
 								// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
 								thisObj.moveCursorImgOnCanvas(activity.segmentParams);
 							}, nextItemBeginTime);
-							console.log('next time is ' + nextItemBeginTime);
 							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
 							this.eventLoopPtrs.push(temp);
 							break;

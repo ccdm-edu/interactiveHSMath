@@ -686,6 +686,12 @@ $(function() {
 		demo.setCurrSeg(1);  // default start at begin
 		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
 		
+		
+		// here is where we get to push the titles up to the far right and squish them 
+		// in to give more graph room
+		$('#MusicIntroHeaders').css('left', '400px');
+
+		
     });
     	
     //****************************************************************************
@@ -724,6 +730,9 @@ $(function() {
     	
 		$('#startAutoDemo').css('display', 'inline-block');
 		$('#autoDemoCtls').css('display', 'none');
+		
+		// put the page back the way it was
+		$('#MusicIntroHeaders').css('left', '130px');
 		
     });
  

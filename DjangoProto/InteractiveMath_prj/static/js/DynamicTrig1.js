@@ -652,7 +652,7 @@ $(function() {
     //********************************************************
 	// create a "script" for the auto-demo tutorial, by now, all variables should be set
 	//********************************************************	
-    
+    const CANVAS_DROP_AUTODEMO = 65;  // how much we drop canvas for autodemo controls, save to undo when over
 	const SCRIPT_AUTO_DEMO = [
 	{ segmentName: "First frequency",
 	  headStartForAudioMillisec: 10000, // generally the audio is longer than the cursor/annotate activity
@@ -900,6 +900,17 @@ $(function() {
 		//$('#segNum').val('1');  // default start at begin
 		demo.setCurrSeg(1);  // default start at begin
 		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
+		
+		// rearrange the page a bit so the demo controls fit better and user can see
+		// more of the plots on the page
+		let dt_cssVar = document.querySelector(':root');
+		var cssVar = getComputedStyle(dt_cssVar);
+		// get the current val of CSS var and remove the px from end
+  		let currCanvasTop = cssVar.getPropertyValue('--CANVAS_TOP').slice(0,-2);
+		let newCanvasTop = parseInt(currCanvasTop) + CANVAS_DROP_AUTODEMO;
+  		dt_cssVar.style.setProperty('--CANVAS_TOP', newCanvasTop + 'px');
+  		// mover header out of controls area
+  		$('#HeaderTrig_DT1').css('left', '400px');
     });
    
     //****************************************************************************
@@ -932,6 +943,16 @@ $(function() {
     	
 		$('#startAutoDemo').css('display', 'inline-block');
 		$('#autoDemoCtls').css('display', 'none');
+		
+		// undo the drop of the canvas when we started autodemo
+		let dt_cssVar = document.querySelector(':root');
+		var cssVar = getComputedStyle(dt_cssVar);
+		// get the current val of CSS var and remove the px from end
+  		let currCanvasTop = cssVar.getPropertyValue('--CANVAS_TOP').slice(0,-2);
+		let newCanvasTop = parseInt(currCanvasTop) - CANVAS_DROP_AUTODEMO;
+  		dt_cssVar.style.setProperty('--CANVAS_TOP', newCanvasTop + 'px');
+  		// move header back where it was
+  		$('#HeaderTrig_DT1').css('left', '300px');
     });
  
 })

@@ -98,7 +98,7 @@ We use negative value for top since we want some overlap*/
 }
 #AmpSinCosCircle_DT1{
 	 position: absolute;
-	 top: var(--CANVAS_TOP); /* this needs to track its parents */
+	 top: 50px;  
 	 left: 0px;  
 	 margin-left: 0 px;
 	 padding-left: 0 px;
@@ -167,17 +167,11 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 #startAutoDemo{
 	visibility: visible;
 }
-#autoDemoCtls{
-	border: 2px solid cyan;
-	border-radius: 10px;
-	visibility: hidden; 
-	width: 380px;
-	margin: 7px 7px 7px 7px;
-}
+
 /* canvas, needs to sit exactly on ampSinCosCircle_DT1 */
 #funTutorial_DT1 {
 	 position: absolute;
-	 top: var(--CANVAS_TOP);
+	 top: 50px; 
 	 left: 0px;
 	 margin-left: 0 px;
 	 padding-left: 0 px;

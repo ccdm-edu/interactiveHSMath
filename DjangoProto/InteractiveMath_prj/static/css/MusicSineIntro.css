@@ -9,20 +9,26 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	--DELTA_X: 80px;
 	--OFF_TO_SIDE_X: 40px;
 	--OFF_TO_SIDE_Y: 10px;
+	--HEADER_LOC: 130px;
 }
 #MusicIntroHeaders {
 	margin: 0;
+	position: relative;
+	top: 20px;
+	left: var(--HEADER_LOC);
 }
-h1, h2{
-	text-align: center;
-	display: block;
+#bigIntro{
+	position: absolute;
+	top: 0px;
 }
-h2{
+#bigIntroSub{
+	position: absolute;
+	top: 50px;
 	font-size: 20px;
 }
 #TrumpetMusicalScale{
 	position: relative;
-	top: 0px;
+	top: calc(var(--HEADER_LOC) + 20px);
 	width: auto;
 }
 /* Initial instructions for user with animation */
@@ -159,7 +165,7 @@ h2{
 ************************************************************/
 #SinusoidGraph{
 	position: relative;
-	top: 270px;
+	top: calc(290px + var(--HEADER_LOC));
 	width: 650px;
 }
 #PitchGraph{
@@ -302,9 +308,9 @@ h2{
 	100%    {left: 540px; clip-path: polygon(90% 100%, 90% 0, 100% 0%, 100% 100%);}
 }	
 /* credits to float at the bottom */
-#artistCredits{
+#artistCredits_Intro{
 	position: relative;
-	top: 620px;
+	top: calc(640px + var(--HEADER_LOC));
 }
 #image_credit_clefHearts{
 	position: absolute;
@@ -322,13 +328,6 @@ h2{
 /*****************Auto demo controls on****************************/
 #startAutoDemo{
 	visibility: visible;
-}
-#autoDemoCtls{
-	border: 2px solid cyan;
-	border-radius: 10px;
-	visibility: hidden; 
-	width: 380px;
-	margin: 7px 7px 7px 7px;
 }
 /*********************Tutorial demo type help******************/
 /* canvas, needs to sit exactly on ClefWithNotes */
