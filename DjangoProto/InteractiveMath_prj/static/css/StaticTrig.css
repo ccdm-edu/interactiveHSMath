@@ -11,26 +11,22 @@ This is the style sheet for the StaticTrig.html page
 	--LABEL_X_VAL1: 50px;
 	--LABEL_X_VAL2: 170px;
 	--LABEL_X_VAL3: 350px;
+	--CIRCLE_DOT_TOP: 0px;
 }
 
-/* create canvas for expandable unit circle, position = relative lets the footer float to bottom for all parent elements.
-We use negative value for top since we want some overlap*/
-#AmpSinCosCircle{
-	 position:relative; 
-	 top:0px; 
-	 left: 10px;
-}
+
 /***************************/
 /* put a label up and an expln/to do selector input box */
 #headerAndCtl_ST {
 	position: relative;
 	top: 0px;
+	left: 200px;
 }
 /* text header of page activity*/
 #HeaderTrig_ST {
 	position: absolute;
 	border: 0px;
-	left: 220px;
+	left: 100px;
 	font-weight: bold;
 	font-size: 32px;
 	width: 100%
@@ -40,6 +36,8 @@ We use negative value for top since we want some overlap*/
 /* arrange all the parms that feed into or get info out of circle */
 #CircleValues {
 	position: relative;
+	top: calc(40px + var(--CIRCLE_DOT_TOP));
+	left: 0px;
 }
 #ampCircLabel {
 	position: absolute;
@@ -101,13 +99,27 @@ We use negative value for top since we want some overlap*/
 	top: var(--VALUE_Y_1);
 
 }
+
+/************Holds the circle drawings and help and animation***************/
+/* create canvas for expandable unit circle, position = relative lets the footer float to bottom for all parent elements.
+We use negative value for top since we want some overlap*/
+#Canvas_STrig{
+	 position:relative; 
+	 top: 0px;  /*want to invade some space for header and advanced topics link */
+	 left: 0px;
+}
+#AmpSinCosCircle{
+	 position:absolute; 
+	 top: var(--CIRCLE_DOT_TOP); 
+	 left: 0px
+}
 /* decorate the quadrant identifiers for plot */
 .quadIdentifiers {
-	position: relative;
+	position: absolute;
 	font-size: 30px;
 	font-weight: bold;
 	color: green;
-	top: -400px;  /* so we can place it up and over canvas */
+	top: calc(var(--CIRCLE_DOT_TOP) + 220px); 
 }
 #quad1_ID{
 	position: absolute;
@@ -129,16 +141,16 @@ We use negative value for top since we want some overlap*/
 }
 /*************Dynamic Help**************/
 #FirstHelp_ST {
-	position: relative;
+	position: absolute;
 	width: 200px;
-	border: 1px solid black;
+	outline: 1px solid black;
 	padding: 10px;
 	background-color: pink;
 	font-family: Arial;
 	font-size: 15px;
 	font-weight: bold;
-	left: 120px;
-	top: -300px;    /* top value is neg so we can place it over top of canvass */
+	left: 110px;
+	top: calc(var(--CIRCLE_DOT_TOP) + 360px);   
 	z-index: 10;
 	visibility: visible;
 	animation-name: showBeginnerBlinkyHelp;
@@ -150,8 +162,23 @@ We use negative value for top since we want some overlap*/
 
 /* grow the box and move so lettering and position doesn't change  */
 @keyframes showBeginnerBlinkyHelp {
-	0%		{border: 1px solid black;}
-	50%		{border: 10px solid black; width: 218px; left: 110px; top: -310px;} 
-	100%	{border: 1px solid black; width: 200px; left: 120px; top: -300px;}
+	0%		{outline: 1px solid black;}
+	50%		{outline: 10px solid black;} 
+	100%	{outline: 1px solid black;}
 }
-		
+
+/*********************Tutorial demo type help******************/
+#startAutoDemo{
+	visibility: visible;
+}
+#funTutorial_ST{
+	 position: absolute;
+	 top: var(--CIRCLE_DOT_TOP);   /* match AmpSinCosCircle canvas */
+	 left: 0px;
+	 margin-left: 0 px;
+	 padding-left: 0 px;
+	 margin-right: 0 px;
+	 padding-right: 0 px;
+	 z-index: -1;
+}
+}	

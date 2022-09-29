@@ -1,6 +1,9 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
+	// put up autodemo image to introduce to students for future pages
+	$("#startAutoDemo").css('display', 'inline-block');
+	
 	let ctxExpandableUnitCircle;
 	let circleDotsCanvas =  $("#AmpSinCosCircle").get(0);;  // later on, this will set the "background image" for animation
 	// get ready to start drawing on this canvas, first get the context
@@ -600,10 +603,21 @@ $(function() {
 	circleDotsCanvas.addEventListener('click', (e) => {
 		// need to convert canvas coord into bitmap coord
 		let rect = circleDotsCanvas.getBoundingClientRect();
-		const pos = {
-		  x: e.clientX - rect.left,
-		  y: e.clientY - rect.top
-		};	
+		let pos;
+		if (e instanceof CustomEvent) {
+			// user is running automated demo
+			pos = {
+				x: e.detail.xVal,
+				y: e.detail.yVal
+			}
+		}
+		else if (e instanceof PointerEvent) {
+			// user clicked on the circle
+			pos = {
+			  x: e.clientX - rect.left,
+			  y: e.clientY - rect.top
+			};	
+		} else { console.log('ERROR:  unexpected event: ' + e);}
 		Object.freeze(pos);
 		let cntr = 0;
 		schoolAngles.forEach(dot => {
@@ -686,7 +700,207 @@ $(function() {
 		    cntr = cntr + 1;
 		});
 	});
+	
+	//******************constants for auto demo*********************************
+	const SCRIPT_AUTO_DEMO = [
+	{ segmentName: "Sine and Cosine Intro",  // not sure why this can't be more than 4 words
+	  headStartForAudioMillisec: 8000, // generally the audio is longer than the cursor/annotate activity
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: '../../static/AudioExpln/StaticTrig_Seg0.mp3'}
+			},
+			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[0], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[1], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[2], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[3], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[4], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[5], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[5], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[6], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[7], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[8], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[9], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[10], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[11], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[12], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[13], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[14], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[15], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: schoolAngles[0], 
+			 	 canvas: circleDotsCanvas,
+			 	 waitTimeMillisec: 3000}
+			},
+	  ]
+	}];
+   //****************************************************************************
+    // User initiates autoDemo activity
+    //****************************************************************************   
+	//*** user clicks the start demo image, iniitalize everything
+	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_ST');  // give the demo the full script
+	const SINE_DROP_AUTODEMO = 80;
+    $('#startAutoDemo').on('click', function(event) {
+		//first get rid of "lets do the demo" image and put up the demo controls
+		$('#startAutoDemo').css('display', 'none');
+		$('#autoDemoCtls').css('display', 'inline-block');
+		$('#autoDemoCtls').css('visibility', 'visible');
+		// fill in the controls properly
+		$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
+		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
+		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
+		demo.setCurrSeg(1);  // default start at begin
+		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
+		
+		
+		// rearrange the page a bit so the demo controls fit better and user can see
+		// more of the plots on the page
+		let st_cssVar = document.querySelector(':root');
+		var cssVar = getComputedStyle(st_cssVar);
+		// get the current val of CSS var and remove the px from end
+  		let currCanvasTop = cssVar.getPropertyValue('--CIRCLE_DOT_TOP').slice(0,-2);
+		let newCanvasTop = parseInt(currCanvasTop) + SINE_DROP_AUTODEMO;
+  		st_cssVar.style.setProperty('--CIRCLE_DOT_TOP', newCanvasTop + 'px');
+  		
+		//$('#AmpSinCosCircle').css('top', "80px");  // used to be 0px
+		//$('#CircleValues').css('top', "120px");  // used to be 40px
+		$('#headerAndCtl_ST').css('left', '300px');  // used to be 200px
+		
+    });
+    	
+    //****************************************************************************
+    // User has interacted with autoDemo controls
+    //****************************************************************************
 
+	// User has selected play
+    $('#playSegment').on('click', function(){	
+    	// activate pause and disable play
+    	$(this).prop('disabled', true);  // disable play once playing
+    	$('#stopSegment').prop('disabled', false);  // reactivate pause
+    	// this is only true for this pages demo...
+    	let currSeg = parseInt($('#segNum').val());
 
+    	demo.setCurrSeg(currSeg);
+    	demo.startDemo();
+    });
+    
+    $('#stopSegment').on('click', function(){	
+    	demo.stopThisSegment();
+
+    	// change icons so play is now enabled and stop is disabled
+    	$(this).prop('disabled', true);  // disable play once playing
+    	$('#playSegment').prop('disabled', false);  // reactivate play 
+    });
+    
+    $('#dismissAutoDemo').on('click', function(){	
+    	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
+    	demo.stopThisSegment();  // may or may not be needed
+    	
+		$('#startAutoDemo').css('display', 'inline-block');
+		$('#autoDemoCtls').css('display', 'none');
+		
+		// undo the drop of the canvas when we started autodemo
+		let st_cssVar = document.querySelector(':root');
+		var cssVar = getComputedStyle(st_cssVar);
+		// get the current val of CSS var and remove the px from end
+  		let currCanvasTop = cssVar.getPropertyValue('--CIRCLE_DOT_TOP').slice(0,-2);
+		let newCanvasTop = parseInt(currCanvasTop) - SINE_DROP_AUTODEMO;
+  		st_cssVar.style.setProperty('--CIRCLE_DOT_TOP', newCanvasTop + 'px');
+  		
+  		
+		//$('#AmpSinCosCircle').css('top', '0px');
+		//$('#CircleValues').css('top', '40px');
+		$('#headerAndCtl_ST').css('left', '200px');
+		
+    });
+ 
 
 })

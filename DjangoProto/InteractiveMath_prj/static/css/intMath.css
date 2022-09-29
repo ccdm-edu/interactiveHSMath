@@ -205,7 +205,7 @@ div#tooltip:hover .tooltiptext {
 	position: absolute;
 	height: 100px;
 	left: 0px;
-	top: 20px;
+	top: 10px;
 	display: none;
 	z-index: 50;  /* needs to be max value */
 }
@@ -219,7 +219,7 @@ div#tooltip:hover .tooltiptext {
 	width: 380px;
 	height: 150px;
 	margin: 7px 7px 7px 7px;
-	z-index: 50;  /* needs to be max value */
+	z-index: 500;  /* needs to be max value */
 }
 
 #autoDemoCtls h1{

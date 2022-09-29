@@ -26,23 +26,28 @@
 		</p>	
 	</div>
 
-	<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
-	<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas:  you must set bitmap for canvas in html, css only -->
-	<!-- sets element size, resulting in distortion -->
-	<!--  use this to create border for debug  style="border:1px solid #000000;" -->
-	<canvas id="AmpSinCosCircle" width=1050 height=650 >
+	<div id="Canvas_STrig">
+		<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
+		<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas:  you must set bitmap for canvas in html, css only -->
+		<!-- sets element size, resulting in distortion -->
+		<!--  use this to create border for debug  style="border:1px solid #000000;" -->
+		<canvas id="AmpSinCosCircle" width=1050 height=650 >
+				Your Browser does not support canvas tag, you are missing graph capability
+		</canvas>
+		<div class="quadIdentifiers">
+			<p id = "quad1_ID">I</p>
+			<p id = "quad2_ID">II</p>
+			<p id = "quad3_ID">III</p>
+			<p id = "quad4_ID">IV</p>
+		</div>	
+		
+		<div id="FirstHelp_ST">
+		<!--  will dynamically add elements here -->
+			<p> Start clicking yellow dots, which represent phase &#920 values</p>
+		</div>
+		<canvas id="funTutorial_ST" width=1050 height=650 >
 			Your Browser does not support canvas tag, you are missing graph capability
-	</canvas>
-	<div class="quadIdentifiers">
-		<p id = "quad1_ID">I</p>
-		<p id = "quad2_ID">II</p>
-		<p id = "quad3_ID">III</p>
-		<p id = "quad4_ID">IV</p>
-	</div>	
-	
-	<div id="FirstHelp_ST">
-	<!--  will dynamically add elements here -->
-		<p> Start clicking yellow dots, which represent phase &#920 values</p>
+		</canvas>
 	</div>
 	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  
@@ -72,7 +77,8 @@
 	
 	<!-- Custom JS for this page -->
 	<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
-	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	    
+	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	
+	<script src="{% static 'js/autoDemo.js' %}" crossorigin="anonymous"></script>	    
 	<script src="{% static 'js/StaticTrig.js' %}" crossorigin="anonymous"></script>	 
 	
 	<br><br>
