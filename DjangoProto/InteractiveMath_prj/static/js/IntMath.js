@@ -75,7 +75,7 @@ $(function () {
 	});   
 	
 	// Change text on both tabs of advanced text drop down to match the stuff thats hidden in html under class 
-	$("#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab011 > p").text($(".AdvTopic_ToDo").text());
-	$("#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab021 > p").text($(".AdvTopic_Expln").text());
+	$("#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab011 > p").html($(".AdvTopic_ToDo").html());
+	$("#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab021 > p").html($(".AdvTopic_Expln").html());
 	
 });
