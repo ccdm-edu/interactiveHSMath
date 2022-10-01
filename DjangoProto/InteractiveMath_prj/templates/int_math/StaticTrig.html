@@ -51,20 +51,39 @@
 	</div>
 	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  
-	At the bottom it doesn't consume space from other elements but it does give search engines a clue what page is all about. -->
-	<p class="AdvTopic_ToDo">TRY THIS:  Click on one of the yellow dots. Try changing Amplitude (r) from a unit circle.  Your choices are limited only because the plots need to fit on a page and be readable.
+	At the bottom it doesn't consume space from other elements but it does give search engines a clue what page is all about. Can only add inline elements to a <p></p>, <ul> is block -->
+	<p class="AdvTopic_ToDo">TRY THIS: <br>1.  Click on one of the yellow dots and check out the animation.<br>2.  Try changing Amplitude (r) from a unit circle.  Notice the (x,y) points change as do the graphs of sin/cos to the right.  Your choices are limited only because the plots need to fit on a page and be readable. <br>3.  Check out the Explanation tab (here under Advanced Topics) for more detailed explanations (with equations, WOO HOO!)
 	</p>
-	<p class="AdvTopic_Expln">EXPLANATION:  When you click on a dot, it is the equivalent of selecting a phase and that phase has a sine and cosine value as reflected in the plots on the right.
-	<br>
-	<b>Quadrant 1:</b>
-	<br>
-	<b>Quadrant 1I:</b>
-	<br>
-	<b>Quadrant 1II:</b>
-	<br>
-	<b>Quadrant 1V:</b>  
-	<br>
-	When you change r from its default value of 1 (unit circle) the (x,y) values and rcos, rsin values also change.
+	<p class="AdvTopic_Expln">EXPLANATION:  <br>
+	<u>Angles used in Sine and Cosine:</u>  When you click on a dot, it is the equivalent of selecting a phase and that phase has a sine and cosine value as reflected in the plots on the right.
+	<br><br>
+	<b>Quadrant 1:</b>  This is what you are familiar with.  Both sine and cosine are positive and angle &#920 is less than 90 degrees or &#960/2 radians.
+	<br><br>
+	<b>Quadrant 1I:</b>  This is mind bending.  How can can I think about opposite and adjacent when &#920 doesn't make a right triangle?<br>  We can think about its supplementary angle &#966 = (&#960 - &#920) or &#920 = (&#960 - &#966).
+	The new angle &#966 does form a right triangle twisted around the y axis so that the x axis cosine value will always be negative and y axis sine is always positive. <br>
+	So what we want to solve is sin(&#920) = sin(&#960 - &#966).<br>  Using our trig identity sin(a &#177 b) = sin(a)cos(b) &#177 cos(a)sin(b) we get <br>sin(&#920) = sin(&#960 - &#966) = sin(&#960)cos(&#966) - cos(&#960)sin(&#966).  <br>Since sin(&#960) = 0 and cos(&#960) = -1, we get 
+	<br><b>sin(&#920)</b> = sin(&#960 - &#966) = <b>sin(&#966)</b> as is shown on the unit circle for dots clicked in the second quadrant.  <br>Similarly, using our trig identity cos(a &#177 b) = cos(a)cos(b) &#8723 sin(a)sin(b) we get <b>cos(&#920)</b> = cos(&#960 - &#966) = cos(&#960)cos(&#966) + sin(&#960)sin(&#966) <b>= -cos(&#966)</b>.  
+	So now we can think about angles in second quadrant &#920 relative to angles that are less than 90 degrees &#966 because <br><b>sin(&#920)</b> = <b>sin(&#966)</b> and <b>cos(&#920)</b> = <b>-cos(&#966)</b>.   
+	<br><br>
+	<b>Quadrant III:</b> Hmmm, &#920 is now wrapping past 180 degrees, how do I find sin(&#920) and cos(&#920)?  Lets use those trig identities we looked at already and think about a new angle &#966 = (&#920 - &#960) or &#920 = (&#966 + &#960).  
+	From the trig identities above we have <b>sin(&#920)</b> = sin(&#966)cos(&#960) + cos(&#966)sin(&#960) = <b>-sin(&#966)</b>
+	and <b>cos(&#920)</b> = cos(&#966)cos(&#960) - sin(&#966)sin(&#960) = <b>-cos(&#966)</b>.  
+	<br>So we see that <b>sin(&#920) = -sin(&#966)</b> and <b>cos(&#920) = -cos(&#966)</b> in quadrant III.  So it goes, in quadrant III, sin and cos are always negative.
+	<br><br>
+	<b>Quadrant 1V:</b>  Yes, the strategies that worked in the other quadrants will also shed light on how to calculate sin and cos of &#920 in terms of an angle thats less than 90 degrees or &#960/2.
+	Lets think about an angle &#966 = (2*&#960 - &#920) or &#920 = (2*&#960 - &#966).  
+	Looking first at the sin, <b>sin(&#920)</b> = sin(2*&#960 - &#966) = sin(2*&#960)cos(&#966) - oos(2*&#960)sin(&#966) = <b>-sin(&#966)</b> since sin(2*&#960) = 0 and oos(2*&#960) = 1.  
+	<b>Lets do cos, cos(&#920)</b> = cos(2*&#960 - &#966) = cos(2*&#960)cos(&#966) + sin(2*&#960)sin(&#966) = <b>cos(&#966)</b>.  We can see from the unit circle and animation for the fourth quadrant:
+	<b>sin(&#920)</b> = <b>-sin(&#966)</b> and <b>cos(&#920)</b> = <b>cos(&#966)</b>
+	<br><br>
+	<u>Changing the amplitude from the unit circle: </u> 
+	The unit circle is a convenient way to talk about angles and sine/cosine.  
+	However, the diameter of the unit circle (r) multiplies sine and cosine of the graph.  When you change the value Amplitude (r) up or down, 
+	you can see that the (x,y) values are now multiplied by r.  
+	Also the sine cosine curves to the right grow as you increase r beyond 1 and shrink as you decrease it below 1.  
+	<br>Why do we care?  Well, as we continue on through these pages, we will find that sine/cosine waves make a sound on your speaker and that radius r is the amplitude 
+	of the sine and cosine wave which translates into volume to your speaker.  So higher values of r are louder than smaller values of r.  
+	As r goes to zero, the tone becomes muted.  
 	</p>
 	
 	<!-- Bootstrap core JavaScript,jquery must be before bootstrap -->
