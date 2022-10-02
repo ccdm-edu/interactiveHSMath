@@ -58,19 +58,25 @@
 	<u>Angles used in Sine and Cosine:</u>  When you click on a dot, it is the equivalent of selecting a phase and that phase has a sine and cosine value as reflected in the plots on the right.
 	<br><br>
 	<b>Quadrant 1:</b>  This is what you are familiar with.  Both sine and cosine are positive and angle &#920 is less than 90 degrees or &#960/2 radians.
-	<br><br>
-	<b>Quadrant 1I:</b>  This is mind bending.  How can can I think about opposite and adjacent when &#920 doesn't make a right triangle?<br>  We can think about its supplementary angle &#966 = (&#960 - &#920) or &#920 = (&#960 - &#966).
+	<br>
+	<img src = {% static 'images/StaticTrigQ2.svg' %} alt="Theta angle in 2nd quadrant">
+	<br>
+	<b>Quadrant II:</b>  This is mind bending.  How can can I think about opposite and adjacent when &#920 doesn't make a right triangle?<br>  We can think about its supplementary angle &#966 = (&#960 - &#920) or &#920 = (&#960 - &#966).
 	The new angle &#966 does form a right triangle twisted around the y axis so that the x axis cosine value will always be negative and y axis sine is always positive. <br>
 	So what we want to solve is sin(&#920) = sin(&#960 - &#966).<br>  Using our trig identity sin(a &#177 b) = sin(a)cos(b) &#177 cos(a)sin(b) we get <br>sin(&#920) = sin(&#960 - &#966) = sin(&#960)cos(&#966) - cos(&#960)sin(&#966).  <br>Since sin(&#960) = 0 and cos(&#960) = -1, we get 
 	<br><b>sin(&#920)</b> = sin(&#960 - &#966) = <b>sin(&#966)</b> as is shown on the unit circle for dots clicked in the second quadrant.  <br>Similarly, using our trig identity cos(a &#177 b) = cos(a)cos(b) &#8723 sin(a)sin(b) we get <b>cos(&#920)</b> = cos(&#960 - &#966) = cos(&#960)cos(&#966) + sin(&#960)sin(&#966) <b>= -cos(&#966)</b>.  
 	So now we can think about angles in second quadrant &#920 relative to angles that are less than 90 degrees &#966 because <br><b>sin(&#920)</b> = <b>sin(&#966)</b> and <b>cos(&#920)</b> = <b>-cos(&#966)</b>.   
-	<br><br>
+	<br>
+	<img src = {% static 'images/StaticTrigQ3.svg' %} alt="Theta angle in 3rd quadrant">
+	<br>
 	<b>Quadrant III:</b> Hmmm, &#920 is now wrapping past 180 degrees, how do I find sin(&#920) and cos(&#920)?  Lets use those trig identities we looked at already and think about a new angle &#966 = (&#920 - &#960) or &#920 = (&#966 + &#960).  
 	From the trig identities above we have <b>sin(&#920)</b> = sin(&#966)cos(&#960) + cos(&#966)sin(&#960) = <b>-sin(&#966)</b>
 	and <b>cos(&#920)</b> = cos(&#966)cos(&#960) - sin(&#966)sin(&#960) = <b>-cos(&#966)</b>.  
 	<br>So we see that <b>sin(&#920) = -sin(&#966)</b> and <b>cos(&#920) = -cos(&#966)</b> in quadrant III.  So it goes, in quadrant III, sin and cos are always negative.
-	<br><br>
-	<b>Quadrant 1V:</b>  Yes, the strategies that worked in the other quadrants will also shed light on how to calculate sin and cos of &#920 in terms of an angle thats less than 90 degrees or &#960/2.
+	<br>
+	<img src = {% static 'images/StaticTrigQ4.svg' %} alt="Theta angle in 4th quadrant">
+	<br>
+	<b>Quadrant IV:</b>  Yes, the strategies that worked in the other quadrants will also shed light on how to calculate sin and cos of &#920 in terms of an angle thats less than 90 degrees or &#960/2.
 	Lets think about an angle &#966 = (2*&#960 - &#920) or &#920 = (2*&#960 - &#966).  
 	Looking first at the sin, <b>sin(&#920)</b> = sin(2*&#960 - &#966) = sin(2*&#960)cos(&#966) - oos(2*&#960)sin(&#966) = <b>-sin(&#966)</b> since sin(2*&#960) = 0 and oos(2*&#960) = 1.  
 	<b>Lets do cos, cos(&#920)</b> = cos(2*&#960 - &#966) = cos(2*&#960)cos(&#966) + sin(2*&#960)sin(&#966) = <b>cos(&#966)</b>.  We can see from the unit circle and animation for the fourth quadrant:
