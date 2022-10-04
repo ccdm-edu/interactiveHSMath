@@ -686,6 +686,8 @@ $(function() {
 		demo.setCurrSeg(1);  // default start at begin
 		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
 		
+		// if, perchance, the trumpet player is speaking and introducint the section, turn it off
+		playOrStopVerbalIntro();
 		
 		// here is where we get to push the titles up to the far right and squish them 
 		// in to give more graph room
