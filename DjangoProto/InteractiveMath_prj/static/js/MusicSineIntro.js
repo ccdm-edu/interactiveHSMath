@@ -487,6 +487,15 @@ $(function() {
 		// leave things as they were when user first started, all is in beginning state
     };	
     let verbalIntroIsPlaying = false;
+    function stopVerbalIntro() {
+		// turn off the existing audio
+		if ('undefined' != typeof helpAudio) {
+			// don't bother if undefined
+			helpAudio.stop(0);
+			verbalIntroIsPlaying = false;
+			$("#verbalIntro").html("Click on me,<br><br>I've got something to say.");
+		}
+	}
     function playOrStopVerbalIntro(){
     	// dont want to play multiple time delayed versions of audio with multiple clicks
 		if (!verbalIntroIsPlaying) {
@@ -494,10 +503,7 @@ $(function() {
 			playVerbalIntro();
 			verbalIntroIsPlaying = true;
 		} else {
-			// turn off the existing audio
-			helpAudio.stop(0);
-			verbalIntroIsPlaying = false;
-			$("#verbalIntro").html("Click on me,<br><br>I've got something to say.");
+			stopVerbalIntro();
 		}
 
 	};
@@ -686,8 +692,8 @@ $(function() {
 		demo.setCurrSeg(1);  // default start at begin
 		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
 		
-		// if, perchance, the trumpet player is speaking and introducint the section, turn it off
-		playOrStopVerbalIntro();
+		// if, perchance, the trumpet player is speaking and introducing the section, turn it off
+		stopVerbalIntro();
 		
 		// here is where we get to push the titles up to the far right and squish them 
 		// in to give more graph room
@@ -715,6 +721,9 @@ $(function() {
     	}
     	demo.setCurrSeg(currSeg);
     	demo.startDemo();
+    	
+    	// if, perchance, the trumpet player is speaking and introducing the section, turn it off
+		stopVerbalIntro();
     });
     
     $('#stopSegment').on('click', function(){	
