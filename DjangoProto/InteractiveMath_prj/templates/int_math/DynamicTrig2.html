@@ -5,6 +5,10 @@
 {%block title_block %}
 	{{ page_tab_header }}
 {% endblock %}
+
+{%block head_block %}
+    <link href="{%static 'css/DynamicTrig2.css' %}" rel="stylesheet">
+{% endblock %}
     
 {% block body_block %}
 	<div id ="headerAndCtl_DT2">
@@ -40,6 +44,14 @@
 		<canvas id="FreqChange_DT2" width=500 height=650>
 			Your Browser does not support canvas tag, you are missing graph capability
 		</canvas>
+		
+		<!-- This funTutorial canvas is intended to lay over all other canvases to give a tutorial of how it works -->
+		<!-- width is addition of two canvases above and height = shorter of the two so this sits on top of both of them -->
+		<!-- We want to point to objects on unit circle canvas so this canvas must sit exactly on  AmpSinCosCircle_DT1-->
+		<!--  debug use style="border:1px solid #FF0000; to see the canvas in red -->
+		<canvas id="funTutorial_DT2" width=950 height=550 ">
+			Your Browser does not support canvas tag, you are missing graph capability
+		</canvas>	
 	</div>
 	
 	<div id="FirstHelp_DT2">
@@ -70,7 +82,8 @@
 	
 	<!-- Custom JS for this page -->
 	<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
-	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	    
+	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	
+	<script src="{% static 'js/autoDemo.js' %}" crossorigin="anonymous"></script>	    
 	<script src="{% static 'js/DynamicTrig2.js' %}" crossorigin="anonymous"></script>	 
 	
 	<br>

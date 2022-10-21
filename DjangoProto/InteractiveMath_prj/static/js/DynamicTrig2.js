@@ -1,6 +1,9 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
+	// turn on help in upper left corner
+	$('#startAutoDemo').css('display', 'inline-block');
+	
 	// set up frequency slider
 	let $currFreq = $("#FreqSlider_DT2");
 	let currFreq = $currFreq.val();
@@ -364,4 +367,87 @@ $(function() {
 		}
 	});
 
+
+	const SCRIPT_AUTO_DEMO = [
+	{ segmentName: "First frequency",
+	  headStartForAudioMillisec: 10000, // generally the audio is longer than the cursor/annotate activity
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: '../../static/AudioExpln/DynamicTrig2_Seg0.mp3'}
+			},
+	  ]
+	}];
+
+    //****************************************************************************
+    // User initiates autoDemo activity
+    //****************************************************************************   
+	//*** user clicks the start demo image, iniitalize everything
+	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_DT2');  // give the demo the full script
+    $('#startAutoDemo').on('click', function(event) {
+		//first get rid of "lets do the demo" image and put up the demo controls
+		$('#startAutoDemo').css('display', 'none');
+		$('#autoDemoCtls').css('display', 'inline-block');
+		$('#autoDemoCtls').css('visibility', 'visible');
+		// fill in the controls properly
+		$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
+		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
+		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
+		//$('#segNum').val('1');  // default start at begin
+		demo.setCurrSeg(1);  // default start at begin
+		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
+		
+		// rearrange the page a bit so the demo controls fit better and user can see
+		// more of the plots on the page
+		//let dt_cssVar = document.querySelector(':root');
+		//var cssVar = getComputedStyle(dt_cssVar);
+		// get the current val of CSS var and remove the px from end
+  		//let currCanvasTop = cssVar.getPropertyValue('--CANVAS_TOP').slice(0,-2);
+		///let newCanvasTop = parseInt(currCanvasTop) + CANVAS_DROP_AUTODEMO;
+  		//dt_cssVar.style.setProperty('--CANVAS_TOP', newCanvasTop + 'px');
+  		// mover header out of controls area
+  		//$('#HeaderTrig_DT1').css('left', '400px');
+    });
+   
+    //****************************************************************************
+    // User has interacted with autoDemo controls
+    //****************************************************************************
+
+	// User has selected play
+    $('#playSegment').on('click', function(){	
+    	// activate pause and disable play
+    	$(this).prop('disabled', true);  // disable play once playing
+    	$('#stopSegment').prop('disabled', false);  // reactivate pause
+    	demo.setCurrSeg(parseInt($('#segNum').val()));
+
+    	demo.startDemo();
+    });
+    
+    $('#stopSegment').on('click', function(){	
+    	demo.stopThisSegment();
+    	// change icons so play is now enabled and stop is disabled
+    	$(this).prop('disabled', true);  // disable play once playing
+    	$('#playSegment').prop('disabled', false);  // reactivate play
+  
+    });
+    
+    $('#dismissAutoDemo').on('click', function(){	
+    	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
+    	demo.stopThisSegment();  // may or may not be needed
+    	
+		$('#startAutoDemo').css('display', 'inline-block');
+		$('#autoDemoCtls').css('display', 'none');
+		
+		// undo the drop of the canvas when we started autodemo
+		//let dt_cssVar = document.querySelector(':root');
+		//var cssVar = getComputedStyle(dt_cssVar);
+		// get the current val of CSS var and remove the px from end
+  		//let currCanvasTop = cssVar.getPropertyValue('--CANVAS_TOP').slice(0,-2);
+		//let newCanvasTop = parseInt(currCanvasTop) - CANVAS_DROP_AUTODEMO;
+  		//dt_cssVar.style.setProperty('--CANVAS_TOP', newCanvasTop + 'px');
+  		// move header back where it was
+  		//$('#HeaderTrig_DT1').css('left', '300px');
+    });
+ 
 })

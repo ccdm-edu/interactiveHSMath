@@ -13,14 +13,15 @@ const demoEventTypes = ["CLICK_ON_CANVAS",
 						"SHOW_MODAL"];
 
 class AutoDemo {
-	constructor(multiSegScript, stringIDOfCanvas) {
+	constructor(multiSegScript, stringIDOfCanvas = 'UnusedCanvas') {
 		// This script is made up of many segments, which can be run independently.  Each segment has
 		// several steps consisting of (maybe) audio, event clicking, annotations etc
 		this.fullScript = multiSegScript;
 		this.canvasID = '#' + stringIDOfCanvas;
 		let ctxDemoCanvas = this.getDemoCtx(this.canvasID);
 		// background plot is the appearance before this segment operates and will return to this value			
-		this.backgroundPlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);
+		this.backgroundPlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);			
+
 		this.currSeg = 0;  // start at beginnning unless user chooses otherwise.  Autodemo runs from 0 to Max-1 but user thinks its 1 to max
 		this.helpAudio;  // placeholder, need access to this for start/stop/pause
 		// keep track of all events put on event loop so if we have to abort a segment, we can empty the event loop

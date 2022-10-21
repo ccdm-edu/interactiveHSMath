@@ -5,7 +5,11 @@
 {%block title_block %}
 	{{ page_tab_header }}
 {% endblock %}
-    
+
+{%block head_block %}
+    <link href="{%static 'css/LandingPage.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block body_block %}
 	
 	<div class="jumbotron p-4">
@@ -46,6 +50,13 @@
 	<br>
 	<br>	
 	
+	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  
+	At the bottom it doesn't consume space from other elements but it does give search engines a clue what page is all about. -->
+    <p class="AdvTopic_ToDo">TRY THIS: On complicated pages, a list of stuff to try out will be here.
+	</p>
+	<p class="AdvTopic_Expln">EXPLANATION: On complicated pages, a detailed explanation of advanced concepts will be here
+	</p>
+	
 	
 	<!-- Bootstrap core JavaScript,jquery must be before bootstrap -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -54,7 +65,7 @@
 	<script>
 			window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
 	</script>
-		        
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 	<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
@@ -63,6 +74,9 @@
 	
 	<!-- custom JS for this page -->
 	<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
+	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	
+	<script src="{% static 'js/autoDemo.js' %}" crossorigin="anonymous"></script>	
+	<script src="{% static 'js/LandingPage.js' %}" crossorigin="anonymous"></script>
 	<script>
 		//need to not have every css load on every page, when that is fixed, can get rid of this
 		$('a[href="#AdvancedTopics"]').css('visibility', 'hidden');

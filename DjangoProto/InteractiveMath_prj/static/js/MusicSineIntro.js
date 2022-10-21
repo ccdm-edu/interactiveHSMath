@@ -523,69 +523,13 @@ $(function() {
 	//********************************************************	
     
 	const SCRIPT_AUTO_DEMO = [
-	{ segmentName: "Intro to Auto Demo",
-	  headStartForAudioMillisec: 10000, // generally the audio is longer than the cursor/annotate activity
-	  segmentActivities: 
-	  [
-			{segmentActivity: "PLAY_AUDIO",
-			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/SineMusicIntro_Seg0.mp3',
-			 	waitTimeMillisec: 0}
-			},
-			{segmentActivity: "ANNOTATE_ELEMENT",
-			 segmentParams: 
-			 	{element: 'segNum', 
-			 	 color: "red",
-			 	 waitTimeMillisec: 5000}
-			},
-			{segmentActivity: "ANNOTATE_ELEMENT",
-			 segmentParams: 
-			 	{element: 'totalSeg', 
-			 	 color: "green",
-			 	 waitTimeMillisec: 8000}
-			},
-			{segmentActivity: "REMOVE_ALL_ANNOTATE_ELEMENT",
-			 segmentParams: 
-			 	{waitTimeMillisec: 1000}
-			},
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'segNum',
-			 	 action: "focus",
-			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
-			 	waitTimeMillisec: 16000}  // this is wait before you go on to next item
-			},
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'segNum',
-			 	 action: "focus",
-			 	 // positive values for offset x and y move the cursor "southwest"
-			 	waitTimeMillisec: 8000}
-			},
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'AdvancedTopics',
-			 	 action: "click",
-			 	 // positive values for offset x and y move the cursor "southwest", so neg x is south east
-			 	 offset: {x: -200, y: 60},
-			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
-			},
-			{segmentActivity: "SHOW_MODAL",
-			 segmentParams:
-			 	{element: 'AdvancedTopics',
-			 	waitTimeMillisec: 0},  // wait time doesn't matter here
-			 },
-			 
-	  ]
-	},
 	{ segmentName: "Sine waves sound great",
 	  headStartForAudioMillisec: 15000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/SineMusicIntro_Seg1.mp3'}
+			 	{filenameURL: '../../static/AudioExpln/SineMusicIntro_Seg0.mp3'}
 			},
 			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
 			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
@@ -711,14 +655,7 @@ $(function() {
     	// activate pause and disable play
     	$(this).prop('disabled', true);  // disable play once playing
     	$('#stopSegment').prop('disabled', false);  // reactivate pause
-    	// this is only true for this pages demo...
-    	let currSeg = parseInt($('#segNum').val());
-    	if (1 == currSeg) {
-    		//we are doing intro to demos, show what advanced topic link looks like 
-    		$('a[href="#AdvancedTopics"]').css('display', 'block');
-    	} else {
-    		$('a[href="#AdvancedTopics"]').css('display', 'none');
-    	}
+		let currSeg = parseInt($('#segNum').val());
     	demo.setCurrSeg(currSeg);
     	demo.startDemo();
     	
@@ -728,11 +665,10 @@ $(function() {
     
     $('#stopSegment').on('click', function(){	
     	demo.stopThisSegment();
-    	// get rid of adv topics link, was for demo only
-    	$('a[href="#AdvancedTopics"]').css('display', 'none');
     	// change icons so play is now enabled and stop is disabled
     	$(this).prop('disabled', true);  // disable play once playing
     	$('#playSegment').prop('disabled', false);  // reactivate play 
+
     });
     
     $('#dismissAutoDemo').on('click', function(){	

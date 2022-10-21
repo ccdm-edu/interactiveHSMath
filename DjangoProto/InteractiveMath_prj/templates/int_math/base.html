@@ -33,13 +33,10 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <!-- want to override things here -->
     <link href="{%static 'css/intMath.css' %}" rel="stylesheet">
-    <link href="{%static 'css/MusicSineIntro.css' %}" rel="stylesheet">
-    <link href="{%static 'css/StaticTrig.css' %}" rel="stylesheet">
-    <link href="{%static 'css/DynamicTrig1.css' %}" rel="stylesheet">
-    <link href="{%static 'css/DynamicTrig2.css' %}" rel="stylesheet">
-    <link href="{%static 'css/ToneTrig.css' %}" rel="stylesheet">
-    <link href="{%static 'css/MusicSineSummary.css' %}" rel="stylesheet">
 
+    {% block head_block %}
+    	<!--  separate out page specific css here -->
+    {% endblock %}
 
 	<!--  style blocks dont like comments in the middle -->
 	<!--  THIS MAKES THE RECAPTCHA LOGO ON ALL PAGES -->
@@ -180,6 +177,10 @@
                   
                     {% block body_block %}
                     {% endblock %}
+                    
+                    <canvas id="UnusedCanvas" width=1 height=1> <!--  Need to pull all this out of AutoDemo soon so don't need this kloodge -->
+						Your Browser does not support canvas tag, you are missing graph capability
+					</canvas>	
                     
                     <!-- FOOTER -->
                     <footer>

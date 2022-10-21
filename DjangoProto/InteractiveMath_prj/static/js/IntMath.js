@@ -1,5 +1,6 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
+// THIS js file covers all that is common to whole site
 $(function () {
 	// tooltips are disabled by default, need to enable them all for bootstrap styling
     $('[data-toggle="tooltip"]').tooltip();

@@ -1,0 +1,69 @@
+/****************Landing page***************************/
+/* make parts of header red, parts black, just like the logo */
+span#homePageHeader {
+	color: red;
+}
+/* blinking color changing word "fun" on landing page */
+span#blinkingColor {
+    animation:blinkingColorText 1.2s infinite;
+}
+@keyframes blinkingColorText{
+    0%{     color: red;    }
+    49%{    color: purple; }
+    60%{    color: transparent; }
+    99%{    color:transparent;  }
+    100%{   color: red;    }
+}
+/*  center the logo on landing page, have it explode out and fade away */
+#logo-home-page {
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+	transform: scale(0.5);
+	position: absolute;
+	animation-name: logo-fade-away;
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
+}
+@keyframes logo-fade-away{
+	 0%   {opacity: 1.0; transform: scale(0.8)}
+	 50%   {opacity: 1.0; transform: scale(1.2)}
+	 100%   {opacity: 0.05; transform: scale(0.8)}
+}
+/* put the home page verbiage over the logo, invisible at first then fades in after logo "burst" 
+   the top is implicitly 0 so that the words would lay on top of logo*/
+div.home_expln p {
+	margin: 10%;
+    font-weight: bold;
+    color: #000000;
+    position: absolute;
+    font-size: 18px;
+    opacity: 0.0;
+    animation-name: expln_fade_in;
+	animation-duration: 2s;
+	animation-delay: 2s;
+	animation-fill-mode: forwards;
+}
+@keyframes expln_fade_in{
+	 0%  {opacity: 0.0;}
+	 100%   {opacity: 1.0;}
+}
+/*****************Auto demo controls on****************************/
+#startAutoDemo{
+	top: 180px;
+	visibility: visible;
+	display: inline-block;
+	opacity: 0;
+    animation-name: help_on_way;
+    animation-delay: 6s;
+	animation-duration: 4s;
+	animation-fill-mode: forwards;  /* retain last value */
+}
+@keyframes help_on_way{
+	 0%   {opacity: 0.0;}
+	 50%   {opacity: 0.5;}
+	 100%   {opacity: 1.0;}
+}
+#autoDemoCtls{
+	top: 140px;
+}
