@@ -276,7 +276,6 @@ class AutoDemo {
 		} else if ("click" == param.action) {
 			// click
 			let currID = '#' + param.element;
-			//console.log('clicking on element ' + currID + 'and length is ' + $(currID).length);
 			$(currID).click();
 		} // else its do nothing or unimplemented
 	}

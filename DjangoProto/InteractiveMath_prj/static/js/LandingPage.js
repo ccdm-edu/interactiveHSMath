@@ -13,7 +13,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/AutoDemoIntro_Seg0.mp3',
+			 	{filenameURL: '../../static/AudioExpln/LandingPage_Seg0.mp3',
 			 	waitTimeMillisec: 0}
 			},
 			{segmentActivity: "ANNOTATE_ELEMENT",
@@ -49,10 +49,10 @@ $(function() {
 			},
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'AdvancedTopics',
+			 	{element:'AdvancedTopicLink',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest", so neg x is south east
-			 	 offset: {x: -200, y: 60},
+			 	 offset: {x: 0, y: 15},
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
 			{segmentActivity: "SHOW_MODAL",
@@ -62,8 +62,28 @@ $(function() {
 			 },
 			 
 	  ]
-	}
+	},
+	{ segmentName: "Welcome to this site...",
+	  headStartForAudioMillisec: 10000, // generally the audio is longer than the cursor/annotate activity
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: '../../static/AudioExpln/LandingPage_Seg1.mp3',
+			 	waitTimeMillisec: 0}
+			},
+			//we only have one item to work on so far so this is slim for now...
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'navbarDropdown',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest", so neg x is south east
+			 	 offset: {x: 0, y: 15},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
 
+	  ]
+	}
 	];
 		
     //****************************************************************************
@@ -98,7 +118,8 @@ $(function() {
     	$('#stopSegment').prop('disabled', false);  // reactivate pause
     	// this is only true for this pages demo...
     	let currSeg = parseInt($('#segNum').val());
-    	$('a[href="#AdvancedTopics"]').css('display', 'block');
+    	$('a[href="#AdvancedTopics"]').css('display', 'inline-block');
+//    	$('a[href="#AdvancedTopics"]').css('width', '150px');  doesn't fixx problem
     	$('a[href="#AdvancedTopics"]').css('visibility', 'visible');
     	demo.setCurrSeg(currSeg);
     	demo.startDemo();
@@ -119,13 +140,13 @@ $(function() {
     	demo.stopThisSegment();  // may or may not be needed
     	
 		$('#startAutoDemo').css('display', 'inline-block');
+		$('#startAutoDemo').css('opacity', '1.0');
+		// pull the control panel for autodemo off the page
 		$('#autoDemoCtls').css('display', 'none');
 		
 		// get rid of adv topics link, was for demo only
     	$('a[href="#AdvancedTopics"]').css('display', 'none');
-    	
-		// put the page back the way it was
-		$('#MusicIntroHeaders').css('left', '130px');
+
 		
     });
  
