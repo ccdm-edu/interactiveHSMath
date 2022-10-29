@@ -386,12 +386,15 @@ $(function() {
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_DT2');  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {
+        // flash a "click here" image to get them to hit play
+    	$('#clickHereCursor').addClass('userHitPlay'); 
+    	
 		//first get rid of "lets do the demo" image and put up the demo controls
 		$('#startAutoDemo').css('display', 'none');
 		$('#autoDemoCtls').css('display', 'inline-block');
 		$('#autoDemoCtls').css('visibility', 'visible');
 		// fill in the controls properly
-		$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
+		//$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
 		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
 		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
 		//$('#segNum').val('1');  // default start at begin
@@ -422,6 +425,9 @@ $(function() {
     	demo.setCurrSeg(parseInt($('#segNum').val()));
 
     	demo.startDemo();
+    	
+    	// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay');
     });
     
     $('#stopSegment').on('click', function(){	
@@ -430,6 +436,8 @@ $(function() {
     	$(this).prop('disabled', true);  // disable play once playing
     	$('#playSegment').prop('disabled', false);  // reactivate play
   
+      	// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay');
     });
     
     $('#dismissAutoDemo').on('click', function(){	
@@ -448,6 +456,17 @@ $(function() {
   		//dt_cssVar.style.setProperty('--CANVAS_TOP', newCanvasTop + 'px');
   		// move header back where it was
   		//$('#HeaderTrig_DT1').css('left', '300px');
+  		
+  		// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay');
     });
+    
+    $("#segNum").change(function(){
+		let currSeg = parseInt($('#segNum').val());
+		demo.setCurrSeg(currSeg);
+		
+		// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay');
+	});
  
 })

@@ -822,24 +822,26 @@ $(function() {
 			},
 	  ]
 	}];
-   //****************************************************************************
+    //****************************************************************************
     // User initiates autoDemo activity
     //****************************************************************************   
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_ST');  // give the demo the full script
 	const SINE_DROP_AUTODEMO = 80;
     $('#startAutoDemo').on('click', function(event) {
+       	// flash a "click here" image to get them to hit play
+    	$('#clickHereCursor').addClass('userHitPlay'); 
+    	
 		//first get rid of "lets do the demo" image and put up the demo controls
 		$('#startAutoDemo').css('display', 'none');
 		$('#autoDemoCtls').css('display', 'inline-block');
 		$('#autoDemoCtls').css('visibility', 'visible');
 		// fill in the controls properly
-		$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
+		//$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
 		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
 		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
 		demo.setCurrSeg(1);  // default start at begin
 		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
-		
 		
 		// rearrange the page a bit so the demo controls fit better and user can see
 		// more of the plots on the page
@@ -870,6 +872,8 @@ $(function() {
 
     	demo.setCurrSeg(currSeg);
     	demo.startDemo();
+    	// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay'); 
     });
     
     $('#stopSegment').on('click', function(){	
@@ -878,6 +882,8 @@ $(function() {
     	// change icons so play is now enabled and stop is disabled
     	$(this).prop('disabled', true);  // disable play once playing
     	$('#playSegment').prop('disabled', false);  // reactivate play 
+    	// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay'); 
     });
     
     $('#dismissAutoDemo').on('click', function(){	
@@ -895,12 +901,18 @@ $(function() {
 		let newCanvasTop = parseInt(currCanvasTop) - SINE_DROP_AUTODEMO;
   		st_cssVar.style.setProperty('--CIRCLE_DOT_TOP', newCanvasTop + 'px');
   		
-  		
 		//$('#AmpSinCosCircle').css('top', '0px');
 		//$('#CircleValues').css('top', '40px');
 		$('#headerAndCtl_ST').css('left', '200px');
 		
+		// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay'); 
     });
- 
+ 	$("#segNum").change(function(){
+		let currSeg = parseInt($('#segNum').val());
+		demo.setCurrSeg(currSeg);
+		// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay'); 
+	});
 
 })

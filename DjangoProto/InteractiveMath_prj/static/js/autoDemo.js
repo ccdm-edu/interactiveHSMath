@@ -2,7 +2,7 @@
 //**** each segment of audio/click activity/annotations to make the material on each page more understandable.
 //**** It is the "instructional" part of each page
 'use strict'
-//JQuery, dont do this script until document DOM objects are loaded and ready
+
 const demoEventTypes = ["CLICK_ON_CANVAS", 
 						"PLAY_AUDIO", 
 						"ACT_ON_ELEMENT", 
@@ -58,6 +58,8 @@ class AutoDemo {
 		} else {
 			console.log(" CODING ERROR, setCurrSeg assumes input param is an integer but it is not");
 		}
+		let newLabel = this.fullScript[this.currSeg].segmentName;
+		$('#segName').html('<b>' + newLabel + '</b>');
 	}
 	
 	getCurrSeg() { 
@@ -84,7 +86,6 @@ class AutoDemo {
 		// increment segment value here and on screen.  User can change if they want
 		if (!this.userStopRequest) {
 			// audio completed without user intervention
-			this.currSeg= this.currSeg + 1;  // increment this.currSeg
 			this.setCurrSeg(this.currSeg + 1);  // since user sees 1 to max, not 0 to max-1
 		}
 		// turn on play button and turn off pause button
@@ -269,6 +270,7 @@ class AutoDemo {
 	    // location of item to be annotated is at locEl.top and locEl.left
 	    let leftPos = Math.round(locEl.left) - param.offset.x;
 	    let topPos = Math.round(locEl.top) + param.offset.y;
+	    console.log("act on element: leftPos=" + leftPos + " top pos= " + topPos);
 	    $('#demoCursorElID').css({ 'left': leftPos + 'px', 'top': topPos + 'px' });
 		if ("focus" == param.action) {
 			// focus shows off what it looks like when user clicks on input element

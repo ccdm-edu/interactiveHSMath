@@ -65,7 +65,7 @@
 				            Trig
 				            </a>
 				            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-				                <a class="dropdown-item" href="{% url 'int_math:MusicSineIntro' %}">Trig Functions</a>
+				                <a class="dropdown-item" id="TrigFuncTopic" href="{% url 'int_math:MusicSineIntro' %}">Trig Functions</a>
 				                <a class="dropdown-item" href="{% url 'int_math:TrigID' %}">Trig Identities</a>
 				            </div>
 				        </li>
@@ -153,6 +153,8 @@
 								<tr align="center">
 									<td align='left'>
 										<div class="btn-group" id="autoDemoPlayPause">
+											<!--  image placed to draw attention to play button -->
+											<img id="clickHereCursor" src="{% static 'images/clickhere_cursor.svg' %}" alt = "Click here to start the demo segment">
 											<button type="button" class="btn btn-outline-secondary" id="playSegment" >
 												<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-play" viewBox="0 0 16 16">
 									  			<path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>

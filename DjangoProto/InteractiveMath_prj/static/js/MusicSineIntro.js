@@ -395,8 +395,8 @@ $(function() {
 	//***********************************
 	// User clicks on either image or the words around the image to get the audio intro
 	//***********************************
-	let helpAudio;	
-	function playVerbalIntro() {
+	let helpAudio;
+	function resetNotes(){
 		// turn off whatever note is already playing  and set up staff to initial state
 		osc.toDestination().stop();
 		// deselect note
@@ -409,6 +409,11 @@ $(function() {
 		sine_plot_100_1k.data.datasets[0].data.push(ampLong);
 		sine_plot_100_1k.update();	
 		selectedNote = null;  // dont want to play any notes since notes deselected
+	};
+		
+	function playVerbalIntro() {
+		// just in case a note is playing, turn it off
+		resetNotes();
 				
 		let context;
 		// Safari has implemented AudioContext as webkitAudioContext so need next LOC
@@ -537,51 +542,67 @@ $(function() {
 			 segmentParams: 
 			 	{xyCoord: trumpetNotes[0],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
-			 	 waitTimeMillisec: 2000}
+			 	 waitTimeMillisec: 3500}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
 			 	{xyCoord: trumpetNotes[1],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
-			 	 waitTimeMillisec: 2000}
+			 	 waitTimeMillisec: 3500}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
 			 	{xyCoord: trumpetNotes[2],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
-			 	 waitTimeMillisec: 2000}
+			 	 waitTimeMillisec: 3500}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
 			 	{xyCoord: trumpetNotes[3],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
-			 	 waitTimeMillisec: 2000}
+			 	 waitTimeMillisec: 3500}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
 			 	{xyCoord: trumpetNotes[4],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
-			 	 waitTimeMillisec: 2000}
+			 	 waitTimeMillisec: 3500}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
 			 	{xyCoord: trumpetNotes[5],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
-			 	 waitTimeMillisec: 2000}
+			 	 waitTimeMillisec: 3500}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
 			 	{xyCoord: trumpetNotes[6],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
-			 	 waitTimeMillisec: 2000}
+			 	 waitTimeMillisec: 3500}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
 			 	{xyCoord: trumpetNotes[7],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
-			 	 waitTimeMillisec: 22000}
+			 	 waitTimeMillisec: 3500}
 			},
-
+			// turn off the tone, it gets annoying after awhile
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'VolOnOff',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			// here we simply take away the red cursor from previous act but don't want to undo it
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'VolOnOff',
+			 	 action: "nothing",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	waitTimeMillisec: 17000}
+			},
 			// here we click on play a tune and bring up twinkle twinkle notes
 			// first bring up drop down menu
 			{segmentActivity: "ACT_ON_ELEMENT", 
@@ -613,7 +634,23 @@ $(function() {
 			 segmentParams:
 			 	{element:'Song1',
 			 	 action: "click",
-			 	waitTimeMillisec: 8000}
+			 	waitTimeMillisec: 20000}
+			},
+			// turn back on the sound at end of audio clip
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'VolOnOff',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			// remove cursor on silence
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'VolOnOff',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 20000}  // time irrelevant here
 			},
 	  ]
 	}
@@ -625,12 +662,15 @@ $(function() {
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_MSIntro');  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {
+        // flash a "click here" image to get them to hit play
+    	$('#clickHereCursor').addClass('userHitPlay'); 
+    	
 		//first get rid of "lets do the demo" image and put up the demo controls
 		$('#startAutoDemo').css('display', 'none');
 		$('#autoDemoCtls').css('display', 'inline-block');
 		$('#autoDemoCtls').css('visibility', 'visible');
 		// fill in the controls properly
-		$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
+		//$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
 		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
 		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
 		demo.setCurrSeg(1);  // default start at begin
@@ -638,12 +678,13 @@ $(function() {
 		
 		// if, perchance, the trumpet player is speaking and introducing the section, turn it off
 		stopVerbalIntro();
+		// just in case a note is playing, turn it off
+		resetNotes();
 		
 		// here is where we get to push the titles up to the far right and squish them 
 		// in to give more graph room
 		$('#MusicIntroHeaders').css('left', '400px');
-
-		
+	
     });
     	
     //****************************************************************************
@@ -652,6 +693,11 @@ $(function() {
 
 	// User has selected play
     $('#playSegment').on('click', function(){	
+    	// if, perchance, the trumpet player is speaking and introducing the section, turn it off
+		stopVerbalIntro();
+		// just in case a note is playing, turn it off
+		resetNotes();
+		
     	// activate pause and disable play
     	$(this).prop('disabled', true);  // disable play once playing
     	$('#stopSegment').prop('disabled', false);  // reactivate pause
@@ -661,6 +707,8 @@ $(function() {
     	
     	// if, perchance, the trumpet player is speaking and introducing the section, turn it off
 		stopVerbalIntro();
+		// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay');
     });
     
     $('#stopSegment').on('click', function(){	
@@ -669,6 +717,8 @@ $(function() {
     	$(this).prop('disabled', true);  // disable play once playing
     	$('#playSegment').prop('disabled', false);  // reactivate play 
 
+    	// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay');
     });
     
     $('#dismissAutoDemo').on('click', function(){	
@@ -681,7 +731,15 @@ $(function() {
 		// put the page back the way it was
 		$('#MusicIntroHeaders').css('left', '130px');
 		
+		// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay');
     });
  
- 
+ 	$("#segNum").change(function(){
+		let currSeg = parseInt($('#segNum').val());
+		demo.setCurrSeg(currSeg);
+		
+		// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay');
+	});
 })
