@@ -837,7 +837,6 @@ $(function() {
 		$('#autoDemoCtls').css('display', 'inline-block');
 		$('#autoDemoCtls').css('visibility', 'visible');
 		// fill in the controls properly
-		//$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
 		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
 		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
 		demo.setCurrSeg(1);  // default start at begin

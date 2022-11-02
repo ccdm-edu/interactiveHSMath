@@ -10,7 +10,8 @@ const demoEventTypes = ["CLICK_ON_CANVAS",
 						"ANNOTATE_ELEMENT", 
 						"REMOVE_ALL_ANNOTATE_ELEMENT",
 						"REMOVE_ACT_ON_ELEMENT",
-						"SHOW_MODAL"];
+						"SHOW_MODAL",
+						"CHANGE_ELEMENT_VALUE"];
 
 class AutoDemo {
 	constructor(multiSegScript, stringIDOfCanvas = 'UnusedCanvas') {
@@ -311,6 +312,32 @@ class AutoDemo {
 			}
 		}
 	}
+	
+	changeValOnSliderElement(param=null) {
+		// The user is able to click on various points of slider and change value but have to fake it for demo
+		// pull out the special demo cursor icon and place on proper location
+		let $demoCursor = $('<img>',{id:'demoCursorElID',src:'../../static/images/DemoCursor.svg'});
+		$demoCursor.css('position', 'absolute');		
+		$demoCursor.css('zIndex', '2000');  // make sure cursor sits on top, bootstrap dropdown-menu show makes z index of 1000
+		$demoCursor.appendTo("body");
+		let locEl = $('#' + param.element).offset();
+	    // location of item to be annotated is at locEl.top and locEl.left
+	    let leftPos = Math.round(locEl.left) - param.offset.x;
+	    let topPos = Math.round(locEl.top) + param.offset.y;
+	    console.log("act on element: leftPos=" + leftPos + " top pos= " + topPos);
+	    // set position of fake big red cursor that wanders through documants
+	    $('#demoCursorElID').css({ 'left': leftPos + 'px', 'top': topPos + 'px' });
+		
+		// change the value on slider
+		let $elToUpdt = $('#' + param.element);
+		$elToUpdt.prop("value", param.value);
+		console.log('value of ' + param.element + 'is now ' + $elToUpdt.val());
+		// now fire off an event to be detected onchange
+		let event = new Event('change');
+		// Dispatch it.
+		$elToUpdt.trigger('change');
+		
+	}
 		
 	//****************************************
 	// play specified segment of the script
@@ -414,6 +441,15 @@ class AutoDemo {
 							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
 							this.eventLoopPtrs.push(temp);	
 							break
+						case (demoEventTypes[8]):
+							// change value of an element
+							temp = setTimeout(function(){
+								// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
+								thisObj.changeValOnSliderElement(activity.segmentParams);
+							}, nextItemBeginTime);	
+							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
+							this.eventLoopPtrs.push(temp);	
+							break							
 						default:
 							console.log('SW error in autoDemo switch stmt');
 							break;

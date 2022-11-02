@@ -45,6 +45,7 @@ $(function() {
 		}
 		return [index, numIncrement, (index * ANGLE_PER_PT_RAD)];
 	};
+	// start up value
 	$("#currFreqVal_DT2").text($("#FreqSlider_DT2").val() + " Hz");
 	[ind, inc, phaseOffsetInRad] = findSampToSkip(currFreq);
 
@@ -343,7 +344,8 @@ $(function() {
     
     //***********************************
     //*** Change label on freq slider and adjust the tone as appropriate
-	$('#FreqSlider_DT2').on('input', function(){
+	$('#FreqSlider_DT2').on('change', function(){
+		console.log(" WE MADE IT to change on slider");
 		$currFreq = $("#FreqSlider_DT2");  // get slider value
 	    // and put it on the label as string
 		$("#currFreqVal_DT2").text($("#FreqSlider_DT2").val() + " Hz");
@@ -359,7 +361,6 @@ $(function() {
 		// update labels to show current freq
 		$("#sinEqtnLabelHI_DT2").text("S=sin(2" + MULT_DOT + PI + MULT_DOT + "f" + MULT_DOT + "t)=sin(2" + MULT_DOT + PI + MULT_DOT + currFreq + MULT_DOT + "t)");
 		$("#sinEqtnLabelLO_DT2").text("S=sin(2" + MULT_DOT + PI + MULT_DOT + "f" + MULT_DOT + "t)=sin(2" + MULT_DOT + PI + MULT_DOT + currFreq + MULT_DOT + "t)");	
-		//console.log(" changing freq and start interal is " + startInterval);
 		// if an old freq is running, stop and start it again
 		if (startInterval) clearInterval(startInterval);
 		if (clockIsRunning) {
@@ -367,15 +368,97 @@ $(function() {
 		}
 	});
 
-
+    //****************************************************************************
+    // Autodemo script for dynamic trig 2
+    //**************************************************************************** 
 	const SCRIPT_AUTO_DEMO = [
 	{ segmentName: "First frequency",
-	  headStartForAudioMillisec: 10000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 19000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
 			 	{filenameURL: '../../static/AudioExpln/DynamicTrig2_Seg0.mp3'}
+			},
+			// click on go button to start sampling at 0.5 Hz
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'GoFreq_DT2',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 8000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'GoFreq_DT2',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 5000} 
+			},
+			// click on freq slider to change freq to 2 hz,  offset is approx guess, user can change
+			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'FreqSlider_DT2',
+			 	 value: "2.0",
+			 	  offset: {x: 25, y: 10},  // in the 2Hz location
+			 	waitTimeMillisec: 9000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'FreqSlider_DT2',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 2000} 
+			},
+			// click on freq slider to change freq to 4 hz,  offset is approx guess, user can change
+			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'FreqSlider_DT2',
+			 	 value: "4.0",
+			 	  offset: {x: 0, y: 10},  // in the 2Hz location
+			 	waitTimeMillisec: 8000}  // this is wait before you go on to next item
+			 },	
+			// remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'FreqSlider_DT2',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 2000} 
+			},
+			// click on freq slider to change freq to 8 hz,  offset is approx guess, user can change
+			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'FreqSlider_DT2',
+			 	 value: "8.0",
+			 	  offset: {x: -40, y: 10},  // in the 2Hz location
+			 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
+			 },	
+			// remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'FreqSlider_DT2',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 2000} 
+			},
+			// click on freq slider to change freq to 10 hz,  offset is approx guess, user can change
+			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'FreqSlider_DT2',
+			 	 value: "10.0",
+			 	  offset: {x: -65, y: 10},  // in the 2Hz location
+			 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
+			 },	
+			// remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'FreqSlider_DT2',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 2000} 
 			},
 	  ]
 	}];
