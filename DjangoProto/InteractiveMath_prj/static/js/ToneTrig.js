@@ -1,6 +1,8 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
+	// turn on help in upper left corner
+	$('#startAutoDemo').css('display', 'inline-block');
 
 	// implement the Tone sounding and chart tools
 	let $currFreq = $("#in-range-freq");
@@ -494,12 +496,12 @@ $(function() {
 	//  User instigated callback events
 	//***********************************
 	// Change label on freq slider and adjust the tone as appropriate
-	$('#in-range-freq').on('input', function(){
+	$('#in-range-freq').on('change', function(){
 		updateFreq();
 	});
 	
 	// Change label on amplitude slider and adjust the tone as appropriate
-	$('#in-range-amp').on('input', function(){
+	$('#in-range-amp').on('change', function(){
 		$currAmp = $("#in-range-amp")
 		$("#currAmpLabel").text($currAmp.val());
 		if (ToneIsOnNow==true) {
@@ -510,7 +512,7 @@ $(function() {
 	});
 	
 	// Change label on phase slider and adjust the tone as appropriate
-	$('#in-range-phase').on('input', function(){		
+	$('#in-range-phase').on('change', function(){		
 		updatePhase();
 	});
 	
@@ -546,7 +548,7 @@ $(function() {
 	});
 	
 	//whenever any of the tone params change, redraw both graphs and update
-	$("#toneChanges").on('input',drawTone);
+	$("#toneChanges").on('change',drawTone);
 	
 	// update advanced topics modal tab text
 	let todo_tab_element = "#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab011 > p";
@@ -895,5 +897,228 @@ $(function() {
 		}, 1000);
 	    sessionStorage.adModal = 1;
     }
+    
+    
+    //****************************************************************************
+    // Autodemo script for tone trig
+    //**************************************************************************** 
+	const SCRIPT_AUTO_DEMO = [
+	{ segmentName: "Sine Sound",
+	  headStartForAudioMillisec: 23000, // generally the audio is longer than the cursor/annotate activity
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: '../../static/AudioExpln/ToneTrig_Seg0.mp3'}
+			},
+			//*****************************
+			// click on freq slider to change freq to 100 hz,  offset is approx guess, user can change
+			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'in-range-freq',
+			 	 value: "100",
+			 	  offset: {x: 45, y: 10},  // in the 100Hz location
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'in-range-freq',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 1000} 
+			},
+			//*****************************
+			// click on start tone  button to play default tone
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'start-stop-button',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'start-stop-button',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 3000} 
+			},
+			//*****************************
+			// increase the volume
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'in-range-amp',
+			 	 value: "80",
+			 	  offset: {x: -40, y: 10},  // turn volume up high
+			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'in-range-amp',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 10000} 
+			},
+			//*****************************
+			// turn down volume
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'in-range-amp',
+			 	 value: "5",
+			 	  offset: {x: 35, y: 10},  // turn volume way down
+			 	waitTimeMillisec: 2000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'in-range-amp',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 2000} 
+			},			
+			//*****************************
+			// click on freq slider to change freq to 233 hz,  offset is approx guess, user can change
+			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'in-range-freq',
+			 	 value: "233",
+			 	  offset: {x: 38, y: 10},  // in the 233Hz location
+			 	waitTimeMillisec: 10000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'in-range-freq',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 5000} 
+			},		
+			//*****************************
+			// click on freq slider to change freq to 2 khz,  offset is approx guess, user can change
+			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'in-range-freq',
+			 	 value: "2000",
+			 	  offset: {x: 18, y: 10},  // in the 2kHz location
+			 	waitTimeMillisec: 23000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'in-range-freq',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 6000} 
+			},		
+			//*****************************
+			// click on freq slider to change freq to 8 khz,  offset is approx guess, user can change
+			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'in-range-freq',
+			 	 value: "8000",
+			 	  offset: {x: -35, y: 10},  // in the 2kHz location
+			 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'in-range-freq',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 3000} 
+			},		
+			//*****************************
+			// click on start tone  button to stop tones
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'start-stop-button',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'start-stop-button',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 3000} 
+			},		
+
+	  ]
+	}];
+
+    //****************************************************************************
+    // User initiates autoDemo activity
+    //****************************************************************************   
+	//*** user clicks the start demo image, iniitalize everything
+	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
+    $('#startAutoDemo').on('click', function(event) {
+        // flash a "click here" image to get them to hit play
+    	$('#clickHereCursor').addClass('userHitPlay'); 
+    	
+		//first get rid of "lets do the demo" image and put up the demo controls
+		$('#startAutoDemo').css('display', 'none');
+		$('#autoDemoCtls').css('display', 'inline-block');
+		$('#autoDemoCtls').css('visibility', 'visible');
+		// fill in the controls properly
+		//$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
+		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
+		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
+		//$('#segNum').val('1');  // default start at begin
+		demo.setCurrSeg(1);  // default start at begin
+		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
+		
+
+    });
+   
+    //****************************************************************************
+    // User has interacted with autoDemo controls
+    //****************************************************************************
+
+	// User has selected play
+    $('#playSegment').on('click', function(){	
+    	// activate pause and disable play
+    	$(this).prop('disabled', true);  // disable play once playing
+    	$('#stopSegment').prop('disabled', false);  // reactivate pause
+    	demo.setCurrSeg(parseInt($('#segNum').val()));
+
+    	demo.startDemo();
+    	
+    	// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay');
+    });
+    
+    $('#stopSegment').on('click', function(){	
+    	demo.stopThisSegment();
+    	// change icons so play is now enabled and stop is disabled
+    	$(this).prop('disabled', true);  // disable play once playing
+    	$('#playSegment').prop('disabled', false);  // reactivate play
+  
+      	// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay');
+    });
+    
+    $('#dismissAutoDemo').on('click', function(){	
+    	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
+    	demo.stopThisSegment();  // may or may not be needed
+    	
+		$('#startAutoDemo').css('display', 'inline-block');
+		$('#autoDemoCtls').css('display', 'none');
+  		
+  		// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay');
+    });
+    
+    $("#segNum").change(function(){
+		let currSeg = parseInt($('#segNum').val());
+		demo.setCurrSeg(currSeg);
+		
+		// remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay');
+	});
+	
+	
 
 })
