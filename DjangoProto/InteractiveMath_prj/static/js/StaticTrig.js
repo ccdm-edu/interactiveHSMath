@@ -851,8 +851,6 @@ $(function() {
 		let newCanvasTop = parseInt(currCanvasTop) + SINE_DROP_AUTODEMO;
   		st_cssVar.style.setProperty('--CIRCLE_DOT_TOP', newCanvasTop + 'px');
   		
-		//$('#AmpSinCosCircle').css('top', "80px");  // used to be 0px
-		//$('#CircleValues').css('top', "120px");  // used to be 40px
 		$('#headerAndCtl_ST').css('left', '300px');  // used to be 200px
 		
     });
@@ -907,6 +905,7 @@ $(function() {
 		// remove the class so the animation will work on next page, cant do this until animation completes
     	$('#clickHereCursor').removeClass('userHitPlay'); 
     });
+    
  	$("#segNum").change(function(){
 		let currSeg = parseInt($('#segNum').val());
 		demo.setCurrSeg(currSeg);

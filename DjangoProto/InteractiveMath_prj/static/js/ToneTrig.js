@@ -1054,6 +1054,7 @@ $(function() {
     //****************************************************************************   
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
+	const RIGHT_SHIFT_TONE_TRIG = 250;
     $('#startAutoDemo').on('click', function(event) {
         // flash a "click here" image to get them to hit play
     	$('#clickHereCursor').addClass('userHitPlay'); 
@@ -1070,7 +1071,15 @@ $(function() {
 		demo.setCurrSeg(1);  // default start at begin
 		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
 		
-
+		// rearrange the page a bit so the demo controls fit better and user can see
+		// more of the plots on the page, do this by modifying a CSS var
+		let tt_cssVar = document.querySelector(':root');
+		var cssVar = getComputedStyle(tt_cssVar);
+		// get the current val of CSS var and remove the px from end
+  		let currCtlsLeft = cssVar.getPropertyValue('--NO_AUTODEMO_LEFT_POS').slice(0,-2);
+		let newCtlsLeft = parseInt(currCtlsLeft) + RIGHT_SHIFT_TONE_TRIG;
+  		tt_cssVar.style.setProperty('--NO_AUTODEMO_LEFT_POS', newCtlsLeft + 'px');
+  		
     });
    
     //****************************************************************************
@@ -1106,8 +1115,16 @@ $(function() {
     	
 		$('#startAutoDemo').css('display', 'inline-block');
 		$('#autoDemoCtls').css('display', 'none');
+		
+		// undo the drop of the canvas when we started autodemo
+		let tt_cssVar = document.querySelector(':root');
+		let cssVar = getComputedStyle(tt_cssVar);
+		// get the current val of CSS var and remove the px from end
+  		let currCtlsLeft = cssVar.getPropertyValue('--NO_AUTODEMO_LEFT_POS').slice(0,-2);
+		let newCtlsLeft = parseInt(currCtlsLeft) - RIGHT_SHIFT_TONE_TRIG;
+  		tt_cssVar.style.setProperty('--NO_AUTODEMO_LEFT_POS', newCtlsLeft + 'px');
   		
-  		// remove the class so the animation will work on next page, cant do this until animation completes
+   		// remove the class so the click here animation will work on next page, cant do this until animation completes
     	$('#clickHereCursor').removeClass('userHitPlay');
     });
     

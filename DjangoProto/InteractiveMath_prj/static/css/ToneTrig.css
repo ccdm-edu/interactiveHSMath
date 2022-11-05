@@ -7,6 +7,7 @@ This is the style sheet for ToneTrig.html
 	--TOP_EDGE_PLOT: 64px;
 	--WIDTH_466HZ: 159px;
 	--HEIGHT_TONE_PLOT: 140px;
+	--NO_AUTODEMO_LEFT_POS: 150px;
 }
 
 #headerAndCtl_TT {
@@ -39,7 +40,7 @@ This is the style sheet for ToneTrig.html
 	position: absolute;
 	border: 0px;
 	resize: none;
-	left: 300px;
+	left: var(--NO_AUTODEMO_LEFT_POS);
 	width: 700px;
 	font-weight: bold;
 	font-size: 32px;
@@ -48,7 +49,7 @@ This is the style sheet for ToneTrig.html
 /* This is the three side by side controls 1.  treble clef that picks instrument/note 2.  explanation of current activity 3.  tone param changes */
 #InstrumentToneMenu {
 		  position: absolute;
-		  left: 300px;
+		  left: var(--NO_AUTODEMO_LEFT_POS);
           width:50px;
           height:100px;
           background-color:white; 
@@ -58,7 +59,7 @@ This is the style sheet for ToneTrig.html
 /* item 3, tone controls, freq, amplitude, phase*/
 #toneChanges {
 	    position: absolute;
-	    left: 400px;
+	    left: calc(100px + var(--NO_AUTODEMO_LEFT_POS));
 		display: inline-block; 
 		border: 1px solid black;"
 }
@@ -78,7 +79,7 @@ This is the style sheet for ToneTrig.html
 /* arrange the expansion lines between the two graphs for max understandability */
 #overlapExpansionLines{
     position:relative;
-    top: 100px;
+    top: 110px;
     height: 250px;
     width: 800px;
 }

@@ -467,7 +467,7 @@ $(function() {
     // User initiates autoDemo activity
     //****************************************************************************   
 	//*** user clicks the start demo image, iniitalize everything
-	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_DT2');  // give the demo the full script
+	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {
         // flash a "click here" image to get them to hit play
     	$('#clickHereCursor').addClass('userHitPlay'); 
