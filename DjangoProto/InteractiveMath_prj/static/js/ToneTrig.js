@@ -1047,6 +1047,192 @@ $(function() {
 			},		
 
 	  ]
+	},
+	{ segmentName: "Amplitude and Phase",
+	  headStartForAudioMillisec: 11000, // generally the audio is longer than the cursor/annotate activity
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: '../../static/AudioExpln/ToneTrig_Seg1.mp3'}
+			},
+			//*****************************
+			// click on amplitude slider to 5,  offset is approx guess, user can change
+			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'in-range-amp',
+			 	 value: "5",
+			 	  offset: {x: 45, y: 10},  // in the 5 location
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'in-range-freq',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 6000} 
+			},
+			//*****************************
+			// click on start tone  button to play default tone
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'start-stop-button',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'start-stop-button',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 3000} 
+			},
+			//*****************************
+			// increase the volume to 10
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'in-range-amp',
+			 	 value: "10",
+			 	  offset: {x: 30, y: 10},  // turn volume up high
+			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'in-range-amp',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 3000} 
+			},
+			//*****************************
+			// increase volume to 20
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'in-range-amp',
+			 	 value: "20",
+			 	  offset: {x: 25, y: 10},  // turn volume way down
+			 	waitTimeMillisec: 2000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'in-range-amp',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 2000} 
+			},	
+			//*****************************
+			// decrease the volume to 5
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'in-range-amp',
+			 	 value: "5",
+			 	  offset: {x: 35, y: 10},  // turn volume up high
+			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'in-range-amp',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 8000} 
+			},		
+			//*****************************
+			// click on phase slider to make it a cosine at 90 degrees,  offset is approx guess, user can change
+			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'in-range-phase',
+			 	 value: "90",
+			 	  offset: {x: 15, y: 10},  // in the 90 location
+			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'in-range-phase',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 15000} 
+			},					
+			//*****************************
+			// click on start tone  button to stop tones
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'start-stop-button',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'start-stop-button',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 3000} 
+			},		
+
+	  ]
+	},
+		{ segmentName: "Trig in Music",
+	  headStartForAudioMillisec: 10000, // generally the audio is longer than the cursor/annotate activity
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: '../../static/AudioExpln/ToneTrig_Seg2.mp3'}
+			},
+			//*****************************
+			// click on colorful clef pulldown menu which can cause robot
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'InstrumentToneMenu',
+			 	 action: "click",
+			 	 offset: {x: 0, y: 0},
+			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'InstrumentToneMenu',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 3000} 
+			},		
+			//*****************************
+			// click on input and type answser,  offset is approx guess, user can change
+			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'id_math_test',
+			 	 value: "12",
+			 	  offset: {x: 20, y: 10},  
+			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'id_math_test',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 5000} 
+			},
+			//*****************************
+			// click on submit after answering robot modal question
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'Robot_submitBtn',
+			 	 action: "click",
+			 	 offset: {x: 0, y: 0},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'Robot_submitBtn',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 3000} 
+			},
+	  ]
 	}];
 
     //****************************************************************************
