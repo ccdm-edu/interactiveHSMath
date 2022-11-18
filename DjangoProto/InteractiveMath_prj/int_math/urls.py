@@ -27,7 +27,9 @@ urlpatterns = [
     path('acknowledgements/', views.AckView.as_view(), name='acknowledgements'),
 #utility stuff that serves many pages potentially
     path('bot_check/', views.ChkUsrIsRobotView.as_view(), name='bot_check'),
-    path('give_file/', views.VerifyClientGiveFile.as_view(), name='give_file')
-    
-    
+    path('give_file/', views.VerifyClientGiveFile.as_view(), name='give_file'),
+    path('TermsOfUse/', views.Legal_TermsOfUse.as_view(), name='TermsOfUse'),
+    path('Privacy/', views.Legal_Privacy.as_view(), name='Privacy'),
+    path('Cookie/', views.Legal_Cookie.as_view(), name='Cookie'),    
+    path('Contact_me/', views.ContactMe.as_view(), name='Contact_me'),    
 ]

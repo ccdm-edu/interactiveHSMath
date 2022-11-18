@@ -953,7 +953,7 @@ $(function() {
 		$('#startAutoDemo').css('display', 'inline-block');
 		$('#autoDemoCtls').css('display', 'none');
 		
-		// undo the drop of the canvas when we started autodemo
+		// undo the drop of the canvas when we started autodemo and arrange things as they were before
 		let dt_cssVar = document.querySelector(':root');
 		var cssVar = getComputedStyle(dt_cssVar);
 		// get the current val of CSS var and remove the px from end

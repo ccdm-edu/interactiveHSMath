@@ -86,8 +86,10 @@ class AutoDemo {
 		// demo isn't over until audio is done, update to next segment
 		// increment segment value here and on screen.  User can change if they want
 		if (!this.userStopRequest) {
-			// audio completed without user intervention
-			this.setCurrSeg(this.currSeg + 1);  // since user sees 1 to max, not 0 to max-1
+			// audio completed without user intervention, setCurrSeg takes an input segment number of
+			// what user sees(1 to max), which is one higher than we keep internally (0 to max-1).
+			// next segment must be one higher still, setCurrSeg will ensure we dont go over max avail
+			this.setCurrSeg(this.currSeg + 1 + 1);  // since user sees 1 to max, not 0 to max-1
 		}
 		// turn on play button and turn off pause button
 		$('#playSegment').prop('disabled', false);  
@@ -96,6 +98,9 @@ class AutoDemo {
 		$(this.canvasID).css('z-index',-1);
 		this.removeActOnElement();  // get rid of fake cursor on an element if it exists
 		if ('undefined' !== typeof this.ModalWindow) {this.ModalWindow.modal('hide');	}	// if a modal is showing, get rid of it
+		
+		// remove the class so the animation will work on next page
+    	$('#clickHereCursor').removeClass('userHitPlay');
 	}
 	
 	//****************************************

@@ -32,6 +32,12 @@ def populate():
         {'title': 'Thank You!', 'url': '../acknowledgements'},
         ]
     
+    legal_subtopics = [
+        {'title': 'Terms Of Use', 'url': '../TermsOfUse'},
+        {'title': 'Privacy Policy', 'url': '../Privacy'},
+        {'title': 'Cookie Policy', 'url': '../Cookie'},
+        ]
+    
     all_possible_stats = [
         {'pass_mathtest': False, 'recaptcha_v3_quartile': '1Q'}, 
         {'pass_mathtest': False, 'recaptcha_v3_quartile': '2Q'},
@@ -48,7 +54,8 @@ def populate():
     topics = {'TrigFunct': [{'topic': trig_subtopics}],
               'TrigIdent': [{'topic': trigIdent_subtopics}],
             'Imag_num': [{'topic': imag_num_subtopics}],
-            'You': [{'topic': people_subtopics}]
+            'You': [{'topic': people_subtopics}],
+            'Legal': [{'topic': legal_subtopics}],
             }
     #iterating through .items means cat is the key and cat_data is the value of 
     #the cats dictionary item

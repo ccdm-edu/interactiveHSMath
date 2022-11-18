@@ -300,4 +300,33 @@ class TrigIDTuneView(View):
                         'topic': Topic.objects.get(name="TrigIdent"),
                         }
         response = render(request, 'int_math/TrigIdent_Tune.html', context=context_dict)
-        return response       
+        return response 
+     
+class Legal_TermsOfUse(View):
+    def get(self, request):
+        context_dict = {'page_tab_header': 'Terms Of Use',
+                        'topic': Topic.objects.get(name="Legal"),
+                       }  
+        response = render(request, 'int_math/TermsOfUse.html', context=context_dict)
+        return response
+class Legal_Privacy(View):
+    def get(self, request):
+        context_dict = {'page_tab_header': 'Privacy Policy',
+                        'topic': Topic.objects.get(name="Legal"),
+                       }  
+        response = render(request, 'int_math/Privacy.html', context=context_dict)
+        return response
+class Legal_Cookie(View):
+    def get(self, request):
+        context_dict = {'page_tab_header': 'Cookie Policy',
+                        'topic': Topic.objects.get(name="Legal"),
+                       } 
+        response = render(request, 'int_math/Cookie.html', context=context_dict)
+        return response
+class ContactMe(View):
+    def get(self, request):
+        context_dict = {'page_tab_header': 'Contact Us',
+                        'topic': None,
+                       } 
+        response = render(request, 'int_math/Contact_me.html', context=context_dict)
+        return response

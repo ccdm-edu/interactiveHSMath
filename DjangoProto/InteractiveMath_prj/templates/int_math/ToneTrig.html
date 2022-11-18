@@ -13,10 +13,6 @@
 
 <!-- SineCosID is a placemarker for begin of link to go to sine cosine tones and musical notes -->
 <div id="SineCosID">
-	<!--  for robot checking, if true, don't put bot check modal window up, user is not a bot. 
-	This variable is a server response to user bot check and directs whether user is allowed full use of page 
-	This is for debug only -->
-	<div id="botCheckTestNeeded">{{ botChkTstNeed }}</div>
 	
 	<div id ="headerAndCtl_TT">
     	<h1 id = "musicalActivity">Synthesized Tone</h1>
@@ -44,7 +40,7 @@
 	   		<!--  role and aria* helps those using screen readers -->
 	   		<ul class="dropdown-menu" role="menu" aria-labelledby="InstrumentToneMenu">
 				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Tone Only</a></li>
-				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">B<span>&#9837;</span> Trumpet plays C5</a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" id='AutodemoTrumpetSelect' href="#">B<span>&#9837;</span> Trumpet plays C5</a></li>
 				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Clarinet plays C5</a></li>
 				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Soprano Sax plays C5</a></li>
 				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Tenor Sax plays C4</a></li>
@@ -183,18 +179,7 @@
     <script src="{% static 'js/ToneTrig.js' %}" crossorigin="anonymous"></script>	
     <script src="{% static 'js/RobotChk.js' %}" crossorigin="anonymous"></script>	
     
-    <script type="text/javascript">
-    $.getScript("../../../static/js/jquery-bootstrap-modal-forms-min.js", function() {
-    	// we also have to wait until we are SURE the proper file has loaded before doing all this
-		// This has to be here for django to render properly, cannot be in js file
-		{% if botChkTstNeed %}
-			$('#InstrumentDropDownMenu').modalForm({
-				//we put a next param on the url to indicate we want to come back to this spot when modal window done
-		        formURL: "{% url 'int_math:bot_check' %}?next={% url 'int_math:ToneTrig' %}"
-		    });
-		{% endif %}
-	});
-	</script>
+
 </div>
 {% endblock %}
 

@@ -18,6 +18,7 @@ $(function() {
 	let tuneState = [];
 	let currTuneState = DEFAULT_TONE;  // pick the first element, which will be the synthesized tones
 	let tuneExpln = [];
+	let tuneFilenameURL = [];  // filename at server
 	let tuneToDo = []
 	let tuneInstrument = [];
 	let tuneTitle = [];
@@ -490,7 +491,7 @@ $(function() {
 			console.log("We expected Fsg/Fsmp3 = " + actualSampRatio + " Difference is " + (approxSampRatio - actualSampRatio));
 			return graphArray;
 		}
-	}
+	}  // end of class InstrumentNote
 		
 	//***********************************
 	//  User instigated callback events
@@ -553,7 +554,31 @@ $(function() {
 	// update advanced topics modal tab text
 	let todo_tab_element = "#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab011 > p";
 	let expln_tab_element = "#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab021 > p";
+	
+	function doToneOnly() {
+		// no instruments to play, its tone only.  No need for a play tone button
+		$("#allowNotePlay").css("visibility", "hidden");
 		
+		// get rid of any musical note legends
+		sine_plot_100_1k.data.datasets[1].label = "";
+		sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,255,255)'; // white for legend (invisible)
+		
+		// clean up any Periodicity arrows/text if left over from musical notes and redraw expansion lines
+		ctxExpandTime.putImageData(backgroundPlot, 0, 0);
+		// get rid of all old periodicity stuff, in case its present
+		$('.First_Period').css("visibility", "hidden");			
+		$('.Second_Period').css("visibility", "hidden");
+		$('.Third_Period').css("visibility", "hidden");
+		$('.Fourth_Period').css("visibility", "hidden");
+		$("#Period_Text1").css("visibility", "hidden");			
+		$('#Period_Text2').css("visibility", "hidden");
+		// on power up, draw the expansion lines between graphs
+		DrawExpansionLinesBtwnGraphs();
+		
+		// update graphs, to eliminate musical note if present
+		drawTone()
+	};
+	
 	// Handle user selecting the musical note drop down menu
 	$('#InstrumentDropDownMenu .dropdown-menu li a').on('click', function(event){
 		let selectItem = $('#InstrumentDropDownMenu .dropdown-menu li a').index($(this));
@@ -563,27 +588,7 @@ $(function() {
 		$(expln_tab_element).text(tuneExpln[currTuneState]);
 		$("#musicalActivity").html(tuneTitle[currTuneState]);
 		if (currTuneState === DEFAULT_TONE) {
-			// no instruments to play, its tone only.  No need for a play tone button
-			$("#allowNotePlay").css("visibility", "hidden");
-			
-			// get rid of any musical note legends
-			sine_plot_100_1k.data.datasets[1].label = "";
-			sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,255,255)'; // white for legend (invisible)
-			
-			// clean up any Periodicity arrows/text if left over from musical notes and redraw expansion lines
-			ctxExpandTime.putImageData(backgroundPlot, 0, 0);
-			// get rid of all old periodicity stuff, in case its present
-			$('.First_Period').css("visibility", "hidden");			
-			$('.Second_Period').css("visibility", "hidden");
-			$('.Third_Period').css("visibility", "hidden");
-			$('.Fourth_Period').css("visibility", "hidden");
-			$("#Period_Text1").css("visibility", "hidden");			
-			$('#Period_Text2').css("visibility", "hidden");
-			// on power up, draw the expansion lines between graphs
-			DrawExpansionLinesBtwnGraphs();
-			
-			// update graphs, to eliminate musical note if present
-			drawTone()
+			doToneOnly();
 		} else {	
 			let context;
 			// Safari has implemented AudioContext as webkitAudioContext so need next LOC
@@ -595,9 +600,9 @@ $(function() {
 				// I don't think we need a csrf token for this ajax post.  1.  there is already a session ID required for this
 				// request 2.  Nothing is stored to database, request must be a filename we have or else get error back
 				// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
-			    $.ajax({url:  '../give_file/',
+			    $.ajax({url:  tuneFilenameURL[currTuneState],
 			    		type: 'GET',
-			    	  	data:  {instrument: tuneInstrument[currTuneState]},
+			    	  	data:  {instrument: tuneInstrument[currTuneState]},  // not needed anymore
 			    	  	// if all is ok, return a blob, which we will convert to arrayBuffer, else return text cuz its an error
 			    	  	xhr: function () {
                 			let xhr = new XMLHttpRequest();
@@ -860,9 +865,10 @@ $(function() {
 					tuneTitle[index+1] = paramSet.title;
 					tuneOffset[index+1] = parseInt(paramSet.tuneOffset);
 					tuneFundamentalFreq[index+1] = parseInt(paramSet.fundamentalHz);
+					tuneFilenameURL[index+1] = paramSet.filenameURL;
 				});
 
-				// set the params if we go back to default tone
+				// set the params if we go back to default tone, filenameURL is not needed
 				tuneState[DEFAULT_TONE] = "Synthesized_all";
 				tuneExpln[DEFAULT_TONE] = $(".AdvTopic_Expln").text();		
 				tuneToDo[DEFAULT_TONE]= $(".AdvTopic_ToDo").text();			
@@ -1175,8 +1181,8 @@ $(function() {
 
 	  ]
 	},
-		{ segmentName: "Trig in Music",
-	  headStartForAudioMillisec: 10000, // generally the audio is longer than the cursor/annotate activity
+	{ segmentName: "Trig in Music",
+	  headStartForAudioMillisec: 11000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
@@ -1189,7 +1195,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'InstrumentToneMenu',
 			 	 action: "click",
-			 	 offset: {x: 0, y: 0},
+			 	 offset: {x: 30, y: 60},
 			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
@@ -1197,41 +1203,84 @@ $(function() {
 			 segmentParams:
 			 	{element:'InstrumentToneMenu',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 3000} 
+			 	waitTimeMillisec: 53000} 
 			},		
 			//*****************************
-			// click on input and type answser,  offset is approx guess, user can change
-			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
-			{segmentActivity: "CHANGE_ELEMENT_VALUE",
-			 segmentParams:
-			 	{element:'id_math_test',
-			 	 value: "12",
-			 	  offset: {x: 20, y: 10},  
-			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
-			 },		
-			// remove cursor on freq slider 
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'id_math_test',
-			 	 action: "nothing",
-			 	waitTimeMillisec: 5000} 
-			},
-			//*****************************
-			// click on submit after answering robot modal question
+			// click on trumpet from drop down menu
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'Robot_submitBtn',
+			 	{element:'AutodemoTrumpetSelect',
+			 	 action: "focus",
+			 	 offset: {x: 40, y: 12},
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			},
+			// focus first then click so user sees what we do
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'AutodemoTrumpetSelect',
 			 	 action: "click",
-			 	 offset: {x: 0, y: 0},
+			 	 offset: {x: 40, y: 12},
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'Robot_submitBtn',
+			 	{element:'AutodemoTrumpetSelect',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 3000} 
+			 	waitTimeMillisec: 45000} 
 			},
+
+			//*****************************
+			// click on start tone  button to start tones
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'start-stop-button',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'start-stop-button',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 10000} 
+			},	
+			//*****************************
+			// click on play note button to stop tones
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'allowNotePlay',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'allowNotePlay',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 8000} 
+			},
+			//*****************************
+			// click on start tone  button to stop tones
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'start-stop-button',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'start-stop-button',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 10000} 
+			},	
 	  ]
 	}];
 
@@ -1274,6 +1323,8 @@ $(function() {
 
 	// User has selected play
     $('#playSegment').on('click', function(){	
+    	// in case plots have other stuff on them from other activities, clean it up
+    	doToneOnly();
     	// activate pause and disable play
     	$(this).prop('disabled', true);  // disable play once playing
     	$('#stopSegment').prop('disabled', false);  // reactivate pause

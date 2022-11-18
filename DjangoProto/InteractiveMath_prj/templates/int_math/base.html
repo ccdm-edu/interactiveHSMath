@@ -71,6 +71,17 @@
 				        </li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'int_math:imag_num' %}">Imaginary</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'int_math:user_contrib' %}">You</a></li>
+                        <li class="nav-item dropdown">
+				            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				            Legal
+				            </a>
+				            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+				                <a class="dropdown-item" href="{% url 'int_math:TermsOfUse' %}">Terms of Use</a>
+				                <a class="dropdown-item" href="{% url 'int_math:Privacy' %}">Privacy Policy</a>
+				                <a class="dropdown-item" href="{% url 'int_math:Cookie' %}">Cookie Policy</a>
+				            </div>
+				        </li>
+				        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:Contact_me' %}">Contact</a></li>
                     </ul>
                 </div>
             </nav>
@@ -124,13 +135,13 @@
 					<!-- /.modal -->
 					
 					<div id="autoDemo">
-						<img id="startAutoDemo" src="{% static 'images/autoDemoButton.svg' %}" alt = "Click here to start a demo of page">
+						<img id="startAutoDemo" src="{% static 'images/autoDemoButton.svg' %}" alt = "Click here to start a demo of page" data-toggle="tooltip" data-placement="right" title="Make sure your speaker is on">
 						<!--  make a play/pause button set from bootstrap icons -->
 						<div id="autoDemoCtls">
 						    <table>
 						    	<tr>
 						    		<td align="center">
-						    			<h1>Demo Controls: <br>Let's see how this page works!</h1>
+						    			<h1>Audio Demo Controls: <br>Let's see how this page works!</h1>
 						    		</td>
 						    	</tr>
 								<tr align="center">
