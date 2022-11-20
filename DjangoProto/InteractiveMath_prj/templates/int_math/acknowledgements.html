@@ -14,5 +14,18 @@
 
 	<br>
 	<br>	
+	<!-- Bootstrap core JavaScript,jquery must be before bootstrap -->	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script>
+		<!-- in case can't get from google, load from local -->
+		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
+	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+	<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
+				   
+	<!-- Custom JS for this page -->
+	<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
+	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	
 
+	
 {% endblock %}

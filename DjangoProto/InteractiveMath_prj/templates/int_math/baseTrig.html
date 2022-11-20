@@ -98,12 +98,102 @@
                 </nav>
                 
                 <main role="main" class="col-md-9  ml-sm-auto col-lg-10 px-4">		
+                	<!--  advanced topics popup window that can move and be reduced and brought up again and doesn't interfere with action on page -->
+					<a id="AdvancedTopicLink" href="#AdvancedTopics" data-backdrop="false" data-toggle="modal">Advanced (popup)</a>	
+					<div id="AdvancedTopics" class="modal fade">
+					    <div class="modal-dialog">
+					        <div class="modal-content border-primary">
+					        	<!-- next el uses bootstrap flex to arrange elements (https://getbootstrap.com/docs/4.3/utilities/flex/) -->
+					        	<!-- First3 classes arrange elements, the mx etc sets margins -->
+								<div class="modal-header row d-flex justify-content-between mx-1 mx-sm-3 mb-0 pb-0" data-toggle="tooltip" data-placement="top" title="Drag me around as needed">
+									<h5 class="modal-title">Advanced Topics:</h5>
+									<div class="tabs active" id="tab01">
+									    <h6 class="font-weight-bold">Try This</h6>
+									</div>
+									<div class="tabs" id="tab02">
+									    <h6 class="text-muted ">Explanation</h6>
+									</div>
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								</div>
+				                <div class="line"></div>
+					            <div class="modal-body">	            
+					                <fieldset class="show" id="tab011">
+						                <p>To Do: </p>
+				                    </fieldset>
+				                    <fieldset id="tab021">
+						                <p>Explanation: </p>
+				                    </fieldset>         
+					            </div>
+					            <div class="modal-footer">
+					                <button type="button" class="btn btn-primary" data-dismiss="modal">I'm done</button>
+					            </div>
+					        </div>
+					        <!-- /.modal-content -->
+					    </div>
+					    <!-- /.modal-dialog -->
+					</div>
+					<!-- /.modal -->
+					
+					<div id="autoDemo">
+						<img id="startAutoDemo" src="{% static 'images/autoDemoButton.svg' %}" alt = "Click here to start a demo of page" data-toggle="tooltip" data-placement="right" title="Make sure your speaker is on">
+						<!--  make a play/pause button set from bootstrap icons -->
+						<div id="autoDemoCtls">
+						    <table>
+						    	<tr>
+						    		<td align="center">
+						    			<h1>Audio Demo Controls: <br>Let's see how this page works!</h1>
+						    		</td>
+						    	</tr>
+								<tr align="center">
+									<td align="left">
+										Segment Name: <span id="segName"></span>
+									</td>
+								</tr>
+								<tr>
+									<td align="left">
+										<!--  max value of input will have to be set after JS runs to see how big the script is -->
+										Segment Number/Total Segments: 
+									</td>
+									<td align="left">
+										<input id="segNum" type="number" min="1" max="10" maxlength = '2' step="1" required data-toggle="tooltip" title="Select Demo segment to play">
+									</td>
+									<td align = "left">
+										<span id="totalSeg">/0</span>
+									</td>
+								</tr>
+								<tr align="center">
+									<td align='left'>
+										<div class="btn-group" id="autoDemoPlayPause">
+											<!--  image placed to draw attention to play button -->
+											<img id="clickHereCursor" src="{% static 'images/clickhere_cursor.svg' %}" alt = "Click here to start the demo segment">
+											<button type="button" class="btn btn-outline-secondary" id="playSegment" >
+												<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-play" viewBox="0 0 16 16">
+									  			<path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
+												</svg>
+									        </button>
+									        <button type="button" class="btn btn-outline-secondary" id="stopSegment" >
+									        	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-stop" viewBox="0 0 16 16">
+												<path d="M3.5 5A1.5 1.5 0 0 1 5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5zM5 4.5a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5V5a.5.5 0 0 0-.5-.5H5z"/>
+												</svg>					        	
+											</button>
+								        </div>
+							        </td>
+							        <td align='right'>
+							        	<button type="button" class="btn btn-primary" id='dismissAutoDemo'>I'm done</button>
+							        </td>
+						        </tr>
+							</table>
+						</div> <!--  autodemo controls -->
+					</div> <!--  autodemo controls plus start image -->
 					
 					
                   
                     {% block body_block %}
                     {% endblock %}
                     
+                    <canvas id="UnusedCanvas" width=1 height=1> <!--  Need to pull all this out of AutoDemo soon so don't need this kloodge -->
+						Your Browser does not support canvas tag, you are missing graph capability
+					</canvas>	
                     
                     <!-- FOOTER -->
                     <footer>
