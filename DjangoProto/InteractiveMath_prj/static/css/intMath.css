@@ -11,6 +11,41 @@ p#headerForSubtopics {
 	font: papyrus;
 }
 
+/*****************All pages, left section legal notices********************************/
+#sidebarMenu{
+	position: relative;
+}
+#LegalNotice_Consent {
+	position: absolute;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-bottom: 10px;
+	border-style: double;
+	padding: 2px;
+	bottom: 0px;
+}
+#CookieChoice{
+	position: absolute
+	 /* This puts buttons at the bottom of box */
+}
+#yesCookies{
+	position: absolute;
+	top: -20px;
+	left: 20px;
+	background-color: green; 
+  	border: none;
+  	color: white;
+    text-align: center;
+}
+#noCookies{
+	position: absolute;
+	top: -20px;
+	left: 70px;
+	background-color: red; 
+  	border: none;
+  	color: white;
+    text-align: center;
+}
 /*******************All pages, advanced topic "modal" window ***********************/
 /*Advanced Topics "modal-that-is-really-a-dialog" window param cuz i wanna use bootstrap */
 :root{
