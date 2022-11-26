@@ -51,12 +51,12 @@
     <body>
         <header>
             <nav class="navbar navbar-expand-md navbar-light fixed-top p-0" style="background-color: #e3f2fd; font-size: 140%">
-                <a class="navbar-brand p-2" href="{% url 'int_math:index' %}">Interactive Math</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand p-2" href="{% url 'int_math:index' %}">Interactable Math</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#upperNavbarCollapse" aria-controls="upperNavbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 
-                <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="collapse navbar-collapse" id="upperNavbarCollapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item"><a class="nav-link" href="{% url 'int_math:index' %}">Home</a></li>
 				        <!-- Did this by looking at bootstrap dashboard navbar dropdown -->
@@ -71,16 +71,7 @@
 				        </li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'int_math:imag_num' %}">Imaginary</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'int_math:user_contrib' %}">You</a></li>
-                        <li class="nav-item dropdown">
-				            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				            Legal
-				            </a>
-				            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-				                <a class="dropdown-item" href="{% url 'int_math:TermsOfUse' %}">Terms of Use</a>
-				                <a class="dropdown-item" href="{% url 'int_math:Privacy' %}">Privacy Policy</a>
-				                <a class="dropdown-item" href="{% url 'int_math:Cookie' %}">Cookie Policy</a>
-				            </div>
-				        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:TermsOfUse' %}">Legal</a></li>
 				        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:Contact_me' %}">Contact</a></li>
                     </ul>
                 </div>
@@ -98,7 +89,7 @@
 		                	<p>By continuing to use this site, you agree with the <a href="{% url 'int_math:TermsOfUse' %}">Terms Of Use</a> 
 		                	and <a href="{% url 'int_math:Privacy' %}">Privacy</a>/<a href="{% url 'int_math:Cookie' %}">Cookie</a> policy.
 		                	For questions/comments, please see <a href="{% url 'int_math:Contact_me' %}">Contact</a> page.
-		                	Cookies are used to enhance your experience on this site.  Allow cookies?<br></p>
+		                	Cookies are used to enhance your experience on this site.  Allow cookies? (default is no)<br></p>
 		                	<div id="CookieChoice">
 		                		<br><button type="button" id='yesCookies'>Yes</button><button type="button" id='noCookies'>No</button>
 		                	</div>

@@ -13,7 +13,17 @@ $(function () {
                     .removeClass('active');
         // can't add active to any DOM element since when new page loads, it will be crushed by reloading of subtopics.html
         // save "this" and when page loads, reset it to active
-        sessionStorage.setItem("activePage", this.getAttribute('href'));
+        sessionStorage.setItem("activePage", $(this).attr('href'));
+//                sessionStorage.setItem("activePage", this.getAttribute('href'));
+        
+	});
+	
+	// on upper menu bar, want selected items to appear different
+	$('div#upperNavbarCollapse.collapse.navbar-collapse > ul.navbar-nav.mr-auto > li.nav-item > a.nav-link').on('click', function(e) {
+		$(this).css('font-weight', 'bold');
+		// can't change font on any DOM element since when new page loads, it will be crushed by reloading of subtopics.html
+        // save "this" and when page loads, reset it to active
+        sessionStorage.setItem("activeTopBarIndex", $('div#upperNavbarCollapse.collapse.navbar-collapse > ul.navbar-nav.mr-auto > li.nav-item').index($(this).parent()));
 	});
 	
 	$( document ).ready(function() {
@@ -30,7 +40,8 @@ $(function () {
 	    		//console.log(" hitting this subtopic list for first time");
 	    	} else {
 		    	// check to see that the stored value is still part of this set of subtopics
-		    	let expectedDomEl = $('ul.nav.flex-column > li.nav-item > a[href="' + currPage + '"')
+		    	let expectedDomEl = $('ul.nav.flex-column > li.nav-item > a[href="' + currPage + '"]');
+		    	//console.log('OOOOOold list highlight, length of dom is ' + expectedDomEl.length);
 		    	if (expectedDomEl.length == 0) {
 		    		// user has changed topics and the old subtopic is now obsolete, pick first DOM element
 		    		currPage = firstDomEl.attr('href');
@@ -48,6 +59,13 @@ $(function () {
     		// wait till we get to a page with subtopics.  For now, clear out old stuff
     		sessionStorage.removeItem("activePage");
     	}
+    	
+    	// now that a new page has loaded, highlight which top menu item we are on
+    	// recall whats active and change appearance
+     	let currTopIndex = sessionStorage.getItem("activeTopBarIndex");
+    	console.log("upper menu bar index is " + currTopIndex);
+    	let $currTopItem = $('div#upperNavbarCollapse.collapse.navbar-collapse > ul.navbar-nav.mr-auto > li.nav-item > a').eq(parseInt(currTopIndex));
+    	$currTopItem.css('font-weight', 'bold');
 	});
 		
 	//***********************************
