@@ -8,6 +8,7 @@
 
 {%block head_block %}
     <link href="{%static 'css/LandingPage.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 {% endblock %}
 
 {% block body_block %}
@@ -18,9 +19,22 @@
 		</div>
 	</div>
 		
-	<img id="logo-home-page" src="{% static 'images/IM_logo3.svg' %}" alt = "Interactable Math Logo">
-	
-	
+	<div id="userHelpLandingPage">
+		<img id="logo-home-page" src="{% static 'images/IM_logo3.svg' %}" alt = "Interactable Math Logo">
+		
+		<div class="widget" id="selectNewbieOrExpert">
+			<fieldset>
+			    <legend><div>I am</div><div class="line"></div></legend>
+			    <div class="controlgroup">
+					<label for="newbieMode">New to this site</label>
+				    <input type="radio" name="radio-1" id="newbieMode">
+				    <label for="expertMode">Familiar with this site</label>
+				    <input type="radio" name="radio-1" id="expertMode">
+			    </div>
+		  	</fieldset>
+		</div>
+	</div>
+  
 	<div class="home_expln">
 		<p>This website is designed to connect the "boring" stuff that high school students "have" to learn in Algebra 2 and Geometry and Advanced Math Topics to the real world in a way that is <span id="blinkingColor">fun </span>and interactive.  
 		You will see how trig functions play into music and imaginary numbers help your cell phone send your text messages (and do everything else phones do). 

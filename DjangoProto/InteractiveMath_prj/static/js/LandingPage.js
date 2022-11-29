@@ -2,6 +2,10 @@
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
 
+    $( "input[type='radio']" ).checkboxradio();  // handle the newbie/expert mode
+    //$( "fieldset" ).controlgroup();
+    $( ".controlgroup" ).controlgroup()
+    
     //********************************************************
 	// create a "script" for the auto-demo tutorial, by now, all variables should be set
 	//********************************************************	
