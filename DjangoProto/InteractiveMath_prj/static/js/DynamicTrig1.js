@@ -4,6 +4,21 @@ $(function() {
 	// turn on help in upper left corner
 	$('#startAutoDemo').css('display', 'inline-block');
 	
+	// user can only pick expert/newbie mode on the first home page
+	let newbieMode = sessionStorage.getItem('UserIsNew');
+	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
+		// emphasize the auto demo as first place
+		$("#startAutoDemo").addClass('newbieMode');
+		$("#FirstHelp_DT1").addClass('newbieMode');
+	} else if (newbieMode && (newbieMode.toLowerCase() === 'false')) {
+		// remind user what to do 
+		$("#FirstHelp_DT1").addClass('expertMode');
+	} else {
+		// user somehow got here without going through landing page or deleted sessionStorage, put in newbie mode
+		$("#startAutoDemo").addClass('newbieMode');
+		$("#FirstHelp_DT1").addClass('newbieMode');
+	}
+	
 	let ctxUnitCircle;
 	let circleDotsCanvas =  $("#AmpSinCosCircle_DT1").get(0);  // later on, this will set the "background image" for animation
 	// get ready to start drawing on this canvas, first get the context

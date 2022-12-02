@@ -4,6 +4,13 @@ $(function() {
 	// turn on help in upper left corner
 	$('#startAutoDemo').css('display', 'inline-block');
 	
+	// user can only pick expert/newbie mode on the first home page
+	let newbieMode = sessionStorage.getItem('UserIsNew');
+	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
+		// emphasize the auto demo as first place
+		$("#startAutoDemo").addClass('newbieMode');
+	} 
+	
 	// set up frequency slider
 	let $currFreq = $("#FreqSlider_DT2");
 	let currFreq = $currFreq.val();

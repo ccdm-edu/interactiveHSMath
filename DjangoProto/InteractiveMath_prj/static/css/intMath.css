@@ -195,6 +195,22 @@ div#tooltip:hover .tooltiptext {
 	display: none;
 	z-index: 50;  /* needs to be max value */
 }
+/* in newbie mode, we draw attention to startAutoDemo */
+#startAutoDemo.newbieMode {
+    margin-left: auto;
+    margin-right: auto;
+	transform: scale(1.0);
+	animation-iteration-count: 3;
+	animation-name: autoDemo_newbieMode;
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
+} 
+@keyframes autoDemo_newbieMode{
+	 0%   {transform: scale(1.0)}
+	 50%   {transform: scale(1.5)}
+	 100%   {transform: scale(1.0)}
+}
+/* client has selected auto demo, now give controls to use it */
 #autoDemoCtls{
 	position: absolute;
 	top: 0px;

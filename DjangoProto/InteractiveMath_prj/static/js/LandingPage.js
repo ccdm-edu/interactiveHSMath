@@ -1,10 +1,22 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
-
-    $( "input[type='radio']" ).checkboxradio();  // handle the newbie/expert mode
-    //$( "fieldset" ).controlgroup();
-    $( ".controlgroup" ).controlgroup()
+    
+	
+	// if the user has saved an old mode, resurrect it here
+	let newbieMode = sessionStorage.getItem('UserIsNew');
+	if (!newbieMode) {
+		// first arrival to site, default newbie mode
+		$("#newbieMode").prop('checked', true); // put them in newbie mode
+		sessionStorage.setItem('UserIsNew', true);  // if user never changes anything, they are classed as newbie
+	} else if (newbieMode.toLowerCase() === "false") {
+		$("#expertMode").prop('checked', true); // put them in newbie mode
+	} else {
+		// user saved newbie mode or its their first arrival to site,
+		sessionStorage.setItem('UserIsNew', true);  // if user never changes anything, they are classed as newbie
+		$("#newbieMode").prop('checked', true); // put them in newbie mode
+	}
+		
     
     //********************************************************
 	// create a "script" for the auto-demo tutorial, by now, all variables should be set
@@ -196,5 +208,20 @@ $(function() {
     	$('#clickHereCursor').removeClass('userHitPlay'); 
 	});
 
- 
+    //****************************************************************************
+    // User has changed newbie/expert mode selection
+    //****************************************************************************
+	$("#selectNewbieOrExpert input[name='helpLevel']").on('click', function(event) {
+		if($('input:radio[name=helpLevel]:checked').val() == "newbieMode"){
+			sessionStorage.setItem('UserIsNew', true);
+			console.log(' newbie mode');
+		} else if($('input:radio[name=helpLevel]:checked').val() == "expertMode") {
+			// go to expert mode
+			console.log('expert mode');
+			sessionStorage.setItem('UserIsNew', false);
+		} else {
+			console.log('Coding error on selection of user proficiency level');
+		}    
+	});   
+     
 })

@@ -134,7 +134,10 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 }
 
 /*************Dynamic Help**************/
-#FirstHelp_DT1 {
+#FirstHelp_DT1.newbieMode {
+	display: none;
+}
+#FirstHelp_DT1.expertMode {
 	position: relative;
 	width: 200px;
 	/*	unlike border, outline doesn't consume space */

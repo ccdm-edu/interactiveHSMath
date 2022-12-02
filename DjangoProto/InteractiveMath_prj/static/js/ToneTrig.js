@@ -3,6 +3,21 @@
 $(function() {
 	// turn on help in upper left corner
 	$('#startAutoDemo').css('display', 'inline-block');
+	
+	// user can only pick expert/newbie mode on the first home page
+	let newbieMode = sessionStorage.getItem('UserIsNew');
+	let stopModal = true;  // will stop modal window from popping up later in this script
+	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
+		// emphasize the auto demo as first place
+		$("#startAutoDemo").addClass('newbieMode');
+	} else if (newbieMode && (newbieMode.toLowerCase() === 'false')) {
+		// remind user what to do 
+		stopModal = false;
+	} else {
+		// user somehow got here without going through landing page or deleted sessionStorage, put in newbie mode
+		$("#startAutoDemo").addClass('newbieMode');
+	}
+
 
 	// implement the Tone sounding and chart tools
 	let $currFreq = $("#in-range-freq");
@@ -892,8 +907,8 @@ $(function() {
 	//initial user help via pop up modal window
 	//***********************************	
 	// after 1 sec, put up a modal window that explains what to do.  Very short/simple.  Will only
-	// happen once per session
-	if (!sessionStorage.adModal) {
+	// happen once per session and only if in expert mode (wont happen in newbie mode)
+	if ((!sessionStorage.adModal) && (!stopModal)) {
 		setTimeout(function() {
 			$('#admodal').find('.item').first().addClass('active');
 		    $('#admodal').modal({

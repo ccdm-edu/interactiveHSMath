@@ -68,21 +68,28 @@ div.home_expln p {
 	top: 140px;
 }
 /*******************expert/newbie selection ******************************/
-#userHelpLandingPage{
-	position: relative;
-}
+
 #selectNewbieOrExpert{
 	position: absolute;
 	left: 300px;
+	/* make it appear same as the START HERE autodemo */
+	opacity: 0;
+	animation-name: help_on_way;
+    animation-delay: 6s;
+	animation-duration: 4s;
+	animation-fill-mode: forwards;  /* retain last value */
 }
 fieldset {
     border: 1px solid black;
+    align-items: center;
+    justify-content: center;
 }
 legend {
     display:flex;
     justify-content:space-between;
-    width: 100%;
+    width: 100%; 
     position: relative;
+    color: blue;
 }
 legend div {
     background-color: white;
@@ -93,7 +100,6 @@ legend div.line {
     flex: 1 1 auto;
     background-color: transparent;
 }
-
 legend div.line:before {
     position: absolute;
     z-index: -1;
@@ -102,9 +108,6 @@ legend div.line:before {
     right: 0px;
     top: 50%;
     border-top: 1px solid black;
-}
-.controlgroup{
-	margin: 3px;
 }
 
 				    

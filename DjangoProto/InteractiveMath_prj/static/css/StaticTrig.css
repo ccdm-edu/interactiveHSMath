@@ -140,7 +140,10 @@ We use negative value for top since we want some overlap*/
 	top: 300px;
 }
 /*************Dynamic Help**************/
-#FirstHelp_ST {
+#FirstHelp_ST.newbieMode {
+	display: none;
+}
+#FirstHelp_ST.expertMode {
 	position: absolute;
 	width: 200px;
 	outline: 1px solid black;

@@ -32,7 +32,10 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	width: auto;
 }
 /* Initial instructions for user with animation */
-#initialInstrMusicTrigIntro{
+#initialInstrMusicTrigIntro.newbieMode{
+	display: none;
+}
+#initialInstrMusicTrigIntro.expertMode{
 	position: absolute;
 	top: 50px;
 	left: 10px;

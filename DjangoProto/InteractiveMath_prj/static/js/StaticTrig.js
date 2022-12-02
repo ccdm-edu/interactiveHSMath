@@ -3,6 +3,21 @@
 $(function() {
 	// put up autodemo image to introduce to students for future pages
 	$("#startAutoDemo").css('display', 'inline-block');
+
+	// user can only pick expert/newbie mode on the first home page
+	let newbieMode = sessionStorage.getItem('UserIsNew');
+	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
+		// emphasize the auto demo as first place
+		$("#startAutoDemo").addClass('newbieMode');
+		$("#FirstHelp_ST").addClass('newbieMode');
+	} else if (newbieMode && (newbieMode.toLowerCase() === 'false')) {
+		// remind user what to do 
+		$("#FirstHelp_ST").addClass('expertMode');
+	} else {
+		// user somehow got here without going through landing page or deleted sessionStorage, put in newbie mode
+		$("#startAutoDemo").addClass('newbieMode');
+		$("#FirstHelp_ST").addClass('newbieMode');
+	}
 	
 	let ctxExpandableUnitCircle;
 	let circleDotsCanvas =  $("#AmpSinCosCircle").get(0);;  // later on, this will set the "background image" for animation
