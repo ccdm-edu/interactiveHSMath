@@ -68,10 +68,12 @@ div.home_expln p {
 	top: 140px;
 }
 /*******************expert/newbie selection ******************************/
-
+:root{
+	--NORMAL_NEWBIE_EXPERT_SELECT: 300px;  
+}
 #selectNewbieOrExpert{
 	position: absolute;
-	left: 300px;
+	left: var(--NORMAL_NEWBIE_EXPERT_SELECT);
 	/* make it appear same as the START HERE autodemo */
 	opacity: 0;
 	animation-name: help_on_way;

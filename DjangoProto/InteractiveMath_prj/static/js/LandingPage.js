@@ -150,7 +150,9 @@ $(function() {
 		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
 		demo.setCurrSeg(1);  // default start at begin
 		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
-				
+		// need to move the newbie/expert controls to right once control for autodemo comes up
+		$('#selectNewbieOrExpert').css('left', '500px');
+		
     });
     	
     //****************************************************************************
@@ -199,6 +201,9 @@ $(function() {
     	$('a[href="#AdvancedTopics"]').css('display', 'none');
     	// remove the class so the animation will work on next page, cant do this until animation completes
     	$('#clickHereCursor').removeClass('userHitPlay'); 
+    	
+    	// user is done with autodemo, move expert/newbie controls back where they were
+    	$('#selectNewbieOrExpert').css('left', 'var(--NORMAL_NEWBIE_EXPERT_SELECT)');
     });
 
 	$("#segNum").change(function(){
