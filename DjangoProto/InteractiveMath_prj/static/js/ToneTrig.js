@@ -1078,6 +1078,15 @@ $(function() {
 			 	{filenameURL: '../../static/AudioExpln/ToneTrig_Seg1.mp3'}
 			},
 			//*****************************
+			// click on freq slider to change freq to 1000 hz,  we last left off at 8kHz, need a less annoying freq 
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'in-range-freq',
+			 	 value: "1000",
+			 	  offset: {x: 23, y: 10},  // in the 1000Hz location
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			 },	
+			//*****************************
 			// click on amplitude slider to 5,  offset is approx guess, user can change
 			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
 			{segmentActivity: "CHANGE_ELEMENT_VALUE",
