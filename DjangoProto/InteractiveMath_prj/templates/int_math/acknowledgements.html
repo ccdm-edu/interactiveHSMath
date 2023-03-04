@@ -5,11 +5,18 @@
 {%block title_block %} 
 	{{ page_tab_header }}
 {% endblock %}
-    
+  
+{%block head_block %}
+    <link href="{%static 'css/Acknowledgements.css' %}" rel="stylesheet">
+{% endblock %}
+  
 {% block body_block %}
-	
-	Under Construction, Thank you to all who assisted!!!
-	All synthetic voices by <a href="readloud.net">readloud.net</a>
+	<h1>THANK YOU to all who have helped with this site!</h1>
+	<section class="contributor_contact">
+		<a href="https://mathdoctorbrevard.wordpress.com/"><img src="{%static 'ThankYouLogos/math-doctor-no-small-lettering.png' %}"/></a>
+		<a href="https://mathdoctorbrevard.wordpress.com/"><h2> Cheryl L. Avila, PhD</h2></a>
+		<a href="https://mathdoctorbrevard.wordpress.com/"><h3>Professional personal tutoring</h3></a>
+	</section>
 	
 
 	<br>

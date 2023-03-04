@@ -1,0 +1,32 @@
+/***********************
+This is the style sheet for the acknowledgements.html page
+************************/
+h1 {
+	display:grid; /* need this to get justify content and align to work */
+	font-size: 30px;
+	/* this makes the top header take up all columns */
+	grid-column: 1/4;
+	justify-content: center;
+	align-items: center;
+}
+.contributor_contact img{
+	width: 250px;
+	height: 80px;	
+}
+.contributor_contact h2{
+	font-size: 20px;	
+}
+.contributor_contact h3{
+	font-size: 15px;	
+}
+/* Main */
+main {
+  display: grid;
+  /* below header, 3 col per width, 5 deep (for now) */
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;  /* spacing between grid virtual boxes */
+  grid-auto-rows: auto;  /* makes the row thickness what it needs to be */
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
