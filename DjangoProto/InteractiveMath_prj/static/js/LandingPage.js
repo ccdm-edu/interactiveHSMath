@@ -1,8 +1,7 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
-    
-	
+    	
 	// if the user has saved an old mode, resurrect it here
 	let newbieMode = sessionStorage.getItem('UserIsNew');
 	if (!newbieMode) {
@@ -88,6 +87,7 @@ $(function() {
 			 	{filenameURL: '../../static/AudioExpln/LandingPage_Seg1.mp3',
 			 	waitTimeMillisec: 6000}
 			},
+						
 			//we only have one item to work on so far so this is slim for now...
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
@@ -111,16 +111,16 @@ $(function() {
 			 	{element:'TrigFuncTopic.dropdown-item',
 			 	 action: "focus",
 			 	 offset: {x: 0, y: 19},
-			 	waitTimeMillisec: 15000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
-			// remove drop down menu
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			//**********FAKE SUBTOPIC LIST **************
+			// put up a fake subtopic list to show what we could do
+			{segmentActivity: "FAKE_SUBTOPICS", 
 			 segmentParams:
-			 	{element:'navbarDropdown',
-			 	 action: "click",
-			 	waitTimeMillisec: 5000}
-			},
-			// remove red cursor
+			 	{idToGo:  'NoSubtopicAvail',
+			 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
+			},			
+			// remove red cursor from dropdown
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'TrigFuncTopic.dropdown-item',
@@ -128,6 +128,86 @@ $(function() {
 			 	 offset: {x: 0, y: 19},
 			 	waitTimeMillisec: 1000}  // this is wait doesnt matter
 			},
+			// move red cursor over to 1st fake page
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'firstFakePage.nav-link',
+			 	 action: "focus",
+			 	 offset: {x: 0, y: 19},
+			 	waitTimeMillisec: 13000}  // this is wait before you go on to next item
+			},
+			// remove red cursor from 1st fake page
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'firstFakePage.nav-link',
+			 	 action: "focus",
+			 	 offset: {x: 0, y: 19},
+			 	waitTimeMillisec: 1000}  // this is wait doesnt matter
+			},
+			// move red cursor over to 2nd fake page
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'secondFakePage.nav-link',
+			 	 action: "focus",
+			 	 offset: {x: 0, y: 19},
+			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
+			},
+			// remove red cursor from 2nd fake page
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'secondFakePage.nav-link',
+			 	 action: "focus",
+			 	 offset: {x: 0, y: 19},
+			 	waitTimeMillisec: 1000}  // this is wait doesnt matter
+			},
+			// move red cursor over to 3rd fake page
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'thirdFakePage.nav-link',
+			 	 action: "focus",
+			 	 offset: {x: 0, y: 19},
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			},
+			// remove red cursor from 3rd fake page
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'thirdFakePage.nav-link',
+			 	 action: "focus",
+			 	 offset: {x: 0, y: 19},
+			 	waitTimeMillisec: 1000}  // this is wait doesnt matter
+			},
+			// move red cursor over to 4rh fake page
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'fourthFakePage.nav-link',
+			 	 action: "focus",
+			 	 offset: {x: 0, y: 19},
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			},
+			// remove red cursor from 4th fake page
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'fourthFakePage.nav-link',
+			 	 action: "focus",
+			 	 offset: {x: 0, y: 19},
+			 	waitTimeMillisec: 1000}  // this is wait doesnt matter
+			},
+			// remove fake subtopic list
+						// put up a fake subtopic list to show what we could do
+			{segmentActivity: "REMOVE_FAKE_SUBTOPICS", 
+			 segmentParams:
+			 	{idToGo:  'NoSubtopicAvail',
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			//***********END FAKE SUBLIST***************** 		
+			// remove drop down menu
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'navbarDropdown',
+			 	 action: "click",
+			 	waitTimeMillisec: 5000}
+			},
+
 	  ]
 	}
 	];

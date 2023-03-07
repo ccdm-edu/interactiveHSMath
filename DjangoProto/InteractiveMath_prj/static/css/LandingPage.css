@@ -67,6 +67,7 @@ div.home_expln p {
 #autoDemoCtls{
 	top: 140px;
 }
+
 /*******************expert/newbie selection ******************************/
 :root{
 	--NORMAL_NEWBIE_EXPERT_SELECT: 300px;  

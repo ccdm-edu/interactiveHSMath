@@ -11,7 +11,9 @@ const demoEventTypes = ["CLICK_ON_CANVAS",
 						"REMOVE_ALL_ANNOTATE_ELEMENT",
 						"REMOVE_ACT_ON_ELEMENT",
 						"SHOW_MODAL",
-						"CHANGE_ELEMENT_VALUE"];
+						"CHANGE_ELEMENT_VALUE",
+						"FAKE_SUBTOPICS", 
+						"REMOVE_FAKE_SUBTOPICS"];
 
 class AutoDemo {
 	constructor(multiSegScript, stringIDOfCanvas = 'UnusedCanvas') {
@@ -343,7 +345,49 @@ class AutoDemo {
 		$elToUpdt.trigger('change');
 		
 	}
+	
+	changeSubtopicsOnIntroPage(param=null) {
+		// idToGo is the text we want to replace temporarily for demo
+		// NEED TO save the old stuff here and put it back when done
+		this.oldText = $('#' + param.idToGo).html();
 		
+		// get rid of old text and put up the new fake subtopics
+		// I dont know why I cant use the data feather here with music note like I did in subtopics.html but 
+		// this is the "real" location of the icon from the browser
+		let musicNote = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-music"><path d="M9 17H5a2 2 0 0 0-2 2 2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm12-2h-4a2 2 0 0 0-2 2 2 2 0 0 0 2 2h2a2 2 0 0 0 2-2z"></path><polyline points="9 17 9 5 21 3 21 15"></polyline></svg>';
+		let fakeSubtopics = '<ul class="nav flex-column">' +
+							'<p id="headerForSubtopics"> Subtopics </p>' +
+							'<li class="nav-item">' +
+								'<a class="nav-link" id="firstFakePage">' +
+								musicNote + 
+								'1. Introduction' +
+								'</a>' +
+							'</li>' +
+							'<li class="nav-item">' +
+								'<a class="nav-link" id="secondFakePage">' +
+								musicNote +
+								"2. HEEEELP! I'm lost" +
+								'</a>' +
+							'</li>'+
+							'<li class="nav-item">' +
+								'<a class="nav-link" id="thirdFakePage">' +
+								musicNote +
+								"3. Hey, I'm getting this" +
+								'</a>' +
+							'</li>' +
+							'<li class="nav-item">' +
+								'<a class="nav-link" id="fourthFakePage">' +
+								musicNote +
+								'4. Summary' +
+								'</a>' +
+							'</li>' +
+						'</ul>';
+		$('#' + param.idToGo).empty().append(fakeSubtopics);
+	}
+	revertSubtopicsOnIntroPage(param=null) {
+		// idToGo is the text we want to replace temporarily for demo
+		$('#' + param.idToGo).empty().append(this.oldText);
+	}		
 	//****************************************
 	// play specified segment of the script
 	//****************************************
@@ -454,9 +498,27 @@ class AutoDemo {
 							}, nextItemBeginTime);	
 							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
 							this.eventLoopPtrs.push(temp);	
-							break							
+							break
+						case (demoEventTypes[9]):
+							// change subtopics to a dummy in intro to site						
+							temp = setTimeout(function(){
+								// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
+								thisObj.changeSubtopicsOnIntroPage(activity.segmentParams);
+							}, nextItemBeginTime);	
+							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
+							this.eventLoopPtrs.push(temp);
+							break;
+						case (demoEventTypes[10]):
+							// change dummy subtopics out to what it was originally					
+							temp = setTimeout(function(){
+								// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
+								thisObj.revertSubtopicsOnIntroPage(activity.segmentParams);
+							}, nextItemBeginTime);	
+							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
+							this.eventLoopPtrs.push(temp);
+							break;
 						default:
-							console.log('SW error in autoDemo switch stmt');
+							console.log('SW error in autoDemo switch stmt, switch select value was ' + activity.segmentActivity);
 							break;
 					} // end of switch stmt
 				} // end of if not pause demo
