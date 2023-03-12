@@ -32,30 +32,37 @@
 	
   	<img id="logo-home-page" src="{% static 'images/IM_logo3.svg' %}" alt = "Interactable Math Logo">
 	<div class="home_expln">
-		<p>This website is designed to connect the "boring" stuff that high school students "have" to learn in Algebra 2 and Geometry and Advanced Math Topics to the real world in a way that is <span id="blinkingColor">fun </span>and interactive.  
-		You will see how trig functions play into music and imaginary numbers help your cell phone send your text messages (and do everything else phones do). 
-		<br>
-		<noscript>
-		<br>
-		Since this site is interactive, Javascript <font size="+2">MUST </font>be enabled to fully experience the site.
-		You do not have Javascript enabled in your browser. 
-		<br>
-		</noscript>
-		{% if using_safari %}
-			<br>
-			<b> You are using Safari, this site needs alot more work/testing to be Safari ready.  Please use latest version of Chrome.  </b>
-			<br>
-		{% endif %}
 		{% if is_mobile %}
 			<br>
 			<b> You are using a mobile device.  This site was designed for the larger canvas of a desktop or laptop (or perhaps notebook).  
-			Eventually it may become mobile friendly but today is not your day.  Please use on a desktop/laptop.  </b>
+			Eventually it may become mobile friendly but today is not that day.  Please use on a desktop/laptop.  </b>
 			<br>
+		{% else %}
+			<!-- We can work with this platform -->
+			<noscript>
+				<!-- however, we must have javascript enabled, only client knows if this is true -->
+				<br>
+					Since this site is interactive, Javascript <font size="+2">MUST </font>be enabled to fully experience the site.
+					You do not have Javascript enabled in your browser. 
+				<br>
+			</noscript>
+			<p>
+				This website is designed to connect the "boring" stuff that high school students "have" to learn in Algebra 2 
+				and Geometry and Advanced Math Topics to the real world in a way that is <span id="blinkingColor">fun </span>and interactive.  
+				You will see how trig functions play into music and imaginary numbers help your cell phone send your text messages (and do everything else phones do). 
+			<br><br>
+				Only one person is writing code for this site so progress is
+				slow.  As of now, it is tested only on Chrome web browser and generally works under Firefox/Edge and is flaky under Safari and no way on IE.  
+				It looks best on a laptop/desktop/notebook.  
+				This site needs more screen real-estate than a phone can give.  Its just NOT going to work well on your phone.  Maybe someday...<br>Enjoy!
+			</p>
+			{% if using_safari %}
+			<br>
+				<b> You are using Safari, this site needs alot more work/testing to be Safari ready.  Please use latest version of Chrome.  </b>
+			<br>
+			{% endif %}
 		{% endif %}		
-		<br>
-		Only one person is writing code for this site so progress is
-		slow.  As of now, it is tested only on Chrome web browser and generally works under Firefox/Edge and is flaky under Safari and no way on IE.  It looks best on a laptop/desktop/notebook.  This site needs more screen real-estate than a phone can give.  Its just NOT going to work well on your phone.  Maybe someday...<br>Enjoy!
-		</p>
+
 	</div>
 	<br>
 	<br>	
@@ -72,7 +79,9 @@
 	<!--  needed to run the drop down menus in bootstrap -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script>
-			window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
+			<!-- in case can't get from google, load from local -->
+			var localJQ = "{% static 'js/jquery-360min.js' %}";
+			window.jQuery || document.write('<script src="${localJQ}"><\/script>')
 	</script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 	<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>

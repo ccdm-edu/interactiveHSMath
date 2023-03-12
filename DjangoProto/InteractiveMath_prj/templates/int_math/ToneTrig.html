@@ -167,9 +167,11 @@
         
 	<!--  this must come before the jquery ui and bootstrap-->	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 	<script>
-		<!-- if you can't load from google, load locally -->
-		window.jQuery || document.write('<script src="{% static 'js/jquery-360min.js' %}"><\/script>')
+			<!-- in case can't get from google, load from local -->
+			var localJQ = "{% static 'js/jquery-360min.js' %}";
+			window.jQuery || document.write('<script src="${localJQ}"><\/script>')
 	</script>
 	<!--  jquery ui needed for advanced topic draggable window -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
