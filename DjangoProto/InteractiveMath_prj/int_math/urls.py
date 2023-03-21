@@ -11,11 +11,13 @@ app_name = 'int_math'
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
 #Trig functions
+    path('IntroTrigMusicConcepts/', views.MusicTrigConceptIntroView.as_view(), name='IntroTrigMusicConcepts'),
     path('MusicSineIntro/', views.MusicTrigView.as_view(), name='MusicSineIntro'),
     path('StaticTrig/', views.StaticTrigView.as_view(), name='StaticTrig'),
     path('DynamicTrig1/', views.DynamicTrig1View.as_view(), name='DynamicTrig1'),
     path('DynamicTrig2/', views.DynamicTrig2View.as_view(), name='DynamicTrig2'),
     path('ToneTrig/', views.ToneTrigView.as_view(), name='ToneTrig'),
+    path('MusicNotesTrig/', views.MusicNotesTrigView.as_view(), name='MusicNotesTrig'),
     path('MusicSineSummary/', views.TrigSummaryView.as_view(), name='MusicSineSummary'),
 #Trig Identities
     path('TrigIdentity/', views.TrigIDView.as_view(), name="TrigID"),

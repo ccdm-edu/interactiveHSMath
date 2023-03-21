@@ -38,6 +38,9 @@ div.home_expln p {
     color: #000000;
     position: absolute;
     font-size: 18px;
+    /* 140px is top on autodemo controls, 150 is width of autodemo ctls, rest is padding */
+    /* better to redo all this with flexbox or grid */
+    top: calc(140px + 150px + 10px);
     opacity: 0.0;
     animation-name: expln_fade_in;
 	animation-duration: 2s;
@@ -113,4 +116,5 @@ legend div.line:before {
     border-top: 1px solid black;
 }
 
-				    
+/***************layout of whole page *******************************************/
+			    

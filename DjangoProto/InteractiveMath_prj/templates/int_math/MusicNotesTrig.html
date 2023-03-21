@@ -1,0 +1,180 @@
+{% extends 'int_math/baseTrig.html' %}
+{% load static %} <!--  another difference from django 2 to 3.1 -->
+
+{%block title_block %}
+	{{ page_tab_header }}
+{% endblock %}
+ 
+{%block head_block %}
+    <link href="{%static 'css/MusicNotesTrig.css' %}" rel="stylesheet">
+{% endblock %}
+   
+{% block body_block %}
+
+<!-- SineCosID is a placemarker for begin of link to go to sine cosine tones and musical notes -->
+<div id="SineCosID">
+	
+	<div id ="headerAndCtl_TT">
+    	<h1 id = "musicalActivity">Musical Notes and Underlying Trig</h1>
+    </div>
+    <!-- default startup, will change as user loads musician notes-->
+    <p class="AdvTopic_ToDo"> TRY THIS:  Turn on your speaker.  Hit Start Tone and adjust Frequency and notice the pitch goes up and down.  
+    Adjust Amplitude and notice only the volume changes.  Adjust Phase slowly and note there is no perceived change but if you change it quickly, you get a popping sound.  
+    Tone phase only means something compared to a tone of a different phase.  When you change phase quickly, you hear phase 1 relative to phase 2, phase 3 etc.  It produces a discontinuity or a pop sound.
+	</p>
+    <p class="AdvTopic_Expln"> EXPLANATION:  Synthesized Tone.  Sine and Cosine functions, when translated to voltage and sent to a speaker are just tones. Pure tones are of one frequency only. 
+    As the amplitude changes it gets louder/softer.  You can't hear slow phase changes. If you change phase very fast, it sounds like pops in the speaker because you are comparing current phase with an older version which is way off, 
+    produces a discontinuity in the waveform and this souns like a pop.  As you change frequency, you can move from low bass up to the midrange of human hearing at 10,000 Hz.  
+    Musical notes are made up of a pitch frequency, which is one of the tones you create here plus some harmonics and overtones that give the instrument its richness.  
+    The harmonics and overtones are multiples of the pitch frequency which is why the musical instrument playing a note repeats at the rate of the pitch frequency.  
+    In fact, we could start with a sine and cosine of the pitch frequency and a calculated amplitude for each.  Then we add another sine and cosine at 2 times the pitch frequency with newly calculated amplitudes.  
+    We continue and add another sine and cosine of 3x the pitch frequency with calculated amplitudes and so on up to a very high multiple of the pitch frequency.  This is how you can mathematically represent ANY of these
+    musical instruments playing a note.  The amplitudes calculated would be different for a trumpet versus a flute versus the human voice but you could create any of these
+    waveforms of an instrument playing a note.  This is the basis for Fourier Series, a college concept for mathematically representing ANY periodic waveform.
+    </p>
+    
+	<!-- When user requests large mp3 file from server via drop down menu, put up modal window to ensure user is not a bot -->
+	<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content"></div>
+		</div>
+	</div>
+    
+    <div id="menuExplnTones">
+	    <div id="InstrumentDropDownMenu">	 
+	       	<!-- Bootstrap dropdown see W3schools https://www.w3schools.com/bootstrap/bootstrap_ref_js_dropdown.asp --> 
+	   		<button class="btn btn-default dropdown-toggle" type="button"  id="InstrumentToneMenu" data-toggle="dropdown">
+	     		<img src="{% static 'images/MusicMenu.svg' %}" alt = "Music drop down menu to select instruments playing notes" data-toggle="tooltip" title="click to get musical note dropdown menu" >
+	       		<span class="caret"></span>
+	   		</button>
+	   		<!--  role and aria* helps those using screen readers -->
+	   		<ul class="dropdown-menu" role="menu" aria-labelledby="InstrumentToneMenu">
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Tone Only</a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" id='AutodemoTrumpetSelect' href="#">B<span>&#9837;</span> Trumpet plays C5</a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Clarinet plays C5</a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Soprano Sax plays C5</a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Tenor Sax plays C4</a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Flute plays B4<span>&#9837;</span></a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Human sings B4<span>&#9837;</span></a></li>
+
+	   		</ul>
+	    </div>
+	   
+		    
+		<!--  dont put tables inside a div, they stop "working", elements aren't functional anymore -->
+	    <table>
+			<tbody>
+				<tr>
+					<td align="center">
+						<div id="toneChanges">
+							<table border="0">
+								<tbody>
+									<tr>
+										<th colspan='2'>Sine Wave (tone) Parameters</th>
+									    <!-- this only shows up when musical instrument selected, put next to start/stop tone -->
+	    								<input type="button" id="allowNotePlay" value="Play Note"> 
+	    								<!--  this button plays the tone and is visible all the time -->
+										<input type="button" id="start-stop-button" value="Start Tone" data-toggle="tooltip" data-placement="top" title="turn on speaker to hear sine wave you created">
+									</tr>	
+									<tr>		
+										<td align="left">
+											Frequency: <span id="currFreqLabel">000</span> Hz
+										</td>
+										<td align="left">
+											Volume: <span id="currAmpLabel">000</span>
+										</td>						
+									</tr>
+									<tr>
+										<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz, use bootstrap for tooltips  -->
+										<td>
+											<input id="in-range-amp" type="range" step="1" value="10" min="1" max="100" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	 	<div id="overlapExpansionLines">
+	 		<!--  want to overlap the top graph with expansion lines below it -->
+	 		<!--  canvas used for chart js need the size defined one level up at div -->
+		 	<div id = "sinePlotLongWrapper">
+		 		<!-- Needs to be a bit bigger since it has the title -->
+		 		<canvas id="sine_plotsLong">
+		 		Your Browser does not support canvas tag, you are missing graph capability
+		 		</canvas>
+		 	</div>
+		 	<div class="Period_Tone First_Period"></div>
+		 	<div class="Period_Tone Second_Period"></div>
+		 	<div class="Period_Tone Third_Period"></div>
+		 	<div class="Period_Tone Fourth_Period"></div>
+		 	<div id = "Period_Text1" ></div>
+		 	<div id = "Period_Text2" ></div>
+
+	 	</div>
+ 	</div>
+	
+	<!-- Put up a brief "HOW TO use this page" modal window -->
+	<div class="modal fade" id="admodal" role="dialog" tabindex="-1">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h1>What to do here</h1>
+					<ul>
+					<li>Listen to a sine wave tone by <b>hitting Start Tone button </b>on the upper right box.  Play around
+					with the frequency, amplitude and phase and note the change on the graph below.</li>
+					<li>Compare to a musical instrument playing a note by <b>clicking on rainbow clef pull down menu</b>  
+				    <img src="{% static 'images/MusicMenu.svg' %}" height = "60" width="30" alt = "Rainbow musical clef">.
+				    Play the pitch note by <b>hitting Start Tone in upper right</b>.  I've already set up the correct pitch frequency for you for the note played.  Compare to the instrument playing that note by 
+				    <b>hitting Play Note</b> on upper Left (will magically appear when needed).</li>					
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<!--  when clicked, this will dismiss the modal -->
+					<button class="btn btn-success" data-dismiss="modal" type="button">Got it!</button><br class="visible-xs">	
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+	<br>
+	<br>
+	<div id = "artistCredits">
+		<p id="image_credit_chromTrebClef"> <a href = "https://openclipart.org/detail/257257/chromatic-musical-notes-typography-no-background">Chromatic Treble Clef image </a>by Gordon Dylan Johnson </p>
+	</div>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.73/Tone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+        
+	<!--  this must come before the jquery ui and bootstrap-->	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+	<script>
+			<!-- in case can't get from google, load from local -->
+			var localJQ = "{% static 'js/jquery-360min.js' %}";
+			window.jQuery || document.write('<script src="${localJQ}"><\/script>')
+	</script>
+	<!--  jquery ui needed for advanced topic draggable window -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+	<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
+			
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+	<!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
+	<script>feather.replace()</script>
+			
+	<!-- To be able to add modal window for robot check -->
+	<script src="{% static 'js/jquery-bootstrap-modal-forms-min.js' %}" crossorigin="anonymous"></script>
+	
+	<!-- Custom JS for this page -->
+	<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
+	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	
+	<script src="{% static 'js/autoDemo.js' %}" crossorigin="anonymous"></script>	    
+    <script src="{% static 'js/MusicNotesTrig.js' %}" crossorigin="anonymous"></script>	
+	
+    
+
+</div>
+{% endblock %}

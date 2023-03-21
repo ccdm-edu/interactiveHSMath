@@ -1,5 +1,5 @@
 /***********************
-This is the style sheet for ToneTrig.html
+This is the style sheet for MusicNotesTrig.html
 ************************/
 /* create global var for this html */
 :root{
@@ -24,16 +24,7 @@ This is the style sheet for ToneTrig.html
 	left: 0px;
 	height: 700px;
 }
-/*****************************************************************/
-/* turn off the indicator (botCheckTestNeeded) that bot check is needed or not (modal window comes up with test or not).  
-   The server sends a cookie to client which
-   cannot be modified, which holds the bot state for the server of this particular client.  If the client asks for 
-   something and the bot test has not
-   passed, the request will be rejected. */
-   /* display block overrides the none so need to force with important */
-#botCheckTestNeeded{
-	display: none !important;
-}
+
 /*****************************************************************/
 /* this is a header of current activity*/
 #musicalActivity {
@@ -137,23 +128,6 @@ This is the style sheet for ToneTrig.html
     left:0px;
     z-index: -1;
 }
-#timeExpand{
-	 position:absolute; 
-	 top:230px; 
-	 left: 0px;
-	 height: 110px;
-	 width: 800px;
-}
-#sinePlotsShortWrapper{
-	position: relative;
-	top: 155px;
-	height: 200px;
-	width: 800px;
-}
-#sine_plotsShort{
-	position: absolute;
-}
-
 /*****************************************************************/
 /* credits to float at the bottom */
 #artistCredits{

@@ -183,7 +183,15 @@ class IndexView(View):
                         }        
         response = render(request, 'int_math/index.html', context=context_dict)
         return response
-
+# page 1 General Concepts Intro of trig function section
+class MusicTrigConceptIntroView(View):
+    def get(self, request):
+        context_dict = {'page_tab_header': 'IntroConcepts',
+                        'topic': Topic.objects.get(name="TrigFunct"),
+                        }
+        response = render(request, 'int_math/IntroTrigMusicConcepts.html', context=context_dict)
+        return response
+# page 2 Music Sine Intro of trig function section    
 class MusicTrigView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'MusicalTrig',
@@ -191,7 +199,7 @@ class MusicTrigView(View):
                         }
         response = render(request, 'int_math/MusicSineIntro.html', context=context_dict)
         return response
-        
+# page 3 Where does sine/cosine come from? of trig function section       
 class StaticTrigView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'StaticTrig',
@@ -199,7 +207,7 @@ class StaticTrigView(View):
                         }
         response = render(request, 'int_math/StaticTrig.html', context=context_dict)
         return response
-    
+# page 4 Lets add time and make frequency of trig function section    
 class DynamicTrig1View(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'DynamicTrig',
@@ -208,6 +216,7 @@ class DynamicTrig1View(View):
         response = render(request, 'int_math/DynamicTrig1.html', context=context_dict)
         return response
     
+# page 5 Lets go faster in time of trig function section
 class DynamicTrig2View(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'DynamicTrig',
@@ -215,23 +224,25 @@ class DynamicTrig2View(View):
                         }
         response = render(request, 'int_math/DynamicTrig2.html', context=context_dict)
         return response
-
+# page 6 Lets get into audible sin/cosine tones of trig function section
 class ToneTrigView(View):
     def get(self, request):
-        #check session cookie (which expires after soom time--default 15 days) to see if bot test passed
-        try: 
-            # If session is established, use it
-            botCheckNeeded = not request.session['notABot']
-        except:
-            # else, no session established, set it up so robot check test required
-            botCheckNeeded = True
         context_dict = {'page_tab_header': 'ToneTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
-                        'botChkTstNeed': botCheckNeeded,
                         }
         response = render(request, 'int_math/ToneTrig.html', context=context_dict)
         return response
+
+# page 7 Lets compare musical instruments to sine/cosine of same pitch of trig function section    
+class MusicNotesTrigView(View):
+    def get(self, request):
+        context_dict = {'page_tab_header': 'MusicNotes',
+                        'topic': Topic.objects.get(name="TrigFunct"),
+                        }
+        response = render(request, 'int_math/MusicNotesTrig.html', context=context_dict)
+        return response
     
+# page 8 Lets summarize this all now of trig function section
 class TrigSummaryView(View):
     def get(self, request):
         #check session cookie (which expires after soom time--default 15 days) to see if bot test passed
