@@ -18,103 +18,110 @@
     	<h1 id = "musicalActivity">Musical Notes and Underlying Trig</h1>
     </div>
     <!-- default startup, will change as user loads musician notes-->
-    <p class="AdvTopic_ToDo"> TRY THIS:  Turn on your speaker.  Hit Start Tone and adjust Frequency and notice the pitch goes up and down.  
-    Adjust Amplitude and notice only the volume changes.  Adjust Phase slowly and note there is no perceived change but if you change it quickly, you get a popping sound.  
-    Tone phase only means something compared to a tone of a different phase.  When you change phase quickly, you hear phase 1 relative to phase 2, phase 3 etc.  It produces a discontinuity or a pop sound.
+    <p class="AdvTopic_ToDo"> TRY THIS:  Turn on your speaker.  Select an instrument.  Hit Start Tone button to hear the sine wave frequency of this note (to within 1 Hz) then hit Start Instrument button.
+    Look at the plot of the MP3 waveform of the musician playing the note versus the sine wave basic frequency.  The period of the two waveforms are the same.  The musicians sound is much richer than the sine
+    wave which you would expect by looking at the more complex waveform produced.]
 	</p>
     <p class="AdvTopic_Expln"> EXPLANATION:  Synthesized Tone.  Sine and Cosine functions, when translated to voltage and sent to a speaker are just tones. Pure tones are of one frequency only. 
-    As the amplitude changes it gets louder/softer.  You can't hear slow phase changes. If you change phase very fast, it sounds like pops in the speaker because you are comparing current phase with an older version which is way off, 
-    produces a discontinuity in the waveform and this souns like a pop.  As you change frequency, you can move from low bass up to the midrange of human hearing at 10,000 Hz.  
-    Musical notes are made up of a pitch frequency, which is one of the tones you create here plus some harmonics and overtones that give the instrument its richness.  
-    The harmonics and overtones are multiples of the pitch frequency which is why the musical instrument playing a note repeats at the rate of the pitch frequency.  
-    In fact, we could start with a sine and cosine of the pitch frequency and a calculated amplitude for each.  Then we add another sine and cosine at 2 times the pitch frequency with newly calculated amplitudes.  
-    We continue and add another sine and cosine of 3x the pitch frequency with calculated amplitudes and so on up to a very high multiple of the pitch frequency.  This is how you can mathematically represent ANY of these
+    Musical notes are made up of a pitch frequency, which is the sine wave tone here plus some harmonics and overtones that give the instrument its richness.  
+    The harmonics and overtones are multiples of the pitch frequency which is why the musical instrument playing a note repeats at the rate of the sine wave.  
+    In fact, we could start with a sine of the pitch frequency and a calculated amplitude and phase.  Then we add another sine at 2 times the pitch frequency with newly calculated amplitude and phase.  
+    We continue and add another sine and cosine of 3x the pitch frequency with calculated amplitude and phase and so on up to a very high multiple of the pitch frequency.  This is how you can mathematically represent ANY of these
     musical instruments playing a note.  The amplitudes calculated would be different for a trumpet versus a flute versus the human voice but you could create any of these
     waveforms of an instrument playing a note.  This is the basis for Fourier Series, a college concept for mathematically representing ANY periodic waveform.
-    </p>
+    </p>  
     
-	<!-- When user requests large mp3 file from server via drop down menu, put up modal window to ensure user is not a bot -->
-	<div class="modal fade" tabindex="-1" role="dialog" id="modal">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content"></div>
+	<!--  dont put tables inside a div, they stop "working", elements aren't functional anymore -->
+	<div id="MusicNotesToneControl">
+	
+		<div id="musicNotes">
+			<table>
+				<tbody>
+					<tr>
+						<th colspan='2'>Musical Notes Parameters</th>
+					    <!-- this only shows up when musical instrument selected, put next to start/stop tone -->
+						<input type="button" id="allowNotePlay" value="Play Instrument"> 
+					</tr>	
+					<tr>		
+						<td align="left">
+							<label for="InstrumentTypes">Choose a musical instrument:</label>
+							<select name="InstrumentTypes" id="InstrumentTypes">
+								<option value="trumpet">B<span>&#9837;</span> Trumpet</option>
+								<option value="clarinet">Clarinet</option>
+								<option value="soprano_sax">Soprano Sax</option>
+								<option value="tenor sax">Tenor Sax</option>
+								<option value="flute">Flute</option>
+								<option value="human">Human voice</option>
+							</select>
+						</td>
+						<td align="right">
+							Volume: <span id="currMusicVolLabel">000</span>
+						</td>						
+					</tr>
+					<tr>
+						<td align="left">
+							Current Note: <span id="currMusicNoteLabel"></span>
+						</td>
+						<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz, use bootstrap for tooltips  -->
+						<td align="right">
+							<input id="in-range-music-amp" type="range" step="1" value="3" min="1" max="10" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
+
+		<div id="toneChanges">
+			<table>
+				<tbody>
+					<tr>
+						<th colspan='2'>Sine Wave (tone) Parameters</th>
+ 								<!--  this button plays the tone and is visible all the time -->
+						<input type="button" id="toneStartbutton" value="Play Tone" data-toggle="tooltip" data-placement="top" title="turn on speaker to hear sine wave you created">
+					</tr>	
+					<tr>		
+						<td>
+							Frequency: <span id="currFreqLabel">000</span> Hz
+						</td>
+						<td>
+							Volume: <span id="currAmpLabel">000</span>
+						</td>						
+					</tr>
+					<tr>
+						<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz, use bootstrap for tooltips  -->
+						<td>  <!-- placeholder for missing element -->
+						     
+						</td>
+						<td align="right">
+							<input id="in-range-amp" type="range" step="1" value="3" min="1" max="10" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
 	</div>
-    
-    <div id="menuExplnTones">
-	    <div id="InstrumentDropDownMenu">	 
-	       	<!-- Bootstrap dropdown see W3schools https://www.w3schools.com/bootstrap/bootstrap_ref_js_dropdown.asp --> 
-	   		<button class="btn btn-default dropdown-toggle" type="button"  id="InstrumentToneMenu" data-toggle="dropdown">
-	     		<img src="{% static 'images/MusicMenu.svg' %}" alt = "Music drop down menu to select instruments playing notes" data-toggle="tooltip" title="click to get musical note dropdown menu" >
-	       		<span class="caret"></span>
-	   		</button>
-	   		<!--  role and aria* helps those using screen readers -->
-	   		<ul class="dropdown-menu" role="menu" aria-labelledby="InstrumentToneMenu">
-				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Tone Only</a></li>
-				<li role="presentation"><a role="menuitem" tabindex="-1" id='AutodemoTrumpetSelect' href="#">B<span>&#9837;</span> Trumpet plays C5</a></li>
-				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Clarinet plays C5</a></li>
-				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Soprano Sax plays C5</a></li>
-				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Tenor Sax plays C4</a></li>
-				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Flute plays B4<span>&#9837;</span></a></li>
-				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Human sings B4<span>&#9837;</span></a></li>
-
-	   		</ul>
-	    </div>
-	   
-		    
-		<!--  dont put tables inside a div, they stop "working", elements aren't functional anymore -->
-	    <table>
-			<tbody>
-				<tr>
-					<td align="center">
-						<div id="toneChanges">
-							<table border="0">
-								<tbody>
-									<tr>
-										<th colspan='2'>Sine Wave (tone) Parameters</th>
-									    <!-- this only shows up when musical instrument selected, put next to start/stop tone -->
-	    								<input type="button" id="allowNotePlay" value="Play Note"> 
-	    								<!--  this button plays the tone and is visible all the time -->
-										<input type="button" id="start-stop-button" value="Start Tone" data-toggle="tooltip" data-placement="top" title="turn on speaker to hear sine wave you created">
-									</tr>	
-									<tr>		
-										<td align="left">
-											Frequency: <span id="currFreqLabel">000</span> Hz
-										</td>
-										<td align="left">
-											Volume: <span id="currAmpLabel">000</span>
-										</td>						
-									</tr>
-									<tr>
-										<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz, use bootstrap for tooltips  -->
-										<td>
-											<input id="in-range-amp" type="range" step="1" value="10" min="1" max="100" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-
-	 	<div id="overlapExpansionLines">
-	 		<!--  want to overlap the top graph with expansion lines below it -->
-	 		<!--  canvas used for chart js need the size defined one level up at div -->
-		 	<div id = "sinePlotLongWrapper">
-		 		<!-- Needs to be a bit bigger since it has the title -->
-		 		<canvas id="sine_plotsLong">
-		 		Your Browser does not support canvas tag, you are missing graph capability
-		 		</canvas>
-		 	</div>
-		 	<div class="Period_Tone First_Period"></div>
-		 	<div class="Period_Tone Second_Period"></div>
-		 	<div class="Period_Tone Third_Period"></div>
-		 	<div class="Period_Tone Fourth_Period"></div>
-		 	<div id = "Period_Text1" ></div>
-		 	<div id = "Period_Text2" ></div>
-
+	
+ 	<div id="GraphPlusPeriodMarkers">
+ 		<!--  want to overlap the top graph with expansion lines below it -->
+ 		<!--  canvas used for chart js need the size defined one level up at div -->
+	 	<div id = "sinePlotLongWrapper">
+	 		<!-- Needs to be a bit bigger since it has the title -->
+	 		<canvas id="sine_plotsLong">
+	 		Your Browser does not support canvas tag, you are missing graph capability
+	 		</canvas>
 	 	</div>
+	 	<div class="Period_Tone First_Period"></div>
+	 	<div class="Period_Tone Second_Period"></div>
+	 	<div class="Period_Tone Third_Period"></div>
+	 	<div class="Period_Tone Fourth_Period"></div>
+	 	<div id = "Period_Text1" ></div>
+	 	<div id = "Period_Text2" ></div>
+	 	
+	 	<!-- Needed for the period markers showing periodicity -->
+		<canvas id="timeExpand">
+ 			Your Browser does not support canvas tag, you are missing graph capability
+ 		</canvas>
  	</div>
 	
 	<!-- Put up a brief "HOW TO use this page" modal window -->
@@ -140,11 +147,6 @@
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 
-	<br>
-	<br>
-	<div id = "artistCredits">
-		<p id="image_credit_chromTrebClef"> <a href = "https://openclipart.org/detail/257257/chromatic-musical-notes-typography-no-background">Chromatic Treble Clef image </a>by Gordon Dylan Johnson </p>
-	</div>
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.73/Tone.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
