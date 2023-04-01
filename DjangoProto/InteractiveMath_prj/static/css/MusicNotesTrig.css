@@ -3,35 +3,31 @@ This is the style sheet for MusicNotesTrig.html
 ************************/
 /* create global var for this html */
 :root{
-	--LEFT_EDGE_PLOT: 54px;
-	--TOP_EDGE_PLOT: 64px;
+	--LEFT_EDGE_PLOT: 49px;
 	--WIDTH_466HZ: 159px;
 	--HEIGHT_TONE_PLOT: 140px;
-	
+	--TOP_EDGE_PLOT: 60px;
 	--HEIGHT_HEADER: 40px;
-	--WIDTH_MUSIC_NOTE_CTL: 470px;
+	--WIDTH_MUSIC_NOTE_CTL: 410px;
 	--HEIGHT_MUSIC_NOTE_CTL: 150px;
+	--HEIGHT_GRAPH: 250px;
+	--HEIGHT_PERIOD_EXPLN: 110px;
 }
 /* this is for all table elements, horizontal spacing*/
 td {
 	padding-left: 5px;
 	padding-right: 5px;
 }
+/* make sliders a fixed shorter length */
+input[type="range"] {
+  width:80px;
+}
+/*****************************************************************/
 #headerAndCtl_TT {
 	position: relative;
 	margin: 10px;
 	height: var(--HEIGHT_HEADER)
 }
-
-/* do NOT put a space between number and word "px" */
-/* This is parent of the two control boxes */
-#MusicNotesToneControl {
-	position: relative;
-	left: 100px;   /* to get out of way of START HERE */
-	height: var(--HEIGHT_MUSIC_NOTE_CTL);
-}
-
-/*****************************************************************/
 /* this is a header of current activity and goes within headerAndCtl_TT */
 #musicalActivity {
 	position: absolute;
@@ -44,7 +40,14 @@ td {
 	font-size: 32px;
 	}
 /*****************************************************************/
+/* do NOT put a space between number and word "px" */
+/* This is parent of the two control boxes */
 /* This is the side by side controls 1. Music note 2.  Tone notes that fits under parent MusicNotesControl*/
+#MusicNotesToneControl {
+	position: relative;
+	left: 100px;   /* to get out of way of START HERE */
+	height: var(--HEIGHT_MUSIC_NOTE_CTL);
+}
 
 /* item 1, make border color match graph color of musical note amplitude*/
 #musicNotes {
@@ -69,16 +72,22 @@ td {
 
 /*****************************************************************/
 /* arrange the expansion lines between the two graphs for max understandability */
-#overlapExpansionLines{
+#GraphPlusPeriodMarkers{
     position:relative;
-    top: calc(var(--HEIGHT_MUSIC_NOTE_CTL) + var(--HEIGHT_HEADER));
-    height: 250px;
-    width: 800px;
 }
+/* plot out the waveforms mp3 and tone */
 #sinePlotLongWrapper{
 	position: absolute;
-	height: 250px;
+	height: var(--HEIGHT_GRAPH);
 	width:800px;
+}
+/* draw diagrams below graphs to show relationships */
+#timeExpand{
+	 position:absolute; 
+	 left: 0px;
+	 top: calc(var(--HEIGHT_GRAPH)); 
+	 height: var(--HEIGHT_PERIOD_EXPLN);
+	 width: 800px;
 }
 
 /* checkerbox to show periodicity**/

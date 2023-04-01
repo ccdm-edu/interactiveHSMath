@@ -15,7 +15,7 @@
 <div id="SineCosID">
 	
 	<div id ="headerAndCtl_TT">
-    	<h1 id = "musicalActivity">Musical Notes and Underlying Trig</h1>
+    	<h1 id = "musicalActivity"></h1>
     </div>
     <!-- default startup, will change as user loads musician notes-->
     <p class="AdvTopic_ToDo"> TRY THIS:  Turn on your speaker.  Select an instrument.  Hit Start Tone button to hear the sine wave frequency of this note (to within 1 Hz) then hit Start Instrument button.
@@ -40,22 +40,24 @@
 					<tr>
 						<th colspan='2'>Musical Notes Parameters</th>
 					    <!-- this only shows up when musical instrument selected, put next to start/stop tone -->
-						<input type="button" id="allowNotePlay" value="Play Instrument"> 
+						<input type="button" id="allowNotePlay" > 
 					</tr>	
 					<tr>		
 						<td align="left">
 							<label for="InstrumentTypes">Choose a musical instrument:</label>
 							<select name="InstrumentTypes" id="InstrumentTypes">
-								<option value="trumpet">B<span>&#9837;</span> Trumpet</option>
-								<option value="clarinet">Clarinet</option>
-								<option value="soprano_sax">Soprano Sax</option>
-								<option value="tenor sax">Tenor Sax</option>
-								<option value="flute">Flute</option>
-								<option value="human">Human voice</option>
+								<option value="-1">Select Here</option>
+								<!-- subscripts/superscripts dont work on drop down menus ??? -->
+								<option value="0">B<sup>&#9837;</sup> Trumpet</option>
+								<option value="1">Clarinet</option>
+								<option value="2">Soprano Sax</option>
+								<option value="3">Tenor Sax</option>
+								<option value="4">Flute</option>
+								<option value="5">Human voice</option>
 							</select>
 						</td>
 						<td align="right">
-							Volume: <span id="currMusicVolLabel">000</span>
+							Volume: <span id="currMusicVolLabel"></span>
 						</td>						
 					</tr>
 					<tr>
@@ -64,7 +66,7 @@
 						</td>
 						<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz, use bootstrap for tooltips  -->
 						<td align="right">
-							<input id="in-range-music-amp" type="range" step="1" value="3" min="1" max="10" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
+							<input id="music-amp" type="range" step="1" value="3" min="0" max="10" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
 						</td>
 					</tr>
 				</tbody>
@@ -77,14 +79,14 @@
 					<tr>
 						<th colspan='2'>Sine Wave (tone) Parameters</th>
  								<!--  this button plays the tone and is visible all the time -->
-						<input type="button" id="toneStartbutton" value="Play Tone" data-toggle="tooltip" data-placement="top" title="turn on speaker to hear sine wave you created">
+						<input type="button" id="toneStartButton" value="Play Tone" data-toggle="tooltip" data-placement="top" title="turn on speaker to hear sine wave you created">
 					</tr>	
 					<tr>		
 						<td>
-							Frequency: <span id="currFreqLabel">000</span> Hz
+							Frequency: <span id="currFreqLabel"></span> Hz
 						</td>
 						<td>
-							Volume: <span id="currAmpLabel">000</span>
+							Volume: <span id="currToneVolLabel"></span>
 						</td>						
 					</tr>
 					<tr>
@@ -93,7 +95,7 @@
 						     
 						</td>
 						<td align="right">
-							<input id="in-range-amp" type="range" step="1" value="3" min="1" max="10" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
+							<input id="tone-amp" type="range" step="1" value="3" min="0" max="10" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
 						</td>
 					</tr>
 				</tbody>
@@ -119,7 +121,8 @@
 	 	<div id = "Period_Text2" ></div>
 	 	
 	 	<!-- Needed for the period markers showing periodicity -->
-		<canvas id="timeExpand">
+	 	<!--  use following for debug on canvas placement  style="border:1px solid #FF0000; to see the canvas in red -->
+		<canvas id="timeExpand" style="border:1px solid #FF0000">
  			Your Browser does not support canvas tag, you are missing graph capability
  		</canvas>
  	</div>

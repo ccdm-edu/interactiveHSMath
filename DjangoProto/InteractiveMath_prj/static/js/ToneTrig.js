@@ -532,9 +532,9 @@ $(function() {
 		updatePhase();
 	});
 	
-	$('#start-stop-button').css('background-color', GO_COLOR);  // initial value
+	$('#toneStartButton').css('background-color', GO_COLOR);  // initial value
 	// handle user clicking on/off the tone on/off button
-	$('#start-stop-button').on('click', function(){
+	$('#toneStartButton').on('click', function(){
 		if (typeof ToneIsOnNow == "undefined")  {
 			// First time in, 
 			ToneIsOnNow = false;
@@ -552,13 +552,13 @@ $(function() {
 					phase: $currPhase.val(),
 					type:"sine"});
 			osc.toDestination().start();	
-			$("#start-stop-button").prop("value", "Stop Tone");
-			$('#start-stop-button').css('background-color', STOP_COLOR);
+			$("#toneStartButton").prop("value", "Stop Tone");
+			$('#toneStartButton').css('background-color', STOP_COLOR);
 			ToneIsOnNow = true;
 		} else {
 			osc.toDestination().stop();
-			$("#start-stop-button").prop("value", "Start Tone");
-			$('#start-stop-button').css('background-color', GO_COLOR);
+			$("#toneStartButton").prop("value", "Start Tone");
+			$('#toneStartButton').css('background-color', GO_COLOR);
 			ToneIsOnNow = false;
 		}
 	});
@@ -953,7 +953,7 @@ $(function() {
 			// click on start tone  button to play default tone
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -962,7 +962,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 3000} 
 			},
@@ -1053,7 +1053,7 @@ $(function() {
 			// click on start tone  button to stop tones
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -1062,7 +1062,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 3000} 
 			},		
@@ -1107,7 +1107,7 @@ $(function() {
 			// click on start tone  button to play default tone
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -1116,7 +1116,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 3000} 
 			},
@@ -1189,7 +1189,7 @@ $(function() {
 			// click on start tone  button to stop tones
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -1198,7 +1198,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 3000} 
 			},		
@@ -1258,7 +1258,7 @@ $(function() {
 			// click on start tone  button to start tones
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -1267,7 +1267,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 10000} 
 			},	
@@ -1292,7 +1292,7 @@ $(function() {
 			// click on start tone  button to stop tones
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -1301,7 +1301,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 10000} 
 			},	

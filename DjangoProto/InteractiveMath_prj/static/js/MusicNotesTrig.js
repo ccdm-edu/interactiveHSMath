@@ -21,40 +21,55 @@ $(function() {
 
 	// implement the Tone sounding and chart tools
 	let currFreq = 233;
-	let $currAmp = $("#in-range-amp");
+	let $currMusicAmp = $("#music-amp");
+	let $currToneAmp = $("#tone-amp");
 	
 	let noteIsOnNow = false;  // for musical note
 	let ToneIsOnNow = false;  // for synthesized tone, both musical note and tone can play additively.
 	let osc = new Tone.Oscillator(); 
 	
 	//initialize variables needed to play the non synthesized tone musical notes
-	const DEFAULT_TONE = 0;  // first item in drop down is always plain synthesized tone
+	const UNSELECTED = -1;  
 	let tuneState = [];
-	let currTuneState = DEFAULT_TONE;  // pick the first element, which will be the synthesized tones
+	let currTuneState = UNSELECTED;  // pick the first element, which will be the synthesized tones
 	let tuneExpln = [];
 	let tuneFilenameURL = [];  // filename at server
 	let tuneToDo = []
 	let tuneInstrument = [];
+	let tuneMusicalNote = [];
 	let tuneTitle = [];
-	let tuneBuffer = [];  // array of AudioBuffer for currTuneState 1 through N, all musical notes, used to play full mp3 file
+	let tuneBuffer = [];  // array of AudioBuffer for currTuneState 0 through N-1, all musical notes, used to play full mp3 file
 	let tuneOffset = []; // determines when plotting will begin in mp3 file, index is currTuneState
 	let tuneFundamentalFreq = []; // initialize tone for closest approx
 	let tuneGraphLong = [[]];  // holds an array, per musical note, of graphing points for long graph (10ms)
 	let noteFilePoint = [];   // array for every instrument of InstrumentNote, will determine next point using multirate sample rate conversion
 	// DO need to handle the currTuneState = tone and we don't plot that one this way...
 	
+	const GO_COLOR = "LightGreen";
+	const STOP_COLOR = "LightPink";
+	const STOP_NOTE = "Stop Note";
+	const PLAY_NOTE = "Play Instrument"
+	//list of notes used
+	const C5_NOTE = "C<sub>5</sub>";
+	const C4_NOTE = "C<sub>4</sub>";
+	const BFLAT4_NOTE = "B<sup><span>&#9837;</span></sup><sub>4</sub>";
+	// map JSON texts to html
+	const NOTE_MAPPING = new Map([ ["C5", C5_NOTE],["C4", C4_NOTE],["B4flat", BFLAT4_NOTE] ]);
+
 	//everything is relative to the html page this code operates on, server needs to work from /static directory (without django intervention)
 	const STATIC_FILE_LOC = "../../static/json/";
 	const urlInitValJson = STATIC_FILE_LOC + "ToneTrigConfig.json";
+	
+	const DEFAULT_TITLE = "Musical Notes and Underlying Trig";
+	$("#musicalActivity").html(DEFAULT_TITLE);  //load up default
+	$("#allowNotePlay").css("visibility", "hidden");   // load up default, until user selects instrument
+	$('#toneStartButton').css('background-color', GO_COLOR);  // initial value, this is never hidden
 	
 	// used for plotting
 	let timeMsLong = [];
 	let ampLong = [];
 	let ampLongCurrNote = [];  // what is plotted
 	
-	const GO_COLOR = "LightGreen";
-	const STOP_COLOR = "LightPink";
-
 	const NUM_PTS_PLOT_LONG = 1000;
 	const DURATION_LONG_PLOT_MS = 10;	
 	//sample period in sec
@@ -64,7 +79,7 @@ $(function() {
 	function fillInArrays(){
 		let i;
 		for (i=0; i<=NUM_PTS_PLOT_LONG; i++) {
-			ampLong[i] = $currAmp.val() * Math.sin(2 * Math.PI * (currFreq * i * samplePeriodLong) );
+			ampLong[i] = $currToneAmp.val() * Math.sin(2 * Math.PI * (currFreq * i * samplePeriodLong) );
 			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 2);	
 			// this allows us to turn off graph yet keep data around, for currTuneState=TONE_ONLY, this will be a null array 
 			if (tuneGraphLong[currTuneState] != null) {
@@ -87,12 +102,6 @@ $(function() {
 	    	// seems like a library bug? but one we can get around
 	        dataset.data.pop();
 	    });
-				
-	    
-	    // update title to match new parameters
-	    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
-	    let currTitleText = 'Pitch tone y = ' + $currAmp.val() + ' * sin{ 2 * \u03C0 * (' + currFreq + ' * t ) }';
-	    sine_plot_100_1k.options.title.text = currTitleText;
 		
 		// now fill the arrays and push them to the plots
 		fillInArrays();   
@@ -106,16 +115,12 @@ $(function() {
 	};
 	
 	function updateFreq() {
-
-		$("#currFreqLabel").text(currFreq);   // and put it on the label as string
-		if (ToneIsOnNow==true) {
-			osc.frequency.value = currFreq;
-			// if tone isn't on, don't have to change anything...
-		}
+		let newToneFreq = tuneFundamentalFreq[currTuneState];
+		$("#currFreqLabel").text(newToneFreq);   // and put it on the tone freq label as string
+		currFreq = parseInt(newToneFreq)
+		osc.frequency.value = currFreq;
 	}
 	
-
-	//--------------------------------------------------------------------------------------------------------------------
 	//***********************************
 	// show periodicity as musical instrument comes up with the pitch freq
 	//***********************************
@@ -128,6 +133,12 @@ $(function() {
 	function showPeriodicity(freqSelect){
 		// delete the expansion lines to make room for these periodicity indicators/verbiage
 		ctxExpandTime.putImageData(backgroundPlot, 0, 0);
+		if (currTuneState == UNSELECTED) {
+			//clean out everything
+			$('#Period_Text1').css("visibility", "hidden");			
+			$('#Period_Text2').css("visibility", "hidden");
+			return; // nothing left to do
+		}
 		// set up constants to be used to draw arrows and signposts
 		const LEFT_X = 20;
 		const MARKER_Y_UP = LEFT_EDGE_Y - 100;
@@ -243,26 +254,41 @@ $(function() {
 		} else console.log(' Coding error, unexpected input freq to showPeriodicity as ' + freqSelect);
 		
 	}	
-	
+
+	//***********************************
+	// adjust mp3 plots so they phase line up with sine waves in most illustrative way possible
+	//***********************************	
 	function updatePlotsUserAides() {
 		// we set up musical note for zero phase as we line it up with associated pitch sine
 		
-		// set up tone to approximate the fundamental freq of musical instrument
-		let newToneFreq = tuneFundamentalFreq[currTuneState];
-		$("#currFreqLabel").text(newToneFreq);   // and put it on the label as string
+		if (currTuneState == UNSELECTED) {
+			// user has chosen "no instrument"
+			// get rid of all old periodicity stuff, that overlays graphs, selectively turn on as needed later on	
+			$('.First_Period').css("visibility", "hidden");			
+			$('.Second_Period').css("visibility", "hidden");
+			$('.Third_Period').css("visibility", "hidden");
+			$('.Fourth_Period').css("visibility", "hidden");
+			showPeriodicity();  //turn everything off
+			sine_plot_100_1k.data.datasets[1].label = "";
+			sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,255,255)'; // white for legend (invisible)
+			// clean up any Periodicity arrows/text if left over from musical notes and redraw expansion lines
+			ctxExpandTime.putImageData(backgroundPlot, 0, 0);
+	    	// make all these changes happen
+	    	sine_plot_100_1k.update();	
+			return;
+		}
 		updateFreq();
 		
 		// change the musical note legends
 		let instrArray = tuneState[currTuneState].split("_");
 		let musicVerb = " plays ";
 		if ("Human" == tuneInstrument[currTuneState]) { musicVerb = " sings "; }
-		sine_plot_100_1k.data.datasets[1].label = tuneInstrument[currTuneState] + musicVerb + instrArray[instrArray.length - 1];
+		//The label wont accept html tags for sup/sub scripts or flat symbols
+		sine_plot_100_1k.data.datasets[1].label = tuneInstrument[currTuneState];
 		sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,165,0)'
 
 		// update graphs
 		drawTone()
-		// we have new instrument mp3, allow play
-		$("#allowNotePlay").css("visibility", "visible"); 
 		
 		// get rid of all old periodicity stuff, that overlays graphs, selectively turn on as needed later on	
 		$('.First_Period').css("visibility", "hidden");			
@@ -287,11 +313,7 @@ $(function() {
 			this.POINTS_IN_NOTE_PERIOD = buffer.sampleRate / noteFreq;
 			// 1.5 adds some points to search the period for "zero phase" before changing sample rate to plot
 			const PHASE_UP_POINTS = 1.5 * this.POINTS_IN_NOTE_PERIOD;
-			this.mp3Data = buffer.getChannelData(0).slice(tuneOffset[tuneState], tuneOffset[tuneState] + NUM_PTS_PLOT_LONG + PHASE_UP_POINTS + 1);
-			this.currTuneState = tuneState;  
-			if (tuneState === DEFAULT_TONE) {
-				console.error(" This should never be called for the synthesized tone, only for mp3 files");
-			}
+			this.mp3Data = buffer.getChannelData(0).slice(tuneOffset[tuneState], tuneOffset[tuneState] + NUM_PTS_PLOT_LONG + PHASE_UP_POINTS + 1); 
 		}
 		
 		// Web Audio opens the given mp3 file and resamples it according to the destination's desired sample rate
@@ -390,8 +412,9 @@ $(function() {
 		}
 		
 		getGraphArray() {
-		// musical data only plotted on upper plot (looses meaning on lower plot since freq soo low)
+			// musical data only plotted on upper plot (looses meaning on lower plot since freq soo low)
 			let graphArray = [];
+			
 			// count up time on the graph
 			let tG = 0.0;
 			// count up time for each point in the mp3 file
@@ -431,23 +454,45 @@ $(function() {
 	}  // end of class InstrumentNote
 		
 	//***********************************
-	//  User instigated callback events
+	//  User instigated callback events   CHANGE Musical Note Volume
 	//***********************************
 	
-	// Change label on amplitude slider and adjust the tone as appropriate
-	$('#in-range-amp').on('change', function(){
-		$currAmp = $("#in-range-amp")
-		$("#currAmpLabel").text($currAmp.val());
-		if (ToneIsOnNow==true) {
-			let tonejs_dB = -40 + 20.0 * Math.log10($currAmp.val());
-			osc.volume.value = tonejs_dB;
-			// if tone isn't on, don't have to change anything...
-		}
-	});
+	function changeMP3Volume(){
+		//for MP3, will use max volume setting to give factor of 2 (3db) increase.
+		//middle setting is no amplification and zero setting is mute
+		// https://stackoverflow.com/questions/70480176/webaudio-api-change-volume-for-one-of-sources
+		// createGain can be used to mute as well
+		let mp3Gain = $currMusicAmp.val();
+		let gainMusicNode = context.createGain();  //return is a GainNode
+		const MAX_VOL_GAIN = 10;  // need to do better here, match this with max vol from html
+		gainMusicNode.gain.value = mp3Gain * 2 / MAX_VOL_GAIN;  // between 0 and 1 is attenuation, over 1 is gain. 
+		sourceNote.disconnect(0);  // get rid of old tone volume
+		sourceNote.connect(gainMusicNode).connect(context.destination);  // bring in new volume tone
+	}
 	
-	$('#start-stop-button').css('background-color', GO_COLOR);  // initial value
-	// handle user clicking on/off the tone on/off button
-	$('#start-stop-button').on('click', function(){
+	// Change label on music amplitude slider and adjust the tone as appropriate
+	$('#music-amp').on('change', function(){
+		$currMusicAmp = $("#music-amp")
+		$("#currMusicVolLabel").text($currMusicAmp.val());
+		changeMP3Volume();
+	});
+
+	//***********************************
+	//  User instigated callback events   CHANGE Tone Volume
+	//***********************************
+	// Change label on tone amplitude slider and adjust the tone as appropriate
+	$('#tone-amp').on('change', function(){
+		$currToneAmp = $("#tone-amp");
+		$("#currToneVolLabel").text($currToneAmp.val());
+		// change the volume of the tone source
+		let tonejs_dB = 20.0 * Math.log10($currToneAmp.val());
+		osc.volume.value = tonejs_dB;
+	});	
+	
+	//***********************************
+	//  User instigated callback events   User STARTS or STOPS TONE
+	//***********************************
+	$('#toneStartButton').on('click', function(){
 		if (typeof ToneIsOnNow == "undefined")  {
 			// First time in, 
 			ToneIsOnNow = false;
@@ -456,7 +501,7 @@ $(function() {
 		// and 0 dB is plenty loud enough.  I know this isn't the music industry definition (decibel SPL where 0 dB
 		// is the quietest sound one can hear and 100 dB will cause hearing damage) so I will say Amplitude = 1
 		// is min audible and amplitude 40 dB higher (40 = 20log(A1/A0) or A1=100 if A0 = 1) is max we want to put out
-		let tonejs_dB = -40 + 20.0 * Math.log10($currAmp.val());
+		let tonejs_dB = -40 + 20.0 * Math.log10($currToneAmp.val());
 		if (ToneIsOnNow==false) {
 			// currently false, clicked by user and about to be true 
 			osc = new Tone.Oscillator({
@@ -464,58 +509,46 @@ $(function() {
 					volume: tonejs_dB,
 					type:"sine"});
 			osc.toDestination().start();	
-			$("#start-stop-button").prop("value", "Stop Tone");
-			$('#start-stop-button').css('background-color', STOP_COLOR);
+			$("#toneStartButton").prop("value", "Stop Tone");
+			$('#toneStartButton').css('background-color', STOP_COLOR);
 			ToneIsOnNow = true;
 		} else {
 			osc.toDestination().stop();
-			$("#start-stop-button").prop("value", "Start Tone");
-			$('#start-stop-button').css('background-color', GO_COLOR);
+			$("#toneStartButton").prop("value", "Start Tone");
+			$('#toneStartButton').css('background-color', GO_COLOR);
 			ToneIsOnNow = false;
 		}
 	});
-	
-	//whenever any of the tone params change, redraw both graphs and update
-	$("#toneChanges").on('change',drawTone);
 	
 	// update advanced topics modal tab text
 	let todo_tab_element = "#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab011 > p";
 	let expln_tab_element = "#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab021 > p";
 	
-	function doToneOnly() {
-		// no instruments to play, its tone only.  No need for a play tone button
-		$("#allowNotePlay").css("visibility", "hidden");
-		
-		// get rid of any musical note legends
-		sine_plot_100_1k.data.datasets[1].label = "";
-		sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,255,255)'; // white for legend (invisible)
-		
-		// clean up any Periodicity arrows/text if left over from musical notes and redraw expansion lines
-		ctxExpandTime.putImageData(backgroundPlot, 0, 0);
-		// get rid of all old periodicity stuff, in case its present
-		$('.First_Period').css("visibility", "hidden");			
-		$('.Second_Period').css("visibility", "hidden");
-		$('.Third_Period').css("visibility", "hidden");
-		$('.Fourth_Period').css("visibility", "hidden");
-		$("#Period_Text1").css("visibility", "hidden");			
-		$('#Period_Text2').css("visibility", "hidden");
 
-		
-		// update graphs, to eliminate musical note if present
-		drawTone()
-	};
-	
-	// Handle user selecting the musical note drop down menu
-	$('#InstrumentDropDownMenu .dropdown-menu li a').on('click', function(event){
-		let selectItem = $('#InstrumentDropDownMenu .dropdown-menu li a').index($(this));
+	//***********************************
+	//  User instigated callback events   User SELECTS NEW instrument
+	//***********************************
+	$('#InstrumentTypes').on('change', function(event){
+		let selectItem = parseInt($('#InstrumentTypes').val());
 		currTuneState = selectItem;
-		// update advanced modal window
-		$(todo_tab_element).text(tuneToDo[currTuneState]);
-		$(expln_tab_element).text(tuneExpln[currTuneState]);
-		$("#musicalActivity").html(tuneTitle[currTuneState]);
-		if (currTuneState === DEFAULT_TONE) {
-			doToneOnly();
+		console.log('currTuneState is ' + currTuneState)
+		if (selectItem === UNSELECTED) {
+			console.log('User has not selected instrument yet')
+			updatePlotsUserAides();
+			$("#musicalActivity").html(DEFAULT_TITLE);
+			$("#allowNotePlay").css("visibility", "hidden"); 
+			$("#currMusicNoteLabel").html("");
+			return;
 		} else {	
+			// an instrument was chosen, move forward...
+			currTuneState = selectItem;
+			console.log('currTuneState is ' + currTuneState)
+			// update advanced modal window
+			$(todo_tab_element).html(tuneToDo[currTuneState]);
+			$(expln_tab_element).html(tuneExpln[currTuneState]);
+			$("#musicalActivity").html(tuneTitle[currTuneState]);
+			$("#currMusicNoteLabel").html(NOTE_MAPPING.get(tuneMusicalNote[currTuneState]) );
+			
 			let context;
 			// Safari has implemented AudioContext as webkitAudioContext so need next LOC
 			window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -575,6 +608,11 @@ $(function() {
 									
 									// clean up the signal params and graphs and user aides for new instrument
 									updatePlotsUserAides();
+									
+									// we have new instrument mp3, allow play
+									$("#allowNotePlay").prop("value", PLAY_NOTE);
+									$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
+									$("#allowNotePlay").css("visibility", "visible");  
 																	
 									// decodeAudioData is async and doesn't support promises, can't use try/catch for errors
 									},function(err) { alert("err(decodeAudioData) on file for: " + tuneInstrument[currTuneState] + " error =" + err); } )
@@ -601,6 +639,10 @@ $(function() {
 				// we already have this instrument cached
 				// clean up the signal params and graphs and user aides for new instrument
 				updatePlotsUserAides();
+				// we have new instrument mp3, allow play
+				$("#allowNotePlay").prop("value", PLAY_NOTE);
+				$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
+				$("#allowNotePlay").css("visibility", "visible"); 
 
 			}
 		};
@@ -610,12 +652,9 @@ $(function() {
 	// source reference
 	let sourceNote;
 	let context;
-	
-	//****************************************************************	
-	// if user selects a musical note from a specific instrument, and 
-	// then clicks "play note" need to play mp3
-	//****************************************************************
-	$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
+	//***********************************
+	//  User instigated callback events   User selects PLAY INSTRUMENT they have selected
+	//***********************************
 	$('#allowNotePlay').on('click', function(event){
 		if (typeof noteIsOnNow == "undefined")  {
 			// First time in, 
@@ -637,26 +676,24 @@ $(function() {
 				window.AudioContext = window.AudioContext || window.webkitAudioContext;
 				context = new AudioContext();	
 				sourceNote = context.createBufferSource();
-				// about to turn on the note
-				console.log("reuse the stored value");
 				sourceNote.buffer = tuneBuffer[currTuneState];
-				sourceNote.connect(context.destination);
+				changeMP3Volume(); // sets up gain to current user setting and start
 				// auto play
-				sourceNote.start(0); 
+				sourceNote.start(0);			
 				noteIsOnNow = true;
-				$("#allowNotePlay").prop("value", "Stop Note");
+				$("#allowNotePlay").prop("value", STOP_NOTE);
 				$("#allowNotePlay").css("background-color", STOP_COLOR);
 			} else {
 	        	// someone is tired of listening to our lovely tuning note
 	        	sourceNote.stop(0); 
 				noteIsOnNow = false;
-				$("#allowNotePlay").prop("value", "Play Note");
+				$("#allowNotePlay").prop("value", PLAY_NOTE);
 				$("#allowNotePlay").css("background-color", GO_COLOR);
 			}
 			sourceNote.onended = () => {
 				// no longer playing the note, either by user stop or natural completion
 				noteIsOnNow = false;
-				$("#allowNotePlay").prop("value", "Play Note");
+				$("#allowNotePlay").prop("value", PLAY_NOTE);
 				$("#allowNotePlay").css("background-color", GO_COLOR);
 			}
         }
@@ -703,9 +740,8 @@ $(function() {
 		},
 	};
 	Object.freeze(CHART_OPTIONS);  // to make it truly const
-	let currTitle = {display: true, text: 'Pitch tone y = ' + $currAmp.val() + ' * sin{ 2 * pi * (' + currFreq + ' * t) }'};
 	
-	const TOP_CHART = {...CHART_OPTIONS, title: currTitle };
+	const TOP_CHART = {...CHART_OPTIONS };
 	let sine_plot_100_1k = new Chart(ctxLong, {
 	    type: 'line',
 	    data: {
@@ -743,7 +779,6 @@ $(function() {
     let backgroundPlot; 
     let expandTimeCanvas = $("#timeExpand").get(0);
 	backgroundPlot = ctxExpandTime.getImageData(0, 0, expandTimeCanvas.width, expandTimeCanvas.height);
-	
 
 	//***********************************
 	//initialize values for tone as page first comes up
@@ -751,7 +786,8 @@ $(function() {
 	fillInArrays();
 	drawTone();
 	$("#currFreqLabel").text(currFreq);
-	$("#currAmpLabel").text($("#in-range-amp").val());
+	$("#currMusicVolLabel").text($("#music-amp").val());
+	$("#currToneVolLabel").text($("#tone-amp").val());
 
 	//***********************************
 	//initialize data fields for tone and musical notes
@@ -762,25 +798,16 @@ $(function() {
 			if (status === 'success') {				
 				$.each(data.TestNote, function(index, paramSet) {
 					// set the params for all the instruments
-					tuneState[index+1] = (paramSet.instrument).replace(" ","_") + "_" + paramSet.musicalNote;
-					tuneExpln[index+1] = paramSet.expln;		
-					tuneToDo[index+1]= paramSet.todo;			
-					tuneInstrument[index+1] = paramSet.instrument;
-					tuneTitle[index+1] = paramSet.title;
-					tuneOffset[index+1] = parseInt(paramSet.tuneOffset);
-					tuneFundamentalFreq[index+1] = parseInt(paramSet.fundamentalHz);
-					tuneFilenameURL[index+1] = paramSet.filenameURL;
-				});
-
-				// set the params if we go back to default tone, filenameURL is not needed
-				tuneState[DEFAULT_TONE] = "Synthesized_all";
-				tuneExpln[DEFAULT_TONE] = $(".AdvTopic_Expln").text();		
-				tuneToDo[DEFAULT_TONE]= $(".AdvTopic_ToDo").text();			
-				tuneInstrument[DEFAULT_TONE] = "Synthesized";
-				tuneTitle[DEFAULT_TONE] = "Sine Waves play Audio Tones";
-				tuneOffset[DEFAULT_TONE] = "0";
-				tuneFundamentalFreq[DEFAULT_TONE] = "";
-				
+					tuneState[index] = (paramSet.instrument).replace(" ","_") + "_" + paramSet.musicalNote;
+					tuneMusicalNote[index] = paramSet.musicalNote;
+					tuneExpln[index] = paramSet.expln;		
+					tuneToDo[index]= paramSet.todo;			
+					tuneInstrument[index] = paramSet.instrument;
+					tuneTitle[index] = paramSet.title;
+					tuneOffset[index] = parseInt(paramSet.tuneOffset);
+					tuneFundamentalFreq[index] = parseInt(paramSet.fundamentalHz);
+					tuneFilenameURL[index] = paramSet.filenameURL;
+				});				
 				$("#musicalActivity").html(tuneTitle[currTuneState]);
 			}
 			else {
@@ -867,7 +894,7 @@ $(function() {
 			// click on start tone  button to start tones
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -876,7 +903,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 10000} 
 			},	
@@ -901,7 +928,7 @@ $(function() {
 			// click on start tone  button to stop tones
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -910,7 +937,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'start-stop-button',
+			 	{element:'toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 10000} 
 			},	
@@ -957,7 +984,23 @@ $(function() {
 	// User has selected play
     $('#playSegment').on('click', function(){	
     	// in case plots have other stuff on them from other activities, clean it up
-    	doToneOnly();
+		
+		// get rid of any musical note legends
+		sine_plot_100_1k.data.datasets[1].label = "";
+		sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,255,255)'; // white for legend (invisible)
+		
+		// clean up any Periodicity arrows/text if left over from musical notes and redraw expansion lines
+		ctxExpandTime.putImageData(backgroundPlot, 0, 0);
+		// get rid of all old periodicity stuff, in case its present
+		$('.First_Period').css("visibility", "hidden");			
+		$('.Second_Period').css("visibility", "hidden");
+		$('.Third_Period').css("visibility", "hidden");
+		$('.Fourth_Period').css("visibility", "hidden");
+		$("#Period_Text1").css("visibility", "hidden");			
+		$('#Period_Text2').css("visibility", "hidden");
+		
+		// update graphs, to eliminate musical note if present
+		drawTone()
     	// activate pause and disable play
     	$(this).prop('disabled', true);  // disable play once playing
     	$('#stopSegment').prop('disabled', false);  // reactivate pause
