@@ -340,4 +340,8 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	 left: 10px;
 	 z-index: -1;  /* normal operation, this should be noninterfering */
 }
-		
+	
+#MusicIntroBlock {
+	/* define space for rest of page makes footer float to bottom */
+	height: 750px;
+}	

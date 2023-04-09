@@ -11,80 +11,81 @@
 {% endblock %}
 
 {% block body_block %}	
-	<div id="MusicIntroHeaders">
-		<h1 id="bigIntro">C Major scale on B<span>&#9837;</span> Instrument</h1>
-		<h2 id="bigIntroSub">Trig functions acting like a trumpet, clarinet or soprano sax (all B<span>&#9837;</span> instruments)</h2>
-	</div>
-	<div id="TrumpetMusicalScale">
-		<!-- Two canvases that sit on top of each other, one is to measure clicks and other is to fill in notes with color when selected -->	
-		<!-- use the following to put a debug border around canvas: style="border:1px solid #000000;"  -->
-		<canvas id="ClefWithNotes" width=1000 height=250 >
-			Your Browser does not support canvas tag, you are missing graph capability
-		</canvas>
-		<canvas id="NotesFilledIn" width=1000 height=250>
-			Your Browser does not support canvas tag, you are missing graph capability
-		</canvas>
-		<!--  to add border to canvas, add this at end style="border:1px solid #000000;" -->
-		<canvas id="funTutorial_MSIntro" width=1000 height=250> <!--  must match canvas above -->
-			Your Browser does not support canvas tag, you are missing graph capability
-		</canvas>	
+	<div id="MusicIntroBlock">
+		<div id="MusicIntroHeaders">
+			<h1 id="bigIntro">C Major scale on B<span>&#9837;</span> Instrument</h1>
+			<h2 id="bigIntroSub">Trig functions acting like a trumpet, clarinet or soprano sax (all B<span>&#9837;</span> instruments)</h2>
+		</div>
+		<div id="TrumpetMusicalScale">
+			<!-- Two canvases that sit on top of each other, one is to measure clicks and other is to fill in notes with color when selected -->	
+			<!-- use the following to put a debug border around canvas: style="border:1px solid #000000;"  -->
+			<canvas id="ClefWithNotes" width=1000 height=250 >
+				Your Browser does not support canvas tag, you are missing graph capability
+			</canvas>
+			<canvas id="NotesFilledIn" width=1000 height=250>
+				Your Browser does not support canvas tag, you are missing graph capability
+			</canvas>
+			<!--  to add border to canvas, add this at end style="border:1px solid #000000;" -->
+			<canvas id="funTutorial_MSIntro" width=1000 height=250> <!--  must match canvas above -->
+				Your Browser does not support canvas tag, you are missing graph capability
+			</canvas>	
+			
+			<img id="colorfulClef" src="{% static 'images/Prismatic-Clef-Hearts-2.svg' %}" alt = "Clef to left of musical notes">
+			<img class="wholeNote" id="wholeNote1" src="{% static 'images/WholeNote.svg' %}" alt = "Low C whole note on Trumpet scale">
+			<img class="wholeNote" id="wholeNote2" src="{% static 'images/WholeNote.svg' %}" alt = "D whole note on Trumpet scale">
+			<img class="wholeNote" id="wholeNote3" src="{% static 'images/WholeNote.svg' %}" alt = "E whole note on Trumpet scale">
+			<img class="wholeNote" id="wholeNote4" src="{% static 'images/WholeNote.svg' %}" alt = "F whole note on Trumpet scale">
+			<img class="wholeNote" id="wholeNote5" src="{% static 'images/WholeNote.svg' %}" alt = "G whole note on Trumpet scale">
+			<img class="wholeNote" id="wholeNote6" src="{% static 'images/WholeNote.svg' %}" alt = "A whole note on Trumpet scale">
+			<img class="wholeNote" id="wholeNote7" src="{% static 'images/WholeNote.svg' %}" alt = "B whole note on Trumpet scale">
+			<img class="wholeNote" id="wholeNote8" src="{% static 'images/WholeNote.svg' %}" alt = "C whole note on Trumpet scale">
+			<p class="letterToNote" id="LowCNote"></p>
+			<p class="letterToNote" id="DNote"></p>
+			<p class="letterToNote" id="ENote"></p>
+			<p class="letterToNote" id="FNote"></p>
+			<p class="letterToNote" id="GNote"></p>
+			<p class="letterToNote" id="ANote"></p>
+			<p class="letterToNote" id="BNote"></p>
+			<p class="letterToNote" id="CNote"></p>
+			<!-- The canvas will be used to draw lines for notes, the clef, notes and text will drop on canvas -->
+			<!-- Initial instructions will come in from left, stif for a few sec and go off to right -->
+			<ol id = "initialInstrMusicTrigIntro">
+				<li>Turn ON your speaker</li>
+		  		<li>Click some notes</li>
+			</ol>
+		</div>
 		
-		<img id="colorfulClef" src="{% static 'images/Prismatic-Clef-Hearts-2.svg' %}" alt = "Clef to left of musical notes">
-		<img class="wholeNote" id="wholeNote1" src="{% static 'images/WholeNote.svg' %}" alt = "Low C whole note on Trumpet scale">
-		<img class="wholeNote" id="wholeNote2" src="{% static 'images/WholeNote.svg' %}" alt = "D whole note on Trumpet scale">
-		<img class="wholeNote" id="wholeNote3" src="{% static 'images/WholeNote.svg' %}" alt = "E whole note on Trumpet scale">
-		<img class="wholeNote" id="wholeNote4" src="{% static 'images/WholeNote.svg' %}" alt = "F whole note on Trumpet scale">
-		<img class="wholeNote" id="wholeNote5" src="{% static 'images/WholeNote.svg' %}" alt = "G whole note on Trumpet scale">
-		<img class="wholeNote" id="wholeNote6" src="{% static 'images/WholeNote.svg' %}" alt = "A whole note on Trumpet scale">
-		<img class="wholeNote" id="wholeNote7" src="{% static 'images/WholeNote.svg' %}" alt = "B whole note on Trumpet scale">
-		<img class="wholeNote" id="wholeNote8" src="{% static 'images/WholeNote.svg' %}" alt = "C whole note on Trumpet scale">
-		<p class="letterToNote" id="LowCNote"></p>
-		<p class="letterToNote" id="DNote"></p>
-		<p class="letterToNote" id="ENote"></p>
-		<p class="letterToNote" id="FNote"></p>
-		<p class="letterToNote" id="GNote"></p>
-		<p class="letterToNote" id="ANote"></p>
-		<p class="letterToNote" id="BNote"></p>
-		<p class="letterToNote" id="CNote"></p>
-		<!-- The canvas will be used to draw lines for notes, the clef, notes and text will drop on canvas -->
-		<!-- Initial instructions will come in from left, stif for a few sec and go off to right -->
-		<ol id = "initialInstrMusicTrigIntro">
-			<li>Turn ON your speaker</li>
-	  		<li>Click some notes</li>
-		</ol>
+		<div id="SinusoidGraph">
+			<label id = "noteSelect">Note Played: </label>
+			<p id="noteSelectVal"> </p>
+			<label id = "FreqOfNote">Frequency (Hz):  </label>
+			<p id="FreqOfNoteVal"> </p>
+			<label id = "noteVolLabel">Volume:  </label>
+			<p id = "noteVolValue"></p>
+			<input id="noteVol" type="range" step="1" value="20" min="1" max="100" data-toggle="tooltip" data-placement="right" title="Turn on your speaker">
+			<input type="button" id="VolOnOff" value="Silence" data-toggle="tooltip" data-placement="right" title="">
+			<!-- For debug to see where this canvas is, can add border around it with:  style="border:1px solid #000000;" -->
+			<p id = "notesToPlayLabel" data-toggle="tooltip" data-placement="right" title="Play these notes in order"></p>
+			<p id = "notesToPlay" ></p>
+			<div class="dropdown">
+				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuSong" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				    Try a Song
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuSong">
+				    <button class="dropdown-item" type="button" id="Song1">Twinkle Twinkle</button>
+				    <button class="dropdown-item" type="button" id="Song2">Happy Birthday</button>
+				    <button class="dropdown-item" type="button" id="Song3">Jingle Bells</button>
+				</div>
+	        </div>
+			<canvas id="PitchGraph" width=600 height=250>
+				Your Browser does not support canvas tag, you are missing graph capability
+			</canvas>
+			<img id="staticTrumpeter" src="{% static 'images/trumpter.svg' %}" alt = "Jazz Trumpeter, click to get audio explanation">
+			<p id="verbalIntro">Click on me,<br><br>I have something to say.</p>
+			<img id="trumpetersNotes" src="{% static 'images/TrumpeterNotes.svg' %}" alt = "animation: notes leave trumpeter's instrument">
+			<!--  IMAGE credits, images from openclipart.org -->
+		</div>
 	</div>
-	
-	<div id="SinusoidGraph">
-		<label id = "noteSelect">Note Played: </label>
-		<p id="noteSelectVal"> </p>
-		<label id = "FreqOfNote">Frequency (Hz):  </label>
-		<p id="FreqOfNoteVal"> </p>
-		<label id = "noteVolLabel">Volume:  </label>
-		<p id = "noteVolValue"></p>
-		<input id="noteVol" type="range" step="1" value="20" min="1" max="100" data-toggle="tooltip" data-placement="right" title="Turn on your speaker">
-		<input type="button" id="VolOnOff" value="Silence" data-toggle="tooltip" data-placement="right" title="">
-		<!-- For debug to see where this canvas is, can add border around it with:  style="border:1px solid #000000;" -->
-		<p id = "notesToPlayLabel" data-toggle="tooltip" data-placement="right" title="Play these notes in order"></p>
-		<p id = "notesToPlay" ></p>
-		<div class="dropdown">
-			<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuSong" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			    Try a Song
-			</button>
-			<div class="dropdown-menu" aria-labelledby="dropdownMenuSong">
-			    <button class="dropdown-item" type="button" id="Song1">Twinkle Twinkle</button>
-			    <button class="dropdown-item" type="button" id="Song2">Happy Birthday</button>
-			    <button class="dropdown-item" type="button" id="Song3">Jingle Bells</button>
-			</div>
-        </div>
-		<canvas id="PitchGraph" width=600 height=250>
-			Your Browser does not support canvas tag, you are missing graph capability
-		</canvas>
-		<img id="staticTrumpeter" src="{% static 'images/trumpter.svg' %}" alt = "Jazz Trumpeter, click to get audio explanation">
-		<p id="verbalIntro">Click on me,<br><br>I have something to say.</p>
-		<img id="trumpetersNotes" src="{% static 'images/TrumpeterNotes.svg' %}" alt = "animation: notes leave trumpeter's instrument">
-		<!--  IMAGE credits, images from openclipart.org -->
-	</div>
-	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  
 	At the bottom it doesn't consume space from other elements but it does give search engines a clue what page is all about. -->
     <p class="AdvTopic_ToDo">TRY THIS: On complicated pages, a list of stuff to try out will be here.

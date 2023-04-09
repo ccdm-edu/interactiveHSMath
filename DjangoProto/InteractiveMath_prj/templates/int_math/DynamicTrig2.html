@@ -11,45 +11,47 @@
 {% endblock %}
     
 {% block body_block %}
-	<div id ="headerAndCtl_DT2">
-		<h1 id="HeaderTrig_DT2" >Trig Functions Need For Speed</h1>
-			<!--  dont want this popup to exclude all other activity, its a supplement -->	
-	</div>
-
-	<div id="CircleValues_DT2">	
-		<label id = "time_DT2" data-toggle="tooltip" data-placement="right" title="Total time that phase is accumulating (0.5 sec accuracy)"><b>Time (sec)</b></label>
-		<p id="timeVal_DT2">0</p>
-		<label id="cyclesLabel_DT2" data-toggle="tooltip" data-placement="right" title="Number of times phase passed 360"><b>Cycles</b></label>
-		<p id="cycles_DT2"> 0 </p>
-		<label id = "periodLabel_DT2" data-toggle="tooltip" data-placement="right" title="Time to complete one cycle.  Approx (Time/cycles)"><b>T (period in sec, 1/frequency)</b></label>
-		<p id="period_DT2">0 </p>
-		<p id="UserNotices_DT2" ></p>	
-		<p id="SampPerPeriodLabel_DT2" data-toggle="tooltip" data-placement="right" title="Number of green dots touched per revolution"><b>Samples Per Period</b></p>
-		<p id="SampPerPeriod_DT2"></p>
-		<label id="FreqLabel_DT2"><b>Frequency:</b></label><span id="currFreqVal_DT2">000</span> 
-		<input id="FreqSlider_DT2" type="range" step="0.1" value="0.5" min="0.5" max="10" data-placement="left" data-toggle="tooltip" title="click on slider and use arrows for greater precision">
-		<input type="button" id="GoFreq_DT2" value="GO" ata-toggle="tooltip" data-placement="right" title="Adjust freq slider at any time">
-	</div>
+	<div id="DynamicTrig2Block">
+		<div id ="headerAndCtl_DT2">
+			<h1 id="HeaderTrig_DT2" >Trig Functions Need For Speed</h1>
+				<!--  dont want this popup to exclude all other activity, its a supplement -->	
+		</div>
 	
-	<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
-	<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas:  you must set bitmap for canvas in html, css only -->
-	<!-- sets element size, resulting in distortion -->
-	<div id="UnitCircleAndGraphCanvas_DT2">
-		<canvas id="AmpSinCosCircle_DT2" width=450 height=550>
-			Your Browser does not support canvas tag, you are missing graph capability
-		</canvas>
-		<!--  to add border to canvas, add this at end style="border:1px solid #000000;" -->
-		<p id="sinEqtnLabelHI_DT2">S=sin(2&#8901&#960&#8901f&#8901t)</p>  
-		<p id="sinEqtnLabelLO_DT2">S=sin(2&#8901&#960&#8901f&#8901t)</p> 
-		<canvas id="FreqChange_DT2" width=500 height=650>
-			Your Browser does not support canvas tag, you are missing graph capability
-		</canvas>
+		<div id="CircleValues_DT2">	
+			<label id = "time_DT2" data-toggle="tooltip" data-placement="right" title="Total time that phase is accumulating (0.5 sec accuracy)"><b>Time (sec)</b></label>
+			<p id="timeVal_DT2">0</p>
+			<label id="cyclesLabel_DT2" data-toggle="tooltip" data-placement="right" title="Number of times phase passed 360"><b>Cycles</b></label>
+			<p id="cycles_DT2"> 0 </p>
+			<label id = "periodLabel_DT2" data-toggle="tooltip" data-placement="right" title="Time to complete one cycle.  Approx (Time/cycles)"><b>T (period in sec, 1/frequency)</b></label>
+			<p id="period_DT2">0 </p>
+			<p id="UserNotices_DT2" ></p>	
+			<p id="SampPerPeriodLabel_DT2" data-toggle="tooltip" data-placement="right" title="Number of green dots touched per revolution"><b>Samples Per Period</b></p>
+			<p id="SampPerPeriod_DT2"></p>
+			<label id="FreqLabel_DT2"><b>Frequency:</b></label><span id="currFreqVal_DT2">000</span> 
+			<input id="FreqSlider_DT2" type="range" step="0.1" value="0.5" min="0.5" max="10" data-placement="left" data-toggle="tooltip" title="click on slider and use arrows for greater precision">
+			<input type="button" id="GoFreq_DT2" value="GO" ata-toggle="tooltip" data-placement="right" title="Adjust freq slider at any time">
+		</div>
 		
-	</div>
-	
-	<div id="FirstHelp_DT2">
-	<!--  will dynamically add elements here -->
-		<p> Select a frequency then hit Go button</p>
+		<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
+		<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas:  you must set bitmap for canvas in html, css only -->
+		<!-- sets element size, resulting in distortion -->
+		<div id="UnitCircleAndGraphCanvas_DT2">
+			<canvas id="AmpSinCosCircle_DT2" width=450 height=550>
+				Your Browser does not support canvas tag, you are missing graph capability
+			</canvas>
+			<!--  to add border to canvas, add this at end style="border:1px solid #000000;" -->
+			<p id="sinEqtnLabelHI_DT2">S=sin(2&#8901&#960&#8901f&#8901t)</p>  
+			<p id="sinEqtnLabelLO_DT2">S=sin(2&#8901&#960&#8901f&#8901t)</p> 
+			<canvas id="FreqChange_DT2" width=500 height=650>
+				Your Browser does not support canvas tag, you are missing graph capability
+			</canvas>
+			
+		</div>
+		
+		<div id="FirstHelp_DT2">
+		<!--  will dynamically add elements here -->
+			<p> Select a frequency then hit Go button</p>
+		</div>
 	</div>
 	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  

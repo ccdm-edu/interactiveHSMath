@@ -185,21 +185,19 @@
 							</table>
 						</div> <!--  autodemo controls -->
 					</div> <!--  autodemo controls plus start image -->
-					
-					
-                  
-                    {% block body_block %}
-                    {% endblock %}
                     
                     <canvas id="UnusedCanvas" width=1 height=1> <!--  Need to pull all this out of AutoDemo soon so don't need this kloodge -->
 						Your Browser does not support canvas tag, you are missing graph capability
 					</canvas>	
+					
+					{% block body_block %}
+                    {% endblock %}
                     
                     <!-- FOOTER -->
-                    <footer>
-                        <p class="float-right"><a href="#">Back to top</a></p>
-                        <p class="id_site">&copy; 2021 Interactable Math &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
-                    </footer>
+                    <div id="Site-footer">
+                    	<button type="button" class="btn btn-info" id="GoToNextPage">Next ></button>
+                        <p id="SiteInfo-links">&copy; 2023 Interactable Math &middot; <a href="{% url 'int_math:Privacy' %}">Privacy</a> &middot; <a href="{% url 'int_math:TermsOfUse' %}">Terms</a></p>
+                    </div>
                 </main>
             </div>
         </div>

@@ -167,3 +167,8 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	visibility: hidden;
 }
 
+/**********************define space for footer to float at bottom***************/
+#DynamicTrig2Block {
+	/* define space for rest of page makes footer float to bottom */
+	height: 700px;
+}	

@@ -20,7 +20,9 @@ $(function() {
 
 
 	// implement the Tone sounding and chart tools
-	let currFreq = 233;
+	const C5_FREQ = 466.16; // frequency in Hz of Bflat instrument playing C5
+	const C4_FREQ = 233.08;  // frequency in Hz of Bflat instrument playing C4
+	let currFreq = C5_FREQ;
 	let $currMusicAmp = $("#music-amp");
 	let $currToneAmp = $("#tone-amp");
 	
@@ -79,7 +81,9 @@ $(function() {
 	function fillInArrays(){
 		let i;
 		for (i=0; i<=NUM_PTS_PLOT_LONG; i++) {
-			ampLong[i] = $currToneAmp.val() * Math.sin(2 * Math.PI * (currFreq * i * samplePeriodLong) );
+			// for plot purposes, fix the tone amp to 10, else plots change too much and it is confusing for kids and
+			// they might adjust things too much so you lose the punch line of musical note periodicity
+			ampLong[i] = 10.0 * Math.sin(2 * Math.PI * (currFreq * i * samplePeriodLong) );
 			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 2);	
 			// this allows us to turn off graph yet keep data around, for currTuneState=TONE_ONLY, this will be a null array 
 			if (tuneGraphLong[currTuneState] != null) {
@@ -117,7 +121,7 @@ $(function() {
 	function updateFreq() {
 		let newToneFreq = tuneFundamentalFreq[currTuneState];
 		$("#currFreqLabel").text(newToneFreq);   // and put it on the tone freq label as string
-		currFreq = parseInt(newToneFreq)
+		currFreq = newToneFreq;
 		osc.frequency.value = currFreq;
 	}
 	
@@ -145,7 +149,7 @@ $(function() {
 		const MARKER_Y_DOWN = LEFT_EDGE_Y + 45;
 		$('#Period_Text1').css("visibility", "visible");			
 		$('#Period_Text2').css("visibility", "visible");
-		if (233 == freqSelect) {
+		if (C4_FREQ == freqSelect) {
 			// go to CSS, pull out scales values and pull off px suffix and convert to numbers
 			const SHORT_T = parseInt(rootStyles.getPropertyValue('--WIDTH_466HZ').replace('px', ''));
 			const DOUBLE_T = 2 * SHORT_T;
@@ -159,7 +163,7 @@ $(function() {
 			const NEW_PERIOD_BOX_LEFT = LEFT_EDGE_X + DOUBLE_T;
 			$('.Second_Period').css("left", NEW_PERIOD_BOX_LEFT + 'px');
 			//change the period wording
-			$("#Period_Text1").html('Period T <br>= 1/Frequency = 1/(233 Hz) = 4.29 ms');
+			$("#Period_Text1").html('Period T <br>= 1/Frequency = 1/(233.08 Hz) = 4.29 ms');
 			$('#Period_Text2').css("left", (NEW_PERIOD_BOX_LEFT + SHORT_T) + 'px');
 			$("#Period_Text2").html('T = 4.29 ms');
 			// create X and Y of two "signposts"
@@ -198,7 +202,7 @@ $(function() {
 			new AxisArrow(ctxExpandTime, [THIRD_233_X, LEFT_EDGE_Y], 'L',"blue").draw();
 			new AxisArrow(ctxExpandTime, [FOURTH_233_X, LEFT_EDGE_Y], 'R',"blue").draw();
 			
-		} else if (466 == freqSelect) {			
+		} else if (C5_FREQ == freqSelect) {			
 			// go to CSS, pull out scales values and pull off px suffix and convert to numbers
 			const SHORT_T = parseInt(rootStyles.getPropertyValue('--WIDTH_466HZ').replace('px', ''));
 			const DOUBLE_T = 2 * SHORT_T;
@@ -212,7 +216,7 @@ $(function() {
 			const NEW_PERIOD_BOX_LEFT = LEFT_EDGE_X + SHORT_T;
 			$('.Second_Period').css("left", NEW_PERIOD_BOX_LEFT + 'px');
 			//change the period wording
-			$("#Period_Text1").html('Period T <br>= 1/Frequency<br><br>= 1/(466 Hz) <br>= 2.15 ms');
+			$("#Period_Text1").html('Period T <br>= 1/Frequency<br><br>= 1/(466.16 Hz) <br>= 2.15 ms');
 			$('#Period_Text2').css("left", (NEW_PERIOD_BOX_LEFT + 40) + 'px');
 			$("#Period_Text2").html('T = 2.15 ms');
 
@@ -296,7 +300,7 @@ $(function() {
 		$('.Third_Period').css("visibility", "hidden");
 		$('.Fourth_Period').css("visibility", "hidden");
 
-		// add periodicity as per the pitch freq (only two allowed here, 233 and 466)
+		// add periodicity as per the pitch freq (only two allowed here, 233.08 and 466.16)
 		showPeriodicity(tuneFundamentalFreq[currTuneState]);
 	}
 
@@ -484,8 +488,8 @@ $(function() {
 	$('#tone-amp').on('change', function(){
 		$currToneAmp = $("#tone-amp");
 		$("#currToneVolLabel").text($currToneAmp.val());
-		// change the volume of the tone source
-		let tonejs_dB = 20.0 * Math.log10($currToneAmp.val());
+		// change the volume of the tone source, we scale down by 1/10 from previous page
+		let tonejs_dB = -20 + 20.0 * Math.log10($currToneAmp.val());
 		osc.volume.value = tonejs_dB;
 	});	
 	
@@ -501,7 +505,7 @@ $(function() {
 		// and 0 dB is plenty loud enough.  I know this isn't the music industry definition (decibel SPL where 0 dB
 		// is the quietest sound one can hear and 100 dB will cause hearing damage) so I will say Amplitude = 1
 		// is min audible and amplitude 40 dB higher (40 = 20log(A1/A0) or A1=100 if A0 = 1) is max we want to put out
-		let tonejs_dB = -40 + 20.0 * Math.log10($currToneAmp.val());
+		let tonejs_dB = -20 + 20.0 * Math.log10($currToneAmp.val());
 		if (ToneIsOnNow==false) {
 			// currently false, clicked by user and about to be true 
 			osc = new Tone.Oscillator({
@@ -805,7 +809,7 @@ $(function() {
 					tuneInstrument[index] = paramSet.instrument;
 					tuneTitle[index] = paramSet.title;
 					tuneOffset[index] = parseInt(paramSet.tuneOffset);
-					tuneFundamentalFreq[index] = parseInt(paramSet.fundamentalHz);
+					tuneFundamentalFreq[index] = parseFloat(paramSet.fundamentalHz);
 					tuneFilenameURL[index] = paramSet.filenameURL;
 				});				
 				$("#musicalActivity").html(tuneTitle[currTuneState]);

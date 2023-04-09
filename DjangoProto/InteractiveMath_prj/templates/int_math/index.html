@@ -11,58 +11,59 @@
 {% endblock %}
 
 {% block body_block %}
-	
-	<div class="jumbotron p-4 ">
-		<div class="container">
-			<h1 class="jumbotron-heading">I<span id=homePageHeader>nteractable</span> M<span id=homePageHeader>ath</span>: </h1> <h2>High School PreCalculus and Physics</h2>
+	<div id="LandingMainBody">
+		<div class="jumbotron p-4 ">
+			<div class="container">
+				<h1 class="jumbotron-heading">I<span id=homePageHeader>nteractable</span> M<span id=homePageHeader>ath</span>: </h1> <h2>High School PreCalculus and Physics</h2>
+			</div>
 		</div>
-	</div>
-			
-	<div id="selectNewbieOrExpert">
-	<form>
-		<fieldset>
-		  	<legend><div>I am</div><div class="line"></div></legend>
-				<label for="newbieMode">New to this site</label>
-			    <input type="radio" name="helpLevel" id="newbieMode" value="newbieMode">
-			    <label for="expertMode">Familiar with this site</label>
-			    <input type="radio" name="helpLevel" id="expertMode" value="expertMode">
-	  	</fieldset>
-	</form>
-	</div>
+				
+		<div id="selectNewbieOrExpert">
+		<form>
+			<fieldset>
+			  	<legend><div>I am</div><div class="line"></div></legend>
+					<label for="newbieMode">New to this site</label>
+				    <input type="radio" name="helpLevel" id="newbieMode" value="newbieMode">
+				    <label for="expertMode">Familiar with this site</label>
+				    <input type="radio" name="helpLevel" id="expertMode" value="expertMode">
+		  	</fieldset>
+		</form>
+		</div>
+		
+	  	<img id="logo-home-page" src="{% static 'images/IM_logo3.svg' %}" alt = "Interactable Math Logo">
+		<div class="home_expln">
+			{% if is_mobile %}
+				<br>
+				<b> You are using a mobile device.  This site was designed for the larger canvas of a desktop or laptop (or perhaps notebook).  
+				Eventually it may become mobile friendly but today is not that day.  Please use on a desktop/laptop.  </b>
+				<br>
+			{% else %}
+				<!-- We can work with this platform -->
+				<noscript>
+					<!-- however, we must have javascript enabled, only client knows if this is true -->
+					<br>
+						Since this site is interactive, Javascript <font size="+2">MUST </font>be enabled to fully experience the site.
+						You do not have Javascript enabled in your browser. 
+					<br>
+				</noscript>
+				<p>
+					This website is designed to connect the theories and equations in Algebra 2 and PreCalculus to the real world in a way that is <span id="blinkingColor">fun </span>and interactive.  
+					You will see how trig functions play into music and imaginary numbers help your cell phone send your text messages (and voice too). 
+				<br><br>
+					Only one person is writing code for this site so progress is
+					slow.  As of now, it is tested only on Chrome web browser and generally works under Firefox/Edge and is flaky under Safari and no way on IE.  
+					It looks best on a laptop/desktop/notebook.  
+					This site needs more screen real-estate than a phone can give.  Its just NOT going to work well on your phone.  Maybe someday...<br>Enjoy!
+				</p>
+				{% if using_safari %}
+				<br>
+					<b> You are using Safari, this site needs alot more work/testing to be Safari ready.  Please use latest version of Chrome.  </b>
+				<br>
+				{% endif %}
+			{% endif %}		
 	
-  	<img id="logo-home-page" src="{% static 'images/IM_logo3.svg' %}" alt = "Interactable Math Logo">
-	<div class="home_expln">
-		{% if is_mobile %}
-			<br>
-			<b> You are using a mobile device.  This site was designed for the larger canvas of a desktop or laptop (or perhaps notebook).  
-			Eventually it may become mobile friendly but today is not that day.  Please use on a desktop/laptop.  </b>
-			<br>
-		{% else %}
-			<!-- We can work with this platform -->
-			<noscript>
-				<!-- however, we must have javascript enabled, only client knows if this is true -->
-				<br>
-					Since this site is interactive, Javascript <font size="+2">MUST </font>be enabled to fully experience the site.
-					You do not have Javascript enabled in your browser. 
-				<br>
-			</noscript>
-			<p>
-				This website is designed to connect the theories and equations in Algebra 2 and PreCalculus to the real world in a way that is <span id="blinkingColor">fun </span>and interactive.  
-				You will see how trig functions play into music and imaginary numbers help your cell phone send your text messages (and voice too). 
-			<br><br>
-				Only one person is writing code for this site so progress is
-				slow.  As of now, it is tested only on Chrome web browser and generally works under Firefox/Edge and is flaky under Safari and no way on IE.  
-				It looks best on a laptop/desktop/notebook.  
-				This site needs more screen real-estate than a phone can give.  Its just NOT going to work well on your phone.  Maybe someday...<br>Enjoy!
-			</p>
-			{% if using_safari %}
-			<br>
-				<b> You are using Safari, this site needs alot more work/testing to be Safari ready.  Please use latest version of Chrome.  </b>
-			<br>
-			{% endif %}
-		{% endif %}		
-
-	</div>
+		</div>
+	</div> 
 	<br>
 	<br>	
 	

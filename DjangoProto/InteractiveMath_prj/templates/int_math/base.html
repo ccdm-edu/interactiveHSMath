@@ -65,7 +65,7 @@
 				            Trig
 				            </a>
 				            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-				                <a class="dropdown-item" id="TrigFuncTopic" href="{% url 'int_math:MusicSineIntro' %}">Trig Functions</a>
+				                <a class="dropdown-item" id="TrigFuncTopic" href="{% url 'int_math:IntroTrigMusicConcepts' %}">Trig Functions</a>
 				                <a class="dropdown-item" href="{% url 'int_math:TrigID' %}">Trig Identities</a>
 				            </div>
 				        </li>
@@ -107,8 +107,7 @@
                     
                     <!-- FOOTER -->
                     <footer>
-                        <p class="float-right"><a href="#">Back to top</a></p>
-                        <p class="id_site">&copy; 2021 Interactable Math &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+                        <p class="id_site">&copy; 2023 Interactable Math &middot; <a href="{% url 'int_math:Privacy' %}">Privacy</a> &middot; <a href="{% url 'int_math:TermsOfUse' %}">Terms</a></p>
                     </footer>
                 </main>
             </div>

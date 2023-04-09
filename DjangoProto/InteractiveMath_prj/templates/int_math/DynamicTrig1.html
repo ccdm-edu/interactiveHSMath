@@ -11,46 +11,47 @@
 {% endblock %}
 
 {% block body_block %}
-
-	<div id ="headerAndCtl_DT1">
-		<h1 id="HeaderTrig_DT1">Sine meets time and we get frequency</h1>
-	</div>
-	
-	<div id="CircleValues_DT1">	
-		<input type="button" id="ClearOldFreq_DT1" value="Clear" data-toggle="tooltip" data-placement="top" title="Stop clock.  Clear plots">
-		<label id = "time_DT1">Time (sec)</label>
-		<p id="timeVal_DT1"> </p>
-		<label id="thetaLabel_DT1">&#920</label>
-		<p id="theta_DT1"> 0 </p>
-		<label id = "LastFrequenciesLabel_DT1">f (frequency in Hz)</label>
-		<p id="LastFrequencies_DT1"> </p>
-		<p id="UserNotices_DT1" ></p>	
-		<input type="button" id="StartOver_DT1" value="Start Over" data-toggle="tooltip" data-placement="top" title="Back to beginning on user help">
-	</div>
-	
-	<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
-	<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas:  you must set bitmap for canvas in html, css only -->
-	<!-- sets element size, resulting in distortion -->
-	<div id="UnitCircleAndGraphCanvas">
-		<!--  AmpSinCosCircle sits to the left -->
-		<canvas id="AmpSinCosCircle_DT1" width=450 height=550">
-			Your Browser does not support canvas tag, you are missing graph capability
-		</canvas>
-		<!--  to add border to canvas, add this at end style="border:1px solid #000000;" -->
-		<p id="sinEqtnLabelHI_DT1">S=sin(2&#8901&#960&#8901f&#8901t)</p>  
-		<p id="sinEqtnLabelLO_DT1">S=sin(2&#8901&#960&#8901f&#8901t)</p> 
-		<!--  FreqChange sits to the right of the above canvas, AmpSinCosCircle_DT1 -->
-		<canvas id="FreqChange_DT1" width=500 height=650 >
-			Your Browser does not support canvas tag, you are missing graph capability
-		</canvas>
-		<!-- This funTutorial canvas is intended to lay over all other canvases to give a tutorial of how it works -->
-		<!-- width is addition of two canvases above and height = shorter of the two so this sits on top of both of them -->
-		<!-- We want to point to objects on unit circle canvas so this canvas must sit exactly on  AmpSinCosCircle_DT1-->
-		<!--  debug use style="border:1px solid #FF0000; to see the canvas in red -->
-		<canvas id="funTutorial_DT1" width=950 height=550 ">
-			Your Browser does not support canvas tag, you are missing graph capability
-		</canvas>							
+	<div id="DynamicTrig1Block">
+		<div id ="headerAndCtl_DT1">
+			<h1 id="HeaderTrig_DT1">Sine meets time and we get frequency</h1>
+		</div>
 		
+		<div id="CircleValues_DT1">	
+			<input type="button" id="ClearOldFreq_DT1" value="Clear" data-toggle="tooltip" data-placement="top" title="Stop clock.  Clear plots">
+			<label id = "time_DT1">Time (sec)</label>
+			<p id="timeVal_DT1"> </p>
+			<label id="thetaLabel_DT1">&#920</label>
+			<p id="theta_DT1"> 0 </p>
+			<label id = "LastFrequenciesLabel_DT1">f (frequency in Hz)</label>
+			<p id="LastFrequencies_DT1"> </p>
+			<p id="UserNotices_DT1" ></p>	
+			<input type="button" id="StartOver_DT1" value="Start Over" data-toggle="tooltip" data-placement="top" title="Back to beginning on user help">
+		</div>
+		
+		<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
+		<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas:  you must set bitmap for canvas in html, css only -->
+		<!-- sets element size, resulting in distortion -->
+		<div id="UnitCircleAndGraphCanvas">
+			<!--  AmpSinCosCircle sits to the left -->
+			<canvas id="AmpSinCosCircle_DT1" width=450 height=550">
+				Your Browser does not support canvas tag, you are missing graph capability
+			</canvas>
+			<!--  to add border to canvas, add this at end style="border:1px solid #000000;" -->
+			<p id="sinEqtnLabelHI_DT1">S=sin(2&#8901&#960&#8901f&#8901t)</p>  
+			<p id="sinEqtnLabelLO_DT1">S=sin(2&#8901&#960&#8901f&#8901t)</p> 
+			<!--  FreqChange sits to the right of the above canvas, AmpSinCosCircle_DT1 -->
+			<canvas id="FreqChange_DT1" width=500 height=650 >
+				Your Browser does not support canvas tag, you are missing graph capability
+			</canvas>
+			<!-- This funTutorial canvas is intended to lay over all other canvases to give a tutorial of how it works -->
+			<!-- width is addition of two canvases above and height = shorter of the two so this sits on top of both of them -->
+			<!-- We want to point to objects on unit circle canvas so this canvas must sit exactly on  AmpSinCosCircle_DT1-->
+			<!--  debug use style="border:1px solid #FF0000; to see the canvas in red -->
+			<canvas id="funTutorial_DT1" width=950 height=550 ">
+				Your Browser does not support canvas tag, you are missing graph capability
+			</canvas>							
+			
+		</div>
 	</div>
 	
 	<div id="FirstHelp_DT1">

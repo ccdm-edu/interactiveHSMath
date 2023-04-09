@@ -535,7 +535,7 @@ $(function() {
 		playOrStopVerbalIntro();
 	});
 	
-	//need to not have every css load on every page, when that is fixed, can get rid of this
+	//since this is on template and dont need it here...
 	$('a[href="#AdvancedTopics"]').css('display', 'none');
 
     //********************************************************

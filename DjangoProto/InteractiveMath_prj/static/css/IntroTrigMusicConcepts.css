@@ -1,0 +1,40 @@
+/***********************
+This is the style sheet for ToneTrig.html
+************************/
+/* create global var for this html */
+:root{
+	
+}
+h1 {
+	text-align: center;
+}
+#Initial_MCexplaining {
+	margin: 10px;
+	/* center up on its own line */
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+#trigIntro-controls {
+	margin: 10px;
+	/* center up on its own line */
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+#TriggyIntroText {
+	height:200px;
+	width:800px;
+	margin: 10px;
+	padding: 10px;
+	border:2px solid blue;
+	font:16px/26px Georgia, Garamond, Serif;
+	overflow:auto;  /* to get scroll bars */
+	/* center up on its own line */
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+#ReviewConcepts{
+	
+}

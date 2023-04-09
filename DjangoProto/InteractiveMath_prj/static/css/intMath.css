@@ -255,18 +255,21 @@ img#clickHereCursor.userHitPlay {
 }
 
 /************all pages, footer **************************/
-/* I don't fully understand all this but if I put a bottom spec, on dynamictrig page, it places it up near
-the top, like it has no idea where bottom is. I know static and tone trig page css aren't done quite right but
-the footer is at least at bottom, forcing footer relative to top is kloodgy  but does work for all pages*/
-footer {
+#Site-footer {
 	position: relative;
-	/*bottom: 10px;*/
-	top: 700px;
-	height: 2.5rem;
-	color: black;
+	bottom: 30px; 
+	height: 100px;
+	margin: 40px;
 }
-footer.id_site {
+/***************all pages next page button ****************/
+/* students like more than one way to get to next page and they are used to a button at bottom saying "next" */
+#GoToNextPage {
+	float: right;
+}
+#SiteInfo-links {
 	position: absolute;
-	left: 0px;	
+	bottom: 0px;
+	width: 300px;	
 }
+
 	

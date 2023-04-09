@@ -3,10 +3,10 @@ This is the style sheet for MusicNotesTrig.html
 ************************/
 /* create global var for this html */
 :root{
-	--LEFT_EDGE_PLOT: 49px;
-	--WIDTH_466HZ: 159px;
-	--HEIGHT_TONE_PLOT: 140px;
-	--TOP_EDGE_PLOT: 60px;
+	--LEFT_EDGE_PLOT: 55px;
+	--WIDTH_466HZ: 159px;  /* the width in pixels of 2.15ms */
+	--HEIGHT_TONE_PLOT: 162px;
+	--TOP_EDGE_PLOT: 33px;
 	--HEIGHT_HEADER: 40px;
 	--WIDTH_MUSIC_NOTE_CTL: 410px;
 	--HEIGHT_MUSIC_NOTE_CTL: 150px;
@@ -71,7 +71,7 @@ input[type="range"] {
 
 
 /*****************************************************************/
-/* arrange the expansion lines between the two graphs for max understandability */
+/* this chunk includes graph and the canvas below that shows periodicity */
 #GraphPlusPeriodMarkers{
     position:relative;
 }
@@ -122,13 +122,13 @@ input[type="range"] {
 #Period_Text1{
 	position: absolute;
 	left: calc(var(--LEFT_EDGE_PLOT) + 50px);
-	top: calc(var(--TOP_EDGE_PLOT) + 160px);
+	top: calc(var(--TOP_EDGE_PLOT) + var(--HEIGHT_TONE_PLOT) + 30px);
 	color: red;
 }
 #Period_Text2{
 	position: absolute;
 	left: calc(var(--LEFT_EDGE_PLOT) + var(--WIDTH_466HZ) + 50px);
-	top: calc(var(--TOP_EDGE_PLOT) + 190px);
+	top: calc(var(--TOP_EDGE_PLOT) + var(--HEIGHT_TONE_PLOT) + 40px);
 	color: blue;
 }
 /* we allow the time expand lines to write on this canvas */
@@ -140,3 +140,8 @@ input[type="range"] {
 }
 /*****************************************************************/
 
+/**********************define space for footer to float at bottom***************/
+#SineCosBlock {
+	/* define space for rest of page makes footer float to bottom */
+	height: 500px;
+}	
