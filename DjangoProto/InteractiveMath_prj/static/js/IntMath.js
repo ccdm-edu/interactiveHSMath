@@ -14,10 +14,31 @@ $(function () {
         // can't add active to any DOM element since when new page loads, it will be crushed by reloading of subtopics.html
         // save "this" and when page loads, reset it to active
         sessionStorage.setItem("activePage", $(this).attr('href'));
-        
+
 	});
 	
-	// on upper menu bar, want selected items to appear different
+	// we now have a NEXT > button (student request) for within a topic to go to next page when done
+	// If selected, we need the categories on the left to reflect which is active.  We never use the next button
+	// to change topics (subjects along top)
+	$("#GoToNextPage").on('click', function(event) {
+		// we wrap the <a> tag around the button for each pages js, so have to go up one level
+		let buttonSelPage = $("#GoToNextPage").parent().attr('href');
+		// get rif of the old "active" page, there may not be anything stored under sessionStorage yet so just search and remove
+		$('ul.nav.flex-column > li.nav-item > a').each(function() {
+  			if ($(this).hasClass('active')) {
+				$(this).removeClass('active');  
+				console.log("removed active from list item " + $(this).text());
+			};
+		});
+		// if page hasnt changed yet, setting session storage will update properly	
+		sessionStorage.setItem("activePage", buttonSelPage);
+		// if page has already changed, update here as active
+		let searchItem = 'ul.nav.flex-column > li.nav-item > a[href="' + burronSelPage + '"]';
+		let $currActiveListItemATag = $(searchItem);
+		$currActiveListItemATag.addClass('active')
+    });
+	
+	// on upper menu bar, where its topics, not the subtopics over in list to left, we want selected items to appear different
 	$('div#upperNavbarCollapse.collapse.navbar-collapse > ul.navbar-nav.mr-auto > li.nav-item > a.nav-link').on('click', function(e) {
 		$(this).css('font-weight', 'bold');
 		// can't change font on any DOM element since when new page loads, it will be crushed by reloading of subtopics.html

@@ -85,15 +85,10 @@
 	                    {% block sidebar_block %}
 	                        {% get_subtopic_list topic %}
 	                    {% endblock %}
-		                <div id="LegalNotice_Consent">
-		                	<p>By continuing to use this site, you agree with the <a href="{% url 'int_math:TermsOfUse' %}">Terms Of Use</a> 
-		                	and <a href="{% url 'int_math:Privacy' %}">Privacy</a>/<a href="{% url 'int_math:Cookie' %}">Cookie</a> policy.
-		                	For questions/comments, please see <a href="{% url 'int_math:Contact_me' %}">Contact</a> page.
-		                	Cookies are used to enhance your experience on this site.  Allow cookies? (default is no)<br></p>
-		                	<div id="CookieChoice">
-		                		<br><button type="button" id='yesCookies'>Yes</button><button type="button" id='noCookies'>No</button>
-		                	</div>
-		                </div>
+	                    {% block legal_notices %}
+	                    <!-- only used on landing page for now, since may not always be enough room with long lists of subjects -->
+						{% endblock %}
+
                     </div>
                 </nav>
                 

@@ -15,8 +15,9 @@ $(function() {
 		sessionStorage.setItem('UserIsNew', true);  // if user never changes anything, they are classed as newbie
 		$("#newbieMode").prop('checked', true); // put them in newbie mode
 	}
-		
-    
+	
+	//Dont want a next button on this page so kill it here	
+    $("#GoToNextPage").css('display', 'none');
     //********************************************************
 	// create a "script" for the auto-demo tutorial, by now, all variables should be set
 	//********************************************************	

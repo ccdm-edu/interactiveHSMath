@@ -119,5 +119,5 @@ legend div.line:before {
 /***************layout of whole page *******************************************/
 #LandingMainBody{
 	/* define space for rest of page makes footer float to bottom */
-	height: 550px;
+	height: 575px;
 }		    
