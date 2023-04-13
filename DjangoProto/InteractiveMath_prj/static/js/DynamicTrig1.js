@@ -4,6 +4,9 @@ $(function() {
 	// turn on help in upper left corner
 	$('#startAutoDemo').css('display', 'inline-block');
 	
+	//if Next  button hit (in base template), set it up to go to intro page
+	$("#GoToNextPage").wrap('<a href="../DynamicTrig2"></a>');
+	
 	// user can only pick expert/newbie mode on the first home page
 	let newbieMode = sessionStorage.getItem('UserIsNew');
 	if (newbieMode && (newbieMode.toLowerCase() === "true")) {

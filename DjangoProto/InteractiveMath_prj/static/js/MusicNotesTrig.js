@@ -4,6 +4,9 @@ $(function() {
 	// turn on help in upper left corner
 	$('#startAutoDemo').css('display', 'inline-block');
 	
+	//if Next, button hit (in base template), set it up to go to intro page
+	$("#GoToNextPage").wrap('<a href="../MusicSineSummary"></a>');
+	
 	// user can only pick expert/newbie mode on the first home page
 	let newbieMode = sessionStorage.getItem('UserIsNew');
 	let stopModal = true;  // will stop modal window from popping up later in this script

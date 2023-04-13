@@ -4,6 +4,9 @@ $(function() {
 	// put up autodemo image to introduce to students for future pages
 	$("#startAutoDemo").css('display', 'inline-block');
 	
+	//if Next  button hit (in base template), set it up to go to intro page
+	$("#GoToNextPage").wrap('<a href="../StaticTrig"></a>');
+	
 	// user can only pick expert/newbie mode on the first home page
 	let newbieMode = sessionStorage.getItem('UserIsNew');
 	if (newbieMode && (newbieMode.toLowerCase() === "true")) {

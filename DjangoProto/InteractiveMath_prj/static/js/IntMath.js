@@ -44,6 +44,8 @@ $(function () {
 		// can't change font on any DOM element since when new page loads, it will be crushed by reloading of subtopics.html
         // save "this" and when page loads, reset it to active
         sessionStorage.setItem("activeTopBarIndex", $('div#upperNavbarCollapse.collapse.navbar-collapse > ul.navbar-nav.mr-auto > li.nav-item').index($(this).parent()));
+        // clear out obsolete topic, in case there is one, we want to go to first element of the subtopics
+		sessionStorage.removeItem("activePage");
 	});
 	
 	$( document ).ready(function() {
