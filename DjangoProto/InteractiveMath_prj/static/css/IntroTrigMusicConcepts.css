@@ -3,17 +3,38 @@ This is the style sheet for ToneTrig.html
 ************************/
 /* create global var for this html */
 :root{
-	
+	--WIDTH_GIF: 320px;
+
 }
+/*************************Triggy explaining*********************************/
 h1 {
 	text-align: center;
 }
+/* This is the gif that will "explain" intro terms and rest of music-trig */
 #Initial_MCexplaining {
 	margin: 10px;
+	width: var(--WIDTH_GIF);  
 	/* center up on its own line */
 	display: block;
-	margin-left: auto;
 	margin-right: auto;
+	margin-left: auto;
+	
+	/* set up animation */
+	animation-duration: 1s;
+  	animation-name: slidein;
+  	animation-timing-function: ease-in-out;
+
+}
+@keyframes slidein {
+  from {
+  	/* push it mostly off page (still have a bit of margin) */
+	margin-left: calc(-1 * var(--WIDTH_GIF));
+  }
+
+  to {
+    /*need to manually calculate here what auto does for you to center it else it gets confused */
+    margin-left: calc(50% - 0.5 *var(--WIDTH_GIF));
+  }
 }
 #trigIntro-controls {
 	margin: 10px;
@@ -35,6 +56,29 @@ h1 {
 	margin-left: auto;
 	margin-right: auto;
 }
-#ReviewConcepts{
-	
+/*******************Triggy done explaining, go to intro videos on key concepts ************************/
+#IntroConceptVideo{
+	/* center up the video*/
+	margin-left: auto;
+	margin-right: auto;
+	padding: 20px;
+}
+#IntroToConceptList > li.active{
+	color: pink;
+}
+/* set of input/output controls for user interaction with freq measuring */
+#IntroMusicInteractive {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+}
+/* for each item in the flex box */
+.IntroMusicFreqControl {
+	margin: 20px;
+}
+/* for the numerical results, put in a box */
+.IntroMusicResult {
+	padding: 5px;
+	width: 75px;  /* arbitrary size on width of indicator */
+	border-style: solid;
 }

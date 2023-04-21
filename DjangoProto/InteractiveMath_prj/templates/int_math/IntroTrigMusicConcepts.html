@@ -12,30 +12,68 @@
 
 {% block body_block %}
 	<h1>Introduction to</h1><h1>Trig Functions and Music Concepts</h1>
+	
+	<!-- --------------------------------Triggy's intro to site and reveiew topica-------------------------------- -->
 	<img id="Initial_MCexplaining" src="{% static 'images/IntroCharacter.gif' %}" alt = "Character introducing terms and concepts" >
 	<audio controls id="trigIntro-controls"> 
-	<source src="{% static 'AudioExpln/TriggyIntro.mp3' %}"> 
-		Your browser does not support html5 audio, please upgrade your browser (Chrome preferably) to latest version
-	</audio>
+		<source src="{% static 'AudioExpln/TriggyIntro.mp3' %}"> 
+			Your browser does not support html5 audio, please upgrade your browser (Chrome preferably) to latest version
+		</audio>
 	<div id="TriggyIntroText" ">
-	<!-- text comes from MusicIntroToTerms.docx which the synthetic voice speaks to user.  Best to put text here for SEO -->
-	Hi, my name is Triggy.  We are going to show how trig functions, namely sine and cosine, are used in music. 
-	We’ll start with me playing a tune you know with simple sine functions then you can do this yourself and try new tunes. 
-	Then we will look at how these sine and cosine functions come out of your algebra 2 class, then they start moving faster 
-	and faster until they get fast enough to be heard by your ears and become a pitch frequency and then we will 
-	compare those trig functions to the recordings of real musicians playing various instruments.   
-
-	<br>
-	But first we have to review some basic terms.  When this audio is done, 
-	I will bring up several review topics or you can hit the Review button below to get there faster.  
-	Each of the topics will bring up a short video explanation and there will be stuff for you to do during 
-	the video.  I will start you on the first topic of frequency and period but you can choose as you like. 
-	Go through or skip topics as you please.  When you are done or if you already know these concepts, 
-	click the next page button on the lower right corner of this page or page 2 over on the far left list of 
-	pages.  Have fun!
+		<!-- text comes from MusicIntroToTerms.docx which the synthetic voice speaks to user.  Best to put text here for SEO -->
+		Hi, my name is Triggy.  We are going to show how trig functions, namely sine and cosine, are used in music. 
+		We’ll start with me playing a tune you know with simple sine functions then you can do this yourself and try new tunes. 
+		Then we will look at how these sine and cosine functions come out of your algebra 2 class, then they start moving faster 
+		and faster until they get fast enough to be heard by your ears and become a pitch frequency and then we will 
+		compare those trig functions to the recordings of real musicians playing various instruments.   
+	
+		<br>
+		But first we have to review some basic terms.  When this audio is done, 
+		I will bring up several review topics or you can hit the Review button below to get there faster.  
+		Each of the topics will bring up a short video explanation and there will be stuff for you to do during 
+		the video.  I will start you on the first topic of frequency and period but you can choose as you like. 
+		Go through or skip topics as you please.  When you are done or if you already know these concepts, 
+		click the next page button on the lower right corner of this page or page 2 over on the far left list of 
+		pages.  Have fun!
 	
 	</div>
 	<button type="button" class="btn btn-outline-info" id="ReviewConcepts">Review</button>
+	
+	<!-- ---------------------------This is the review stuff that happens after Triggy's intro-------------------------------- -->
+	<video height='480' width='640' id = "IntroConceptVideo" controls poster="{% static 'images/MusicMenu.svg' %}">
+		<source src="{% static 'VideoExpln/MusicSineSummary.mp4' %}" type="video/mp4">
+		Your browser does not support the Video tag of html5, time for a browser upgrade!		
+	</video>
+	<div id=IntroMusicInteractive>
+		<section class="IntroMusicFreqControl">
+			<p><strong>Measure Repetition</strong></p>
+			<button type="button" class="btn btn-primary" id="UserMeasuresFrequency" data-toggle="tooltip" data-placement="left" title="Click to count periodic events">Hit Me</button>
+			<p id="informUserFreqQuality" ></p>
+		</section>
+		<section class="IntroMusicFreqControl">
+			<p><strong>Time Elapsed</strong> (sec)</p>
+			<div  class = "IntroMusicResult" id="IntroFreqTime">00.0</div>
+		</section>
+		<section class="IntroMusicFreqControl">
+			<p><strong>Period</strong> (sec) <br>average</p>
+			<div class = "IntroMusicResult" id="IntroFreqPeriod">00.0</div>
+		</section>
+		<section class="IntroMusicFreqControl">
+			<p><strong>Frequency</strong> = 1/Period (Hz) <br>average</p>
+			<div class = "IntroMusicResult" id="IntroFreqHz">00.0</div>
+		</section>
+		<section class="IntroMusicFreqControl">
+			<p><strong>Frequency</strong> = (1/Period)* (60 sec/1 min) <br>average<br>(beat per minute, bpm)</p>
+			<div class = "IntroMusicResult" id="IntroFreqBPM">00.0</div>
+		</section>
+		</section>		
+	</div>
+	<h2>
+	<ul id="IntroToConceptList">
+		<li id="FreqPerIntro" data-toggle="tooltip" data-placement="left" title="Click to select">Frequency and Period<br>
+		<li id="SineCosIntro" data-toggle="tooltip" data-placement="left" title="Click to select">Sine and Cosine<br>
+		<li id="SoundwavePitchIntro" data-toggle="tooltip" data-placement="left" title="Click to select">Soundwaves and Pitch Tones<br>
+	</ul></h2>
 	
 	<!--  have to put another jquery library ref here, not sure why, its in the base, this must come before the jquery ui -->	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
