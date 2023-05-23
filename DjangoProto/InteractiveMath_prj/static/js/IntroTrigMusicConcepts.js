@@ -13,7 +13,7 @@ $(function() {
 	$("#IntroToConceptList").css('display', 'none');
 	$("#IntroConceptVideo").css('display', 'none');
 	$("#IntroMusicInteractive").css('display', 'none');
-	
+	const VIDEO_EXPLN_FILENAMES = ["../../static/VideoExpln/IntroToFrequencyEtc_MedQualityHD720p.mp4", "../../static/VideoExpln/IntroSineCosine_MedQualHD720p.mp4", "IntroToAudioTones.mp4"]
 	const BAD_FREQ_STABILITY = "Frequency isn't stable"
 	const REPORT_FREQ_ACCURACY = ""
 	const ACTIVE_TOPIC = "     <-- Current Topic";
@@ -34,7 +34,10 @@ $(function() {
 				//change text of new active topic
 				let currText =$(this).text();
 				$(this).text(currText + ACTIVE_TOPIC);
-				// AJAX over the video if not here already
+				// swap out the video with new one
+				let tutorialVideo = $('#IntroConceptVideo')[0];
+				tutorialVideo.src = VIDEO_EXPLN_FILENAMES[index];
+				tutorialVideo.load();				
 			}
 		});
 	}
@@ -79,18 +82,22 @@ $(function() {
 		$('#IntroFreqHz').text((1/avPer).toFixed(1));
 		$('#IntroFreqBPM').text((60/avPer).toFixed(1))
 	}
-	let currTime = 0;
+	let currTime = 0;  // accumulated time
+	let timeIntoPeriod = 0;  // resets on begin of every period
 	let timerIsOn = false;
 	let USER_NOT_INTERACTING = 10; //user hit button once and never again, not a desired outcome
 	let startInterval = setInterval(function(){
 		if (timerIsOn){
-			currTime = currTime + 0.1; // add 100 ms everytime we come here		
+			currTime = currTime + 0.1; // add 100 ms everytime we come here	
+			timeIntoPeriod = timeIntoPeriod + 0.1;	
 			$('#IntroFreqTime').text(currTime.toFixed(1));  // update time label	
+			$('#IntroFreqTimeReset').text(timeIntoPeriod.toFixed(1));
 			if ( (avPer > 0) && (currTime - lastTimeMarker) > (2 * avPer) ) {
 				// user has stopped hitting freq count button, this is a legitimate ending of counting
 				updateStatOutput();
 				timerIsOn = false;
 				currTime = 0;
+				timeIntoPeriod = 0;
 				numTimesClicked = 0;
 				lastTimeMarker = 0;
 				avPer = 0;
@@ -101,11 +108,12 @@ $(function() {
 				// user hit button once and never again, need to explain how this all works 
 				timerIsOn = false;
 				currTime = 0;
+				timeIntoPeriod = 0;
 				numTimesClicked = 0;
 				lastTimeMarker = 0;
 				avPer = 0;
 				periodAccum = 0;
-				$("#informUserFreqQuality").html("Hit button every time<br>a periodic event occurs");
+				$("#informUserFreqQuality").html("Hit button on event start");
 				console.log('user hit abnormal ending');
 			}
 		}
@@ -124,6 +132,7 @@ $(function() {
 			let currPeriod = currTime - lastTimeMarker;
 			periodAccum = periodAccum + currPeriod;
 			avPer = periodAccum/numTimesClicked;
+			timeIntoPeriod = 0;
 			updateStatOutput();
 			lastTimeMarker = currTime;  // for next click
 		}	

@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block body_block %}
-	<h1>Introduction to</h1><h1>Trig Functions and Music Concepts</h1>
+	<h1>Intro to Trig and Music Concepts</h1>
 	
 	<!-- --------------------------------Triggy's intro to site and reveiew topica-------------------------------- -->
 	<img id="Initial_MCexplaining" src="{% static 'images/IntroCharacter.gif' %}" alt = "Character introducing terms and concepts" >
@@ -40,8 +40,8 @@
 	<button type="button" class="btn btn-outline-info" id="ReviewConcepts">Review</button>
 	
 	<!-- ---------------------------This is the review stuff that happens after Triggy's intro-------------------------------- -->
-	<video height='480' width='640' id = "IntroConceptVideo" controls poster="{% static 'images/MusicMenu.svg' %}">
-		<source src="{% static 'VideoExpln/MusicSineSummary.mp4' %}" type="video/mp4">
+	<video height='480' width='640' id = "IntroConceptVideo" controls poster="{% static 'images/TriggyVer1_openEye.svg' %}">
+		<source src="{% static 'VideoExpln/IntroToFrequencyEtc_MedQualityHD720p.mp4' %}" type="video/mp4">
 		Your browser does not support the Video tag of html5, time for a browser upgrade!		
 	</video>
 	<div id=IntroMusicInteractive>
@@ -53,6 +53,10 @@
 		<section class="IntroMusicFreqControl">
 			<p><strong>Time Elapsed</strong> (sec)</p>
 			<div  class = "IntroMusicResult" id="IntroFreqTime">00.0</div>
+		</section>
+		<section class="IntroMusicFreqControl">
+			<p><strong>Time into Period</strong> (sec)</p>
+			<div  class = "IntroMusicResult" id="IntroFreqTimeReset">00.0</div>
 		</section>
 		<section class="IntroMusicFreqControl">
 			<p><strong>Period</strong> (sec) <br>average</p>

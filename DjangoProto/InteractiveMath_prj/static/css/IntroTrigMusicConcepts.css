@@ -4,6 +4,7 @@ This is the style sheet for ToneTrig.html
 /* create global var for this html */
 :root{
 	--WIDTH_GIF: 320px;
+	--SPACE_TO_SQUEEZE_OUT: -50px;
 
 }
 /*************************Triggy explaining*********************************/
@@ -61,24 +62,36 @@ h1 {
 	/* center up the video*/
 	margin-left: auto;
 	margin-right: auto;
-	padding: 20px;
+	/* we need height of 480 to make it readable but this puts too much white space at the top of video.  
+	Allow the header to invade this unused white space */
+	position: relative;
+	top: var(--SPACE_TO_SQUEEZE_OUT);
 }
 #IntroToConceptList > li.active{
 	color: pink;
 }
 /* set of input/output controls for user interaction with freq measuring */
 #IntroMusicInteractive {
-	display: flex;
+	/* need to get this box up closer to the video so users can see the video selections below */
+	position: relative;
+	top: var(--SPACE_TO_SQUEEZE_OUT);  
+	/* set up internal elements as flex */
 	flex-direction: row;
 	justify-content: flex-start;
 }
 /* for each item in the flex box */
 .IntroMusicFreqControl {
-	margin: 20px;
+	margin: 10px;
 }
 /* for the numerical results, put in a box */
 .IntroMusicResult {
 	padding: 5px;
 	width: 75px;  /* arbitrary size on width of indicator */
 	border-style: solid;
+}
+/* the list of videos user can choose from */
+#IntroToConceptList {
+	/* need to move this up so as to not let user get lost in white space */
+	position: relative;
+	top: var(--SPACE_TO_SQUEEZE_OUT);
 }
