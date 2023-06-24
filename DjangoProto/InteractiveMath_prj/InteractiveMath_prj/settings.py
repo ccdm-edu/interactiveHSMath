@@ -15,12 +15,22 @@ import os
 from django.conf.global_settings import SECURE_SSL_REDIRECT, SECURE_HSTS_SECONDS,\
     SECURE_HSTS_INCLUDE_SUBDOMAINS, SECURE_HSTS_PRELOAD, SESSION_COOKIE_HTTPONLY
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 STATIC_DIR = os.path.join(BASE_DIR,"static")
-STATIC_MUSIC_DIR = os.path.join(STATIC_DIR, 'MusicNotes')
-STATIC_AUDIO_HELP_DIR = os.path.join(STATIC_DIR, 'AudioExpln')
-STATICFILES_DIRS = [STATIC_DIR, STATIC_MUSIC_DIR,STATIC_AUDIO_HELP_DIR]
+#*****make a symbolic link to test how it works *****
+# this is the actual location of desired binaries
+BINARIES_LOC_str = os.environ.get('STATIC_BINARIES_DIR')
+
+#this is the destination location
+SYMLINK_BINARIES_dir = os.path.join(STATIC_DIR,"static_binaries")
+if (not (os.path.exists(SYMLINK_BINARIES_dir))):
+    os.symlink(BINARIES_LOC_str, SYMLINK_BINARIES_dir)
+    
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+#STATIC_MUSIC_DIR = os.path.join(STATIC_DIR, 'MusicNotes')
+#STATIC_AUDIO_HELP_DIR = os.path.join(STATIC_DIR, 'AudioExpln')
+STATICFILES_DIRS = [STATIC_DIR]
 
 RECAPTCHA_SECRET_KEY = os.environ.get('G_RECAPTCHA_V3_SECRET_KEY')
 

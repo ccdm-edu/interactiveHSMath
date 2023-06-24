@@ -13,11 +13,10 @@ $(function() {
 	$("#IntroToConceptList").css('display', 'none');
 	$("#IntroConceptVideo").css('display', 'none');
 	$("#IntroMusicInteractive").css('display', 'none');
-	const VIDEO_EXPLN_FILENAMES = ["../../static/VideoExpln/IntroToFrequencyEtc_MedQualityHD720p.mp4", "../../static/VideoExpln/IntroSineCosine_MedQualHD720p.mp4", "IntroToAudioTones.mp4"]
+	const VIDEO_EXPLN_FILENAMES = ["../../static/static_binaries/VideoExpln/IntroToFrequencyEtc_MedQualityHD720p.mp4", "../../static/static_binaries/VideoExpln/IntroSineCosine_MedQualHD720p.mp4", "IntroToAudioTones.mp4"]
 	const BAD_FREQ_STABILITY = "Frequency isn't stable"
 	const REPORT_FREQ_ACCURACY = ""
 	const ACTIVE_TOPIC = "     <-- Current Topic";
-	const VIDEO_LIST = ["FreqPeriod.mp4", "SinCos.mp4", "SoundPitch.mp4"];
 	function makeVideoActive(currVideoIndex){
 		activeVideoIndex = currVideoIndex;
 		// let user know which video is active
