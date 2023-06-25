@@ -19,8 +19,8 @@ h1 {
 .contributor_contact h3{
 	font-size: 15px;	
 }
-/* Main */
-main {
+
+#AcknowledgementsBlock {
   display: grid;
   /* below header, 3 col per width, 5 deep (for now) */
   grid-template-columns: repeat(3, 1fr);

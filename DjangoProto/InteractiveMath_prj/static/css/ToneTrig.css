@@ -24,16 +24,7 @@ This is the style sheet for ToneTrig.html
 	left: 0px;
 	height: 700px;
 }
-/*****************************************************************/
-/* turn off the indicator (botCheckTestNeeded) that bot check is needed or not (modal window comes up with test or not).  
-   The server sends a cookie to client which
-   cannot be modified, which holds the bot state for the server of this particular client.  If the client asks for 
-   something and the bot test has not
-   passed, the request will be rejected. */
-   /* display block overrides the none so need to force with important */
-#botCheckTestNeeded{
-	display: none !important;
-}
+
 /*****************************************************************/
 /* this is a header of current activity*/
 #musicalActivity {
@@ -46,20 +37,12 @@ This is the style sheet for ToneTrig.html
 	font-size: 32px;
 	}
 /*****************************************************************/
-/* This is the three side by side controls 1.  treble clef that picks instrument/note 2.  explanation of current activity 3.  tone param changes */
-#InstrumentToneMenu {
-		  position: absolute;
-		  left: var(--NO_AUTODEMO_LEFT_POS);
-          width:50px;
-          height:100px;
-          background-color:white; 
-          padding: 0px;
-}
+/* This is the side by side controls 1.  explanation of current activity 2.  tone param changes */
 
 /* item 3, tone controls, freq, amplitude, phase*/
 #toneChanges {
 	    position: absolute;
-	    left: calc(100px + var(--NO_AUTODEMO_LEFT_POS));
+	    left: calc(25px + var(--NO_AUTODEMO_LEFT_POS));
 		display: inline-block; 
 		border: 1px solid black;
 }
@@ -68,13 +51,7 @@ This is the style sheet for ToneTrig.html
 	position: relative;
 	left: 40px;
 }
-/* This handles the header and "play music mp3 again" button on upper left shown as Plan Note button
- that comes and goes as user loads music notes*/
-#allowNotePlay {
-	position: relative;
-	visibility: hidden;
-	left: -20px;
-}
+
 /*****************************************************************/
 /* arrange the expansion lines between the two graphs for max understandability */
 #overlapExpansionLines{

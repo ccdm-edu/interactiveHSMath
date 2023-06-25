@@ -44,13 +44,16 @@ DEBUG_str = os.environ.get('DEBUG')
 #note, this variable is used on several pages in this project, cant change name here alone
 DEBUG = False
 #
+DEPLOY_URL_str = os.environ.get('TEST_DEPLOY_URL')
 if DEBUG_str.lower() == 'true':
     DEBUG = True
 
 if DEBUG:
     ALLOWED_HOSTS = ['127.0.0.1']
 else:
-    ALLOWED_HOSTS = ['catcoder.pythonanywhere.com']
+    ALLOWED_HOSTS = [DEPLOY_URL_str]
+    
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
