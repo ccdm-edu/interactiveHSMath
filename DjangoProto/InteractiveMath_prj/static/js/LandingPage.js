@@ -29,7 +29,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/LandingPage_Seg0.mp3',
+			 	{filenameURL: '../../static/static_binaries/AudioExpln/LandingPage_Seg0.mp3',
 			 	waitTimeMillisec: 0}
 			},
 			{segmentActivity: "ANNOTATE_ELEMENT",
@@ -85,7 +85,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/LandingPage_Seg1.mp3',
+			 	{filenameURL: '../../static/static_binaries/AudioExpln/LandingPage_Seg1.mp3',
 			 	waitTimeMillisec: 6000}
 			},
 						

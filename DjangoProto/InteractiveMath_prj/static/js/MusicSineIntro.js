@@ -441,7 +441,7 @@ $(function() {
 		// I don't think we need a csrf token for this ajax post.  1.  there is already a session ID required for this
 		// request 2.  Nothing is stored to database, request must be a code for filename we have or else get error back
 		// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
-	    $.ajax({url:  '../../static/AudioExpln/SineMusicIntro.mp3',
+	    $.ajax({url:  '../../static/static_binaries/AudioExpln/SineMusicIntro.mp3',
 	    		type: 'GET',
 	    	  	// if all is ok, return a blob, which we will convert to arrayBuffer, else return text cuz its an error
 	    	  	xhr: function () {
@@ -552,7 +552,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/SineMusicIntro_Seg0.mp3'}
+			 	{filenameURL: '../../static/static_binaries/AudioExpln/SineMusicIntro_Seg0.mp3'}
 			},
 			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
 			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate

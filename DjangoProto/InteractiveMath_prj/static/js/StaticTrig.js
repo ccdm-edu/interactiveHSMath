@@ -727,7 +727,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/StaticTrig_Seg0.mp3'}
+			 	{filenameURL: '../../static/static_binaries/AudioExpln/StaticTrig_Seg0.mp3'}
 			},
 			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
 			{segmentActivity: "CLICK_ON_CANVAS",

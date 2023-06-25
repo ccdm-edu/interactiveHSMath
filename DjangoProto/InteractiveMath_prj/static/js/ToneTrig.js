@@ -933,7 +933,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/ToneTrig_Seg0.mp3'}
+			 	{filenameURL: '../../static/static_binaries/AudioExpln/ToneTrig_Seg0.mp3'}
 			},
 			//*****************************
 			// click on freq slider to change freq to 100 hz,  offset is approx guess, user can change
@@ -1078,7 +1078,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/ToneTrig_Seg1.mp3'}
+			 	{filenameURL: '../../static/static_binaries/AudioExpln/ToneTrig_Seg1.mp3'}
 			},
 			//*****************************
 			// click on freq slider to change freq to 1000 hz,  we last left off at 8kHz, need a less annoying freq 
@@ -1214,7 +1214,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/ToneTrig_Seg2.mp3'}
+			 	{filenameURL: '../../static/static_binaries/AudioExpln/ToneTrig_Seg2.mp3'}
 			},
 			//*****************************
 			// click on colorful clef pulldown menu which can cause robot

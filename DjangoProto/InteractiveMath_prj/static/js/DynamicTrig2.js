@@ -388,7 +388,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/DynamicTrig2_Seg0.mp3'}
+			 	{filenameURL: '../../static/static_binaries/AudioExpln/DynamicTrig2_Seg0.mp3'}
 			},
 			// click on go button to start sampling at 0.5 Hz
 			{segmentActivity: "ACT_ON_ELEMENT", 
