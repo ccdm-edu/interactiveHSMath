@@ -68,13 +68,13 @@ $(function() {
 	const SCALES_IMAGE_X_OFFSET = 5;  // location of image is about this much off of center of note in x in pixels
 	const SCALES_IMAGE_Y_OFFSET = 15; // location of image is about this much off of center of note in y in pixels
 
-	// frequencies (freqHz) based on http://www.bitbrothers.com/~pbrown/Musical_Instruments/Trumpet/Trumpet_Tuning_Chart.pdf
-	// notes and info from http://openmusictheory.com/pitches.html and https://bbtrumpet.com/blogs/Theory/naming-the-cs
+	//frequencies based on https://pages.mtu.edu/~suits/notefreqs.html for C major scale, old freq were notes with freq sounded by 
+	// bflat instrument (trumpet)
 	const trumpetNotes = [
 		{
 			// lowest C
 			notePlayed: "C4",
-			freqHz: 233.08,
+			freqHz: 261.63, //233.08,
 			// position of center
 			x: SCALES_LOWEST_X + SCALES_IMAGE_X_OFFSET,
 			y: SCALES_HIGHEST_Y + SCALES_IMAGE_Y_OFFSET,
@@ -83,7 +83,7 @@ $(function() {
 		{
 			// D
 			notePlayed: "D4",
-			freqHz: 261.83,
+			freqHz: 293.66, //261.83,
 			// position of center
 			x: SCALES_LOWEST_X + SCALES_DELTA_X + SCALES_IMAGE_X_OFFSET,
 			y: SCALES_HIGHEST_Y - SCALES_DELTA_Y + SCALES_IMAGE_Y_OFFSET,
@@ -92,7 +92,7 @@ $(function() {
 		{
 			// E
 			notePlayed: "E4",
-			freqHz: 293.67,
+			freqHz: 329.63, //293.67,
 			// position of center
 			x: SCALES_LOWEST_X + 2 * SCALES_DELTA_X + SCALES_IMAGE_X_OFFSET,
 			y: SCALES_HIGHEST_Y - 2 * SCALES_DELTA_Y + SCALES_IMAGE_Y_OFFSET,
@@ -101,7 +101,7 @@ $(function() {
 		{
 			// F
 			notePlayed: "F4",
-			freqHz: 311.13,
+			freqHz: 349.23, //311.13,
 			// position of center
 			x: SCALES_LOWEST_X + 3 * SCALES_DELTA_X + SCALES_IMAGE_X_OFFSET,
 			y: SCALES_HIGHEST_Y - 3 * SCALES_DELTA_Y + SCALES_IMAGE_Y_OFFSET,
@@ -110,7 +110,7 @@ $(function() {
 		{
 			// G
 			notePlayed: "G4",
-			freqHz: 349.23,
+			freqHz: 392.00, //349.23,
 			// position of center
 			x: SCALES_LOWEST_X + 4 * SCALES_DELTA_X + SCALES_IMAGE_X_OFFSET,
 			y: SCALES_HIGHEST_Y - 4 * SCALES_DELTA_Y + SCALES_IMAGE_Y_OFFSET,
@@ -119,7 +119,7 @@ $(function() {
 		{
 			// A
 			notePlayed: "A4",
-			freqHz: 392.0,
+			freqHz: 440.00, //392.0,
 			// position of center
 			x: SCALES_LOWEST_X + 5 * SCALES_DELTA_X + SCALES_IMAGE_X_OFFSET,
 			y: SCALES_HIGHEST_Y - 5 * SCALES_DELTA_Y + SCALES_IMAGE_Y_OFFSET,
@@ -128,7 +128,7 @@ $(function() {
 		{
 			// B
 			notePlayed: "B4",
-			freqHz: 440.0,
+			freqHz: 493.88, //440.0,
 			// position of center
 			x: SCALES_LOWEST_X + 6 * SCALES_DELTA_X + SCALES_IMAGE_X_OFFSET,
 			y: SCALES_HIGHEST_Y - 6 * SCALES_DELTA_Y + SCALES_IMAGE_Y_OFFSET,
@@ -137,7 +137,7 @@ $(function() {
 		{
 			// C
 			notePlayed: "C5",
-			freqHz: 466.16,
+			freqHz: 523.25, //466.16,
 			// position of center
 			x: SCALES_LOWEST_X + 7 * SCALES_DELTA_X + SCALES_IMAGE_X_OFFSET,
 			y: SCALES_HIGHEST_Y - 7 * SCALES_DELTA_Y + SCALES_IMAGE_Y_OFFSET,
@@ -378,8 +378,18 @@ $(function() {
 			$("#VolOnOff").prop("title", "Select note from above scales first");
 		}	
 	});
-		
-			
+	
+	//***********************************
+	// user wants a clean "reloaded" screen.  Mostly used at end of autodemo to clean things up
+	//***********************************	
+	$('#ResetPage').on('click', function(event){	
+		//resets graphs, scale and sound from tones only
+		resetNotes();
+		// get rid of song notes
+		$('#notesToPlay').css('display', 'none')
+  		$('#notesToPlayLabel').text("");
+	});	
+	
 	//***********************************
 	// user selects a song and code puts up notes to hit on staff
 	//***********************************	
@@ -547,14 +557,13 @@ $(function() {
     
 	const SCRIPT_AUTO_DEMO = [
 	{ segmentName: "Sine waves sound great",
-	  headStartForAudioMillisec: 15000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 35000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
 			 	{filenameURL: '../../static/static_binaries/AudioExpln/SineMusicIntro_Seg0.mp3'}
 			},
-			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
 			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
@@ -604,10 +613,10 @@ $(function() {
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 3500}
 			},
-			// turn off the tone, it gets annoying after awhile
+			// turn off the tone, and reset everything
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'VolOnOff',
+			 	{element:'ResetPage',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -616,10 +625,10 @@ $(function() {
 			// here we simply take away the red cursor from previous act but don't want to undo it
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'VolOnOff',
+			 	{element:'ResetPage',
 			 	 action: "nothing",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	waitTimeMillisec: 17000}
+			 	waitTimeMillisec: 12000}
 			},
 			// here we click on play a tune and bring up twinkle twinkle notes
 			// first bring up drop down menu
@@ -652,23 +661,69 @@ $(function() {
 			 segmentParams:
 			 	{element:'Song1',
 			 	 action: "click",
-			 	waitTimeMillisec: 20000}
+			 	waitTimeMillisec: 1000}
 			},
-			// turn back on the sound at end of audio clip
+
+			// play the first part of twinkle twinkle
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[0],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[0],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[4],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[4],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[5],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[5],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 1000}
+			},
+			{segmentActivity: "CLICK_ON_CANVAS",
+			 segmentParams: 
+			 	{xyCoord: trumpetNotes[4],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 1000}
+			},
+
+			// turn off the tone and clean up the screen
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'VolOnOff',
+			 	{element:'ResetPage',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
-			// remove cursor on silence
+			// here we simply take away the red cursor from previous act but don't want to undo it
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'VolOnOff',
+			 	{element:'ResetPage',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 20000}  // time irrelevant here
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	waitTimeMillisec: 1000}
 			},
 	  ]
 	}

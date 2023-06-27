@@ -15,11 +15,11 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	margin: 0;
 	position: relative;
 	top: 20px;
-	left: var(--HEADER_LOC);
+	left: calc(230px + var(--HEADER_LOC));
 }
 #bigIntro{
 	position: absolute;
-	top: 0px;
+	top: 0px; 
 }
 #bigIntroSub{
 	position: absolute;
@@ -228,6 +228,13 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	top: 60px;
 	left: 550px;
 	z-index: 10;
+}
+#ResetPage{
+	position: absolute;
+	width: 50px;
+	top: 60px;
+	left: 480px;
+	z-index: 10;	
 }
 #notesToPlayLabel{
 	position: absolute;
