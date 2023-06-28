@@ -29,13 +29,13 @@ $(function() {
 	if ( $("#ClefWithNotes").length ) {
     	ctxMusicCanvas = $("#ClefWithNotes").get(0).getContext('2d');
 	} else {
-    	console.log('Cannot obtain Trumpet b flat notes context');
+    	console.log('Cannot obtain C major notes context');
 	}
 	let ctxBkgdMusicCanvas;
 	if ( $("#NotesFilledIn").length ) {
     	ctxBkgdMusicCanvas = $("#NotesFilledIn").get(0).getContext('2d');
 	} else {
-    	console.log('Cannot obtain Trumpet b flat background notes context');
+    	console.log('Cannot obtain C major background notes context');
 	}
 	
 	// put up the horizontal lines for notes
@@ -70,7 +70,7 @@ $(function() {
 
 	//frequencies based on https://pages.mtu.edu/~suits/notefreqs.html for C major scale, old freq were notes with freq sounded by 
 	// bflat instrument (trumpet)
-	const trumpetNotes = [
+	const CmajorNotes = [
 		{
 			// lowest C
 			notePlayed: "C4",
@@ -146,14 +146,14 @@ $(function() {
 		
 	];
 	// Add text on the staff for the proper note		
-	$('#LowCNote').text(trumpetNotes[0].notePlayed);
-	$('#DNote').text(trumpetNotes[1].notePlayed);
-	$('#ENote').text(trumpetNotes[2].notePlayed);
-	$('#FNote').text(trumpetNotes[3].notePlayed);
-	$('#GNote').text(trumpetNotes[4].notePlayed);
-	$('#ANote').text(trumpetNotes[5].notePlayed);
-	$('#BNote').text(trumpetNotes[6].notePlayed);
-	$('#CNote').text(trumpetNotes[7].notePlayed);
+	$('#LowCNote').text(CmajorNotes[0].notePlayed);
+	$('#DNote').text(CmajorNotes[1].notePlayed);
+	$('#ENote').text(CmajorNotes[2].notePlayed);
+	$('#FNote').text(CmajorNotes[3].notePlayed);
+	$('#GNote').text(CmajorNotes[4].notePlayed);
+	$('#ANote').text(CmajorNotes[5].notePlayed);
+	$('#BNote').text(CmajorNotes[6].notePlayed);
+	$('#CNote').text(CmajorNotes[7].notePlayed);
 	
 	// set up for outputing a tone of proper freq
 	let osc = new Tone.Oscillator(); 
@@ -292,7 +292,7 @@ $(function() {
 		Object.freeze(pos);
 		let cntr = 0;
 		
-		trumpetNotes.forEach(note => {
+		CmajorNotes.forEach(note => {
 			// not sure yet which dot the user clicked on, must search all
 			if (isInside(pos, note, NOTE_RADIUS)) {
 				// turn off colors of previously selected notes
@@ -385,7 +385,7 @@ $(function() {
 	$('#ResetPage').on('click', function(event){	
 		//resets graphs, scale and sound from tones only
 		resetNotes();
-		// get rid of song notes
+		// get rid of song notes, in case user pulled up notes from a specific song
 		$('#notesToPlay').css('display', 'none')
   		$('#notesToPlayLabel').text("");
 	});	
@@ -423,7 +423,6 @@ $(function() {
 	//***********************************
 	// User clicks on either image or the words around the image to get the audio intro
 	//***********************************
-	let helpAudio;
 	function resetNotes(){
 		// turn off whatever note is already playing  and set up staff to initial state
 		osc.toDestination().stop();
@@ -438,107 +437,37 @@ $(function() {
 		sine_plot_100_1k.update();	
 		selectedNote = null;  // dont want to play any notes since notes deselected
 	};
-		
-	function playVerbalIntro() {
-		// just in case a note is playing, turn it off
-		resetNotes();
-				
-		let context;
-		// Safari has implemented AudioContext as webkitAudioContext so need next LOC
-		window.AudioContext = window.AudioContext || window.webkitAudioContext;
-		context = new AudioContext();			
+	
+	// Do the verbal intro over to the far right usint the AutoDemo class with only the audio file
+	const SCRIPT_VERBAL_INTRO = [
+	{ segmentName: "",  // unused here
+	  headStartForAudioMillisec: 0, // doesn't matter, we play audio only, nothing more
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: '../../static/static_binaries/AudioExpln/SineMusicIntro.mp3'}
+			}
+		]
+	}];
+	let verbalIntro = new AutoDemo(SCRIPT_VERBAL_INTRO, 'funTutorial_MSIntro');  // give the demo the full script
 
-		// I don't think we need a csrf token for this ajax post.  1.  there is already a session ID required for this
-		// request 2.  Nothing is stored to database, request must be a code for filename we have or else get error back
-		// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
-	    $.ajax({url:  '../../static/static_binaries/AudioExpln/SineMusicIntro.mp3',
-	    		type: 'GET',
-	    	  	// if all is ok, return a blob, which we will convert to arrayBuffer, else return text cuz its an error
-	    	  	xhr: function () {
-        			let xhr = new XMLHttpRequest();
-        			xhr.onreadystatechange = function () {
-                		if (xhr.readyState == 2) {
-                			// send() was called and headers and status are returned
-                    		if (xhr.status == 200) {
-                        		xhr.responseType = "blob";
-                    		} else {
-                        		xhr.responseType = "text";
-                    		}
-                		}
-        			};
-        			return xhr;
-    			},
-			})
-			.done(function(data, statusText, jqXHR) {
-				// DO, rewrite this with promise syntax  https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/decodeAudioData
-				// By definition, to get here means request is done and successful, (status = 4 and 200)
-				let blobTune = new Blob([data], { 'type': 'audio/mpeg' });  // this must match what we send over
-				console.log('file size is ' + blobTune.size + ' type is ' + blobTune.type);				
-		
-				blobTune.arrayBuffer().then(blob2array => 
-					{ // done converting blob to arrayBuffer, promise complete, convert blob2array to buffer
-					context.decodeAudioData(blob2array, function(buffer) {
-						// to get here means asynchronous mp3 decode is complete and successful
-						console.log("finished decoding mp3");
-						try {
-							console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate );
-							helpAudio = context.createBufferSource();
-							helpAudio.buffer = buffer;
-							helpAudio.connect(context.destination);
-							// auto play the recording
-							helpAudio.start(0);
-							// this just needs to be somewhere where helpAudio is defined to be saved for later
-							helpAudio.onended = () => 
-							{
-								// no longer playing the audio intro, either by user stop or natural completion
-								verbalIntroIsPlaying = false;
-								$("#verbalIntro").html("Click on me,<br><br>I've got something to say.");
-							};
-						} catch(e) {
-							// most likely not enough space to createBuffer
-							console.error(e);
-							alert("Failed note file setup, error is " + e);
-						}
-																									
-						// decodeAudioData is async and doesn't support promises, can't use try/catch for errors
-						},function(err) { alert("err(decodeAudioData) on file for: Audio help for music trig intro" + " error =" + err); } )
-					}, reason => {
-						console.error("conversion of blob to arraybuffer failed");
-				});
-
-			})  // done with success (done) function
-			.fail(function(jqXHR, exception) {
-					if (jqXHR.status == 403) {
-						alert("Need to pass bot test to access server file.  No file for YOU!");  
-					} else if (jqXHR.status == 404) {
-						alert("File not found.  See Administrator");
-					} else {
-						alert("ERROR:  return status is " + jqXHR.status );
-						console.error(jqXHR)
-					}
-			});   // done with ajax
-		// leave things as they were when user first started, all is in beginning state
-    };	
     let verbalIntroIsPlaying = false;
     function stopVerbalIntro() {
 		// turn off the existing audio
-		if ('undefined' != typeof helpAudio) {
-			// don't bother if undefined
-			helpAudio.stop(0);
-			verbalIntroIsPlaying = false;
-			$("#verbalIntro").html("Click on me,<br><br>I've got something to say.");
-		}
+		verbalIntro.stopThisSegment();
+		verbalIntroIsPlaying = false;
+		$("#verbalIntro").html("Click on me,<br><br>I've got something to say.");
 	}
     function playOrStopVerbalIntro(){
     	// dont want to play multiple time delayed versions of audio with multiple clicks
 		if (!verbalIntroIsPlaying) {
 			$("#verbalIntro").html("Click on me<br><br> to stop talking");
-			playVerbalIntro();
+			verbalIntro.startDemo();
 			verbalIntroIsPlaying = true;
 		} else {
 			stopVerbalIntro();
 		}
-
 	};
 
 	$("#staticTrumpeter").click(function() {
@@ -567,51 +496,57 @@ $(function() {
 			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[0],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[0],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 3500}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[1],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[1],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 3500}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[2],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[2],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 3500}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[3],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[3],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 3500}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[4],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[4],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 3500}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[5],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[5],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 3500}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[6],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[6],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 3500}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[7],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[7],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 3500}
+			},
+			{segmentActivity: "REMOVE_LAST_CANVAS_ANNOTATION",
+			 segmentParams: 
+			 	{xyCoord: CmajorNotes[7],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 500}
 			},
 			// turn off the tone, and reset everything
 			{segmentActivity: "ACT_ON_ELEMENT", 
@@ -667,47 +602,52 @@ $(function() {
 			// play the first part of twinkle twinkle
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[0],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[0],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 1000}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[0],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[0],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 1000}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[4],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[4],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 1000}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[4],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[4],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 1000}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[5],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[5],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 1000}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[5],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[5],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 1000}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
-			 	{xyCoord: trumpetNotes[4],   // has an x y embedded with other stuff
+			 	{xyCoord: CmajorNotes[4],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
 			 	 waitTimeMillisec: 1000}
 			},
-
+			{segmentActivity: "REMOVE_LAST_CANVAS_ANNOTATION",
+			 segmentParams: 
+			 	{xyCoord: CmajorNotes[4],   // has an x y embedded with other stuff
+			 	 canvas: ClefWithNotes,
+			 	 waitTimeMillisec: 500}
+			},
 			// turn off the tone and clean up the screen
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
@@ -732,12 +672,11 @@ $(function() {
     //****************************************************************************
     // User initiates autoDemo activity
     //****************************************************************************   
-	//*** user clicks the start demo image, iniitalize everything
+	//*** user clicks the start demo image in upper left corner, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_MSIntro');  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {
         // flash a "click here" image to get them to hit play
-    	$('#clickHereCursor').addClass('userHitPlay'); 
-    	
+    	$('#clickHereCursor').addClass('userHitPlay');    	
 		//first get rid of "lets do the demo" image and put up the demo controls
 		$('#startAutoDemo').css('display', 'none');
 		$('#autoDemoCtls').css('display', 'inline-block');
@@ -802,7 +741,14 @@ $(function() {
 		$('#autoDemoCtls').css('display', 'none');
 		
 		// put the page back the way it was
-		$('#MusicIntroHeaders').css('left', '130px');
+		let msi_cssVar = document.querySelector(':root');
+		var cssVar = getComputedStyle(msi_cssVar);
+		// get the current val of CSS var and remove the px from end 
+  		let headerLeftPix1 = parseInt(cssVar.getPropertyValue('--TITLE_SHIFT').slice(0,-2));
+  		let headerLeftPix2 = parseInt(cssVar.getPropertyValue('--HEADER_LOC').slice(0,-2));
+  		// then add as per .css file
+  		let headerLeftPix = (headerLeftPix1 + headerLeftPix2); 		
+		$('#MusicIntroHeaders').css('left', headerLeftPix + 'px');
 		
 		// remove the class so the animation will work on next page, cant do this until animation completes
     	$('#clickHereCursor').removeClass('userHitPlay');

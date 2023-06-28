@@ -13,7 +13,8 @@ const demoEventTypes = ["CLICK_ON_CANVAS",
 						"SHOW_MODAL",
 						"CHANGE_ELEMENT_VALUE",
 						"FAKE_SUBTOPICS", 
-						"REMOVE_FAKE_SUBTOPICS"];
+						"REMOVE_FAKE_SUBTOPICS",
+						"REMOVE_LAST_CANVAS_ANNOTATION"];
 
 class AutoDemo {
 	constructor(multiSegScript, stringIDOfCanvas = 'UnusedCanvas') {
@@ -517,6 +518,15 @@ class AutoDemo {
 							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
 							this.eventLoopPtrs.push(temp);
 							break;
+						case (demoEventTypes[11]):
+							// REMOVE_LAST_CANVAS_ANNOTATION, delete an old red cursor that leftover
+							temp = setTimeout(function(){
+								// remove last annotaton on the canvas
+								ctxDemoCanvas.ctx.putImageData(annotatePlot, 0, 0);
+							}, nextItemBeginTime);	
+							nextItemBeginTime = nextItemBeginTime + activity.segmentParams.waitTimeMillisec;
+							this.eventLoopPtrs.push(temp);		
+							break;					
 						default:
 							console.log('SW error in autoDemo switch stmt, switch select value was ' + activity.segmentActivity);
 							break;
