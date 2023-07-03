@@ -709,17 +709,10 @@ $(function() {
 		// just in case a note is playing, turn it off
 		resetNotes();
 		
-    	// activate pause and disable play
-    	$(this).prop('disabled', true);  // disable play once playing
-    	$('#stopSegment').prop('disabled', false);  // reactivate pause
-		let currSeg = parseInt($('#segNum').val());
-    	demo.setCurrSeg(currSeg);
     	demo.startDemo();
     	
     	// if, perchance, the trumpet player is speaking and introducing the section, turn it off
 		stopVerbalIntro();
-		// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
     });
     
     $('#stopSegment').on('click', function(){	
@@ -735,14 +728,8 @@ $(function() {
     $('#dismissAutoDemo').on('click', function(){	
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
-    	
-		$('#startAutoDemo').css('display', 'inline-block');
-		$('#autoDemoCtls').css('display', 'none');
 		
 		demo.moveToLeftForAutoDemo($('#MusicIntroHeaders'));
-		
-		// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
     });
  
  	$("#segNum").change(function(){

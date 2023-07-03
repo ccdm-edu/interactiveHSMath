@@ -73,7 +73,6 @@ div.home_expln p {
 
 /*******************expert/newbie selection ******************************/
 :root{
-	--NORMAL_NEWBIE_EXPERT_SELECT: 300px;  
 }
 #selectNewbieOrExpert{
 	position: absolute;

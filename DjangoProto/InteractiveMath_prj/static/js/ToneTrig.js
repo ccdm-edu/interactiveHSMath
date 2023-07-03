@@ -12,9 +12,6 @@ $(function() {
 	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
 		// emphasize the auto demo as first place
 		$("#startAutoDemo").addClass('newbieMode');
-	} else if (newbieMode && (newbieMode.toLowerCase() === 'false')) {
-		// remind user what to do 
-		stopModal = false;
 	} else {
 		// user somehow got here without going through landing page or deleted sessionStorage, put in newbie mode
 		$("#startAutoDemo").addClass('newbieMode');
@@ -713,15 +710,7 @@ $(function() {
     $('#playSegment').on('click', function(){	
     	// in case plots have other stuff on them from other activities, clean it up
     	doToneOnly();
-    	// activate pause and disable play
-    	$(this).prop('disabled', true);  // disable play once playing
-    	$('#stopSegment').prop('disabled', false);  // reactivate pause
-    	demo.setCurrSeg(parseInt($('#segNum').val()));
-
     	demo.startDemo();
-    	
-    	// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
     });
     
     $('#stopSegment').on('click', function(){	
@@ -737,16 +726,11 @@ $(function() {
     $('#dismissAutoDemo').on('click', function(){	
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
-    	
-		$('#startAutoDemo').css('display', 'inline-block');
-		$('#autoDemoCtls').css('display', 'none');
   		
   		//Autodemo over, move elements back where they were
   		demo.moveToLeftForAutoDemo($('#musicalActivity'));
     	demo.moveToLeftForAutoDemo($('#toneChanges'));	
     	
-   		// remove the class so the click here animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
     });
     
     $("#segNum").change(function(){

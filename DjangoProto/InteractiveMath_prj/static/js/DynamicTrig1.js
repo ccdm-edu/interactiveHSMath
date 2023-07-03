@@ -934,16 +934,10 @@ $(function() {
 
 	// User has selected play
     $('#playSegment').on('click', function(){	
-    	// activate pause and disable play
-    	$(this).prop('disabled', true);  // disable play once playing
-    	$('#stopSegment').prop('disabled', false);  // reactivate pause
-    	demo.setCurrSeg(parseInt($('#segNum').val()));
     	// user may have chosen a segment out of order
     	prepHelpForUser(demo.getCurrSeg()); 
     	demo.startDemo();
-    	
-        // remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
+
     });
     
     $('#stopSegment').on('click', function(){	
@@ -961,18 +955,13 @@ $(function() {
     $('#dismissAutoDemo').on('click', function(){	
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
-    	
-		$('#startAutoDemo').css('display', 'inline-block');
-		$('#autoDemoCtls').css('display', 'none');
 		
   		// move header and canvas back where it was
   		demo.moveToLeftForAutoDemo($('#HeaderTrig_DT1'));
   		demo.moveBackUpForAutoDemo($('#CircleValues_DT1'));
   		demo.moveBackUpForAutoDemo($('#UnitCircleAndGraphCanvas'));
   		demo.moveBackUpForAutoDemo($('#FirstHelp_DT1'));
-  		
-  		// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
+
     });
     
  	$("#segNum").change(function(){

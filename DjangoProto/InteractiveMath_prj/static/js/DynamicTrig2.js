@@ -12,7 +12,11 @@ $(function() {
 	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
 		// emphasize the auto demo as first place
 		$("#startAutoDemo").addClass('newbieMode');
-	} 
+	} else if (newbieMode && (newbieMode.toLowerCase() === 'false')) {
+		// remind user what to do 
+		$('#FirstHelp_DT2').css("visibility", "visible");
+	}
+
 	
 	// set up frequency slider
 	let $currFreq = $("#FreqSlider_DT2");
@@ -310,6 +314,7 @@ $(function() {
     //*** user clicks the Go button, thereby implementing the freq chosen on slider
     let clockIsRunning = false;
     $('#GoFreq_DT2').on('click', function(event) {
+		$('#FirstHelp_DT2').css("visibility", "hidden");  //user doesn't need help anymore
 		//This will keep going until user hits stop
 		if ("GO" == $('#GoFreq_DT2').prop("value")) {
 			// user is asking to Go, set up sampling/freq plots
@@ -503,14 +508,8 @@ $(function() {
 	// User has selected play
     $('#playSegment').on('click', function(){	
     	// activate pause and disable play
-    	$(this).prop('disabled', true);  // disable play once playing
-    	$('#stopSegment').prop('disabled', false);  // reactivate pause
-    	demo.setCurrSeg(parseInt($('#segNum').val()));
-
     	demo.startDemo();
-    	
-    	// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
+
     });
     
     $('#stopSegment').on('click', function(){	
@@ -526,12 +525,6 @@ $(function() {
     $('#dismissAutoDemo').on('click', function(){	
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
-    	
-		$('#startAutoDemo').css('display', 'inline-block');
-		$('#autoDemoCtls').css('display', 'none');
-  		
-  		// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
     });
     
     $("#segNum").change(function(){

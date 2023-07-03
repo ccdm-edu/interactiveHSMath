@@ -1012,15 +1012,8 @@ $(function() {
 		
 		// update graphs, to eliminate musical note if present
 		drawTone()
-    	// activate pause and disable play
-    	$(this).prop('disabled', true);  // disable play once playing
-    	$('#stopSegment').prop('disabled', false);  // reactivate pause
-    	demo.setCurrSeg(parseInt($('#segNum').val()));
 
     	demo.startDemo();
-    	
-    	// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
     });
     
     $('#stopSegment').on('click', function(){	
@@ -1036,16 +1029,10 @@ $(function() {
     $('#dismissAutoDemo').on('click', function(){	
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
-    	
-		$('#startAutoDemo').css('display', 'inline-block');
-		$('#autoDemoCtls').css('display', 'none');
-  		
   		//move header and tone/music controls to right when autodemo is active
     	demo.moveToLeftForAutoDemo($('#headerAndCtl_TT'));
     	demo.moveToLeftForAutoDemo($('#MusicNotesToneControl'));
   		
-   		// remove the class so the click here animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
     });
     
     $("#segNum").change(function(){

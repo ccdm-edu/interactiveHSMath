@@ -242,9 +242,7 @@ $(function() {
 
 	// User has selected play
     $('#playSegment').on('click', function(){	
-    	// activate pause and disable play
-    	$(this).prop('disabled', true);  // disable play once playing
-    	$('#stopSegment').prop('disabled', false);  // reactivate pause
+
     	// this is only true for this pages demo...
     	let currSeg = parseInt($('#segNum').val());
     	if (currSeg === 1){
@@ -252,10 +250,7 @@ $(function() {
 	    	$('a[href="#AdvancedTopics"]').css('display', 'inline-block');
 	    	$('a[href="#AdvancedTopics"]').css('visibility', 'visible');
     	}
-    	demo.setCurrSeg(currSeg);
     	demo.startDemo();
-		// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay'); 
     });
     
     $('#stopSegment').on('click', function(){	
@@ -273,18 +268,12 @@ $(function() {
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
     	
-		$('#startAutoDemo').css('display', 'inline-block');
-		$('#startAutoDemo').css('opacity', '1.0');
-		// pull the control panel for autodemo off the page
-		$('#autoDemoCtls').css('display', 'none');
+	//	$('#startAutoDemo').css('opacity', '1.0');
 		
 		// get rid of adv topics link, was for demo only
     	$('a[href="#AdvancedTopics"]').css('display', 'none');
-    	// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay'); 
-    	
-    	// user is done with autodemo, move expert/newbie controls back where they were
-    	$('#selectNewbieOrExpert').css('left', 'var(--NORMAL_NEWBIE_EXPERT_SELECT)');
+
+    	demo.moveToLeftForAutoDemo($('#selectNewbieOrExpert'))
     });
 
 	$("#segNum").change(function(){

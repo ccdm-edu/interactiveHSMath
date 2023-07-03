@@ -111,6 +111,12 @@ class AutoDemo {
 		});
 		// turn off the audio, need to tell code user is doing this and it is not "naturally finished" via userStopRequest
 		if (this.helpAudio) this.helpAudio.stop(0);
+		
+		// get rid of controls box, go back to small image   	
+		$('#startAutoDemo').css('display', 'inline-block');
+		$('#autoDemoCtls').css('display', 'none');
+		// remove the class so the click here animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay');
 	}
 
 	// the segment is over when the audio is over, time to clean up our toys to allow user to use site or play next seg
@@ -427,6 +433,12 @@ class AutoDemo {
 	// and start the timed cursor demo	
 	startDemo() {
 		let currSeg = this.currSeg;
+		// activate pause and disable play
+	    $('#playSegment').prop('disabled', true);  // disable play once playing
+	    $('#stopSegment').prop('disabled', false);  // reactivate pause
+	    demo.setCurrSeg(parseInt($('#segNum').val()));
+	    // remove the class so the animation will work on next page, cant do this until animation completes
+    	$('#clickHereCursor').removeClass('userHitPlay'); 
 		if ((currSeg >= 0) && (currSeg <= this.fullScript.length)) {
 			// valid segment number
 			let segment = this.fullScript[currSeg];
