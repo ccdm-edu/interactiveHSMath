@@ -187,6 +187,7 @@ div#tooltip:hover .tooltiptext {
 #autoDemo{
 	position: relative;
 }
+/* image that says Start Here */
 #startAutoDemo{
 	position: absolute;
 	height: 100px;
@@ -218,7 +219,7 @@ div#tooltip:hover .tooltiptext {
 	border: 2px solid cyan;
 	border-radius: 10px;
 	display: none;
-	width: 380px;
+	width: 310px;
 	height: 150px;
 	margin: 7px 7px 7px 7px;
 	z-index: 500;  /* needs to be max value */
@@ -228,6 +229,7 @@ div#tooltip:hover .tooltiptext {
 	text-align: center;
 	font-size: 18px;
 }
+/*This portion is the animation that flashes a big red cursor that says "click here" */
 /* when the user starts the autodemo ctrls, the top/left will be set and animation started 
 position setting based on where it would have been placed near the play/pause */
 img#clickHereCursor {

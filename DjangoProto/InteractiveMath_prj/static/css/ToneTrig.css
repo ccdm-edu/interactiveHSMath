@@ -31,7 +31,7 @@ This is the style sheet for ToneTrig.html
 	position: absolute;
 	border: 0px;
 	resize: none;
-	left: var(--NO_AUTODEMO_LEFT_POS);
+	left: 170px;
 	width: 700px;
 	font-weight: bold;
 	font-size: 32px;
@@ -41,10 +41,10 @@ This is the style sheet for ToneTrig.html
 
 /* item 3, tone controls, freq, amplitude, phase*/
 #toneChanges {
-	    position: absolute;
-	    left: calc(25px + var(--NO_AUTODEMO_LEFT_POS));
-		display: inline-block; 
-		border: 1px solid black;
+    position: absolute;
+    left: 175px;
+	display: inline-block; 
+	border: 1px solid black;
 }
 /* start stop for tone */
 #start-stop-button{

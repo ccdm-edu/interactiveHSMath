@@ -32,8 +32,39 @@ class AutoDemo {
 		this.eventLoopPtrs = [];
 		// audio done doesn't know if it just finished or user hit stop, need to keep track
 		this.userStopRequest = false;
+		// How far we need to move elements to acomodate the AutoDemo controls box
+		this.MOVE_RIGHT_AUTODEMO_ACTIVE = 250;
+		this.MOVE_DOWN_AUTODEMO_ACTIVE = 65;
+}
+	//***********This is more prep for Autodemo than actually doing it yet */
+	// Move the the html element id specified to the right to accomodate AUTODEMO being active
+	moveToRightForAutoDemo($elementToMove){
+		// read current value of "left" attribute, pull off the px part of string
+		let currentLeftVal = parseInt($elementToMove.css('left').slice(0,-2));
+		let newLeftVal = currentLeftVal + this.MOVE_RIGHT_AUTODEMO_ACTIVE;
+		$elementToMove.css('left', newLeftVal + 'px')
 	}
-	
+	// Move the html element id specified back to the left now that AUTODEMO is over.
+	moveToLeftForAutoDemo($elementToMove){
+		let currentLeftVal = parseInt($elementToMove.css('left').slice(0,-2));
+		let newLeftVal = currentLeftVal - this.MOVE_RIGHT_AUTODEMO_ACTIVE;
+		$elementToMove.css('left', newLeftVal + 'px')
+	}
+	// move element down for autodemo controls box
+	moveDownForAutoDemo($elementToMove){
+		// read current value of "left" attribute, pull off the px part of string
+		let currentTopVal = parseInt($elementToMove.css('top').slice(0,-2));
+		let newTopVal = currentTopVal + this.MOVE_DOWN_AUTODEMO_ACTIVE;
+		$elementToMove.css('top', newTopVal + 'px')
+	}
+	// Move the html element id specified back to the left now that AUTODEMO is over.
+	moveBackUpForAutoDemo($elementToMove){
+		// read current value of "left" attribute, pull off the px part of string
+		let currentTopVal = parseInt($elementToMove.css('top').slice(0,-2));
+		let newTopVal = currentTopVal - this.MOVE_DOWN_AUTODEMO_ACTIVE;
+		$elementToMove.css('top', newTopVal + 'px')
+	}
+	//***********End of prep for autodemo */
 	// get the context of the canvas used for the demo
 	getDemoCtx() {
 		let ctxDemoCanvas;

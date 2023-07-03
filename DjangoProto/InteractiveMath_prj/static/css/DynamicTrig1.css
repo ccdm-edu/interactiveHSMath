@@ -8,10 +8,10 @@ This is the style sheet for the DynamicTrig1.html page
 }
 /***************************/
 /* put a label up and an expln/to do selector input box */
-#headerAndCtl_DT1 {
+#headerAndCtl_DT1 h1{
 	position: relative;
 	top: 0px;
-	left: 0px;
+	left: 150px;
 	width: auto;
 }
 

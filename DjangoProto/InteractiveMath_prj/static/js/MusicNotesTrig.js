@@ -52,7 +52,7 @@ $(function() {
 	
 	const GO_COLOR = "LightGreen";
 	const STOP_COLOR = "LightPink";
-	const STOP_NOTE = "Stop Note";
+	const STOP_NOTE = "Stop Instrument";
 	const PLAY_NOTE = "Play Instrument"
 	//list of notes used
 	const C5_NOTE = "C<sub>5</sub>";
@@ -516,12 +516,12 @@ $(function() {
 					volume: tonejs_dB,
 					type:"sine"});
 			osc.toDestination().start();	
-			$("#toneStartButton").prop("value", "Stop Tone");
+			$("#toneStartButton").prop("value", "Stop Sine Tone");
 			$('#toneStartButton').css('background-color', STOP_COLOR);
 			ToneIsOnNow = true;
 		} else {
 			osc.toDestination().stop();
-			$("#toneStartButton").prop("value", "Start Tone");
+			$("#toneStartButton").prop("value", "Start Sine Tone");
 			$('#toneStartButton').css('background-color', GO_COLOR);
 			ToneIsOnNow = false;
 		}
@@ -982,6 +982,10 @@ $(function() {
 		let newCtlsLeft = parseInt(currCtlsLeft) + RIGHT_SHIFT_TONE_TRIG;
   		tt_cssVar.style.setProperty('--NO_AUTODEMO_LEFT_POS', newCtlsLeft + 'px');
   		
+  		//move header and tone/music controls to right when autodemo is active
+    	demo.moveToRightForAutoDemo($('#headerAndCtl_TT'));
+    	demo.moveToRightForAutoDemo($('#MusicNotesToneControl'));
+  		
     });
    
     //****************************************************************************
@@ -1035,14 +1039,10 @@ $(function() {
     	
 		$('#startAutoDemo').css('display', 'inline-block');
 		$('#autoDemoCtls').css('display', 'none');
-		
-		// undo the drop of the canvas when we started autodemo
-		let tt_cssVar = document.querySelector(':root');
-		let cssVar = getComputedStyle(tt_cssVar);
-		// get the current val of CSS var and remove the px from end
-  		let currCtlsLeft = cssVar.getPropertyValue('--NO_AUTODEMO_LEFT_POS').slice(0,-2);
-		let newCtlsLeft = parseInt(currCtlsLeft) - RIGHT_SHIFT_TONE_TRIG;
-  		tt_cssVar.style.setProperty('--NO_AUTODEMO_LEFT_POS', newCtlsLeft + 'px');
+  		
+  		//move header and tone/music controls to right when autodemo is active
+    	demo.moveToLeftForAutoDemo($('#headerAndCtl_TT'));
+    	demo.moveToLeftForAutoDemo($('#MusicNotesToneControl'));
   		
    		// remove the class so the click here animation will work on next page, cant do this until animation completes
     	$('#clickHereCursor').removeClass('userHitPlay');

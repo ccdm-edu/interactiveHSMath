@@ -3,21 +3,18 @@ This is the style sheet for MusicNotesTrig.html
 ************************/
 /* create global var for this html */
 :root{
+	--LEFT_EDGE_CONTROLS: 100px;
 	--LEFT_EDGE_PLOT: 55px;
 	--WIDTH_466HZ: 159px;  /* the width in pixels of 2.15ms */
 	--HEIGHT_TONE_PLOT: 162px;
 	--TOP_EDGE_PLOT: 33px;
 	--HEIGHT_HEADER: 40px;
-	--WIDTH_MUSIC_NOTE_CTL: 410px;
+	--WIDTH_MUSIC_NOTE_CTL: 320px;
 	--HEIGHT_MUSIC_NOTE_CTL: 150px;
 	--HEIGHT_GRAPH: 250px;
 	--HEIGHT_PERIOD_EXPLN: 110px;
 }
-/* this is for all table elements, horizontal spacing*/
-td {
-	padding-left: 5px;
-	padding-right: 5px;
-}
+
 /* make sliders a fixed shorter length */
 input[type="range"] {
   width:80px;
@@ -45,7 +42,7 @@ input[type="range"] {
 /* This is the side by side controls 1. Music note 2.  Tone notes that fits under parent MusicNotesControl*/
 #MusicNotesToneControl {
 	position: relative;
-	left: 100px;   /* to get out of way of START HERE */
+	left: var(--LEFT_EDGE_CONTROLS);   /* to get out of way of START HERE */
 	height: var(--HEIGHT_MUSIC_NOTE_CTL);
 }
 

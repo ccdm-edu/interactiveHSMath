@@ -11,7 +11,6 @@ This is the style sheet for the StaticTrig.html page
 	--LABEL_X_VAL1: 50px;
 	--LABEL_X_VAL2: 170px;
 	--LABEL_X_VAL3: 350px;
-	--CIRCLE_DOT_TOP: 0px;
 }
 
 
@@ -20,7 +19,7 @@ This is the style sheet for the StaticTrig.html page
 #headerAndCtl_ST {
 	position: relative;
 	top: 0px;
-	left: 200px;
+	left: 150px;
 }
 /* text header of page activity*/
 #HeaderTrig_ST {
@@ -36,7 +35,7 @@ This is the style sheet for the StaticTrig.html page
 /* arrange all the parms that feed into or get info out of circle */
 #CircleValues {
 	position: relative;
-	top: calc(40px + var(--CIRCLE_DOT_TOP));
+	top: 40px;
 	left: 0px;
 }
 #ampCircLabel {
@@ -110,7 +109,7 @@ We use negative value for top since we want some overlap*/
 }
 #AmpSinCosCircle{
 	 position:absolute; 
-	 top: var(--CIRCLE_DOT_TOP); 
+	 top: 0px; 
 	 left: 0px
 }
 /* decorate the quadrant identifiers for plot */
@@ -119,7 +118,7 @@ We use negative value for top since we want some overlap*/
 	font-size: 30px;
 	font-weight: bold;
 	color: green;
-	top: calc(var(--CIRCLE_DOT_TOP) + 220px); 
+	top: 220px; 
 }
 #quad1_ID{
 	position: absolute;
@@ -153,7 +152,7 @@ We use negative value for top since we want some overlap*/
 	font-size: 15px;
 	font-weight: bold;
 	left: 110px;
-	top: calc(var(--CIRCLE_DOT_TOP) + 360px);   
+	top: 360px;   
 	z-index: 10;
 	visibility: visible;
 	animation-name: showBeginnerBlinkyHelp;
@@ -176,7 +175,7 @@ We use negative value for top since we want some overlap*/
 }
 #funTutorial_ST{
 	 position: absolute;
-	 top: var(--CIRCLE_DOT_TOP);   /* match AmpSinCosCircle canvas */
+	 top: 0px;   /* match AmpSinCosCircle canvas */
 	 left: 0px;
 	 margin-left: 0 px;
 	 padding-left: 0 px;

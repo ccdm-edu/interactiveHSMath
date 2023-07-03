@@ -485,7 +485,7 @@ $(function() {
 	//********************************************************	
     
 	const SCRIPT_AUTO_DEMO = [
-	{ segmentName: "Sine waves sound great",
+	{ segmentName: "Sine as Music",
 	  headStartForAudioMillisec: 35000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
@@ -682,7 +682,6 @@ $(function() {
 		$('#autoDemoCtls').css('display', 'inline-block');
 		$('#autoDemoCtls').css('visibility', 'visible');
 		// fill in the controls properly
-		//$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
 		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
 		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
 		demo.setCurrSeg(1);  // default start at begin
@@ -695,7 +694,7 @@ $(function() {
 		
 		// here is where we get to push the titles up to the far right and squish them 
 		// in to give more graph room
-		$('#MusicIntroHeaders').css('left', '400px');
+		demo.moveToRightForAutoDemo($('#MusicIntroHeaders'));
 	
     });
     	
@@ -740,15 +739,7 @@ $(function() {
 		$('#startAutoDemo').css('display', 'inline-block');
 		$('#autoDemoCtls').css('display', 'none');
 		
-		// put the page back the way it was
-		let msi_cssVar = document.querySelector(':root');
-		var cssVar = getComputedStyle(msi_cssVar);
-		// get the current val of CSS var and remove the px from end 
-  		let headerLeftPix1 = parseInt(cssVar.getPropertyValue('--TITLE_SHIFT').slice(0,-2));
-  		let headerLeftPix2 = parseInt(cssVar.getPropertyValue('--HEADER_LOC').slice(0,-2));
-  		// then add as per .css file
-  		let headerLeftPix = (headerLeftPix1 + headerLeftPix2); 		
-		$('#MusicIntroHeaders').css('left', headerLeftPix + 'px');
+		demo.moveToLeftForAutoDemo($('#MusicIntroHeaders'));
 		
 		// remove the class so the animation will work on next page, cant do this until animation completes
     	$('#clickHereCursor').removeClass('userHitPlay');

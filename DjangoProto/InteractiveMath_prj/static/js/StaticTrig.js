@@ -721,7 +721,7 @@ $(function() {
 	
 	//******************constants for auto demo*********************************
 	const SCRIPT_AUTO_DEMO = [
-	{ segmentName: "Sine and Cosine Intro",  // not sure why this can't be more than 4 words
+	{ segmentName: "Sine Cosine Intro",  // we have 2 column widths for title here
 	  headStartForAudioMillisec: 8000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
@@ -845,7 +845,6 @@ $(function() {
     //****************************************************************************   
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_ST');  // give the demo the full script
-	const SINE_DROP_AUTODEMO = 80;
     $('#startAutoDemo').on('click', function(event) {
        	// flash a "click here" image to get them to hit play
     	$('#clickHereCursor').addClass('userHitPlay'); 
@@ -859,18 +858,14 @@ $(function() {
 		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
 		demo.setCurrSeg(1);  // default start at begin
 		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
-		
-		// rearrange the page a bit so the demo controls fit better and user can see
-		// more of the plots on the page
-		let st_cssVar = document.querySelector(':root');
-		var cssVar = getComputedStyle(st_cssVar);
-		// get the current val of CSS var and remove the px from end
-  		let currCanvasTop = cssVar.getPropertyValue('--CIRCLE_DOT_TOP').slice(0,-2);
-		let newCanvasTop = parseInt(currCanvasTop) + SINE_DROP_AUTODEMO;
-  		st_cssVar.style.setProperty('--CIRCLE_DOT_TOP', newCanvasTop + 'px');
   		
-		$('#headerAndCtl_ST').css('left', '300px');  // used to be 200px
-		
+  		//Move elements to make way for autodemo control box
+  		demo.moveToRightForAutoDemo($('#headerAndCtl_ST'));
+		demo.moveDownForAutoDemo($('#funTutorial_ST'));
+		demo.moveDownForAutoDemo($('#AmpSinCosCircle'));
+  		demo.moveDownForAutoDemo($('#CircleValues'));
+  		demo.moveDownForAutoDemo($('.quadIdentifiers'));
+  		demo.moveDownForAutoDemo($('#FirstHelp_ST'));		
     });
     	
     //****************************************************************************
@@ -907,18 +902,14 @@ $(function() {
     	
 		$('#startAutoDemo').css('display', 'inline-block');
 		$('#autoDemoCtls').css('display', 'none');
-		
-		// undo the drop of the canvas when we started autodemo
-		let st_cssVar = document.querySelector(':root');
-		var cssVar = getComputedStyle(st_cssVar);
-		// get the current val of CSS var and remove the px from end
-  		let currCanvasTop = cssVar.getPropertyValue('--CIRCLE_DOT_TOP').slice(0,-2);
-		let newCanvasTop = parseInt(currCanvasTop) - SINE_DROP_AUTODEMO;
-  		st_cssVar.style.setProperty('--CIRCLE_DOT_TOP', newCanvasTop + 'px');
-  		
-		//$('#AmpSinCosCircle').css('top', '0px');
-		//$('#CircleValues').css('top', '40px');
-		$('#headerAndCtl_ST').css('left', '200px');
+
+		//move elements for autodemo controls box  		
+		demo.moveToLeftForAutoDemo($('#headerAndCtl_ST'));
+		demo.moveBackUpForAutoDemo($('#funTutorial_ST'));
+		demo.moveBackUpForAutoDemo($('#AmpSinCosCircle'));
+  		demo.moveBackUpForAutoDemo($('#CircleValues'));
+  		demo.moveBackUpForAutoDemo($('.quadIdentifiers'));
+  		demo.moveBackUpForAutoDemo($('#FirstHelp_ST'));	
 		
 		// remove the class so the animation will work on next page, cant do this until animation completes
     	$('#clickHereCursor').removeClass('userHitPlay'); 

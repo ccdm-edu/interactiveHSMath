@@ -133,27 +133,20 @@
 						<img id="startAutoDemo" src="{% static 'images/autoDemoButton.svg' %}" alt = "Click here to start a demo of page" data-toggle="tooltip" data-placement="right" title="Make sure your speaker is on">
 						<!--  make a play/pause button set from bootstrap icons -->
 						<div id="autoDemoCtls">
+							<h1>Audio Demo Controls: <br>Let's see how this page works!</h1>
 						    <table>
-						    	<tr>
-						    		<td align="center">
-						    			<h1>Audio Demo Controls: <br>Let's see how this page works!</h1>
-						    		</td>
-						    	</tr>
 								<tr align="center">
-									<td align="left">
+									<td align="left" colspan="2">
 										Segment Name: <span id="segName"></span>
 									</td>
 								</tr>
 								<tr>
 									<td align="left">
 										<!--  max value of input will have to be set after JS runs to see how big the script is -->
-										Segment Number/Total Segments: 
+										Segment Number/Total Segments:
 									</td>
 									<td align="left">
-										<input id="segNum" type="number" min="1" max="10" maxlength = '2' step="1" required data-toggle="tooltip" title="Select Demo segment to play">
-									</td>
-									<td align = "left">
-										<span id="totalSeg">/0</span>
+										<input id="segNum" type="number" min="1" max="10" maxlength = '2' step="1" required data-toggle="tooltip" title="Select Demo segment to play"><span id="totalSeg">/0</span>
 									</td>
 								</tr>
 								<tr align="center">

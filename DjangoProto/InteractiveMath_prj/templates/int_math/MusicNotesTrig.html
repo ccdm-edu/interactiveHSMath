@@ -44,7 +44,7 @@
 					</tr>	
 					<tr>		
 						<td align="left">
-							<label for="InstrumentTypes">Choose a musical instrument:</label>
+							<label for="InstrumentTypes">Choose a musical<br>instrument:</label>
 							<select name="InstrumentTypes" id="InstrumentTypes">
 								<option value="-1">Select Here</option>
 								<!-- subscripts/superscripts dont work on drop down menus ??? -->
@@ -79,7 +79,7 @@
 					<tr>
 						<th colspan='2'>Sine Wave (tone) Parameters</th>
  								<!--  this button plays the tone and is visible all the time -->
-						<input type="button" id="toneStartButton" value="Play Tone" data-toggle="tooltip" data-placement="top" title="turn on speaker to hear sine wave you created">
+						<input type="button" id="toneStartButton" value="Play Sine Tone" data-toggle="tooltip" data-placement="top" title="turn on speaker to hear sine wave you created">
 					</tr>	
 					<tr>		
 						<td>
@@ -126,30 +126,6 @@
  			Your Browser does not support canvas tag, you are missing graph capability
  		</canvas>
  	</div>
-	
-	<!-- Put up a brief "HOW TO use this page" modal window -->
-	<div class="modal fade" id="admodal" role="dialog" tabindex="-1">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-body">
-					<h1>What to do here</h1>
-					<ul>
-					<li>Select a musical instrument playing a note by <b>clicking on the pull down menu.</b>  
-				    <li>Play the pitch note for this instrument by <b>hitting Play Tone green button</b> in upper right.  I will set up the correct pitch frequency for you for the note played.</li>
-				    <li>Compare the pitch note to the instrument playing that note by 
-				  		<b>hitting Play Instrument green button </b> on upper left.</li>	
-				    <li>Compare the plot of the sine wave at pitch frequency with the instrument playing that note.  Notice they both repeat at the same period.</li>
-				    <li>Why is the period of the instrument extremely close but not exactly the same as the sine wave?  Check Advanced(popup) link to find out why </li>				
-					</ul>
-				</div>
-				<div class="modal-footer">
-					<!--  when clicked, this will dismiss the modal -->
-					<button class="btn btn-success" data-dismiss="modal" type="button">Got it!</button><br class="visible-xs">	
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.73/Tone.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
