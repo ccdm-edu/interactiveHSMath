@@ -68,7 +68,7 @@ div.home_expln p {
 	 100%   {opacity: 1.0;}
 }
 #autoDemoCtls{
-	top: 140px;
+	top: 170px;
 }
 
 /*******************expert/newbie selection ******************************/
@@ -76,7 +76,7 @@ div.home_expln p {
 }
 #selectNewbieOrExpert{
 	position: absolute;
-	left: var(--NORMAL_NEWBIE_EXPERT_SELECT);
+	left: 250px;
 	/* make it appear same as the START HERE autodemo */
 	opacity: 0;
 	animation-name: help_on_way;

@@ -454,8 +454,8 @@ $(function() {
 
     let verbalIntroIsPlaying = false;
     function stopVerbalIntro() {
-		// turn off the existing audio
-		verbalIntro.stopThisSegment();
+		// turn off the existing audio, but don't kill the controls box for autodemo
+		verbalIntro.stopThisSegment(false);
 		verbalIntroIsPlaying = false;
 		$("#verbalIntro").html("Click on me,<br><br>I've got something to say.");
 	}
@@ -674,24 +674,13 @@ $(function() {
     //****************************************************************************   
 	//*** user clicks the start demo image in upper left corner, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_MSIntro');  // give the demo the full script
-    $('#startAutoDemo').on('click', function(event) {
-        // flash a "click here" image to get them to hit play
-    	$('#clickHereCursor').addClass('userHitPlay');    	
-		//first get rid of "lets do the demo" image and put up the demo controls
-		$('#startAutoDemo').css('display', 'none');
-		$('#autoDemoCtls').css('display', 'inline-block');
-		$('#autoDemoCtls').css('visibility', 'visible');
-		// fill in the controls properly
-		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
-		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
-		demo.setCurrSeg(1);  // default start at begin
-		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
-		
+    $('#startAutoDemo').on('click', function(event) {		
 		// if, perchance, the trumpet player is speaking and introducing the section, turn it off
 		stopVerbalIntro();
 		// just in case a note is playing, turn it off
 		resetNotes();
-		
+		// prep the control box for user to interact with auto demo
+		demo.prepDemoControls();
 		// here is where we get to push the titles up to the far right and squish them 
 		// in to give more graph room
 		demo.moveToRightForAutoDemo($('#MusicIntroHeaders'));
@@ -710,19 +699,11 @@ $(function() {
 		resetNotes();
 		
     	demo.startDemo();
-    	
-    	// if, perchance, the trumpet player is speaking and introducing the section, turn it off
-		stopVerbalIntro();
+
     });
     
     $('#stopSegment').on('click', function(){	
-    	demo.stopThisSegment();
-    	// change icons so play is now enabled and stop is disabled
-    	$(this).prop('disabled', true);  // disable play once playing
-    	$('#playSegment').prop('disabled', false);  // reactivate play 
-
-    	// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
+    	demo.stopThisSegment(false);  //we don't want to destroy controls box
     });
     
     $('#dismissAutoDemo').on('click', function(){	

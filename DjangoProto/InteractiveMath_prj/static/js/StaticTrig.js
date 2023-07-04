@@ -846,19 +846,8 @@ $(function() {
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_ST');  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {
-       	// flash a "click here" image to get them to hit play
-    	$('#clickHereCursor').addClass('userHitPlay'); 
-    	
-		//first get rid of "lets do the demo" image and put up the demo controls
-		$('#startAutoDemo').css('display', 'none');
-		$('#autoDemoCtls').css('display', 'inline-block');
-		$('#autoDemoCtls').css('visibility', 'visible');
-		// fill in the controls properly
-		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
-		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
-		demo.setCurrSeg(1);  // default start at begin
-		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
-  		
+  		// prep the control box for user to interact with auto demo
+		demo.prepDemoControls();
   		//Move elements to make way for autodemo control box
   		demo.moveToRightForAutoDemo($('#headerAndCtl_ST'));
 		demo.moveDownForAutoDemo($('#funTutorial_ST'));
@@ -878,13 +867,7 @@ $(function() {
     });
     
     $('#stopSegment').on('click', function(){	
-    	demo.stopThisSegment();
-
-    	// change icons so play is now enabled and stop is disabled
-    	$(this).prop('disabled', true);  // disable play once playing
-    	$('#playSegment').prop('disabled', false);  // reactivate play 
-    	// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay'); 
+    	demo.stopThisSegment(false);  //we don't want to destroy controls box
     });
     
     $('#dismissAutoDemo').on('click', function(){	

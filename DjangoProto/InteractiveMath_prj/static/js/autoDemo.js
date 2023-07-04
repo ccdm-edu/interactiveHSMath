@@ -102,8 +102,9 @@ class AutoDemo {
 	}
 	
 	// shut down the current segment as quickly as possible and stay on this segment number.  Will restart
-	// when replay from begin of segment.
-	stopThisSegment() {
+	// when replay from begin of segment.  Since AutoDemo class can be created without control box, 
+	// when we stop a segment, we don't always want to kill a control box
+	stopThisSegment(killTheAutoDemoCtlBox = true) {
 		this.userStopRequest = true;  // dont add any new activity segments to pile
 		// clear EventLoop of all time queued demo events, if all events are already done, no biggie
 		this.eventLoopPtrs.forEach(timedEvent => {
@@ -112,11 +113,17 @@ class AutoDemo {
 		// turn off the audio, need to tell code user is doing this and it is not "naturally finished" via userStopRequest
 		if (this.helpAudio) this.helpAudio.stop(0);
 		
-		// get rid of controls box, go back to small image   	
-		$('#startAutoDemo').css('display', 'inline-block');
-		$('#autoDemoCtls').css('display', 'none');
-		// remove the class so the click here animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
+		// change icons so play is now enabled and stop is disabled
+    	$('#stopSegment').prop('disabled', true);  // disable play once playing
+    	$('#playSegment').prop('disabled', false);  // reactivate play
+    	
+		// get rid of controls box, go back to small image  
+		if (killTheAutoDemoCtlBox) {	
+			$('#startAutoDemo').css('display', 'inline-block');
+			$('#autoDemoCtls').css('display', 'none');
+			// remove the class so the click here animation will work on next page, cant do this until animation completes
+	    	$('#clickHereCursor').removeClass('userHitPlay');
+    	}
 	}
 
 	// the segment is over when the audio is over, time to clean up our toys to allow user to use site or play next seg
@@ -429,6 +436,22 @@ class AutoDemo {
 	//****************************************
 	// play specified segment of the script
 	//****************************************
+	// prepare the Auto Demo controls for user to interact with
+	prepDemoControls(){
+		// flash a "click here" image to get them to hit play
+	    $('#clickHereCursor').addClass('userHitPlay'); 
+	    	
+		//first get rid of "lets do the demo" image and put up the demo controls
+		$('#startAutoDemo').css('display', 'none');
+		$('#autoDemoCtls').css('display', 'inline-block');
+		$('#autoDemoCtls').css('visibility', 'visible');
+		// fill in the controls properly
+		$('#totalSeg').text('/' + this.fullScript.length);
+		$('#segNum').attr('max', this.fullScript.length);
+	
+		this.setCurrSeg(1);  // default start at begin
+		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
+	}
 	// So audio generally starts first and is longer than the cursor demo.  So we start audio, then wait segment.headStartForAudioMillisec
 	// and start the timed cursor demo	
 	startDemo() {
@@ -436,7 +459,7 @@ class AutoDemo {
 		// activate pause and disable play
 	    $('#playSegment').prop('disabled', true);  // disable play once playing
 	    $('#stopSegment').prop('disabled', false);  // reactivate pause
-	    demo.setCurrSeg(parseInt($('#segNum').val()));
+	    this.setCurrSeg(parseInt($('#segNum').val()));
 	    // remove the class so the animation will work on next page, cant do this until animation completes
     	$('#clickHereCursor').removeClass('userHitPlay'); 
 		if ((currSeg >= 0) && (currSeg <= this.fullScript.length)) {

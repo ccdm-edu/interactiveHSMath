@@ -848,140 +848,37 @@ $(function() {
     //**************************************************************************** 
 	const SCRIPT_AUTO_DEMO = [
 
-	{ segmentName: "Trig in Music",
+	{ segmentName: "Trig in Trumpet",
 	  headStartForAudioMillisec: 11000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/AudioExpln/ToneTrig_Seg2.mp3'}
-			},
-			//*****************************
-			// click on colorful clef pulldown menu which can cause robot
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'InstrumentToneMenu',
-			 	 action: "click",
-			 	 offset: {x: 30, y: 60},
-			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
-			},
-			// remove cursor on go/stop button
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'InstrumentToneMenu',
-			 	 action: "nothing",
-			 	waitTimeMillisec: 53000} 
-			},		
-			//*****************************
-			// click on trumpet from drop down menu
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'AutodemoTrumpetSelect',
-			 	 action: "focus",
-			 	 offset: {x: 40, y: 12},
-			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
-			},
-			// focus first then click so user sees what we do
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'AutodemoTrumpetSelect',
-			 	 action: "click",
-			 	 offset: {x: 40, y: 12},
-			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
-			},
-			// remove cursor on go/stop button
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'AutodemoTrumpetSelect',
-			 	 action: "nothing",
-			 	waitTimeMillisec: 45000} 
+			 	{filenameURL: '../../static/static_binaries/AudioExpln/MusicNotesTrig_Seg0.mp3'}
 			},
 
-			//*****************************
-			// click on start tone  button to start tones
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'toneStartButton',
-			 	 action: "click",
-			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
-			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
-			},
-			// remove cursor on go/stop button
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'toneStartButton',
-			 	 action: "nothing",
-			 	waitTimeMillisec: 10000} 
-			},	
-			//*****************************
-			// click on play note button to stop tones
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'allowNotePlay',
-			 	 action: "click",
-			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
-			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
-			},
-			// remove cursor on go/stop button
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'allowNotePlay',
-			 	 action: "nothing",
-			 	waitTimeMillisec: 8000} 
-			},
-			//*****************************
-			// click on start tone  button to stop tones
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'toneStartButton',
-			 	 action: "click",
-			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
-			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
-			},
-			// remove cursor on go/stop button
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'toneStartButton',
-			 	 action: "nothing",
-			 	waitTimeMillisec: 10000} 
-			},	
 	  ]
-	}];
+	},
+	{ segmentName: "Other instruments",
+	  headStartForAudioMillisec: 11000, // generally the audio is longer than the cursor/annotate activity
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: '../../static/static_binaries/AudioExpln/MusicNotesTrig_Seg1.mp3'}
+			},
+
+	  ]
+	},
+	];
 
     //****************************************************************************
     // User initiates autoDemo activity
     //****************************************************************************   
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
-	const RIGHT_SHIFT_TONE_TRIG = 250;
     $('#startAutoDemo').on('click', function(event) {
-        // flash a "click here" image to get them to hit play
-    	$('#clickHereCursor').addClass('userHitPlay'); 
-    	
-		//first get rid of "lets do the demo" image and put up the demo controls
-		$('#startAutoDemo').css('display', 'none');
-		$('#autoDemoCtls').css('display', 'inline-block');
-		$('#autoDemoCtls').css('visibility', 'visible');
-		// fill in the controls properly
-		//$('#segName').html('<b>' + SCRIPT_AUTO_DEMO[0].segmentName + '</b>');
-		$('#totalSeg').text('/' + SCRIPT_AUTO_DEMO.length);
-		$('#segNum').attr('max', SCRIPT_AUTO_DEMO.length);
-		//$('#segNum').val('1');  // default start at begin
-		demo.setCurrSeg(1);  // default start at begin
-		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
-		
-		// rearrange the page a bit so the demo controls fit better and user can see
-		// more of the plots on the page, do this by modifying a CSS var
-		let tt_cssVar = document.querySelector(':root');
-		var cssVar = getComputedStyle(tt_cssVar);
-		// get the current val of CSS var and remove the px from end
-  		let currCtlsLeft = cssVar.getPropertyValue('--NO_AUTODEMO_LEFT_POS').slice(0,-2);
-		let newCtlsLeft = parseInt(currCtlsLeft) + RIGHT_SHIFT_TONE_TRIG;
-  		tt_cssVar.style.setProperty('--NO_AUTODEMO_LEFT_POS', newCtlsLeft + 'px');
-  		
+  		demo.prepDemoControls();
   		//move header and tone/music controls to right when autodemo is active
     	demo.moveToRightForAutoDemo($('#headerAndCtl_TT'));
     	demo.moveToRightForAutoDemo($('#MusicNotesToneControl'));
@@ -1017,13 +914,7 @@ $(function() {
     });
     
     $('#stopSegment').on('click', function(){	
-    	demo.stopThisSegment();
-    	// change icons so play is now enabled and stop is disabled
-    	$(this).prop('disabled', true);  // disable play once playing
-    	$('#playSegment').prop('disabled', false);  // reactivate play
-  
-      	// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
+    	demo.stopThisSegment(false);  //we don't want to destroy controls box
     });
     
     $('#dismissAutoDemo').on('click', function(){	
