@@ -325,12 +325,12 @@ class AutoDemo {
 	    let topPos = Math.round(locEl.top) + param.offset.y;
 	    console.log("act on element: leftPos=" + leftPos + " top pos= " + topPos);
 	    $('#demoCursorElID').css({ 'left': leftPos + 'px', 'top': topPos + 'px' });
+	    let currID = '#' + param.element;
 		if ("focus" == param.action) {
 			// focus shows off what it looks like when user clicks on input element
 			$('#' + param.element).focus();
 		} else if ("click" == param.action) {
 			// click
-			let currID = '#' + param.element;
 			$(currID).click();
 		} // else its do nothing or unimplemented
 	}

@@ -44,17 +44,21 @@
 					</tr>	
 					<tr>		
 						<td align="left">
-							<label for="InstrumentTypes">Choose a musical<br>instrument:</label>
-							<select name="InstrumentTypes" id="InstrumentTypes">
-								<option value="-1">Select Here</option>
-								<!-- subscripts/superscripts dont work on drop down menus ??? -->
-								<option value="0">B<sup>&#9837;</sup> Trumpet</option>
-								<option value="1">Clarinet</option>
-								<option value="2">Soprano Sax</option>
-								<option value="3">Tenor Sax</option>
-								<option value="4">Flute</option>
-								<option value="5">Human voice</option>
-							</select>
+							<div class="dropdown" id="InstrumentSel">
+								<!-- use warning button to get nice gold color -->
+								<button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="InstrumentTypeSel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				    				Pick an instrument
+								</button>
+								<div class="dropdown-menu" aria-labelledby="InstrumentTypeSel" id="InstrumentSelections">
+									<!-- The value attribute must match the instrument on JSON ToneTrigConfig.json -->
+								    <button class="dropdown-item" type="button" value="Trumpet">B<sup>&#9837;</sup> Trumpet</button>
+								    <button class="dropdown-item" type="button" value="Clarinet">Clarinet</button>
+								    <button class="dropdown-item" type="button" value="Soprano Sax">Soprano Sax</button>
+								    <button class="dropdown-item" type="button" value="Tenor Sax">Tenor Sax</button>
+								    <button class="dropdown-item" type="button" value="Flute">Flute</button>
+								    <button class="dropdown-item" type="button" value="Human">Human Voice</button>
+								</div>
+	        				</div>
 						</td>
 						<td align="right">
 							Volume: <span id="currMusicVolLabel"></span>

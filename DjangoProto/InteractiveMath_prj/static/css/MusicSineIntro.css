@@ -174,7 +174,7 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 #PitchGraph{
 	position: absolute;
 	left: 0px;
-	top: 70px;
+	top: 100px;
 }
 #noteSelect{
 	position: absolute;

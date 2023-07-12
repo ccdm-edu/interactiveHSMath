@@ -535,20 +535,28 @@ $(function() {
 	//***********************************
 	//  User instigated callback events   User SELECTS NEW instrument
 	//***********************************
-	$('#InstrumentTypes').on('change', function(event){
-		let selectItem = parseInt($('#InstrumentTypes').val());
-		currTuneState = selectItem;
-		console.log('currTuneState is ' + currTuneState)
-		if (selectItem === UNSELECTED) {
-			console.log('User has not selected instrument yet')
+	// user selects an instrument from dropdown menu
+	$('#InstrumentSel .dropdown-menu button').click(function () {  
+		let currInstrument = $(this).val();
+		//find the index of the selected instrument that was read in from JSON file
+		currTuneState = UNSELECTED;
+		$.each(tuneInstrument, function(index) {
+			if (currInstrument == tuneInstrument[index]) {
+				// no software error, html matches JSON
+				currTuneState = index;
+			}
+		});
+		console.log('we clicked on drowdown menu, selected ' + $(this).val() + "index is " + currTuneState);      
+
+    	if (currTuneState === UNSELECTED) {
+			// should never happen
+			console.log('SW Bug, html does not match JSON config file')
 			updatePlotsUserAides();
 			$("#musicalActivity").html(DEFAULT_TITLE);
 			$("#allowNotePlay").css("visibility", "hidden"); 
 			$("#currMusicNoteLabel").html("");
 			return;
 		} else {	
-			// an instrument was chosen, move forward...
-			currTuneState = selectItem;
 			console.log('currTuneState is ' + currTuneState)
 			// update advanced modal window
 			$(todo_tab_element).html(tuneToDo[currTuneState]);
@@ -856,7 +864,99 @@ $(function() {
 			 segmentParams: 
 			 	{filenameURL: '../../static/static_binaries/AudioExpln/MusicNotesTrig_Seg0.mp3'}
 			},
-
+			//*****************************
+			// click on select instrument pulldown menu 
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'InstrumentTypeSel',
+			 	 action: "click",
+			 	 offset: {x: 20, y: 20},
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			},
+			//*****************************
+			// show we will click on trumpet from drop down menu
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'InstrumentSelections button[value="Trumpet"]',
+			 	 action: "focus",
+			 	 offset: {x: 20, y: 20},
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			},
+			// focus first then click so user sees what we do
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'InstrumentSelections button[value="Trumpet"]',
+			 	 action: "click",
+			 	 offset: {x: 20, y: 20},
+			 	waitTimeMillisec: 200}  // this is wait before you go on to next item
+			},
+			// get rid of cursors
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element: 'InstrumentSelections button[value="Trumpet"]',
+			 	 action: "nothing",
+			 	 offset: {x: 20, y: 20},
+			 	waitTimeMillisec: 200}  // this is wait before you go on to next item
+			},
+			// get rid of drop down menu
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'#InstrumentTypeSel',
+			 	 action: "nothing",
+			 	 offset: {x: 20, y: 20},
+			 	waitTimeMillisec: 58000} 
+			},
+			//*****************************
+			// Big gap here as we explain the periodicity of trumpet
+			//*****************************	
+			// TURN ON sine wave tone
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'toneStartButton',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'toneStartButton',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 8000} 
+			},
+			// wait a bit and TURN ON trumpet
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'allowNotePlay',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'allowNotePlay',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 6000} 
+			},			
+			// TURN OFF sine wave, Trumpet will play itself out
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'toneStartButton',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'toneStartButton',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 1000} 
+			},
 	  ]
 	},
 	{ segmentName: "Other instruments",

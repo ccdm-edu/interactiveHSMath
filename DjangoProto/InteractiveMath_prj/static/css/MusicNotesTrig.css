@@ -3,13 +3,13 @@ This is the style sheet for MusicNotesTrig.html
 ************************/
 /* create global var for this html */
 :root{
-	--LEFT_EDGE_CONTROLS: 100px;
+	--LEFT_EDGE_CONTROLS: 130px;
 	--LEFT_EDGE_PLOT: 55px;
 	--WIDTH_466HZ: 159px;  /* the width in pixels of 2.15ms */
 	--HEIGHT_TONE_PLOT: 162px;
 	--TOP_EDGE_PLOT: 33px;
 	--HEIGHT_HEADER: 40px;
-	--WIDTH_MUSIC_NOTE_CTL: 320px;
+	--WIDTH_MUSIC_NOTE_CTL: 250px;
 	--HEIGHT_MUSIC_NOTE_CTL: 150px;
 	--HEIGHT_GRAPH: 250px;
 	--HEIGHT_PERIOD_EXPLN: 110px;
@@ -23,7 +23,8 @@ input[type="range"] {
 #headerAndCtl_TT {
 	position: relative;
 	margin: 10px;
-	height: var(--HEIGHT_HEADER)
+	height: var(--HEIGHT_HEADER);
+	left: -30px;
 }
 /* this is a header of current activity and goes within headerAndCtl_TT */
 #musicalActivity {

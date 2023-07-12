@@ -186,24 +186,14 @@ $(function() {
 	};
 	function drawTone()
 	{
-		// CHART js hint:  update time, need to add the new and THEN remove the old.  X axis doesn't like to be empty...
-		// actually, I decided to never change time
-		
-	    // update tone, remove old (although for now, just one data set)
-	    sine_plot_100_1k.data.datasets.forEach((dataset) => {
-	    	// somehow, this pop changes the length of ampLong, so best to refill arrays afterwards to get full length
-	    	// seems like a library bug? but one we can get around
-	        dataset.data.pop();
-	    });
 				
-	    // update title to match new parameters
+	    // update title to match new parameters, chart.js 4.3.0 will update from newly modified arrays
 	    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
-	    sine_plot_100_1k.options.title.text = "y = sin(2 " + MULT_DOT + PI +  MULT_DOT + selectedNote.freqHz + MULT_DOT + " t)";
+	    sine_plot_100_1k.options.plugins.title.text = "y = sin(2 " + MULT_DOT + PI +  MULT_DOT + selectedNote.freqHz + MULT_DOT + " t)";
 	    
 		// now fill the arrays and push them to the plots
 		fillInArrays();   
-		// update 10 ms plot
-		sine_plot_100_1k.data.datasets[0].data.push(ampLong);	
+		// update 10 ms plot, no need to repush the same array to the data structure, change will be noticed	
 		sine_plot_100_1k.data.datasets[0].borderColor = selectedNote.noteColor;
 		
 	    // make all these changes happen
@@ -221,33 +211,42 @@ $(function() {
 	const CHART_OPTIONS = {
 //		maintainAspectRatio: false,  //uses the size it is given.  For some reason, this doesn't work here
 		responsive: true,
-	    legend: {
-	        display: false // gets rid of dataset label/legend
-	     },
 		elements:{
 			point:{
 				radius: 1     // to get rid of individual points
 			}
 		},
 		scales: {
-			xAxes: [{
-				scaleLabel: {
+			x: {
+				type: 'linear', 
+				title: {
 					display: true,
-					labelString: 't (milliseconds)'
+					text: 't (milliseconds)'
 				},
-			}],
-			yAxes: [{
-				scaleLabel: {
+			},
+			y: {
+				type: 'linear', 
+				title: {
 					display: true,
-					labelString: 'y amplitude'
+					text: 'y amplitude'
 				}
-			}]
-		}
+			}
+		},
+		plugins: { 
+			title: {
+				display: true,  
+				font: {size: 20}, 
+				text: ''
+				},
+			legend: {
+	        	display: false // gets rid of dataset label/legend
+	     	},
+		},
 	};
-	let currTitle = {display: true, text: ''};
 	
-	const TOP_CHART = {...CHART_OPTIONS, title: currTitle };
-	Object.freeze(TOP_CHART);
+	// careful!  if you are looking at chartjs documentation, current version is 4.3.0 and this was an old version 2.9.4
+    //7/12/2023 upgrade to 4.3.0 https://www.chartjs.org/docs/latest/
+	const TOP_CHART = {...CHART_OPTIONS};
 	let sine_plot_100_1k = new Chart(ctxPitchGraphCanvas, {
 	    type: 'line',
 	    data: {
@@ -259,7 +258,7 @@ $(function() {
 	            borderColor: 'gold',
 	            }]
 	    },
-	    options: TOP_CHART
+	    options: TOP_CHART, 
 	});
 
 	
@@ -431,7 +430,7 @@ $(function() {
 		$("#noteSelectVal").text("");
 		$("#FreqOfNoteVal").text("");
 		// clear out graph and associated equation
-		sine_plot_100_1k.options.title.text = "";
+		sine_plot_100_1k.options.plugins.title.text = "";
 		ampLong.length = 0;  // zero out data and push to graph
 		sine_plot_100_1k.data.datasets[0].data.push(ampLong);
 		sine_plot_100_1k.update();	
