@@ -540,7 +540,7 @@ class AutoDemo {
 							this.eventLoopPtrs.push(temp);	
 							break
 						case (demoEventTypes[6]):
-							// remove cursor from screen
+							// remove cursor from screen,  REMOVE_ACT_ON_ELEMENT
 							temp = setTimeout(function(){
 								// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
 								thisObj.removeActOnElement(activity.segmentParams);

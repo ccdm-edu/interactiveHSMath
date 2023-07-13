@@ -873,6 +873,14 @@ $(function() {
 			 	 offset: {x: 20, y: 20},
 			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
 			},
+			// get rid of drop down menu cursor
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'#InstrumentTypeSel',
+			 	 action: "nothing",
+			 	 offset: {x: 20, y: 20},
+			 	waitTimeMillisec: 1000} 
+			},
 			//*****************************
 			// show we will click on trumpet from drop down menu
 			{segmentActivity: "ACT_ON_ELEMENT", 
@@ -882,30 +890,32 @@ $(function() {
 			 	 offset: {x: 20, y: 20},
 			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
 			},
+
 			// focus first then click so user sees what we do
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'InstrumentSelections button[value="Trumpet"]',
 			 	 action: "click",
 			 	 offset: {x: 20, y: 20},
-			 	waitTimeMillisec: 200}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 50}  // this is wait before you go on to next item
 			},
-			// get rid of cursors
-			{segmentActivity: "ACT_ON_ELEMENT", 
+			// get rid of focus cursors
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element: 'InstrumentSelections  button[value="Trumpet"]',
+			 	 action: "nothing",
+			 	 offset: {x: 20, y: 20},
+			 	waitTimeMillisec: 50}  // this is wait before you go on to next item
+			},
+			// get rid of click cursor
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element: 'InstrumentSelections button[value="Trumpet"]',
 			 	 action: "nothing",
 			 	 offset: {x: 20, y: 20},
-			 	waitTimeMillisec: 200}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 58000}  // this is wait before you go on to next item
 			},
-			// get rid of drop down menu
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'#InstrumentTypeSel',
-			 	 action: "nothing",
-			 	 offset: {x: 20, y: 20},
-			 	waitTimeMillisec: 58000} 
-			},
+
 			//*****************************
 			// Big gap here as we explain the periodicity of trumpet
 			//*****************************	
@@ -960,12 +970,115 @@ $(function() {
 	  ]
 	},
 	{ segmentName: "Other instruments",
-	  headStartForAudioMillisec: 11000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 25000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
 			 	{filenameURL: '../../static/static_binaries/AudioExpln/MusicNotesTrig_Seg1.mp3'}
+			},
+			//*****************************
+			// click on select instrument pulldown menu 
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'InstrumentTypeSel',
+			 	 action: "click",
+			 	 offset: {x: 20, y: 20},
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			},
+			// get rid of drop down menu cursor
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'#InstrumentTypeSel',
+			 	 action: "nothing",
+			 	 offset: {x: 20, y: 20},
+			 	waitTimeMillisec: 1000} 
+			},
+			//*****************************
+			// show we will click on trumpet from drop down menu
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'InstrumentSelections button[value="Flute"]',
+			 	 action: "focus",
+			 	 offset: {x: 20, y: 20},
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			},
+
+			// focus first then click so user sees what we do
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'InstrumentSelections button[value="Flute"]',
+			 	 action: "click",
+			 	 offset: {x: 20, y: 20},
+			 	waitTimeMillisec: 50}  // this is wait before you go on to next item
+			},
+			// get rid of focus cursors
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element: 'InstrumentSelections  button[value="Trumpet"]',
+			 	 action: "nothing",
+			 	 offset: {x: 20, y: 20},
+			 	waitTimeMillisec: 50}  // this is wait before you go on to next item
+			},
+			// get rid of click cursor
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element: 'InstrumentSelections button[value="Trumpet"]',
+			 	 action: "nothing",
+			 	 offset: {x: 20, y: 20},
+			 	waitTimeMillisec: 28000}  // this is wait before you go on to next item
+			},
+
+			//*****************************
+			// Big gap here as we explain the periodicity of trumpet
+			//*****************************	
+			// TURN ON sine wave tone
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'toneStartButton',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'toneStartButton',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 3000} 
+			},
+			// wait a bit and TURN ON trumpet
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'allowNotePlay',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'allowNotePlay',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 6000} 
+			},			
+			// TURN OFF sine wave, Trumpet will play itself out
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'toneStartButton',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'toneStartButton',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 1000} 
 			},
 
 	  ]
