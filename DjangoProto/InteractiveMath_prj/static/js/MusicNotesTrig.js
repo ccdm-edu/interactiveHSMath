@@ -33,6 +33,8 @@ $(function() {
 	let ToneIsOnNow = false;  // for synthesized tone, both musical note and tone can play additively.
 	let osc = new Tone.Oscillator(); 
 	
+	let ctxPeriod, ctxLong;
+	
 	//initialize variables needed to play the non synthesized tone musical notes
 	const UNSELECTED = -1;  
 	let tuneState = [];
@@ -87,7 +89,7 @@ $(function() {
 			// for plot purposes, fix the tone amp to 10, else plots change too much and it is confusing for kids and
 			// they might adjust things too much so you lose the punch line of musical note periodicity
 			ampLong[i] = 10.0 * Math.sin(2 * Math.PI * (currFreq * i * samplePeriodLong) );
-			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 2);	
+			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 3);	
 			// this allows us to turn off graph yet keep data around, for currTuneState=TONE_ONLY, this will be a null array 
 			if (tuneGraphLong[currTuneState] != null) {
 				// arbitrary fixed amplification factor put on mp3 signals for ease in plotting.  Changing
@@ -99,26 +101,12 @@ $(function() {
 	};
 	
 	function drawTone()
-	{
-		// CHART js hint:  update time, need to add the new and THEN remove the old.  X axis doesn't like to be empty...
-		// actually, I decided to never change time
-		
-	    // update tone, remove old (although for now, just one data set)
-	    sine_plot_100_1k.data.datasets.forEach((dataset) => {
-	    	// somehow, this pop changes the length of ampLong, so best to refill arrays afterwards to get full length
-	    	// seems like a library bug? but one we can get around
-	        dataset.data.pop();
-	    });
-		
+	{	
 		// now fill the arrays and push them to the plots
 		fillInArrays();   
 
-		// update 10 ms plot
-		sine_plot_100_1k.data.datasets[0].data.push(ampLong);	 
-
 	    // make all these changes happen
 	    sine_plot_100_1k.update();	                    
- 
 	};
 	
 	function updateFreq() {
@@ -131,6 +119,20 @@ $(function() {
 	//***********************************
 	// show periodicity as musical instrument comes up with the pitch freq
 	//***********************************
+	// Add space for lines indicating periodicity of musical notes
+	//https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
+	if ( $("#periodicityIndicator").length ) {
+    	ctxPeriod = $("#periodicityIndicator").get(0).getContext('2d');
+	} else {
+    	console.error('Cannot obtain timeExpand context');
+	};
+	
+	// keep a snapshot of two plots before the expansion lines inbetween show up
+	// When we move to musical instruments, the 1ms plot on bottom is irrelevant but want the space used
+	// to indicate "1ms expansion" to show periodicity
+    let backgroundPlot; 
+    let expandTimeCanvas = $("#periodicityIndicator").get(0);
+	backgroundPlot = ctxPeriod.getImageData(0, 0, expandTimeCanvas.width, expandTimeCanvas.height);
 		
 	// go to CSS, pull out scales values and pull off px suffix and convert to numbers	
 	var root = document.querySelector(':root');
@@ -139,14 +141,14 @@ $(function() {
 	let LEFT_EDGE_Y = parseInt(rootStyles.getPropertyValue('--TOP_EDGE_PLOT').replace('px', ''));
 	function showPeriodicity(freqSelect){
 		// delete the expansion lines to make room for these periodicity indicators/verbiage
-		ctxExpandTime.putImageData(backgroundPlot, 0, 0);
+		ctxPeriod.putImageData(backgroundPlot, 0, 0);
 		if (currTuneState == UNSELECTED) {
 			//clean out everything
 			$('#Period_Text1').css("visibility", "hidden");			
 			$('#Period_Text2').css("visibility", "hidden");
 			return; // nothing left to do
 		}
-		// set up constants to be used to draw arrows and signposts
+		// set up constants to be used to lines and arrows below the plot for periodicity
 		const LEFT_X = 20;
 		const MARKER_Y_UP = LEFT_EDGE_Y - 100;
 		const MARKER_Y_DOWN = LEFT_EDGE_Y + 45;
@@ -163,52 +165,52 @@ $(function() {
 			$('.Third_Period').css("visibility", "hidden");
 			$('.Fourth_Period').css("visibility", "hidden");
 			// move the second box over by the new width of longer period
-			const NEW_PERIOD_BOX_LEFT = LEFT_EDGE_X + DOUBLE_T;
+			const NEW_PERIOD_BOX_LEFT = LEFT_EDGE_X + DOUBLE_T;  
 			$('.Second_Period').css("left", NEW_PERIOD_BOX_LEFT + 'px');
 			//change the period wording
 			$("#Period_Text1").html('Period T <br>= 1/Frequency = 1/(233.08 Hz) = 4.29 ms');
 			$('#Period_Text2').css("left", (NEW_PERIOD_BOX_LEFT + SHORT_T) + 'px');
 			$("#Period_Text2").html('T = 4.29 ms');
 			// create X and Y of two "signposts"
-			const SECOND_233_X = LEFT_X + 120 - 2;  // move it over a touch so you can see it easier
-			const THIRD_233_X = SECOND_233_X + 2;  // move it over a touch so you can see it easier
-			const FOURTH_233_X = THIRD_233_X + 120 - 2;  // move it over a touch so you can see it easier
+			const SECOND_L_233_X = LEFT_X + 120 - 2;  // move it over a touch to account for line thickness
+			const SECOND_R_233_X = SECOND_L_233_X + 2;  // move it over a touch to account for line thickness
+			const THIRD_L_233_X = SECOND_R_233_X + 120 -2;   // move it over a touch to account for line thickness
+			//*****Create the arrows, lines and text to show periodicity ******/
 			// Need to make vertical lines to show where Period hits on graph
-			ctxExpandTime.beginPath();
-			ctxExpandTime.moveTo(LEFT_X, MARKER_Y_UP);	
-			ctxExpandTime.lineTo(LEFT_X, MARKER_Y_DOWN);
-			ctxExpandTime.strokeStyle = "red";
-		    ctxExpandTime.lineWidth = 1;  // no I don't know why the width is way wider than this... guess i dont care here
+			ctxPeriod.beginPath();
+			ctxPeriod.moveTo(LEFT_X, MARKER_Y_UP);	
+			ctxPeriod.lineTo(LEFT_X, MARKER_Y_DOWN);
+			ctxPeriod.strokeStyle = "red";
+		    ctxPeriod.lineWidth = 1;  // no I don't know why the width is way wider than this... guess i dont care here
 			// make end of period lines in red
-			ctxExpandTime.moveTo(SECOND_233_X, MARKER_Y_UP);
-			ctxExpandTime.lineTo(SECOND_233_X, MARKER_Y_DOWN);
+			ctxPeriod.moveTo(SECOND_L_233_X, MARKER_Y_UP);
+			ctxPeriod.lineTo(SECOND_L_233_X, MARKER_Y_DOWN);
 			// make straight line between arrows
-			ctxExpandTime.moveTo(LEFT_X, LEFT_EDGE_Y);
-			ctxExpandTime.lineTo(SECOND_233_X, LEFT_EDGE_Y);
-			ctxExpandTime.stroke();
+			ctxPeriod.moveTo(LEFT_X, LEFT_EDGE_Y);
+			ctxPeriod.lineTo(SECOND_L_233_X, LEFT_EDGE_Y);
+			ctxPeriod.stroke();
 			// make period lines in blue for second period
-			ctxExpandTime.beginPath();
-			ctxExpandTime.moveTo(THIRD_233_X, MARKER_Y_UP);
-			ctxExpandTime.lineTo(THIRD_233_X, MARKER_Y_DOWN);	
-			ctxExpandTime.strokeStyle = "blue";		
-			ctxExpandTime.stroke();
-			ctxExpandTime.moveTo(FOURTH_233_X, MARKER_Y_UP);
-			ctxExpandTime.lineTo(FOURTH_233_X, MARKER_Y_DOWN);
+			ctxPeriod.beginPath();
+			ctxPeriod.moveTo(SECOND_R_233_X, MARKER_Y_UP);
+			ctxPeriod.lineTo(SECOND_R_233_X, MARKER_Y_DOWN);	
+			ctxPeriod.strokeStyle = "blue";		
+			ctxPeriod.stroke();
+			ctxPeriod.moveTo(THIRD_L_233_X, MARKER_Y_UP);
+			ctxPeriod.lineTo(THIRD_L_233_X, MARKER_Y_DOWN);
 			// make straight line between arrows
-			ctxExpandTime.moveTo(THIRD_233_X, LEFT_EDGE_Y);
-			ctxExpandTime.lineTo(FOURTH_233_X, LEFT_EDGE_Y);
-			ctxExpandTime.stroke();
-			ctxExpandTime.closePath();
+			ctxPeriod.moveTo(SECOND_R_233_X, LEFT_EDGE_Y);
+			ctxPeriod.lineTo(THIRD_L_233_X, LEFT_EDGE_Y);
+			ctxPeriod.stroke();
+			ctxPeriod.closePath();
 			// Need to make red/blue arrows for each period text
-			new AxisArrow(ctxExpandTime, [LEFT_X, LEFT_EDGE_Y], 'L',"red").draw();
-			new AxisArrow(ctxExpandTime, [SECOND_233_X, LEFT_EDGE_Y], 'R',"red").draw();
-			new AxisArrow(ctxExpandTime, [THIRD_233_X, LEFT_EDGE_Y], 'L',"blue").draw();
-			new AxisArrow(ctxExpandTime, [FOURTH_233_X, LEFT_EDGE_Y], 'R',"blue").draw();
+			new AxisArrow(ctxPeriod, [LEFT_X, LEFT_EDGE_Y], 'L',"red").draw();
+			new AxisArrow(ctxPeriod, [SECOND_L_233_X, LEFT_EDGE_Y], 'R',"red").draw();
+			new AxisArrow(ctxPeriod, [SECOND_R_233_X, LEFT_EDGE_Y], 'L',"blue").draw();
+			new AxisArrow(ctxPeriod, [THIRD_L_233_X, LEFT_EDGE_Y], 'R',"blue").draw();
 			
 		} else if (C5_FREQ == freqSelect) {			
 			// go to CSS, pull out scales values and pull off px suffix and convert to numbers
 			const SHORT_T = parseInt(rootStyles.getPropertyValue('--WIDTH_466HZ').replace('px', ''));
-			const DOUBLE_T = 2 * SHORT_T;
 			$('.Period_Tone').css("width", SHORT_T + 'px');
 			// need to show all 4 boxes of period
 			$('.First_Period').css("visibility", "visible");			
@@ -216,47 +218,48 @@ $(function() {
 			$('.Third_Period').css("visibility", "visible");
 			$('.Fourth_Period').css("visibility", "visible");
 			// move the second box over by the new width of longer period
-			const NEW_PERIOD_BOX_LEFT = LEFT_EDGE_X + SHORT_T;
+			const NEW_PERIOD_BOX_LEFT = LEFT_EDGE_X + SHORT_T;  
 			$('.Second_Period').css("left", NEW_PERIOD_BOX_LEFT + 'px');
 			//change the period wording
 			$("#Period_Text1").html('Period T <br>= 1/Frequency<br><br>= 1/(466.16 Hz) <br>= 2.15 ms');
 			$('#Period_Text2').css("left", (NEW_PERIOD_BOX_LEFT + 40) + 'px');
 			$("#Period_Text2").html('T = 2.15 ms');
 
-			const SECOND_233_X = LEFT_X + 60 - 1;  // move it over a touch so you can see it easier
-			const THIRD_233_X = SECOND_233_X + 1;  // move it over a touch so you can see it easier
-			const FOURTH_233_X = THIRD_233_X + 60 - 1;
+			const SECOND_L_466_X = LEFT_X + 60 - 1;  
+			const SECOND_R_466_X = SECOND_L_466_X + 2;  // move it over a touch to account for line thickness
+			const THIRD_L_466_X = SECOND_R_466_X + 60 -1;
+			//*****Create the arrows, lines and text to show periodicity ******/
 			// Need to make vertical lines to show where Period hits on graph
-			ctxExpandTime.beginPath();
-			ctxExpandTime.moveTo(LEFT_X, MARKER_Y_UP);	
-			ctxExpandTime.lineTo(LEFT_X, MARKER_Y_DOWN);
-			ctxExpandTime.strokeStyle = "red";
-		    ctxExpandTime.lineWidth = 1;  // no I don't know why the width is way wider than this... guess i dont care here
+			ctxPeriod.beginPath();
+			ctxPeriod.moveTo(LEFT_X, MARKER_Y_UP);	
+			ctxPeriod.lineTo(LEFT_X, MARKER_Y_DOWN);
+			ctxPeriod.strokeStyle = "red";
+		    ctxPeriod.lineWidth = 1;  // no I don't know why the width is way wider than this... guess i dont care here
 			// make end of period lines in red
-			ctxExpandTime.moveTo(SECOND_233_X, MARKER_Y_UP);
-			ctxExpandTime.lineTo(SECOND_233_X, MARKER_Y_DOWN);
+			ctxPeriod.moveTo(SECOND_L_466_X, MARKER_Y_UP);
+			ctxPeriod.lineTo(SECOND_L_466_X, MARKER_Y_DOWN);
 			// make straight line between arrows
-			ctxExpandTime.moveTo(LEFT_X, LEFT_EDGE_Y);
-			ctxExpandTime.lineTo(SECOND_233_X, LEFT_EDGE_Y);
-			ctxExpandTime.stroke();
+			ctxPeriod.moveTo(LEFT_X, LEFT_EDGE_Y);
+			ctxPeriod.lineTo(SECOND_L_466_X, LEFT_EDGE_Y);
+			ctxPeriod.stroke();
 			// make period lines in blue for second period
-			ctxExpandTime.beginPath();
-			ctxExpandTime.moveTo(THIRD_233_X, MARKER_Y_UP);
-			ctxExpandTime.lineTo(THIRD_233_X, MARKER_Y_DOWN);	
-			ctxExpandTime.strokeStyle = "blue";		
-			ctxExpandTime.stroke();
-			ctxExpandTime.moveTo(FOURTH_233_X, MARKER_Y_UP);
-			ctxExpandTime.lineTo(FOURTH_233_X, MARKER_Y_DOWN);
+			ctxPeriod.beginPath();
+			ctxPeriod.moveTo(SECOND_R_466_X, MARKER_Y_UP);
+			ctxPeriod.lineTo(SECOND_R_466_X, MARKER_Y_DOWN);	
+			ctxPeriod.strokeStyle = "blue";		
+			ctxPeriod.stroke();
+			ctxPeriod.moveTo(THIRD_L_466_X, MARKER_Y_UP);
+			ctxPeriod.lineTo(THIRD_L_466_X, MARKER_Y_DOWN);
 			// make straight line between arrows
-			ctxExpandTime.moveTo(THIRD_233_X, LEFT_EDGE_Y);
-			ctxExpandTime.lineTo(FOURTH_233_X, LEFT_EDGE_Y);
-			ctxExpandTime.stroke();
-			ctxExpandTime.closePath();
+			ctxPeriod.moveTo(SECOND_R_466_X, LEFT_EDGE_Y);
+			ctxPeriod.lineTo(THIRD_L_466_X, LEFT_EDGE_Y);
+			ctxPeriod.stroke();
+			ctxPeriod.closePath();
 			// Need to make red/blue arrows for each period text
-			new AxisArrow(ctxExpandTime, [LEFT_X, LEFT_EDGE_Y], 'L',"red").draw();
-			new AxisArrow(ctxExpandTime, [SECOND_233_X, LEFT_EDGE_Y], 'R',"red").draw();
-			new AxisArrow(ctxExpandTime, [THIRD_233_X, LEFT_EDGE_Y], 'L',"blue").draw();
-			new AxisArrow(ctxExpandTime, [FOURTH_233_X, LEFT_EDGE_Y], 'R',"blue").draw();
+			new AxisArrow(ctxPeriod, [LEFT_X, LEFT_EDGE_Y], 'L',"red").draw();
+			new AxisArrow(ctxPeriod, [SECOND_L_466_X, LEFT_EDGE_Y], 'R',"red").draw();
+			new AxisArrow(ctxPeriod, [SECOND_R_466_X, LEFT_EDGE_Y], 'L',"blue").draw();
+			new AxisArrow(ctxPeriod, [THIRD_L_466_X, LEFT_EDGE_Y], 'R',"blue").draw();
 						
 		} else console.log(' Coding error, unexpected input freq to showPeriodicity as ' + freqSelect);
 		
@@ -279,7 +282,7 @@ $(function() {
 			sine_plot_100_1k.data.datasets[1].label = "";
 			sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,255,255)'; // white for legend (invisible)
 			// clean up any Periodicity arrows/text if left over from musical notes and redraw expansion lines
-			ctxExpandTime.putImageData(backgroundPlot, 0, 0);
+			ctxPeriod.putImageData(backgroundPlot, 0, 0);
 	    	// make all these changes happen
 	    	sine_plot_100_1k.update();	
 			return;
@@ -419,9 +422,7 @@ $(function() {
 		}
 		
 		getGraphArray() {
-			// musical data only plotted on upper plot (looses meaning on lower plot since freq soo low)
-			let graphArray = [];
-			
+			let graphArray = [];			
 			// count up time on the graph
 			let tG = 0.0;
 			// count up time for each point in the mp3 file
@@ -718,7 +719,6 @@ $(function() {
 	//  Immediate execution here
 	//***********************************
 
-	let ctxLong, ctxShort, ctxExpandTime;
 	// prepare to draw the 10ms plot at top
     if ( $("#sine_plotsLong").length ) {
     	ctxLong = $("#sine_plotsLong").get(0).getContext('2d');
@@ -731,30 +731,34 @@ $(function() {
 	const CHART_OPTIONS = {
 		maintainAspectRatio: false,  //uses the size it is given
 		responsive: true,
-	    legend: {
-	        display: true // gets rid of dataset label/legend
-	     },
 		elements:{
 			point:{
 				radius: 1     // to get rid of individual points
 			}
 		},
 		scales: {	
-			xAxes: [{
-				scaleLabel: {
+			x: {
+				type: 'linear',
+				title: {
 					display: true,
-					labelString: 't (milliseconds)'
+					text: 't (milliseconds)'
 				},
-			}],
-			yAxes: [{
-				scaleLabel: {
-					display: true,
-					labelString: 'y amplitude'
+				// see https://www.chartjs.org/docs/latest/axes/cartesian/linear.html
+				ticks: {
+					stepSize: 0.2,
 				}
-			}]
+			},
+			y: {
+				type: 'linear',
+				max: 10,  //too confusing to teens if scale changes because one number is 1% over, better to clip
+				min: -10,
+				title: {
+					display: true,
+					text: 'y amplitude',
+				},
+			}
 		},
 	};
-	Object.freeze(CHART_OPTIONS);  // to make it truly const
 	
 	const TOP_CHART = {...CHART_OPTIONS };
 	let sine_plot_100_1k = new Chart(ctxLong, {
@@ -765,7 +769,7 @@ $(function() {
 	            label: 'Pitch tone (sine wave)',
 	            data: ampLong,
 	            fill: false,
-	            borderColor: 'rgb(75, 192, 192)',
+	            borderColor: 'rgb(75, 192, 192)',  //aqua
 	            },
 	            // this will be the musical note data
 	            {
@@ -777,24 +781,8 @@ $(function() {
 	    },
 	    options: TOP_CHART
 	});
-	Object.freeze(TOP_CHART);  //to make it truly const
 	// if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
 	
-	// Add space for lines indicating periodicity of musical notes
-	//https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
-	if ( $("#timeExpand").length ) {
-    	ctxExpandTime = $("#timeExpand").get(0).getContext('2d');
-	} else {
-    	console.error('Cannot obtain timeExpand context');
-	};
-	
-	// keep a snapshot of two plots before the expansion lines inbetween show up
-	// When we move to musical instruments, the 1ms plot on bottom is irrelevant but want the space used
-	// to indicate "1ms expansion" to show periodicity
-    let backgroundPlot; 
-    let expandTimeCanvas = $("#timeExpand").get(0);
-	backgroundPlot = ctxExpandTime.getImageData(0, 0, expandTimeCanvas.width, expandTimeCanvas.height);
-
 	//***********************************
 	//initialize values for tone as page first comes up
 	//***********************************
@@ -1111,7 +1099,7 @@ $(function() {
 		sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,255,255)'; // white for legend (invisible)
 		
 		// clean up any Periodicity arrows/text if left over from musical notes and redraw expansion lines
-		ctxExpandTime.putImageData(backgroundPlot, 0, 0);
+		ctxPeriod.putImageData(backgroundPlot, 0, 0);
 		// get rid of all old periodicity stuff, in case its present
 		$('.First_Period').css("visibility", "hidden");			
 		$('.Second_Period').css("visibility", "hidden");

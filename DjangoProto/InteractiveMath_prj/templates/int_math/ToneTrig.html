@@ -14,9 +14,8 @@
 <!-- SineCosID is a placemarker for begin of link to go to sine cosine tones and musical notes -->
 <div id="SineCosID">
 	
-	<div id ="headerAndCtl_TT">
-    	<h1 id = "musicalActivity">Synthesized Tone</h1>
-    </div>
+    <h1 id = "musicalActivity">Synthesized Tone</h1>
+    
     <!-- default startup, will change as user loads musician notes-->
     <p class="AdvTopic_ToDo"> TRY THIS:  Turn on your speaker.  Hit Start Tone and adjust Frequency and notice the pitch goes up and down.  
     Adjust Amplitude and notice only the volume changes.  Adjust Phase slowly and note there is no perceived change but if you change it quickly, you get a popping sound.  
@@ -78,31 +77,25 @@
 			</tbody>
 		</table>
 
-	 	<div id="overlapExpansionLines">
-	 		<!--  want to overlap the top graph with expansion lines below it -->
-	 		<!--  canvas used for chart js need the size defined one level up at div -->
-		 	<div id = "sinePlotLongWrapper">
-		 		<!-- Needs to be a bit bigger since it has the title -->
-		 		<canvas id="sine_plotsLong">
+	 	<!-- The plots and explanation lines inbetween the plots, the div is a way to set height and width of canvases,  -->
+		<!-- See URL for explanation of how to handle chart.js in a canvas sizing:  https://www.chartjs.org/docs/latest/configuration/responsive.html#important-note -->
+ 		<!--  canvas used for chart js need the size defined one level up at div -->
+ 		<div id="wrap_sin_plotsLong" style="position: relative; height:250px; width:800px; top:100px">
+		 	<canvas id="sine_plotsLong" >
 		 		Your Browser does not support canvas tag, you are missing graph capability
-		 		</canvas>
-		 	</div>
-		 	<div class="Period_Tone First_Period"></div>
-		 	<div class="Period_Tone Second_Period"></div>
-		 	<div class="Period_Tone Third_Period"></div>
-		 	<div class="Period_Tone Fourth_Period"></div>
-		 	<div id = "Period_Text1" ></div>
-		 	<div id = "Period_Text2" ></div>
-	 		<canvas id="timeExpand">
-	 		Your Browser does not support canvas tag, you are missing graph capability
-	 		</canvas>
+		 	</canvas>
 	 	</div>
-	 	<div id = "sinePlotsShortWrapper">
+	 	<!-- this is not chart.js canvas, treat normally for sizing -->
+ 		<canvas id="timeExpand" >
+ 		Your Browser does not support canvas tag, you are missing graph capability
+ 		</canvas>
+ 		<div id="wrap_sin_plotsShort"style="position: relative; height:200px; width:800px; top:30px">
 	 		<canvas id="sine_plotsShort">
 	 		Your Browser does not support canvas tag, you are missing graph capability
 	 		</canvas>
-	 	</div>
- 	</div>
+ 		</div>
+		
+
 
 	<br>
 	<br>
@@ -111,7 +104,9 @@
 	</div>
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.73/Tone.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <!-- Get the correct cdn chart.js from https://cdnjs.com/libraries/Chart.js (see stackoverflow, use umd version)-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.umd.js" integrity="sha512-CMF3tQtjOoOJoOKlsS7/2loJlkyctwzSoDK/S40iAB+MqWSaf50uObGQSk5Ny/gfRhRCjNLvoxuCvdnERU4WGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
         
 	<!--  this must come before the jquery ui and bootstrap-->	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

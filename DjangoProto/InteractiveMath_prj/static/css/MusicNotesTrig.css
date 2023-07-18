@@ -4,14 +4,14 @@ This is the style sheet for MusicNotesTrig.html
 /* create global var for this html */
 :root{
 	--LEFT_EDGE_CONTROLS: 130px;
-	--LEFT_EDGE_PLOT: 55px;
-	--WIDTH_466HZ: 159px;  /* the width in pixels of 2.15ms */
-	--HEIGHT_TONE_PLOT: 162px;
-	--TOP_EDGE_PLOT: 33px;
+	--LEFT_EDGE_PLOT: 52px;  /*dictates position of periodicity boxes left X position*/
+	--TOP_EDGE_PLOT: 33px;  /*dictates position of periodicity boxes left Y position*/
+	--WIDTH_466HZ: 158px;  /* the width in pixels of 2.15ms */
+	--HEIGHT_TONE_PLOT: 205px;  /* sets height of periodicity boxes  and location of text*/
 	--HEIGHT_HEADER: 40px;
 	--WIDTH_MUSIC_NOTE_CTL: 250px;
 	--HEIGHT_MUSIC_NOTE_CTL: 150px;
-	--HEIGHT_GRAPH: 250px;
+	--HEIGHT_GRAPH: 300px;  /* sets canvas for chart */
 	--HEIGHT_PERIOD_EXPLN: 110px;
 }
 
@@ -80,14 +80,13 @@ input[type="range"] {
 	width:800px;
 }
 /* draw diagrams below graphs to show relationships */
-#timeExpand{
+#periodicityIndicator{
 	 position:absolute; 
 	 left: 0px;
 	 top: calc(var(--HEIGHT_GRAPH)); 
 	 height: var(--HEIGHT_PERIOD_EXPLN);
 	 width: 800px;
 }
-
 /* checkerbox to show periodicity**/
 .Period_Tone {
 	position: absolute;
@@ -141,5 +140,5 @@ input[type="range"] {
 /**********************define space for footer to float at bottom***************/
 #SineCosBlock {
 	/* define space for rest of page makes footer float to bottom */
-	height: 500px;
+	height: 550px;
 }	

@@ -29,7 +29,6 @@ $(function() {
 	// used for plotting
 	let timeMsLong = [];
 	let ampLong = [];
-	let ampLongCurrNote = [];  // what is plotted
 	let timeMsShort = [];
 	let ampShort = [];
 	
@@ -49,46 +48,23 @@ $(function() {
 		let i;
 		for (i=0; i<=NUM_PTS_PLOT_LONG; i++) {
 			ampLong[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodLong + $currPhase.val() / 360.0) );
-			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 2);		
+			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 3);		
 		}
 		for (i=0; i<=NUM_PTS_PLOT_SHORT; i++) {
 			ampShort[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodShort + $currPhase.val() / 360.0) );
-			timeMsShort[i] = roundFP(i * samplePeriodShort * 1000, 2);				
+			// need higher precision here on time than with the longer plot
+			timeMsShort[i] = roundFP(i * samplePeriodShort * 1000, 4);				
 		}	
-
 	};
 	
 	function drawTone()
-	{
-		// CHART js hint:  update time, need to add the new and THEN remove the old.  X axis doesn't like to be empty...
-		// actually, I decided to never change time
-		
-	    // update tone, remove old (although for now, just one data set)
-	    sine_plot_100_1k.data.datasets.forEach((dataset) => {
-	    	// somehow, this pop changes the length of ampLong, so best to refill arrays afterwards to get full length
-	    	// seems like a library bug? but one we can get around
-	        dataset.data.pop();
-	    });
-				
-	    // update tone, remove old (although for now, just one data set), add new
-	    sine_plot_1k_10k.data.datasets.forEach((dataset) => {
-	    	// somehow, this pop changes the length of ampShort, so best to refill arrays afterwards to get full length
-	        dataset.data.pop();
-	    });
-	    
+	{	    
 	    // update title to match new parameters
 	    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
 	    let currTitleText = 'Pitch tone y = ' + $currAmp.val() + ' * sin{ 2 * \u03C0 * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }';
-	    sine_plot_100_1k.options.title.text = currTitleText;
-		
-		// now fill the arrays and push them to the plots
+		sine_plot_100_1k.options.plugins.title.text = currTitleText;
+		// now fill the arrays and they will automatically be reread into plots
 		fillInArrays();   
-
-		// update 10 ms plot
-		sine_plot_100_1k.data.datasets[0].data.push(ampLong);	 
-		// update 1 ms plot
-	    sine_plot_1k_10k.data.datasets[0].data.push(ampShort);
-
 
 	    // make all these changes happen
 	    sine_plot_100_1k.update();	                    
@@ -157,30 +133,6 @@ $(function() {
 		ctxExpandTime.closePath();
 	}
 	//--------------------------------------------------------------------------------------------------------------------
-	
-	function updatePlotsUserAides() {
-		// we set up musical note for zero phase as we line it up with associated pitch sine
-		$("#currPhaseLabel").text("0");
-		$("#in-range-phase").val(0);
-		updatePhase();
-		
-		// we set up signal so it looks best at zero phase
-		$("#currPhaseLabel").text('0');
-		$("#in-range-phase").val(0);
-		updatePhase();  
-
-		// update graphs
-		drawTone()
-		// we have new instrument mp3, allow play
-		$("#allowNotePlay").css("visibility", "visible"); 
-		
-		// get rid of all old periodicity stuff, that overlays graphs, selectively turn on as needed later on	
-		$('.First_Period').css("visibility", "hidden");			
-		$('.Second_Period').css("visibility", "hidden");
-		$('.Third_Period').css("visibility", "hidden");
-		$('.Fourth_Period').css("visibility", "hidden");
-
-	}
 		
 	//***********************************
 	//  User instigated callback events
@@ -245,35 +197,16 @@ $(function() {
 	let expln_tab_element = "#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab021 > p";
 	
 	function doToneOnly() {
-		// no instruments to play, its tone only.  No need for a play tone button
-		$("#allowNotePlay").css("visibility", "hidden");
-		
-		// get rid of any musical note legends
-		sine_plot_100_1k.data.datasets[1].label = "";
-		sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,255,255)'; // white for legend (invisible)
-		
+				
 		// clean up any Periodicity arrows/text if left over from musical notes and redraw expansion lines
-		ctxExpandTime.putImageData(backgroundPlot, 0, 0);
-		// get rid of all old periodicity stuff, in case its present
-		$('.First_Period').css("visibility", "hidden");			
-		$('.Second_Period').css("visibility", "hidden");
-		$('.Third_Period').css("visibility", "hidden");
-		$('.Fourth_Period').css("visibility", "hidden");
-		$("#Period_Text1").css("visibility", "hidden");			
-		$('#Period_Text2').css("visibility", "hidden");
+//		ctxExpandTime.putImageData(backgroundPlot, 0, 0);
+
 		// on power up, draw the expansion lines between graphs
 		DrawExpansionLinesBtwnGraphs();
 		
 		// update graphs, to eliminate musical note if present
 		drawTone()
 	};
-	
-
-	// must do these at a global level since we allow an abort of tone playing, must keep around the original
-	// source reference
-	let sourceNote;
-	let context;
-	
 		
 	//***********************************
 	//  Immediate execution here
@@ -292,38 +225,46 @@ $(function() {
 	} else {
     	console.error('Cannot obtain sin_plotsHi context');
 	};
-			
-	//if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
+	
 	const CHART_OPTIONS = {
-		maintainAspectRatio: false,  //uses the size it is given
 		responsive: true,
-	    legend: {
-	        display: true // gets rid of dataset label/legend
-	     },
+		maintainAspectRatio: false,
 		elements:{
 			point:{
 				radius: 1     // to get rid of individual points
 			}
 		},
-		scales: {	
-			xAxes: [{
-				scaleLabel: {
+		scales: {
+			x: {
+				type: 'linear', 
+				title: {
 					display: true,
-					labelString: 't (milliseconds)'
+					text: 't (milliseconds)'
 				},
-			}],
-			yAxes: [{
-				scaleLabel: {
+			},
+			y: {
+				type: 'linear', 
+				title: {
 					display: true,
-					labelString: 'y amplitude'
+					text: 'y amplitude'
 				}
-			}]
-		},
+			}
+		}
 	};
-	Object.freeze(CHART_OPTIONS);  // to make it truly const
-	let currTitle = {display: true, text: 'Pitch tone y = ' + $currAmp.val() + ' * sin{ 2 * pi * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }'};
 	
-	const TOP_CHART = {...CHART_OPTIONS, title: currTitle };
+	// careful!  if you are looking at chartjs documentation, current version is 4.3.0 and this was an old version 2.9.4
+    //7/12/2023 upgrade to 4.3.0 https://www.chartjs.org/docs/latest/
+    const TOP_LABEL = {plugins: { 
+			title: {
+				display: true,  
+				font: {size: 20}, 
+				text: 'Pitch tone y = ' + $currAmp.val() + ' * sin{ 2 * pi * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }'
+				},
+			legend: {
+	        	display: false 
+			}
+		}};
+	const TOP_CHART = {...CHART_OPTIONS, ...TOP_LABEL};
 	let sine_plot_100_1k = new Chart(ctxLong, {
 	    type: 'line',
 	    data: {
@@ -332,33 +273,30 @@ $(function() {
 	            label: 'Pitch tone (sine wave)',
 	            data: ampLong,
 	            fill: false,
-	            borderColor: 'rgb(75, 192, 192)',
+	            borderColor: 'rgb(75, 192, 192)',  //aqua
 	            },
-	            // this will be the musical note data
-	            {
-	            label: '',
-	            data: ampLongCurrNote,
-	            fill: false,
-	            borderColor: 'rgb(255,255,255)',  // set it to white, cheezy way to null the legend till needed
-	            }]
+	            ]
 	    },
 	    options: TOP_CHART
 	});
-	Object.freeze(TOP_CHART);  //to make it truly const
+    const BOTTOM_LABEL = {plugins: { 
+			legend: {
+	        	display: false 
+			}
+		}};
+	const BOTTOM_CHART = {...CHART_OPTIONS, ...BOTTOM_LABEL};
 	// if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
 	let sine_plot_1k_10k = new Chart(ctxShort, {
 	    type: 'line',
 	    data: {
 	    	labels: timeMsShort,
-	    	//borderColor: 'rgb(255, 165, 0)', this is orange
 	        datasets: [{
-	            label: 'Pitch Tone (sine wave)',
 	            data: ampShort,
 	            fill: false,
-	            borderColor: 'rgb(75, 192, 192)',
+	            borderColor: 'rgb(75, 192, 192)',  //aqua
 	            }]
 	    },
-	    options: CHART_OPTIONS
+	    options: BOTTOM_CHART
 	});
 	 
 	// With the graphs drawn, prepare to draw explanatory lines between the charts
@@ -372,9 +310,9 @@ $(function() {
 	// keep a snapshot of two plots before the expansion lines inbetween show up
 	// When we move to musical instruments, the 1ms plot on bottom is irrelevant but want the space used
 	// to indicate "1ms expansion" to show periodicity
-    let backgroundPlot; 
-    let expandTimeCanvas = $("#timeExpand").get(0);
-	backgroundPlot = ctxExpandTime.getImageData(0, 0, expandTimeCanvas.width, expandTimeCanvas.height);
+//    let backgroundPlot; 
+//    let expandTimeCanvas = $("#timeExpand").get(0);
+//	backgroundPlot = ctxExpandTime.getImageData(0, 0, expandTimeCanvas.width, expandTimeCanvas.height);
 	
 	// on power up, draw the expansion lines between graphs
 	DrawExpansionLinesBtwnGraphs();

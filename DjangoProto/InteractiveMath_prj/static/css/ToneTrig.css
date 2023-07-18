@@ -3,32 +3,12 @@ This is the style sheet for ToneTrig.html
 ************************/
 /* create global var for this html */
 :root{
-	--LEFT_EDGE_PLOT: 54px;
-	--TOP_EDGE_PLOT: 64px;
-	--WIDTH_466HZ: 159px;
-	--HEIGHT_TONE_PLOT: 140px;
-	--NO_AUTODEMO_LEFT_POS: 150px;
-}
-
-#headerAndCtl_TT {
-	position: relative;
-}
-#musicalActivity{
-	text-align: left;
-	top: 0px;
-}
-/* do NOT put a space between number and word "px" */
-#menuExplnTones {
-	position: relative;
-	top: 40px;
-	left: 0px;
-	height: 700px;
 }
 
 /*****************************************************************/
 /* this is a header of current activity*/
 #musicalActivity {
-	position: absolute;
+	position: relative;
 	border: 0px;
 	resize: none;
 	left: 170px;
@@ -37,8 +17,14 @@ This is the style sheet for ToneTrig.html
 	font-size: 32px;
 	}
 /*****************************************************************/
-/* This is the side by side controls 1.  explanation of current activity 2.  tone param changes */
-
+/* This is the controls for tone generation */
+/* do NOT put a space between number and word "px" */
+#menuExplnTones {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	height: 700px;
+}
 /* item 3, tone controls, freq, amplitude, phase*/
 #toneChanges {
     position: absolute;
@@ -54,81 +40,13 @@ This is the style sheet for ToneTrig.html
 
 /*****************************************************************/
 /* arrange the expansion lines between the two graphs for max understandability */
-#overlapExpansionLines{
-    position:relative;
-    top: 110px;
-    height: 250px;
-    width: 800px;
-}
-#sinePlotLongWrapper{
-	position: absolute;
-	height: 250px;
-	width:800px;
-}
-
-/* checkerbox to show periodicity**/
-.Period_Tone {
-	position: absolute;
-	top: var(--TOP_EDGE_PLOT);
-	width: var(--WIDTH_466HZ);
-	height: var(--HEIGHT_TONE_PLOT);
-	border-style: solid;
-	border-width: 1px;
-}
-.First_Period{
-	left: var(--LEFT_EDGE_PLOT);
-	border-color: red;
-	visibility: hidden;
-}
-.Second_Period{
-	left: calc(var(--LEFT_EDGE_PLOT) + var(--WIDTH_466HZ));
-	border-color: blue;	
-	visibility: hidden;
-}
-.Third_Period{
-	left: calc(var(--LEFT_EDGE_PLOT) + 2 * var(--WIDTH_466HZ));
-	border-color: red;
-	visibility: hidden;
-}
-.Fourth_Period{
-	left: calc(var(--LEFT_EDGE_PLOT) + 3 * var(--WIDTH_466HZ));
-	border-color: blue;
-	visibility: hidden;
-}
-#Period_Text1{
-	position: absolute;
-	left: calc(var(--LEFT_EDGE_PLOT) + 50px);
-	top: calc(var(--TOP_EDGE_PLOT) + 160px);
-	color: red;
-}
-#Period_Text2{
-	position: absolute;
-	left: calc(var(--LEFT_EDGE_PLOT) + var(--WIDTH_466HZ) + 50px);
-	top: calc(var(--TOP_EDGE_PLOT) + 190px);
-	color: blue;
-}
-/* we allow the time expand lines to write on this canvas */
-#sine_plotsLong{
-    position:absolute; 
-    top:0px; 
-    left:0px;
-    z-index: -1;
-}
+/* See https://www.chartjs.org/docs/latest/configuration/responsive.html#important-note for */
+/* how to do sizing on canvases that contain chart.js,  timeExpand does not have chart.js */
 #timeExpand{
-	 position:absolute; 
-	 top:230px; 
-	 left: 0px;
-	 height: 110px;
-	 width: 800px;
-}
-#sinePlotsShortWrapper{
-	position: relative;
-	top: 155px;
-	height: 200px;
-	width: 800px;
-}
-#sine_plotsShort{
-	position: absolute;
+	 position: relative; 
+	 top: 75px;
+	 height:100px; 
+	 width:800px
 }
 
 /*****************************************************************/

@@ -126,13 +126,14 @@
 	 	
 	 	<!-- Needed for the period markers showing periodicity -->
 	 	<!--  use following for debug on canvas placement  style="border:1px solid #FF0000; to see the canvas in red -->
-		<canvas id="timeExpand">
+		<canvas id="periodicityIndicator">
  			Your Browser does not support canvas tag, you are missing graph capability
  		</canvas>
  	</div>
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.73/Tone.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <!-- Get the correct cdn chart.js from https://cdnjs.com/libraries/Chart.js (see stackoverflow, use umd version)-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.umd.js" integrity="sha512-CMF3tQtjOoOJoOKlsS7/2loJlkyctwzSoDK/S40iAB+MqWSaf50uObGQSk5Ny/gfRhRCjNLvoxuCvdnERU4WGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         
 	<!--  this must come before the jquery ui and bootstrap-->	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

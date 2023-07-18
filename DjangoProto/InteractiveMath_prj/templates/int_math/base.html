@@ -107,7 +107,10 @@
                     <!-- FOOTER -->
                     <div id="Site-footer">
                     	<button type="button" class="btn btn-info" id="GoToNextPage">Next ></button>
-                        <p id="SiteInfo-links">&copy; 2023 Interactable Math Inc, FL Corporation not-for-profit &middot; <a href="{% url 'int_math:Privacy' %}">Privacy</a> &middot; <a href="{% url 'int_math:TermsOfUse' %}">Terms</a></p>
+                        <!-- legal precedent supports acceptance if links are capitalized, explained as links and underlined -->
+                        <p id="SiteInfo-links">&copy; 2023 Interactable Math Inc, FL Corporation not-for-profit &middot; 
+                        <br> By continuing on this site, you agree to the following two legal document links:  
+                        <a href="{% url 'int_math:Privacy' %}"><u>PRIVACY</u></a> &middot; <a href="{% url 'int_math:TermsOfUse' %}"><u>TERMS</u></a></p>
                     </div>
                 </main>
             </div>
