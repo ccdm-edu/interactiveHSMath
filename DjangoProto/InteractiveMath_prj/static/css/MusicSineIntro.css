@@ -255,7 +255,18 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	display: none;
 }
 /* Make the tune selector button cycle through pretty colors */
-#dropdownMenuSong{
+/* if newbie, dont distract user from listening to full tutorial */
+#dropdownMenuSong.newbieMode{
+	position: absolute;
+	left: 0px;
+	top: 40px;
+	font-size: 15px;
+	font-weight: bold;
+	color: black;
+	background-color: gold;
+}
+/* if expert, draw attention to songs to play */
+#dropdownMenuSong.expertMode{
 	position: absolute;
 	left: 0px;
 	top: 40px;
@@ -297,7 +308,16 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	width: 150px;
 	visibility: hidden; /* will turn on when user has clicked on something on page so as not to overwhelm */
 }
-#trumpetersNotes{
+/* dont distract newbies with somthing other than tutorial */
+#trumpetersNotes.newbieMode{
+	position: absolute;
+	top: -20px;
+	left: 650px;
+	height: 75px;
+	width: 150px;
+	visibility: hidden;  /* wont be visible till user plays a song */
+}
+#trumpetersNotes.expertMode{
 	position: absolute;
 	top: -20px;
 	left: 650px;

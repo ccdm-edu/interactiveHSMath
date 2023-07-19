@@ -13,13 +13,19 @@ $(function() {
 		// emphasize the auto demo as first place
 		$("#startAutoDemo").addClass('newbieMode');
 		$("#initialInstrMusicTrigIntro").addClass('newbieMode');
+		$("#dropdownMenuSong").addClass('newbieMode');
+		$("#trumpetersNotes").addClass('newbieMode');
 	} else if (newbieMode && (newbieMode.toLowerCase()==='false'))  {
 		// remind user what to do , expert mode
 		$("#initialInstrMusicTrigIntro").addClass('expertMode');
+		$("#dropdownMenuSong").addClass('expertMode');
+		$("#trumpetersNotes").addClass('expertMode');
 	} else {
 		// user somehow got here without going through landing page or deleted sessionStorage, put in newbie mode
 		$("#startAutoDemo").addClass('newbieMode');
 		$("#initialInstrMusicTrigIntro").addClass('newbieMode');
+		$("#dropdownMenuSong").addClass('newbieMode');
+		$("#trumpetersNotes").addClass('newbieMode');
 	}		
 		
 	let musicCanvas =  $("#ClefWithNotes").get(0);  // foreground to detect user clicks
