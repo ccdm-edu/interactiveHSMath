@@ -10,7 +10,7 @@ $(function() {
 	$("#GoToNextPage").wrap('<a href="../MusicSineIntro"></a>');
 
 	// on power up, hide all the review topics, they will assume proper location when the Triggy intro stuff goes away
-	$("#IntroToConceptList").css('display', 'none');
+	$("#UserSelectionVideo").css('display', 'none');
 	$("#IntroConceptVideo").css('display', 'none');
 	$("#IntroMusicInteractive").css('display', 'none');
 	const VIDEO_EXPLN_FILENAMES = ["../../static/static_binaries/VideoExpln/IntroToFrequencyEtc_MedQualityHD720p.mp4", "../../static/static_binaries/VideoExpln/IntroSineCosine_MedQualHD720p.mp4", "IntroToAudioTones.mp4"]
@@ -20,7 +20,7 @@ $(function() {
 	function makeVideoActive(currVideoIndex){
 		activeVideoIndex = currVideoIndex;
 		// let user know which video is active
-		$('#IntroToConceptList > li').each(function(index) {
+		$('#VideoList > li').each(function(index) {
   			if ($(this).hasClass('active')) {
 				$(this).removeClass('active');  
 				// go back to default color (css does that) and remove extra text
@@ -51,7 +51,7 @@ $(function() {
 		$("#TriggyIntroText").css('display', 'none');
 		$("#ReviewConcepts").css('display', 'none');
 		// bring up all the new elements for review
-		$("#IntroToConceptList").css('display', 'block');
+		$("#UserSelectionVideo").css('display', 'block');
 		$("#IntroConceptVideo").css('display', 'block');
 		$("#IntroMusicInteractive").css('display', 'flex');
 		makeVideoActive(0);	
@@ -64,8 +64,8 @@ $(function() {
     // if audio is complete, do same as if user had hit the Review Concepts button
     
     // user is in review concepts mode and has selected a new topic
-    $('#IntroToConceptList > li').on('click', function(){
-		let currIndex = $('#IntroToConceptList > li').index($(this));
+    $('#VideoList > li').on('click', function(){
+		let currIndex = $('#VideoList > li').index($(this));
 		makeVideoActive(currIndex);
 	});
 	

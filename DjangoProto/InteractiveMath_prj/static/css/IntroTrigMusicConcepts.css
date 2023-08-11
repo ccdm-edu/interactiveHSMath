@@ -67,9 +67,22 @@ h1 {
 	position: relative;
 	top: var(--SPACE_TO_SQUEEZE_OUT);
 }
-#IntroToConceptList > li.active{
+#UserSelectionVideo{
+	position: relative;
+	top: calc(var(--SPACE_TO_SQUEEZE_OUT) - 25px);
+	float: left;
+}
+#VideoList > li.active{
 	color: pink;
 }
+/* the list of videos user can choose from */
+#VideoList {
+	/* need to move this up so as to not let user get lost in white space */
+	position: relative;
+	top: calc(var(--SPACE_TO_SQUEEZE_OUT) + 40px);
+	font-size: 25px;
+}
+/***************************measuring frequency user controls **************************/
 /* set of input/output controls for user interaction with freq measuring */
 #IntroMusicInteractive {
 	/* need to get this box up closer to the video so users can see the video selections below */
@@ -89,9 +102,8 @@ h1 {
 	width: 75px;  /* arbitrary size on width of indicator */
 	border-style: solid;
 }
-/* the list of videos user can choose from */
-#IntroToConceptList {
-	/* need to move this up so as to not let user get lost in white space */
-	position: relative;
-	top: var(--SPACE_TO_SQUEEZE_OUT);
+/* set the bottom of the page for bottom notices */
+#TrigMusicVideoIntro {
+	/* define space for rest of page makes footer float to bottom */
+	height: 750px;
 }
