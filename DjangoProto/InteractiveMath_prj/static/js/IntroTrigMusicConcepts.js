@@ -60,6 +60,11 @@ $(function() {
 	$("#ReviewConcepts").on('click', function() {
 		cleanOffPageAndReview();
     });
+    // intro speech is done, go to the review page.
+    $("#trigIntro-controls").on('ended', function(){
+		cleanOffPageAndReview();
+    });
+    
     
     // if audio is complete, do same as if user had hit the Review Concepts button
     
