@@ -1,9 +1,9 @@
 /***********************
-This is the style sheet for ToneTrig.html
+This is the style sheet for IntroTrigMusicConcepts.html
 ************************/
 /* create global var for this html */
 :root{
-	--WIDTH_GIF: 320px;
+	--WIDTH_GIF: 520px;
 	--SPACE_TO_SQUEEZE_OUT: -50px;
 
 }
@@ -13,8 +13,9 @@ h1 {
 }
 /* This is the gif that will "explain" intro terms and rest of music-trig */
 #Initial_MCexplaining {
-	margin: 10px;
-	width: var(--WIDTH_GIF);  
+	margin-top: -80px; 
+	margin-bottom: 10px;
+	width: var(--WIDTH_GIF); 
 	/* center up on its own line */
 	display: block;
 	margin-right: auto;

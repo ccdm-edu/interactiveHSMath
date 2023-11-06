@@ -1,0 +1,30 @@
+/***********************
+This is the style sheet for Contact_me.html
+************************/
+h1 {
+	text-align: center;
+}
+
+#centered-form > form{
+	margin-left: auto;
+	margin-right: auto;
+	display: block;  /*needed to get the centering statments above to work */
+	width: 400px;
+}
+input[type=submit]{
+  background-color: cyan;
+  border: 2px solid black;
+  text-align: center;
+  font-size: 15px;
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+}
+#notABot{
+	color: LimeGreen;
+	font-size: larger
+}
+#urABot{
+	color: red;
+	font-size: larger
+}

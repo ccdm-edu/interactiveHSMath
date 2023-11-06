@@ -5,15 +5,38 @@
 {%block title_block %}
 	{{ page_tab_header }}
 {% endblock %}
+
+{%block head_block %}
+    <link href="{%static 'css/Contact_me.css' %}" rel="stylesheet">
+{% endblock %}
     
 {% block body_block %}
-	
-	Under Construction, Will be a form to contact me.  Ask for email only if they want a response from me.  No guarantee of response.
-	If they opt out of cookies, I can't check if they are a robot, can't contact me (see google recaptcha on cookies for V3),  
-	allow them to reconsider.  remember, default is that cookies not allowed so they can't use this page until they enable cookies (need robot test)
-	If you give me an email address, you certify that you are over 13 yrs old.  I reserve the right to save all messages/email addresses sent to me.
-	Have contactme choose a category:  client side bug in SW, content error, comment on TOS, comment on PP/cookie, other
+ 	<!--  for robot checking, need to tell client whether server is local or remote so correct recaptcha site key is sent, will be hidden -->
+ 	<div id="sendServerLoc">{{ debug }}</div>
+	<h1>Contact Interactable Math Inc.</h1><br>
+	<!-- dont save results of robot test so whole site is no cookie -->
+	<div id="centered-form">
+        <form id="ContactUsForm" action = "{% url 'int_math:ProcessContact_me' %}" method="POST">
+            {% csrf_token %}
+			{{form.as_p}}
 
+            <p> There is no guarantee of a personal or timely response.  Interactable Math Inc reserves the right to save all information you provide.
+            Contact submissions are protected by Google reCaptcha V3.  By contacting us, you acknowledge you are over 13 years old and agree to the <a href="{% url 'int_math:TermsOfUse' %}">Terms Of Use </a> 
+		    and <a href="{% url 'int_math:Privacy' %}">Privacy Policy</a> as well as Google terms/privacy.
+            </p>
+          	<br>
+          	{% if botTestDone %}
+          		{% if botTestPassed %}
+          			<p id="notABot"> Thank you for taking the time to contact us. Your message was successfully trasnmitted. </p>
+          		{% else %}
+          			<p id="urABot"> Sorry, you did not pass the robot test.  Your message was not transmitted.  You can try again on another computer. </p>
+          		{% endif %}
+          	{% else %}
+            	<input type="submit" value="Submit">
+            {% endif %}
+        </form>
+    </div>
+    
 	<!-- consider using <select> <option> dropdown form for "topic" error, suggestion etc -->
 	<br>
 	<br>	
@@ -29,6 +52,7 @@
 				   
 	<!-- Custom JS for this page -->
 	<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
-	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	
+	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>
+	<script src="{% static 'js/Contact_me.js' %}" crossorigin="anonymous"></script>	
 
 {% endblock %}

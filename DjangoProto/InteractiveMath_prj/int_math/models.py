@@ -42,3 +42,5 @@ class BotChkResults(models.Model):
     
     def __str__(self):
         return f"pass_math={self.pass_mathtest}, recaptcha_v3={self.recaptcha_v3_quartile}, count = {self.count}"
+
+
