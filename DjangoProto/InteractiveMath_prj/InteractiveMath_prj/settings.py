@@ -37,6 +37,8 @@ RECAPTCHA_SECRET_KEY = os.environ.get('G_RECAPTCHA_V3_SECRET_KEY')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('INT_MATH_SECRET_KEY')
 
+#get the email address for contact me
+WEBSITE_EMAIL = os.environ.get('WEBSITE_EMAIL_ADDR')
 #FILE_UPLOAD_PERMISSIONS defaults to 0o644 which is ok, User can R/W, rest can only R, no executing
 
 # SECURITY WARNING: don't run with debug turned on in production!

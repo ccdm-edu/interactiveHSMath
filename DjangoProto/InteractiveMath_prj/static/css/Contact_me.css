@@ -1,16 +1,36 @@
 /***********************
 This is the style sheet for Contact_me.html
 ************************/
+:root{
+	--POSITION_RESPONSE: -180px;
+}
 h1 {
 	text-align: center;
 }
-
+/*need to force max size here so we get the footers where they should be */
+#centered-form {
+	height: 600px;
+}
+/* want the error messages back in flaming red */
+ul.errorlist li {
+	color: red;
+}
+/* this will resize height based on errors/no errors, internal objects positioned/sized as needed*/
 #centered-form > form{
 	margin-left: auto;
 	margin-right: auto;
 	display: block;  /*needed to get the centering statments above to work */
 	width: 400px;
+	position: relative;
 }
+/*place the verbiage relative to the centered-form */
+#ContactCompliance {
+	position: absolute;
+	left: 30px;
+	bottom: -100px; 
+}
+
+/* place below verbiage and radio box in form */
 input[type=submit]{
   background-color: cyan;
   border: 2px solid black;
@@ -19,12 +39,19 @@ input[type=submit]{
   padding: 10px;
   margin: 5px;
   cursor: pointer;
+  position: absolute;
+  bottom: -150px;
 }
+/*these are the responses for when user hits submit and there are no errors*/
 #notABot{
 	color: LimeGreen;
-	font-size: larger
+	font-size: larger;
+	position: absolute;
+	bottom: var(--POSITION_RESPONSE);
 }
 #urABot{
 	color: red;
-	font-size: larger
+	font-size: larger;
+	position: absolute;
+	bottom: var(--POSITION_RESPONSE);
 }

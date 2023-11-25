@@ -7,6 +7,9 @@ from django.urls import reverse
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.contrib.staticfiles import finders
 from django.core.files import File
+from django.conf import settings
+from django.core.mail import send_mail
+from django.utils.html import escape
 from user_agents import parse
 import urllib.request
 import json
@@ -113,75 +116,109 @@ from int_math.forms import BotChkForm, contactForm
 # respond to client appropriately
 #**********************************************************     
 class ProcessContactPage(BSModalFormView):
-    print(f"WE got to process contact page")
+    print(f"Processing contact page inputs...")
     template_name = 'int_math/Contact_me.html'
     form_class = contactForm
         
     def post(self, request):  
+        returnForm = contactForm()  #assume user got their form correct, for now
         # check the form validity for basic stuff first
         form = self.form_class(request.POST) 
-        quartile = '1Q'
+        botTestDone = False
         testHasPassed = False
-        
-        #did a bot see the token empty box and try to fill it in? (honeypot test)
-        honey_pot_fail = self.request.POST.get('pooh_food_test')
-        
-        # Send off token to google recaptcha
-        recaptcha_str = self.request.POST.get('g_recaptcha_response')
-        print(f'recaptcha string returned to server is {recaptcha_str}')
-        if not honey_pot_fail:
-            if recaptcha_str is not None:
-                #cant do this on the client since server is the only onw with secret key
-                secret_key = settings.RECAPTCHA_SECRET_KEY
-                print(f'secret key returned to server is {secret_key}')
-                payload = {
-                    'response': recaptcha_str,
-                    'secret': secret_key}
-                data = urllib.parse.urlencode(payload).encode()
-                req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
-                print('finished secret key decoder ring on grecaptcha')
-                response = urllib.request.urlopen(req)
-                result = json.loads(response.read().decode())
-                #take action on robot test results
-                if (result['success'] and result['action'] == 'ContactUsForm'):
-                    if (result['score'] < 0.25):
-                        quartile = '1Q'
-                    elif (result['score'] < 0.5): 
-                        quartile = '2Q'
-                    elif (result['score'] < 0.75):
-                        quartile = '3Q'
+        if form.is_valid():
+            # this only checks the format of the email, all other inputs are valid, we escape all text
+            #however, email is optional so a blank is ok
+            print('form is valid WOO HOO')
+            quartile = '1Q'
+            
+            #did a bot see the token empty box and try to fill it in? (honeypot test)
+            honey_pot_fail = self.request.POST.get('pooh_food_test')
+            
+            # Send off token to google recaptcha
+            recaptcha_str = self.request.POST.get('g_recaptcha_response')
+            if not honey_pot_fail:
+                if recaptcha_str is not None:
+                    #cant do this on the client since server is the only onw with secret key
+                    secret_key = settings.RECAPTCHA_SECRET_KEY
+                    payload = {
+                        'response': recaptcha_str,
+                        'secret': secret_key}
+                    data = urllib.parse.urlencode(payload).encode()
+                    req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
+                    print('finished secret key decoder ring on grecaptcha')
+                    response = urllib.request.urlopen(req)
+                    result = json.loads(response.read().decode())
+                    #take action on robot test results
+                    if (result['success'] and result['action'] == 'ContactUsForm'):
+                        botTestDone = True
+                        if (result['score'] < 0.25):
+                            quartile = '1Q'
+                        elif (result['score'] < 0.5): 
+                            quartile = '2Q'
+                        elif (result['score'] < 0.75):
+                            quartile = '3Q'
+                        else:
+                            quartile = '4Q'
                     else:
-                        quartile = '4Q'
-                else:
-                    # need to throw an exception or do something here
-                    print(f"ERROR, bad recaptcha token, raw result was {result}")
-        else:
-            print(f"You failed the Pooh bear test, you checked an invisible honeypot")
-        
-        #JS passes back text string, not a bool
-        print('results on quartile is ' + quartile)
+                        # need to throw an exception or do something here, some kind of software error
+                        print(f"SW error:  bad recaptcha token, raw result was {result}")
+            else:
+                print(f"You failed the Pooh bear test, you checked an invisible honey pot")
+            
+            #JS passes back text string, not a bool
+            print('results on quartile is ' + quartile)
+            
+            if ('4Q' == quartile):
+                #trust this user for the duration of session, no need to retest them as long as client has this cookie
+                request.session['notABot'] = True
+                testHasPassed = True
+                print('Bot test PASSED')
+                #get the email, name and message and ensure no html injection
+                nameOfContact = escape(self.request.POST.get('name'))
+                if nameOfContact == "":
+                    nameOfContact = "anonymous"
+                subjectOfContact = escape(self.request.POST.get('subject'))
+                returnAddrEscaped = escape(self.request.POST.get('email'))
+                if returnAddrEscaped == "":
+                    returnAddrEscaped = "noemailaddr@nomail.com"
+                messageEscaped = escape(self.request.POST.get('message')) 
+                messageEscaped += " --from website user " + nameOfContact
+                sendToEmailAddr = settings.WEBSITE_EMAIL
+                print(subjectOfContact)
+                print(messageEscaped)
+                print (returnAddrEscaped)
+                print (sendToEmailAddr)
+                if not settings.DEBUG:
+                    # email sending wont work on debug dev server
+                    send_mail(
+                        subjectOfContact,
+                        messageEscaped,
+                        returnAddrEscaped,
+                        [sendToEmailAddr],
+                        fail_silently=False,
+                        )
+    
+            else:
+                # tell server not to trust this client on all subsequent accesses and to retest the user
+                request.session['notABot'] = False
+                print('Bot test FAILED')
+            
 
-        if ('4Q' == quartile):
-            #trust this user for the duration of session, no need to retest them as long as client has this cookie
-            request.session['notABot'] = True
-            testHasPassed = True
-            print('Bot test PASSED')
-        else:
-            # tell server not to trust this client on all subsequent accesses and to retest the user
-            request.session['notABot'] = False
-            print('Bot test FAILED')
-        
+        else: 
+            #the only thing this checks is email errors if the user chooses to give one.  else all passes
+            returnForm=form    #return users form complete with their inputs and computed errors
+            
         # add results to running tab kept at server
         # retrieve model and increment the count  NOT DONE YET    
         context_dict = {'page_tab_header': 'Contact Us',
-                        'topic': None,
-                        'form': contactForm(),
-                        'botTestDone': True,
-                        'botTestPassed': testHasPassed
-                       } 
+                            'topic': None,
+                            'form': returnForm,  
+                            'botTestDone': botTestDone,
+                            'botTestPassed': testHasPassed
+                           } 
         response = render(request, 'int_math/Contact_me.html', context=context_dict)
-        return response
-                          
+        return response                      
 
   
 class VerifyClientGiveFile(View):

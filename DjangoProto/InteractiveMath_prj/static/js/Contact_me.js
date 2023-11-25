@@ -8,8 +8,8 @@ $(function() {
 	$('#id_pooh_food_test').css('display', 'none');  //.hide();
 	let doneRecaptcha = false;
 	
-	//user clicks on the message (or tabs to it) to start typing and we do the recaptcha behind the scenes
-	$('#id_message').on('focus', function(){
+	//user clicks on the box for accepting terms (or tabs to it) and we do the recaptcha behind the scenes
+	$('#id_clickwrap_accept').on('click', function(){
 		if (!doneRecaptcha) {
 			const BOGUS = 'bogus_site_key';
 			let G_RECAP_SITE_KEY = BOGUS

@@ -19,23 +19,26 @@
         <form id="ContactUsForm" action = "{% url 'int_math:ProcessContact_me' %}" method="POST">
             {% csrf_token %}
 			{{form.as_p}}
-
-            <p> There is no guarantee of a personal or timely response.  Interactable Math Inc reserves the right to save all information you provide.
+				
+            <p id="ContactCompliance"> There is no guarantee of a personal or timely response.  Interactable Math Inc reserves the right to save all information you provide.
             Contact submissions are protected by Google reCaptcha V3.  By contacting us, you acknowledge you are over 13 years old and agree to the <a href="{% url 'int_math:TermsOfUse' %}">Terms Of Use </a> 
-		    and <a href="{% url 'int_math:Privacy' %}">Privacy Policy</a> as well as Google terms/privacy.
+		    and <a href="{% url 'int_math:Privacy' %}">Privacy Policy</a> as well as Google terms/privacy. <b>Click box to accept and continue</b>.
             </p>
           	<br>
-          	{% if botTestDone %}
-          		{% if botTestPassed %}
-          			<p id="notABot"> Thank you for taking the time to contact us. Your message was successfully trasnmitted. </p>
-          		{% else %}
-          			<p id="urABot"> Sorry, you did not pass the robot test.  Your message was not transmitted.  You can try again on another computer. </p>
-          		{% endif %}
-          	{% else %}
-            	<input type="submit" value="Submit">
-            {% endif %}
+          	
+		    {% if botTestDone %}
+		  		{% if botTestPassed %}
+		  			<p id="notABot"> Thank you for taking the time to contact us. Your message was successfully trasnmitted. </p>
+		  		{% else %}
+		  			<p id="urABot"> Sorry, you did not pass the robot test.  Your message was not transmitted.  You can try again on another computer. </p>
+		  		{% endif %}
+		  	{% else %}
+		    	<input type="submit" value="Submit">
+		    {% endif %}
+    
         </form>
     </div>
+
     
 	<!-- consider using <select> <option> dropdown form for "topic" error, suggestion etc -->
 	<br>

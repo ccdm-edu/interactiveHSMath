@@ -11,11 +11,11 @@
 {% endblock %}
 
 {% block legal_notices %}
-	<div id="LegalNotice_Consent">
-		<p>By continuing to use this site, you agree with the <a href="{% url 'int_math:TermsOfUse' %}">Terms Of Use</a> 
-		and <a href="{% url 'int_math:Privacy' %}">Privacy</a>/<a href="{% url 'int_math:Cookie' %}">Cookie</a> policy.
+	<div id="LegalNotice_Consent_Home">
+		<p><b>By continuing to use this site, you agree with the <a href="{% url 'int_math:TermsOfUse' %}">TERMS OF USE</a> 
+		and <a href="{% url 'int_math:Privacy' %}">PRIVACY</a> policy.
 		For questions/comments, please see <a href="{% url 'int_math:Contact_me' %}">Contact</a> page.
-		Cookies are used to enhance your experience on this site.  Allow cookies? (default is no)<br></p>
+		<br>Allow cookies? (default is no)<br></p></b>
 		<div id="CookieChoice">
 			<br><button type="button" id='yesCookies'>Yes</button><button type="button" id='noCookies'>No</button>
 		</div>
