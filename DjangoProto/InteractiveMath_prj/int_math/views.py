@@ -8,7 +8,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.contrib.staticfiles import finders
 from django.core.files import File
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import send_mail, BadHeaderError
 from django.utils.html import escape
 from user_agents import parse
 import urllib.request
@@ -183,21 +183,36 @@ class ProcessContactPage(BSModalFormView):
                 if returnAddrEscaped == "":
                     returnAddrEscaped = "noemailaddr@nomail.com"
                 messageEscaped = escape(self.request.POST.get('message')) 
-                messageEscaped += " --from website user " + nameOfContact
-                sendToEmailAddr = settings.WEBSITE_EMAIL
-                print(subjectOfContact)
-                print(messageEscaped)
-                print (returnAddrEscaped)
-                print (sendToEmailAddr)
-                if not settings.DEBUG:
-                    # email sending wont work on debug dev server
-                    send_mail(
-                        subjectOfContact,
-                        messageEscaped,
-                        returnAddrEscaped,
-                        [sendToEmailAddr],
-                        fail_silently=False,
-                        )
+                messageEscaped += " --From website user: " + nameOfContact + ".  At email addr: " + returnAddrEscaped
+                sendToEmailAddr = 'interactablemathinc@gmail.com'   #settings.WEBSITE_EMAIL
+                print(f'Subject: {subjectOfContact}')
+                print(f'Message: {messageEscaped}')
+                print (f'hostUser: {settings.EMAIL_HOST_USER}')
+                print (f'host password: {settings.EMAIL_HOST_PASSWORD}')
+                print (f'Send To Addr: {sendToEmailAddr}')
+                #checking user settings
+                print(f'EMAIL_HOST:  {settings.EMAIL_HOST}')
+                print(f'EMAIL_PORT:  {settings.EMAIL_PORT}')
+                num_email_sent = 0
+
+                try:
+                    #the minute you use your sendTo address to log into smtp server, that becomes the "from" addr anyway
+                    num_email_sent = send_mail(
+                                    subjectOfContact,
+                                    messageEscaped,
+                                    sendToEmailAddr,
+                                    [sendToEmailAddr],
+                                    fail_silently=False,
+                                    )
+                except Exception as e:
+                    #will fail on num email sent as 0.  Could get BadHeaderError if user input <LF>, 
+                    #could get auth error if Gmail rejects.  User should never ever get a 500 server error. Baaaaaad
+                    print(e)
+                    
+                    
+                if num_email_sent == 0:
+                    #user has injected newlines and message rejected, could be bot?, or gmail rejects us.  Check log.  Inform user of failure
+                    testHasPassed = False  
     
             else:
                 # tell server not to trust this client on all subsequent accesses and to retest the user

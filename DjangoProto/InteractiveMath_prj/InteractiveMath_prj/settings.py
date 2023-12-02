@@ -28,8 +28,6 @@ if (not (os.path.exists(SYMLINK_BINARIES_dir))):
     os.symlink(BINARIES_LOC_str, SYMLINK_BINARIES_dir)
     
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-#STATIC_MUSIC_DIR = os.path.join(STATIC_DIR, 'MusicNotes')
-#STATIC_AUDIO_HELP_DIR = os.path.join(STATIC_DIR, 'AudioExpln')
 STATICFILES_DIRS = [STATIC_DIR]
 
 RECAPTCHA_SECRET_KEY = os.environ.get('G_RECAPTCHA_V3_SECRET_KEY')
@@ -39,6 +37,16 @@ SECRET_KEY = os.environ.get('INT_MATH_SECRET_KEY')
 
 #get the email address for contact me
 WEBSITE_EMAIL = os.environ.get('WEBSITE_EMAIL_ADDR')
+#setup the SMTP server for use in sending successful messages, based on https://help.pythonanywhere.com/pages/SMTPForFreeUsers/
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+#WEBSITE_EMAIL is a gmail account and SMTP_APP_PSWD is the app password for that gmail account
+EMAIL_HOST_USER = os.environ.get('WEBSITE_EMAIL_ADDR') 
+#NOTE:  app password disabled every time gmail acct changes
+EMAIL_HOST_PASSWORD = os.environ.get('SMTP_APP_PSWD') 
+EMAIL_USE_TLS = True
+
 #FILE_UPLOAD_PERMISSIONS defaults to 0o644 which is ok, User can R/W, rest can only R, no executing
 
 # SECURITY WARNING: don't run with debug turned on in production!

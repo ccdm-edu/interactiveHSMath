@@ -2,7 +2,8 @@
 This is the style sheet for Contact_me.html
 ************************/
 :root{
-	--POSITION_RESPONSE: -180px;
+	--POSITION_RESPONSE_BAD: -200px;
+	--POSITION_RESPONSE_OK: -150px;
 }
 h1 {
 	text-align: center;
@@ -47,11 +48,11 @@ input[type=submit]{
 	color: LimeGreen;
 	font-size: larger;
 	position: absolute;
-	bottom: var(--POSITION_RESPONSE);
+	bottom: var(--POSITION_RESPONSE_OK);
 }
 #urABot{
 	color: red;
 	font-size: larger;
 	position: absolute;
-	bottom: var(--POSITION_RESPONSE);
+	bottom: var(--POSITION_RESPONSE_BAD);
 }

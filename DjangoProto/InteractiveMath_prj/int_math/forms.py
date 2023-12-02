@@ -21,7 +21,7 @@ class contactForm(forms.Form):
         ('Other', "something else..."),]
     subject = forms.ChoiceField(choices=REASONS_TO_CONTACT)  
     #need to force text interpretation only so no code embedded, ensure max length is enforced
-    message = forms.CharField(label = "", max_length=2000, widget=forms.Textarea(attrs={'placeholder': 'Your message, 2000 char max'}))
+    message = forms.CharField(label = "", max_length=2000, widget=forms.Textarea(attrs={'placeholder': 'Your message, 2000 char max, plain text only, no newline characters or html'}))
     #forcing consent to terms before submit makes this "clickwrap" which is considered legally more solid
     clickwrap_accept = forms.BooleanField(required=True,
                                         initial=False,
