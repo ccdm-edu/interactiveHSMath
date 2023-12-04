@@ -184,7 +184,7 @@ class ProcessContactPage(BSModalFormView):
                     returnAddrEscaped = "noemailaddr@nomail.com"
                 messageEscaped = escape(self.request.POST.get('message')) 
                 messageEscaped += " --From website user: " + nameOfContact + ".  At email addr: " + returnAddrEscaped
-                sendToEmailAddr = 'interactablemathinc@gmail.com'   #settings.WEBSITE_EMAIL
+                sendToEmailAddr = settings.EMAIL_HOST_USER
                 print(f'Subject: {subjectOfContact}')
                 print(f'Message: {messageEscaped}')
                 print (f'hostUser: {settings.EMAIL_HOST_USER}')
