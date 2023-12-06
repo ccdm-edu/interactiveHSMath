@@ -1,23 +1,23 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views import View
-from int_math.models import Topic, Subtopic, BotChkResults
-from django.conf import settings
-from django.urls import reverse
-from django.contrib.staticfiles.storage import staticfiles_storage
+from int_math.models import Topic
+#from django.conf import settings
+#from django.urls import reverse
+#from django.contrib.staticfiles.storage import staticfiles_storage
 from django.contrib.staticfiles import finders
-from django.core.files import File
+#from django.core.files import File
 from django.conf import settings
-from django.core.mail import send_mail, BadHeaderError
+from django.core.mail import send_mail
 from django.utils.html import escape
 from user_agents import parse
 import urllib.request
 import json
 import os
 #----for modal windows--------
-from bootstrap_modal_forms.generic import BSModalFormView
+#from bootstrap_modal_forms.generic import BSModalFormView
 # homegrown stuff
-from int_math.forms import BotChkForm, contactForm
+from int_math.forms import contactForm
 
 
 
@@ -112,10 +112,9 @@ from int_math.forms import BotChkForm, contactForm
 #        return responseTest
 
 #**********************************************************
-# These are actions that will require significant server time, verify and 
-# respond to client appropriately
+# These are actions that will require significant server time in recaptcha and smtp calls
 #**********************************************************     
-class ProcessContactPage(BSModalFormView):
+class ProcessContactPage(View):
     print(f"Processing contact page inputs...")
     template_name = 'int_math/Contact_me.html'
     form_class = contactForm
@@ -394,22 +393,20 @@ class ImagNumView(View):
 class PeopleView(View):
     # give user all the info I collect about them
     def get(self, request):
-        qF = BotChkResults.objects.filter(pass_mathtest = False)
-        mtF = [qF.get(recaptcha_v3_quartile = '1Q').count,
-               qF.get(recaptcha_v3_quartile = '2Q').count,
-               qF.get(recaptcha_v3_quartile = '3Q').count,
-               qF.get(recaptcha_v3_quartile = '4Q').count ]
+#        qF = BotChkResults.objects.filter(pass_mathtest = False)
+#        mtF = [qF.get(recaptcha_v3_quartile = '1Q').count,
+#               qF.get(recaptcha_v3_quartile = '2Q').count,
+#               qF.get(recaptcha_v3_quartile = '3Q').count,
+#               qF.get(recaptcha_v3_quartile = '4Q').count ]
         
-        qP = BotChkResults.objects.filter(pass_mathtest = True)
-        mtP = [qP.get(recaptcha_v3_quartile = '1Q').count,
-               qP.get(recaptcha_v3_quartile = '2Q').count,
-               qP.get(recaptcha_v3_quartile = '3Q').count,
-               qP.get(recaptcha_v3_quartile = '4Q').count ]
+#        qP = BotChkResults.objects.filter(pass_mathtest = True)
+#        mtP = [qP.get(recaptcha_v3_quartile = '1Q').count,
+#               qP.get(recaptcha_v3_quartile = '2Q').count,
+#               qP.get(recaptcha_v3_quartile = '3Q').count,
+#               qP.get(recaptcha_v3_quartile = '4Q').count ]
 
         context_dict = {'page_tab_header': 'People',
                         'topic': Topic.objects.get(name="You"),
-                        'mtF': mtF,
-                        'mtP': mtP,
                         }
         return render(request, 'int_math/UserData.html', context=context_dict)
 

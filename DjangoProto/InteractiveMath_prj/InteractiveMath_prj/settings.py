@@ -45,8 +45,6 @@ EMAIL_HOST_USER = os.environ.get('WEBSITE_EMAIL_ADDR')
 EMAIL_HOST_PASSWORD = os.environ.get('SMTP_APP_PSWD') 
 EMAIL_USE_TLS = True
 
-#FILE_UPLOAD_PERMISSIONS defaults to 0o644 which is ok, User can R/W, rest can only R, no executing
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG_str = os.environ.get('DEBUG')
 #note, this variable is used on several pages in this project, cant change name here alone
@@ -73,7 +71,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
-    'bootstrap_modal_forms',
+#    'bootstrap_modal_forms',
     'int_math',
 ]
 

@@ -9,47 +9,7 @@
 {% block body_block %}
 
    <br>
-    <hr class="solid">
-    <div id="msg"> There are two tests a potential user must pass to get "not a robot" privileges:  Math test, 
-    	and Google Recaptcha v3.  Recaptcha V3 needs time to 'learn' the website to give an accurate score.  Recaptcha v3 scores a user
-    	from 0 to 1 where 0 is "definitely robot".  Here I divide up the score into 4 quartiles, 0 to 0.25, 0.25 to 0.5,
-    	0.5 to 0.75 and 0.75 to 1.  Here are the counts for all users of this site.<br>
-    <br>
-    
-    <table style="width:100%; border: 1px solid black; border-collapse: collapse;">
-    <caption style="caption-side:top; text-align:center;">Performance count of users seeking to interact with this site</caption>
-  		<tr>
-    	<th>Recaptcha V3</th>
-    	<th>Math test fail</th>
-    	<th>Math test pass</th>
-  		</tr>
-  		
-  		<tr style="border-bottom:1px solid black">
-    	<th>Quartiles</th>
-  		</tr>
-  		
-  		<tr>
-    	<td style="border-right:1px solid black">Bot (1st quartile)</td>
-    	<td style="border-right:1px solid black; text-align:center">{{ mtF.0 }}</td>
-    	<td style="border-right:1px solid black; text-align:center">{{ mtP.0 }}</td>
-  		</tr>
-  		<tr>
-    	<td style="border-right:1px solid black">Maybe Bot (2nd quartile)</td>
-    	<td style="border-right:1px solid black; text-align:center">{{ mtF.1 }}</td>
-    	<td style="border-right:1px solid black; text-align:center">{{ mtP.1 }}</td>
-  		</tr>
-  		<tr>
-    	<td style="border-right:1px solid black">Maybe Human (3rd quartile)</td>
-    	<td style="border-right:1px solid black; text-align:center">{{ mtF.2 }}</td>
-    	<td style="border-right:1px solid black; text-align:center">{{ mtP.2 }}</td>
-  		</tr>
-  		<tr>
-    	<td style="border-right:1px solid black">Human (4th quartile)</td>
-    	<td style="border-right:1px solid black; text-align:center">{{ mtF.3 }}</td>
-    	<td style="border-right:1px solid black; text-align:center">{{ mtP.3 }}</td>
-  		</tr>
-	</table>
-
+   Under construction
 
 	
 
