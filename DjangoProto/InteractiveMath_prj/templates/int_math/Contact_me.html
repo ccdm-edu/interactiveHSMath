@@ -11,8 +11,8 @@
 {% endblock %}
     
 {% block body_block %}
- 	<!--  for robot checking, need to tell client whether server is local or remote so correct recaptcha site key is sent, will be hidden -->
- 	<div id="sendServerLoc">{{ debug }}</div>
+ 	<!--  for robot checking, need to send public key, will be hidden -->
+ 	<div id="sendGRPublic" style="display:none;">{{ recaptchaPublicKey }}</div>
 	<h1>Contact Interactable Math Inc.</h1><br>
 	<!-- dont save results of robot test so whole site is no cookie -->
 	<div id="centered-form">

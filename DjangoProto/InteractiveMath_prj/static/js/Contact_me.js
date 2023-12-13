@@ -29,13 +29,9 @@ $(function() {
 			// This takes awhile but should be done by time human answers math question
 			//***************
 			grecaptcha.ready(function() {
-				if ($('#sendServerLoc').text().toLowerCase() == "true") {
-					G_RECAP_SITE_KEY = '6LcXoQ8aAAAAAFWEjH47SCbbrcT2ooody-kWuU_L';
-					console.log("user using local server")
-				} else {
-					G_RECAP_SITE_KEY = '6LcyrzAaAAAAALM8nrmbURsAU9-KpQkGvFmDFz13';
-					console.log("user using remote server")
-				}
+				// get public recaptcha key from html
+				G_RECAP_SITE_KEY = $('#sendGRPublic').text();
+				
 				//This is where we send data to the django form and to the server.
 				grecaptcha.execute(G_RECAP_SITE_KEY, {action: 'ContactUsForm'}).then(function(token) {
 	    			console.log('inside the recaptcha execute on token');

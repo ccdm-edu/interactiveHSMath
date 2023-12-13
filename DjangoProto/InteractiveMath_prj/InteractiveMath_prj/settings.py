@@ -31,6 +31,7 @@ if (not (os.path.exists(SYMLINK_BINARIES_dir))):
 STATICFILES_DIRS = [STATIC_DIR]
 
 RECAPTCHA_SECRET_KEY = os.environ.get('G_RECAPTCHA_V3_SECRET_KEY')
+RECAP_PUBLIC_KEY = os.environ.get('G_RECAPTCHA_V3_PUBLIC_KEY')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('INT_MATH_SECRET_KEY')

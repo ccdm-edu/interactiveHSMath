@@ -228,6 +228,7 @@ class ProcessContactPage(View):
         context_dict = {'page_tab_header': 'Contact Us',
                             'topic': None,
                             'form': returnForm,  
+                            'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                             'botTestDone': botTestDone,
                             'botTestPassed': testHasPassed
                            } 
@@ -460,6 +461,7 @@ class ContactMe(View):
         context_dict = {'page_tab_header': 'Contact Us',
                         'topic': None,
                         'form': contactForm(),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         'botTestDone': False,
                         'botTestPassed': False
                        } 
