@@ -4,49 +4,44 @@
 
 <html lang="en">
     <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Jekyll v3.8.5">
-    <link rel="icon" href="{% static 'images/favicon.ico' %}">
-    <title>
-        Interactable Math - {% block title_block %}Interactive Math starter{% endblock %}
-    </title>
-    
-    <!-- Bootstrap core CSS everything breaks with bootstrap 5  :( -->
-    <link href="https://getbootstrap.com/docs/4.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-         
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-9JRKJ4GGBT"></script>
-	<script>
-  		window.dataLayer = window.dataLayer || [];
-  		function gtag(){dataLayer.push(arguments);}
-  		gtag('js', new Date());
+	    <meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	    <meta name="description" content="">
+	    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+	    <meta name="generator" content="Jekyll v3.8.5">
+	    <link rel="icon" href="{% static 'images/favicon.ico' %}">
+	    <title>
+	        Interactable Math - {% block title_block %}Interactive Math starter{% endblock %}
+	    </title>
+	    
+	    <!-- Bootstrap core CSS everything breaks with bootstrap 5  :( -->
+	    <link href="https://getbootstrap.com/docs/4.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	         
+	    <!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-9JRKJ4GGBT"></script>
+		<script>
+	  		window.dataLayer = window.dataLayer || [];
+	  		function gtag(){dataLayer.push(arguments);}
+	  		gtag('js', new Date());
+	
+	  		gtag('config', 'G-9JRKJ4GGBT');
+		</script>
+	    
+	    <!-- Custom styles for this template -->
+	    <link href="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css" rel="stylesheet">
+	    <!--  not sure how to get jquery ui draggable popups, i think this does it -->
+	    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+	    <!-- want to override things here -->
+	    <link href="{%static 'css/intMath.css' %}" rel="stylesheet">
+	
+	    {% block head_block %}
+	    	<!--  separate out page specific css here -->
+	    {% endblock %}
+	
+		<!--  style blocks dont like comments in the middle -->
+		<!--  THIS MAKES THE RECAPTCHA LOGO ON ALL PAGES -->
+		<script src='https://www.google.com/recaptcha/api.js?render={{ recaptchaPublicKey }}'></script>
 
-  		gtag('config', 'G-9JRKJ4GGBT');
-	</script>
-    
-    <!-- Custom styles for this template -->
-    <link href="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css" rel="stylesheet">
-    <!--  not sure how to get jquery ui draggable popups, i think this does it -->
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <!-- want to override things here -->
-    <link href="{%static 'css/intMath.css' %}" rel="stylesheet">
-
-    {% block head_block %}
-    	<!--  separate out page specific css here -->
-    {% endblock %}
-
-	<!--  style blocks dont like comments in the middle -->
-	<!--  THIS MAKES THE RECAPTCHA LOGO ON ALL PAGES -->
-	{% if debug %}
-		<!--  this is for dev server 127.0.0.1 site key -->
-		<script src='https://www.google.com/recaptcha/api.js?render=6LcXoQ8aAAAAAFWEjH47SCbbrcT2ooody-kWuU_L'></script>
-	{% else %}
-		<!--  this is for pythonanywhere deployment site key -->
-		<script src='https://www.google.com/recaptcha/api.js?render=6LcyrzAaAAAAALM8nrmbURsAU9-KpQkGvFmDFz13'></script>
-    {% endif %}
     </head>
     <body>
         <header>

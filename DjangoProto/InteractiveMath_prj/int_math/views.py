@@ -236,57 +236,57 @@ class ProcessContactPage(View):
         return response                      
 
   
-class VerifyClientGiveFile(View):
-    instrumentFilenames = {'Trumpet': "BDM_trumpet_468.MP3", 
-                           'Clarinet': "DG_clarinet467.MP3", 
-                           'Soprano Sax': "MS_SSax_midC.MP3", 
-                           'Tenor Sax': "MS_TSax_midC.MP3",
-                           'Flute': "OS_flute_bflat_466.MP3",
-                           'Human': "DGum_voice466.MP3"}
-    def get(self, request):
-        response = HttpResponse()
-        resultFilename = ''
-        if 'instrument' in request.GET:
-            # Need to go up one level from give_file URL we are in to get to int_math level and correct file location
-            instrument = request.GET['instrument']
-            resultFilename = finders.find(self.instrumentFilenames[instrument])
-            print('result of finders is ')
-            print(resultFilename)
-            searched_locations = finders.searched_locations
+#class VerifyClientGiveFile(View):
+ #   instrumentFilenames = {'Trumpet': "BDM_trumpet_468.MP3", 
+#                           'Clarinet': "DG_clarinet467.MP3", 
+#                           'Soprano Sax': "MS_SSax_midC.MP3", 
+#                           'Tenor Sax': "MS_TSax_midC.MP3",
+#                          'Flute': "OS_flute_bflat_466.MP3",
+#                          'Human': "DGum_voice466.MP3"}
+#    def get(self, request):
+#        response = HttpResponse()
+#        resultFilename = ''
+#        if 'instrument' in request.GET:
+#            # Need to go up one level from give_file URL we are in to get to int_math level and correct file location
+#            instrument = request.GET['instrument']
+#            resultFilename = finders.find(self.instrumentFilenames[instrument])
+#            print('result of finders is ')
+#            print(resultFilename)
+#            searched_locations = finders.searched_locations
 
-        if 'notABot' in request.session:
-            # bot test already performed, notaBot exists, get results
-            if request.session.get('notABot', True):
-                print('you are NOT a bot')
-                try:
+#        if 'notABot' in request.session:
+#            # bot test already performed, notaBot exists, get results
+#            if request.session.get('notABot', True):
+#                print('you are NOT a bot')
+#                try:
                     #all is good, get the file and send if off.  
                     # DO, redo this in terms of nginx access for greater efficiency  Use python django-sendfile library
                     #need different way to send off via development server and nginx (or apache if we later go that way)
-                    tuneFile = open(resultFilename,"rb")
-                    response.write(tuneFile.read())
-                    response['Content-Type'] = 'audio/mpeg'
-                    #response['X-Accel-Redirect'] = resultFilename
+#                    tuneFile = open(resultFilename,"rb")
+#                    response.write(tuneFile.read())
+#                    response['Content-Type'] = 'audio/mpeg'
+#                    #response['X-Accel-Redirect'] = resultFilename
                     #response['X-Accel-Buffering'] = 'no'
-                    response['Content-Length'] = os.path.getsize(resultFilename)
+#                    response['Content-Length'] = os.path.getsize(resultFilename)
                     #response['Content-Disposition'] = 'attachment; filename=' + resultFilename
                     
-                    return response
-                except OSError as e: 
-                    print('File not found:  error=' + e)
-                    response.status_code = 404
-                except Exception as e:
-                    print(e)
-                    response.status_code = 404
-            else:
-                print('you are a bot')
-                response.status_code = 403  #Forbidden 
-        else:
+#                    return response
+#                except OSError as e: 
+#                    print('File not found:  error=' + e)
+#                    response.status_code = 404
+#                except Exception as e:
+#                    print(e)
+#                    response.status_code = 404
+#            else:
+#                print('you are a bot')
+#                response.status_code = 403  #Forbidden 
+#        else:
             # else, bot test not passed/failed yet.  SW Error.  Send msg back to client
-            print('Client short circuited the bot test. NO file for YOU!')
-            response.status_code = 403  #forbidden
+#            print('Client short circuited the bot test. NO file for YOU!')
+#            response.status_code = 403  #forbidden
 
 
-        return response
+#        return response
 
 #**********************************************************
 # these are all page views
@@ -304,6 +304,7 @@ class IndexView(View):
                         'topic': None,
                         'using_safari': usingSafari,
                         'is_mobile': isMobile,
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }        
         response = render(request, 'int_math/index.html', context=context_dict)
         return response
@@ -312,6 +313,7 @@ class MusicTrigConceptIntroView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'IntroConcepts',
                         'topic': Topic.objects.get(name="TrigFunct"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY
                         }
         response = render(request, 'int_math/IntroTrigMusicConcepts.html', context=context_dict)
         return response
@@ -320,6 +322,7 @@ class MusicTrigView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'MusicalTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
         response = render(request, 'int_math/MusicSineIntro.html', context=context_dict)
         return response
@@ -328,6 +331,7 @@ class StaticTrigView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'StaticTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
         response = render(request, 'int_math/StaticTrig.html', context=context_dict)
         return response
@@ -336,6 +340,7 @@ class DynamicTrig1View(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'DynamicTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
         response = render(request, 'int_math/DynamicTrig1.html', context=context_dict)
         return response
@@ -345,6 +350,7 @@ class DynamicTrig2View(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'DynamicTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
         response = render(request, 'int_math/DynamicTrig2.html', context=context_dict)
         return response
@@ -353,6 +359,7 @@ class ToneTrigView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'ToneTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
         response = render(request, 'int_math/ToneTrig.html', context=context_dict)
         return response
@@ -362,6 +369,7 @@ class MusicNotesTrigView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'MusicNotes',
                         'topic': Topic.objects.get(name="TrigFunct"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
         response = render(request, 'int_math/MusicNotesTrig.html', context=context_dict)
         return response
@@ -369,16 +377,10 @@ class MusicNotesTrigView(View):
 # page 8 Lets summarize this all now of trig function section
 class TrigSummaryView(View):
     def get(self, request):
-        #check session cookie (which expires after soom time--default 15 days) to see if bot test passed
-        try: 
-            # If session is established, use it
-            botCheckNeeded = not request.session['notABot']
-        except:
-            # else, no session established, set it up so robot check test required
-            botCheckNeeded = True
+
         context_dict = {'page_tab_header': 'Summary',
                         'topic': Topic.objects.get(name="TrigFunct"),
-                        'botChkTstNeed': botCheckNeeded,
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
         response = render(request, 'int_math/MusicSineSummary.html', context=context_dict)
         return response
@@ -387,6 +389,7 @@ class ImagNumView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'Imag_num',
                         'topic': Topic.objects.get(name="Imag_num"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }        
         response = render(request, 'int_math/imag_num.html', context=context_dict)
         return response
@@ -408,6 +411,7 @@ class PeopleView(View):
 
         context_dict = {'page_tab_header': 'People',
                         'topic': Topic.objects.get(name="You"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
         return render(request, 'int_math/UserData.html', context=context_dict)
 
@@ -415,6 +419,7 @@ class AckView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'Thank You!',
                         'topic': Topic.objects.get(name="You"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
         response = render(request, 'int_math/acknowledgements.html', context=context_dict)
         return response        
@@ -423,6 +428,7 @@ class TrigIDView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'Trig ID',
                         'topic': Topic.objects.get(name="TrigIdent"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
         response = render(request, 'int_math/TrigIdentity.html', context=context_dict)
         return response     
@@ -431,6 +437,7 @@ class TrigIDTuneView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'Inst Tune',
                         'topic': Topic.objects.get(name="TrigIdent"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
         response = render(request, 'int_math/TrigIdent_Tune.html', context=context_dict)
         return response 
@@ -439,6 +446,7 @@ class Legal_TermsOfUse(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'Terms Of Use',
                         'topic': Topic.objects.get(name="Legal"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                        }  
         response = render(request, 'int_math/TermsOfUse.html', context=context_dict)
         return response
@@ -446,6 +454,7 @@ class Legal_Privacy(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'Privacy Policy',
                         'topic': Topic.objects.get(name="Legal"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                        }  
         response = render(request, 'int_math/Privacy.html', context=context_dict)
         return response
@@ -453,6 +462,7 @@ class Legal_Cookie(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'Cookie Policy',
                         'topic': Topic.objects.get(name="Legal"),
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                        } 
         response = render(request, 'int_math/Cookie.html', context=context_dict)
         return response

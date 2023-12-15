@@ -2,6 +2,7 @@
 //JQuery, dont do this script until document DOM objects are loaded and ready
 // THIS js file covers all that is common to whole site
 $(function () {
+		    
 	// tooltips are disabled by default, need to enable them all for bootstrap styling
     $('[data-toggle="tooltip"]').tooltip();
     
@@ -49,6 +50,7 @@ $(function () {
 	});
 	
 	$( document ).ready(function() {
+	
     	// now that new page is loaded, and subtopics has reloaded from scratch along with the page..
     	// recall whats active and change appearance
     	let firstDomEl = $('ul.nav.flex-column > li.nav-item:first > a');
