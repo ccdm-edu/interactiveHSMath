@@ -37,18 +37,11 @@
 	    {% block head_block %}
 	    	<!--  separate out page specific css here -->
 	    {% endblock %}
-	
+
 		<!--  style blocks dont like comments in the middle -->
 		<!--  THIS MAKES THE RECAPTCHA LOGO ON ALL PAGES -->
-		{% if debug %}
-			<!--  this is for dev server 127.0.0.1 site key -->
-			<div id="sendGRPublicBase">{{ settings.RECAP_PUBLIC_KEY }}</div>
-			var GOOGLE_LOC = 'https://www.google.com/recaptcha/api.js?render=' + {{ settings.RECAP_PUBLIC_KEY }}
-			<script src='https://www.google.com/recaptcha/api.js?render=GOOGLE_LOC'></script>
-		{% else %}
-			<!--  this is for pythonanywhere deployment site key -->
-			<script src='https://www.google.com/recaptcha/api.js?render=6LcyrzAaAAAAALM8nrmbURsAU9-KpQkGvFmDFz13'></script>
-	    {% endif %}
+		<script src='https://www.google.com/recaptcha/api.js?render={{ recaptchaPublicKey }}'></script>
+
     </head>
     <body>
         <header>
