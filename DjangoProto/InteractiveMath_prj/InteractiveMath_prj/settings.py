@@ -57,7 +57,9 @@ if DEBUG_str.lower() == 'true':
 if DEBUG:
     ALLOWED_HOSTS = ['127.0.0.1']
 else:
-    ALLOWED_HOSTS = ['catcoder.pythonanywhere.com']
+    CURRENT_HOST = os.environ.get('CURRENT_URL')
+    ALLOWED_HOSTS = [CURRENT_HOST]
+    print(f'current host allowed is : {ALLOWED_HOSTS}')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
