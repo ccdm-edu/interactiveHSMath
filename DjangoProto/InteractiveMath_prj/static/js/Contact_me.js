@@ -24,9 +24,9 @@ $(function() {
 			}
 			
 			//***************
-			// Get the recaptcha token ready and hidden honeypot ready, when all data considered valid
-			// and user hits enter or submit button, the form will submit by jquery-bootstrap-modal-forms-min.js.
-			// This takes awhile but should be done by time human answers math question
+			// Get the recaptcha token ready and hidden honeypot ready.  Give returned recaptcha token 
+			// back to server via form.  
+			// 
 			//***************
 			grecaptcha.ready(function() {
 				// get public recaptcha key from html
@@ -34,15 +34,12 @@ $(function() {
 				
 				//This is where we send data to the django form and to the server.
 				grecaptcha.execute(G_RECAP_SITE_KEY, {action: 'ContactUsForm'}).then(function(token) {
-	    			console.log('inside the recaptcha execute on token');
-					console.log('recaptcha token is ' + token);
 					//django will create this ID from the form
 					$('#id_g_recaptcha_response').val(token);
 				});
-				console.log('recaptcha setup done');
 			});	
 			doneRecaptcha = true;
-		}; // if we havn't checked recaptcha, do it
+		}; 
 
 	});
 });
