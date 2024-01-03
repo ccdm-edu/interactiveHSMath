@@ -13,8 +13,16 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 from django.conf.global_settings import SECURE_SSL_REDIRECT, SECURE_HSTS_SECONDS,\
-    SECURE_HSTS_INCLUDE_SUBDOMAINS, SECURE_HSTS_PRELOAD, SESSION_COOKIE_HTTPONLY
+    SECURE_HSTS_INCLUDE_SUBDOMAINS, SECURE_HSTS_PRELOAD, SESSION_COOKIE_HTTPONLY,\
+    STATIC_ROOT
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG_str = os.environ.get('DEBUG')
+#note, this variable is used on several pages in this project, cant change name here alone
+DEBUG = False
+#
+if DEBUG_str.lower() == 'true':
+    DEBUG = True
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 STATIC_DIR = os.path.join(BASE_DIR,"static")
@@ -22,13 +30,23 @@ STATIC_DIR = os.path.join(BASE_DIR,"static")
 # this is the actual location of desired binaries
 BINARIES_LOC_str = os.environ.get('STATIC_BINARIES_DIR')
 
-#this is the destination location
+#this is the destination location and it only happens in local debug, dont want symlink in production
 SYMLINK_BINARIES_dir = os.path.join(STATIC_DIR,"static_binaries")
-if (not (os.path.exists(SYMLINK_BINARIES_dir))):
-    os.symlink(BINARIES_LOC_str, SYMLINK_BINARIES_dir)
-    
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-STATICFILES_DIRS = [STATIC_DIR]
+if DEBUG:
+    #create symbolic link so everything gets served by runserver as though it was under main project 
+    if (not (os.path.exists(SYMLINK_BINARIES_dir))):
+        os.symlink(BINARIES_LOC_str, SYMLINK_BINARIES_dir)
+    STATICFILES_DIRS = [STATIC_DIR]
+else:
+    #https://stackoverflow.com/questions/24022558/differences-between-staticfiles-dir-static-root-and-media-root
+    #STATIC_ROOT is needed by deployment server for collectstatic, its where static files will be stored
+    #this directory needs to be empty and dump all static files to be served by nginx here.  I see no need to copy
+    # things twice as all of /static/ will go there anyway
+    STATIC_ROOT = os.path.join(BASE_DIR,"static")
+    print(f"collect static root is {STATIC_ROOT}")
+    # STATICFILES_DIR used by collectstatic to serve other directories under deployment
+    # Build paths inside the project like this: BASE_DIR / 'subdir'.
+    STATICFILES_DIRS = [BINARIES_LOC_str]
 
 RECAPTCHA_SECRET_KEY = os.environ.get('G_RECAPTCHA_V3_SECRET_KEY')
 RECAP_PUBLIC_KEY = os.environ.get('G_RECAPTCHA_V3_PUBLIC_KEY')
@@ -45,14 +63,6 @@ EMAIL_HOST_USER = os.environ.get('WEBSITE_EMAIL_ADDR')
 #NOTE:  app password disabled every time gmail acct changes
 EMAIL_HOST_PASSWORD = os.environ.get('SMTP_APP_PSWD') 
 EMAIL_USE_TLS = True
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG_str = os.environ.get('DEBUG')
-#note, this variable is used on several pages in this project, cant change name here alone
-DEBUG = False
-#
-if DEBUG_str.lower() == 'true':
-    DEBUG = True
 
 if DEBUG:
     ALLOWED_HOSTS = ['127.0.0.1']
