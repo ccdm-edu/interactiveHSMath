@@ -40,10 +40,8 @@ if DEBUG:
 else:
     #https://stackoverflow.com/questions/24022558/differences-between-staticfiles-dir-static-root-and-media-root
     #STATIC_ROOT is needed by deployment server for collectstatic, its where static files will be stored
-    #this directory needs to be empty and dump all static files to be served by nginx here.  I see no need to copy
-    # things twice as all of /static/ will go there anyway
-    STATIC_ROOT = os.path.join(BASE_DIR,"static")
-    print(f"collect static root is {STATIC_ROOT}")
+    # this directory will already have some static files, need to put the static_binaries in their expected place
+    STATIC_ROOT = os.path.join(BASE_DIR,"static_binaries")
     # STATICFILES_DIR used by collectstatic to serve other directories under deployment
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
     STATICFILES_DIRS = [BINARIES_LOC_str]

@@ -8,9 +8,9 @@ from django import forms
      
 class contactForm(forms.Form):   
     #Using widget with placeholder gives you help/label that can be overwritten and ins't default
-    name = forms.CharField(label = "", widget=forms.TextInput(attrs={'placeholder': 'Name, 40 char max'}), max_length=40, required=False)
+    name = forms.CharField(label = "", widget=forms.TextInput(attrs={'placeholder': 'Name, 40 char max'}), max_length=40, required=False, help_text="<font color='DarkTurquoise'><i>Not required</i></font>")
     #enforce proper format for emails, uses emailValidator to ensure its valid, allow email to be blank if desired
-    email = forms.EmailField(label = "", widget=forms.TextInput(attrs={'placeholder': 'Email, 50 char max'}), max_length=50, required=False)
+    email = forms.EmailField(label = "", widget=forms.TextInput(attrs={'placeholder': 'Email, 50 char max'}), max_length=50, required=False, help_text="<font color='DarkTurquoise'><i>Required only for reply</i></font>")
     #this will be a drop down menu
     REASONS_TO_CONTACT = [ 
         ('Legal', "problem with legal documents"),
