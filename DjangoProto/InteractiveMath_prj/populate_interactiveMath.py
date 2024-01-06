@@ -29,20 +29,18 @@ def populate():
         {'title':'Imag Num topic 3', 'url':'#ImagNumTopic3'}]
     
     people_subtopics = [
-        {'title': 'Info Collected', 'url': '../UserData'},
         {'title': 'Thank You!', 'url': '../acknowledgements'},
         ]
     
     legal_subtopics = [
         {'title': 'Terms Of Use', 'url': '../TermsOfUse'},
         {'title': 'Privacy Policy', 'url': '../Privacy'},
-        {'title': 'Cookie Policy', 'url': '../Cookie'},
         ]
     
     topics = {'TrigFunct': [{'topic': trig_subtopics}],
               'TrigIdent': [{'topic': trigIdent_subtopics}],
             'Imag_num': [{'topic': imag_num_subtopics}],
-            'You': [{'topic': people_subtopics}],
+            'Thanks': [{'topic': people_subtopics}],
             'Legal': [{'topic': legal_subtopics}],
             }
     #iterating through .items means cat is the key and cat_data is the value of 

@@ -249,15 +249,15 @@ class PeopleView(View):
     # give user all the info I collect about them
     def get(self, request):
         context_dict = {'page_tab_header': 'People',
-                        'topic': Topic.objects.get(name="You"),
+                        'topic': Topic.objects.get(name="Thanks"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
-        return render(request, 'int_math/UserData.html', context=context_dict)
+        return render(request, 'int_math/acknowledgements.html', context=context_dict)
 
 class AckView(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'Thank You!',
-                        'topic': Topic.objects.get(name="You"),
+                        'topic': Topic.objects.get(name="Thanks"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
         response = render(request, 'int_math/acknowledgements.html', context=context_dict)

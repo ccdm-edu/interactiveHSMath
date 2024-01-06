@@ -25,7 +25,6 @@ urlpatterns = [
 #imag num
     path('imag_num/', views.ImagNumView.as_view(), name='imag_num'),
 #You page
-    path('UserData/', views.PeopleView.as_view(), name='user_contrib'),
     path('acknowledgements/', views.AckView.as_view(), name='acknowledgements'),
 #legal
     path('TermsOfUse/', views.Legal_TermsOfUse.as_view(), name='TermsOfUse'),
