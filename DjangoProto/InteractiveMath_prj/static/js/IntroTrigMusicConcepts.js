@@ -13,9 +13,7 @@ $(function() {
 	$("#UserSelectionVideo").css('display', 'none');
 	$("#IntroConceptVideo").css('display', 'none');
 	$("#IntroMusicInteractive").css('display', 'none');
-	const VIDEO_EXPLN_FILENAMES = ["../../static/static_binaries/VideoExpln/IntroToFrequencyEtc_MedQualityHD720p.mp4", "../../static/static_binaries/VideoExpln/IntroSineCosine_MedQualHD720p.mp4", "IntroToAudioTones.mp4"]
-	const BAD_FREQ_STABILITY = "Frequency isn't stable"
-	const REPORT_FREQ_ACCURACY = ""
+	const VIDEO_EXPLN_FILENAMES = ["../../static/static_binaries/VideoExpln/IntroToFrequencyEtc_MedQualityHD720p.mp4", "../../static/static_binaries/VideoExpln/IntroSineCosine_MedQualHD720p.mp4", "../../static/static_binaries/VideoExpln/IntroSoundPitch_MedQuality5secper.mp4"]
 	const ACTIVE_TOPIC = "     <-- Current Topic";
 	function makeVideoActive(currVideoIndex){
 		activeVideoIndex = currVideoIndex;

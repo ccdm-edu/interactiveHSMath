@@ -292,51 +292,8 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 /*******************************************************/
 /* image indicator that will start an audio introduction of this math section */
 /*******************************************************/
-#staticTrumpeter{
-	position: absolute;
-	top: -100px;
-	left: 780px;
-	height: 500px;
-	width: 200px;
-}
-#verbalIntro{
-	position: absolute;
-	font-family: 'Brush Script MT', cursive;
-	font-size: 25px;
-	top: -30px;
-	left: 730px;
-	width: 150px;
-	visibility: hidden; /* will turn on when user has clicked on something on page so as not to overwhelm */
-}
-/* dont distract newbies with somthing other than tutorial */
-#trumpetersNotes.newbieMode{
-	position: absolute;
-	top: -20px;
-	left: 650px;
-	height: 75px;
-	width: 150px;
-	visibility: hidden;  /* wont be visible till user plays a song */
-}
-#trumpetersNotes.expertMode{
-	position: absolute;
-	top: -20px;
-	left: 650px;
-	height: 75px;
-	width: 150px;
-	visibility: hidden;  /* wont be visible till user plays a song */
-	animation-name: notesFlyOutOfTrumpet;
-	animation-duration: 1s;
-	animation-delay: 10s;  /* delay till after user has played some with page*/
-	animation-iteration-count: infinite;
-}
-/* clip-path : polygon( LRcorner, URcorner, ULcorner, LLcorner) if you want a square */
-@keyframes notesFlyOutOfTrumpet {
-	0%		{left: 710px; clip-path: polygon(0 100%, 0 0, 40% 0%, 40% 100% );}
-	20%     {left: 690px; clip-path: polygon(0 100%, 0 0, 60% 0%, 60% 100% );}
-	40% 	{left: 660px; clip-path: polygon(0 100%, 0 0, 100% 0%, 100% 100% );}
-	80%	    {left: 580px; clip-path: polygon(60% 100%, 60% 0, 100% 0%, 100% 100%);}
-	100%    {left: 540px; clip-path: polygon(90% 100%, 90% 0, 100% 0%, 100% 100%);}
-}	
+
+
 /* credits to float at the bottom */
 #artistCredits_Intro{
 	position: relative;
@@ -345,10 +302,6 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 #image_credit_clefHearts{
 	position: absolute;
 	top: 10px;
-}
-#image_credit_trumpeter{
-	position: absolute;	
-	top: 20px;
 }
 #image_credit_wholeNote{
 	position: absolute;	
