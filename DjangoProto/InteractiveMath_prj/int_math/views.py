@@ -296,9 +296,12 @@ class PeopleView(View):
 
 class AckView(View):
     def get(self, request):
+        trigMap = FileMapper()
+        fileMap1 = trigMap.readFileMapper("Thankyou_logo1")
         context_dict = {'page_tab_header': 'Thank You!',
                         'topic': Topic.objects.get(name="Thanks"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'thankyou1': static(fileMap1)
                         }
         response = render(request, 'int_math/acknowledgements.html', context=context_dict)
         return response        
