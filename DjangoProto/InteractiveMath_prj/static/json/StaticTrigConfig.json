@@ -1,5 +1,0 @@
-{
-	"todo": "TRY THIS:  Click on one of the yellow dots. Try changing Amplitude (r) from a unit circle.  Your choices are limited only because the plots need to fit on a page and be readable.",
-	"expln": "EXPLANATION:  When you click on a dot, it is the equivalent of selecting a phase and that phase has a sine and cosine value as reflected in the plots on the right.  When you change r from its default value of 1 (unit circle) the (x,y) values and rcos, rsin values also change."
-
-}

@@ -1,15 +1,13 @@
 from django.shortcuts import render
-#from django.http import HttpResponse
 from django.views import View
 from int_math.models import Topic
-#from django.contrib.staticfiles import finders
+from django.templatetags.static import static
 from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.html import escape
 from user_agents import parse
 import urllib.request
-import json
-#import os
+import json, os
 # homegrown stuff
 from int_math.forms import contactForm
 
@@ -88,12 +86,6 @@ class ProcessContactPage(View):
                 sendToEmailAddr = settings.EMAIL_HOST_USER
                 print(f'Subject: {subjectOfContact}')
                 print(f'Message: {messageEscaped}')
-                print (f'hostUser: {settings.EMAIL_HOST_USER}')
-                print (f'host password: {settings.EMAIL_HOST_PASSWORD}')
-                print (f'Send To Addr: {sendToEmailAddr}')
-                #checking user settings
-                print(f'EMAIL_HOST:  {settings.EMAIL_HOST}')
-                print(f'EMAIL_PORT:  {settings.EMAIL_PORT}')
                 num_email_sent = 0
 
                 try:
@@ -140,6 +132,32 @@ class ProcessContactPage(View):
   
 
 #**********************************************************
+# functions used by page views
+#**********************************************************
+class FileMapper:
+    keyFileWithMappings = os.path.join(os.path.dirname(__file__), '..', 'static', 'static_binaries', 'Configuration', 'BinaryFileNameConfig.json')
+    filenameMap = dict()
+    
+    def __init__(self):
+        if len(self.filenameMap) == 0:
+            try:
+                fileObj = open(self.keyFileWithMappings, 'rt')
+                self.filenameMap = json.load(fileObj)
+            except FileNotFoundError:
+                print(f'File {self.keyFileWithMappings} was not found')
+            except Exception as e:
+                print(f'Error {e} in opening file {self.keyFileWithMappings}')
+            fileObj.close()
+            
+    def readFileMapper(self, genericFileName):
+        actualFile = "none"
+        if len(self.filenameMap) > 0:
+            actualFile = self.filenameMap.get(genericFileName)
+        else:
+            print(f'Software error, file mapper not found or error opening')
+        return actualFile
+            
+#**********************************************************
 # these are all page views
 #**********************************************************
 class IndexView(View):
@@ -151,20 +169,35 @@ class IndexView(View):
         if 'safari' in user_agent.browser.family.lower(): 
             usingSafari = True;
         isMobile = user_agent.is_mobile;
+        fileMap = FileMapper()
+        realFileLandLogo = fileMap.readFileMapper("LandingPageLogo")
         context_dict = {'page_tab_header': 'Home',
                         'topic': None,
                         'using_safari': usingSafari,
                         'is_mobile': isMobile,
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'landingPageLogo': static(realFileLandLogo),
                         }        
         response = render(request, 'int_math/index.html', context=context_dict)
         return response
+#****************************************************************************************
+#  Trig functions section
+#****************************************************************************************
 # page 1 General Concepts Intro of trig function section
 class MusicTrigConceptIntroView(View):
     def get(self, request):
+        trigMap = FileMapper()
+        realFileIntroVideo = trigMap.readFileMapper("IntroToFrequencyVideo")
+        realFileCartoonGIF = trigMap.readFileMapper("CartoonIntroGIF")
+        realFileCartoonTrig = trigMap.readFileMapper("CartoonIntroTrig")
+        realFileIntroAudio = trigMap.readFileMapper("TrigReviewIntroAudio")
         context_dict = {'page_tab_header': 'IntroConcepts',
                         'topic': Topic.objects.get(name="TrigFunct"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'introToFreqVideo': static(realFileIntroVideo),
+                        'cartoonIntroGIF': static(realFileCartoonGIF),
+                        'cartoonIntroTrig': static(realFileCartoonTrig),
+                        'trigReviewIntroAudio': static(realFileIntroAudio),
                         }
         response = render(request, 'int_math/IntroTrigMusicConcepts.html', context=context_dict)
         return response
@@ -228,13 +261,20 @@ class MusicNotesTrigView(View):
 # page 8 Lets summarize this all now of trig function section
 class TrigSummaryView(View):
     def get(self, request):
-
+        trigMap = FileMapper()
+        actualFilename = trigMap.readFileMapper("MusicSummaryVideo")
+        realFileCartoonTrig = trigMap.readFileMapper("CartoonIntroTrig")
         context_dict = {'page_tab_header': 'Summary',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'musicSummaryVideo': static(actualFilename),
+                        'cartoonIntroTrig': static(realFileCartoonTrig),
                         }
         response = render(request, 'int_math/MusicSineSummary.html', context=context_dict)
         return response
+#****************************************************************************************
+#  END OF Trig functions section
+#****************************************************************************************
     
 class ImagNumView(View):
     def get(self, request):
@@ -283,28 +323,27 @@ class TrigIDTuneView(View):
      
 class Legal_TermsOfUse(View):
     def get(self, request):
+        fileMap = FileMapper()
+        actualFilename = fileMap.readFileMapper("Legal_TermsCond")
         context_dict = {'page_tab_header': 'Terms Of Use',
                         'topic': Topic.objects.get(name="Legal"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'legalDocTerms': static(actualFilename) + "#toolbar=0",
                        }  
         response = render(request, 'int_math/TermsOfUse.html', context=context_dict)
         return response
 class Legal_Privacy(View):
     def get(self, request):
+        fileMap = FileMapper()
+        actualFilename = fileMap.readFileMapper("Legal_Privacy")
         context_dict = {'page_tab_header': 'Privacy Policy',
                         'topic': Topic.objects.get(name="Legal"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'legalDocPriv': static(actualFilename) + "#toolbar=0",
                        }  
         response = render(request, 'int_math/Privacy.html', context=context_dict)
         return response
-class Legal_Cookie(View):
-    def get(self, request):
-        context_dict = {'page_tab_header': 'Cookie Policy',
-                        'topic': Topic.objects.get(name="Legal"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
-                       } 
-        response = render(request, 'int_math/Cookie.html', context=context_dict)
-        return response
+
 class ContactMe(View):
     def get(self, request):
         context_dict = {'page_tab_header': 'Contact Us',

@@ -31,11 +31,6 @@ $(function() {
     	console.log('Cannot obtain Sin/Cos unit circle context');
 	}
 	
-	const STATIC_FILE_LOC = "../../static/json/";
-	const urlInitValJson = STATIC_FILE_LOC + "StaticTrigConfig.json";
-	let staticTrigExpln;
-	let staticTrigToDo;
-	
 	// When user changes a parameter or a animation is running, need to be able to go back to an intermediate canvas picture to 
 	// clear out the "old values" to allow writing new values selected by user or animation
 	let axisOnly;  // will be the screen with just axis and no circle or sine/cos dashed lines.  Used when user changes amplitude

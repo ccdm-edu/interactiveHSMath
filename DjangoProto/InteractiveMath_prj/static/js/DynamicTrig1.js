@@ -32,11 +32,6 @@ $(function() {
 	}
 	let sineAxisBkgd;
 	
-	const STATIC_FILE_LOC = "../../static/json/";
-	const urlInitValJson = STATIC_FILE_LOC + "DynamicTrig1Config.json";
-	let dynamicTrig1Expln;
-	let dynamicTrig1ToDo;
-	
 	const FIRST_USER_BOX_POP_HELP = "1. Click the yellow dot with red arrow labeled Start Here.  Then follow the red arrows as they appear. GO FAST!";
 	const SECOND_USER_BOX_POP_HELP = "2. Do it again, but this time skip half the dots.  The red arrows will lead you.  GO FAST!";	
 	const THIRD_USER_BOX_POP_HELP = "3. Another try, but this time skip most of the dots.  The red arrows will lead you.  GO FAST!";

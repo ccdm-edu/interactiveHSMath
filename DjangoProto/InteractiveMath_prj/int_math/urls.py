@@ -29,7 +29,6 @@ urlpatterns = [
 #legal
     path('TermsOfUse/', views.Legal_TermsOfUse.as_view(), name='TermsOfUse'),
     path('Privacy/', views.Legal_Privacy.as_view(), name='Privacy'),
-    path('Cookie/', views.Legal_Cookie.as_view(), name='Cookie'),  
 #contact me email sending  
     path('Contact_me/', views.ContactMe.as_view(), name='Contact_me'),   
     path('ProcessContact_me/', views.ProcessContactPage.as_view(), name='ProcessContact_me'), 
