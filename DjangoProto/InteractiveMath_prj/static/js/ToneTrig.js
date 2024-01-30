@@ -337,7 +337,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/static_binaries/AudioExpln/ToneTrig_Seg0.mp3'}
+			 	{filenameURL: 'ToneTrigSeg0'}
 			},
 			//*****************************
 			// click on freq slider to change freq to 100 hz,  offset is approx guess, user can change
@@ -482,7 +482,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/static_binaries/AudioExpln/ToneTrig_Seg1.mp3'}
+			 	{filenameURL: 'ToneTrigSeg1'}
 			},
 			//*****************************
 			// click on freq slider to change freq to 1000 hz,  we last left off at 8kHz, need a less annoying freq 
@@ -613,7 +613,15 @@ $(function() {
 	  ]
 	}
 ];
-
+	// read the config file and find the actual filenames and put in true values.  First call 'may' have to read
+	// from file, all succeeding calls will be faster since read from local memory
+   	getActualFilename(SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL)
+   		.done(resp1 => {
+			  	SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL = resp1;
+			  	// these should be fast, in case previous one had to open file all this is now cached
+			  	getActualFilename(SCRIPT_AUTO_DEMO[1].segmentActivities[0].segmentParams.filenameURL)
+			  	.done(resp2 => SCRIPT_AUTO_DEMO[1].segmentActivities[0].segmentParams.filenameURL = resp2)
+			  	});
     //****************************************************************************
     // User initiates autoDemo activity
     //****************************************************************************   

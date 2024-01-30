@@ -1,7 +1,7 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
-    	
+   	 	
 	// if the user has saved an old mode, resurrect it here
 	let newbieMode = sessionStorage.getItem('UserIsNew');
 	if (!newbieMode) {
@@ -21,15 +21,15 @@ $(function() {
     //********************************************************
 	// create a "script" for the auto-demo tutorial, by now, all variables should be set
 	//********************************************************	
-    
-	const SCRIPT_AUTO_DEMO = [
+
+	let SCRIPT_AUTO_DEMO = [
 	{ segmentName: "Intro to Auto Demo",
 	  headStartForAudioMillisec: 10000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/static_binaries/AudioExpln/LandingPage_Seg0.mp3',
+			 	{filenameURL: 'LandingPageSeg0',
 			 	waitTimeMillisec: 0}
 			},
 			{segmentActivity: "ANNOTATE_ELEMENT",
@@ -85,7 +85,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/static_binaries/AudioExpln/LandingPage_Seg1.mp3',
+			 	{filenameURL: 'LandingPageSeg1',
 			 	waitTimeMillisec: 6000}
 			},
 						
@@ -212,7 +212,16 @@ $(function() {
 	  ]
 	}
 	];
-		
+	// read the config file and find the actual filenames and put in true values.  First call 'may' have to read
+	// from file, all succeeding calls will be faster since read from local memory
+   	getActualFilename(SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL)
+   		.done(resp1 => {
+			  	SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL = resp1;
+			  	// these should be fast, in case previous one had to open file all this is now cached
+			  	getActualFilename(SCRIPT_AUTO_DEMO[1].segmentActivities[0].segmentParams.filenameURL)
+			  	.done(resp2 => SCRIPT_AUTO_DEMO[1].segmentActivities[0].segmentParams.filenameURL = resp2)
+			  	});
+	
     //****************************************************************************
     // User initiates autoDemo activity
     //****************************************************************************   

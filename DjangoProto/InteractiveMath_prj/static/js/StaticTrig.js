@@ -722,7 +722,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/static_binaries/AudioExpln/StaticTrig_Seg0.mp3'}
+			 	{filenameURL: 'StaticTrigSeg0'}
 			},
 			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
 			{segmentActivity: "CLICK_ON_CANVAS",
@@ -835,6 +835,13 @@ $(function() {
 			},
 	  ]
 	}];
+		// read the config file and find the actual filenames and put in true values.  First call 'may' have to read
+	// from file, all succeeding calls will be faster since read from local memory
+   	getActualFilename(SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL)
+   		.done(resp1 => {
+			  	SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL = resp1;
+			  	});
+
     //****************************************************************************
     // User initiates autoDemo activity
     //****************************************************************************   

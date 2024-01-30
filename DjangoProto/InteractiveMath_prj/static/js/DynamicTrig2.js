@@ -393,7 +393,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/static_binaries/AudioExpln/DynamicTrig2_Seg0.mp3'}
+			 	{filenameURL: 'DynamicTrig2Seg0'}
 			},
 			// click on go button to start sampling at 0.5 Hz
 			{segmentActivity: "ACT_ON_ELEMENT", 
@@ -477,6 +477,12 @@ $(function() {
 			},
 	  ]
 	}];
+	// read the config file and find the actual filenames and put in true values.  First call 'may' have to read
+	// from file, all succeeding calls will be faster since read from local memory
+   	getActualFilename(SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL)
+   		.done(resp1 => {
+			  	SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL = resp1;
+			  	});
 
     //****************************************************************************
     // User initiates autoDemo activity

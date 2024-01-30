@@ -64,8 +64,8 @@ $(function() {
 	const NOTE_MAPPING = new Map([ ["C5", C5_NOTE],["C4", C4_NOTE],["B4flat", BFLAT4_NOTE] ]);
 
 	//everything is relative to the html page this code operates on, server needs to work from /static directory (without django intervention)
-	const STATIC_FILE_LOC = "../../static/json/";
-	const urlInitValJson = STATIC_FILE_LOC + "ToneTrigConfig.json";
+	const STATIC_FILE_LOC = "../../static/static_binaries/";
+	const urlInitValJson = STATIC_FILE_LOC + "Configuration/ToneTrigConfig.json";
 	
 	const DEFAULT_TITLE = "Musical Notes and Underlying Trig";
 	$("#musicalActivity").html(DEFAULT_TITLE);  //load up default
@@ -850,7 +850,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/static_binaries/AudioExpln/MusicNotesTrig_Seg0.mp3'}
+			 	{filenameURL: 'MusicNotesTrigSeg0'}
 			},
 			//*****************************
 			// click on select instrument pulldown menu 
@@ -963,7 +963,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/static_binaries/AudioExpln/MusicNotesTrig_Seg1.mp3'}
+			 	{filenameURL: 'MusicNotesTrigSeg1'}
 			},
 			//*****************************
 			// click on select instrument pulldown menu 
@@ -1072,7 +1072,17 @@ $(function() {
 	  ]
 	},
 	];
-
+	// read the config file and find the actual filenames and put in true values.  First call 'may' have to read
+	// from file, all succeeding calls will be faster since read from local memory
+	console.log('starting musicnotes trig ' + SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL)
+   	getActualFilename(SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL)
+   		.done(resp1 => {
+			  	SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL = resp1;
+			  	console.log('musicnotes trig ' + resp1)
+			  	// this one should be fast, in case previous one had to open file
+			  	getActualFilename(SCRIPT_AUTO_DEMO[1].segmentActivities[0].segmentParams.filenameURL)
+			  	.done(resp2 => SCRIPT_AUTO_DEMO[1].segmentActivities[0].segmentParams.filenameURL = resp2)
+			  	});
     //****************************************************************************
     // User initiates autoDemo activity
     //****************************************************************************   

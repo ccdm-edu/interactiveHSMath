@@ -23,6 +23,60 @@
 	const isInside = (point, circle, radius) => {
 		return ((point.x-circle.x) ** 2 + (point.y - circle.y) ** 2) <= (radius) ** 2;
 	};
+	
+	//*************************************************
+	// read configuration to get specific filenames (test/actual)
+	//*************************************************	
+
+	function getActualFilename(dummyFilename) {
+		const STATIC_FILE_LOC = "../../static/static_binaries/";
+		const urlFileMapJson = STATIC_FILE_LOC + "Configuration/BinaryFileNameConfig.json";
+		
+		var d = new $.Deferred();
+		// try to read back old saved value, else need to open and read config json file		
+		let fileMapConfig, readback;
+		readback = localStorage.getItem("fileMapperConfig");
+		if (readback != null) {
+			try {
+				fileMapConfig = JSON.parse(readback);
+				// debug, print it all out
+				//console.log('len2 is ' + Object.keys(fileMapConfig).length);
+				//Object.keys(fileMapConfig).forEach(value => console.log(value));
+				// the file mapper was successfully read from session memory, no file reads needed, resolve the promise	
+				//console.log('READ FROM LOCAL STORE:  dummyfile is ' + dummyFilename + 'desired mapping is ' + fileMapConfig[dummyFilename])
+				d.resolve(fileMapConfig[dummyFilename]);	
+			}
+			catch(e) {
+				console.log('SW error, stored object is not JSON')
+				d.reject('FAIL')
+			}
+		} else {
+			console.log('file mapper not in memory, need to read the JSON file')
+			$.getJSON(urlFileMapJson)
+			.done(function(fileMapConfig,status,xhr) {
+				//xhr has good stuff like status, responseJSON, statusText, progress
+				if (status === 'success') {				
+   					localStorage.setItem("fileMapperConfig", JSON.stringify(fileMapConfig));
+   					console.log('READ FROM FILE:  desired mapping is ' + fileMapConfig[dummyFilename])
+   					// game over, tell caller all is done and return requested value
+					//def.resolve(fileMapConfig[dummyFilename]);
+					d.resolve(fileMapConfig[dummyFilename]);
+				}
+				else {
+					console.log("config json file request returned with status = " + status);
+					d.reject("FAIL")
+				}
+
+			})
+			.fail(function(fileMapConfig, status, error) {
+				console.error("Error in JSON file " + status + error);
+				alert("Error in JSON file " + status + error);
+				// your screwed, finish the promise
+				d.reject("FAIL");
+			})
+		} 
+		return d.promise();
+	}	
 	//*************************************************
 	// constants for special characters in Javascript
 	//*************************************************

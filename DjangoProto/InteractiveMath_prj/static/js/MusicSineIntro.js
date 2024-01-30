@@ -425,62 +425,6 @@ $(function() {
   		// make the notes come out of trumpet to get the users attention at this point
 		$("#trumpetersNotes").css('visibility', 'visible');
 	});
-	//***********************************
-	// User clicks on either image or the words around the image to get the audio intro
-	//***********************************
-	function resetNotes(){
-		// turn off whatever note is already playing  and set up staff to initial state
-		osc.toDestination().stop();
-		// deselect note
-		ctxBkgdMusicCanvas.putImageData(bkgdPlotNotes, 0, 0);
-		$("#noteSelectVal").text("");
-		$("#FreqOfNoteVal").text("");
-		// clear out graph and associated equation
-		sine_plot_100_1k.options.plugins.title.text = "";
-		ampLong.length = 0;  // zero out data and push to graph
-		sine_plot_100_1k.data.datasets[0].data.push(ampLong);
-		sine_plot_100_1k.update();	
-		selectedNote = null;  // dont want to play any notes since notes deselected
-	};
-	
-	// Do the verbal intro over to the far right usint the AutoDemo class with only the audio file
-	const SCRIPT_VERBAL_INTRO = [
-	{ segmentName: "",  // unused here
-	  headStartForAudioMillisec: 0, // doesn't matter, we play audio only, nothing more
-	  segmentActivities: 
-	  [
-			{segmentActivity: "PLAY_AUDIO",
-			 segmentParams: 
-			 	{filenameURL: '../../static/static_binaries/AudioExpln/SineMusicIntro.mp3'}
-			}
-		]
-	}];
-	let verbalIntro = new AutoDemo(SCRIPT_VERBAL_INTRO, 'funTutorial_MSIntro');  // give the demo the full script
-
-    let verbalIntroIsPlaying = false;
-    function stopVerbalIntro() {
-		// turn off the existing audio, but don't kill the controls box for autodemo
-		verbalIntro.stopThisSegment(false);
-		verbalIntroIsPlaying = false;
-		$("#verbalIntro").html("Click on me,<br><br>I've got something to say.");
-	}
-    function playOrStopVerbalIntro(){
-    	// dont want to play multiple time delayed versions of audio with multiple clicks
-		if (!verbalIntroIsPlaying) {
-			$("#verbalIntro").html("Click on me<br><br> to stop talking");
-			verbalIntro.startDemo();
-			verbalIntroIsPlaying = true;
-		} else {
-			stopVerbalIntro();
-		}
-	};
-
-	$("#staticTrumpeter").click(function() {
-		playOrStopVerbalIntro();
-	});
-	$("#verbalIntro").click(function() {
-		playOrStopVerbalIntro();
-	});
 	
 	//since this is on template and dont need it here...
 	$('a[href="#AdvancedTopics"]').css('display', 'none');
@@ -496,7 +440,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: '../../static/static_binaries/AudioExpln/SineMusicIntro_Seg0.mp3'}
+			 	{filenameURL: 'SineMusicIntroSeg0'}
 			},
 			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
 			{segmentActivity: "CLICK_ON_CANVAS",
@@ -673,7 +617,12 @@ $(function() {
 	  ]
 	}
 	];
-		
+	// read the config file and find the actual filenames and put in true values.  First call 'may' have to read
+	// from file, all succeeding calls will be faster since read from local memory
+   	getActualFilename(SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL)
+   		.done(resp1 => {
+			  	SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL = resp1;
+			  	});
     //****************************************************************************
     // User initiates autoDemo activity
     //****************************************************************************   
