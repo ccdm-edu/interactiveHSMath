@@ -187,7 +187,7 @@ class IndexView(View):
 class MusicTrigConceptIntroView(View):
     def get(self, request):
         trigMap = FileMapper()
-        realFileIntroVideo = trigMap.readFileMapper("IntroToFrequencyVideo")
+        realFileIntroVideo = trigMap.readFileMapper("IntroToFrequencyVideo_html")
         realFileCartoonGIF = trigMap.readFileMapper("CartoonIntroGIF")
         realFileCartoonTrig = trigMap.readFileMapper("CartoonIntroTrig")
         realFileIntroAudio = trigMap.readFileMapper("TrigReviewIntroAudio")

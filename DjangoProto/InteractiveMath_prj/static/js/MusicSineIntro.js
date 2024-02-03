@@ -383,7 +383,24 @@ $(function() {
 			$("#VolOnOff").prop("title", "Select note from above scales first");
 		}	
 	});
-	
+	//***********************************
+	// User clicks on either image or the words around the image to get the audio intro
+	//***********************************
+	function resetNotes(){
+		// turn off whatever note is already playing and set up staff to initial state
+		osc.toDestination().stop();
+		// deselect note
+		ctxBkgdMusicCanvas.putImageData(bkgdPlotNotes, 0, 0);
+		$("#noteSelectVal").text("");
+		$("#FreqOfNoteVal").text("");
+		// clear out graph and associated equation
+		sine_plot_100_1k.options.plugins.title.text = "";
+		ampLong.length = 0; // zero out data and push to graph
+		sine_plot_100_1k.data.datasets[0].data.push(ampLong);
+		sine_plot_100_1k.update(); 
+		selectedNote = null; // dont want to play any notes since notes deselected
+	};
+
 	//***********************************
 	// user wants a clean "reloaded" screen.  Mostly used at end of autodemo to clean things up
 	//***********************************	
@@ -629,8 +646,6 @@ $(function() {
 	//*** user clicks the start demo image in upper left corner, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_MSIntro');  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {		
-		// if, perchance, the trumpet player is speaking and introducing the section, turn it off
-		stopVerbalIntro();
 		// just in case a note is playing, turn it off
 		resetNotes();
 		// prep the control box for user to interact with auto demo
@@ -647,8 +662,6 @@ $(function() {
 
 	// User has selected play
     $('#playSegment').on('click', function(){	
-    	// if, perchance, the trumpet player is speaking and introducing the section, turn it off
-		stopVerbalIntro();
 		// just in case a note is playing, turn it off
 		resetNotes();
 		
