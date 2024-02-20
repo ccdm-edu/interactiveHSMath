@@ -41,7 +41,7 @@
 				fileMapConfig = JSON.parse(readback);
 				// debug, print it all out
 				//console.log('len2 is ' + Object.keys(fileMapConfig).length);
-				Object.keys(fileMapConfig).forEach(value => console.log(value + " , " + fileMapConfig[value]));
+				//Object.keys(fileMapConfig).forEach(value => console.log(value + " , " + fileMapConfig[value]));
 				// the file mapper was successfully read from session memory, no file reads needed, resolve the promise	
 				//console.log('READ FROM LOCAL STORE:  dummyfile is ' + dummyFilename + 'desired mapping is ' + fileMapConfig[dummyFilename])
 				d.resolve(fileMapConfig[dummyFilename]);	
@@ -58,9 +58,8 @@
 				if (status === 'success') {				
    					localStorage.setItem("fileMapperConfig", JSON.stringify(fileMapConfig));
    					console.log('READ FROM FILE:  desired mapping is ' + fileMapConfig[dummyFilename])
-   					Object.keys(fileMapConfig).forEach(value => console.log(value + " , " + fileMapConfig[value]));
+   					//Object.keys(fileMapConfig).forEach(value => console.log(value + " , " + fileMapConfig[value]));
    					// game over, tell caller all is done and return requested value
-					//def.resolve(fileMapConfig[dummyFilename]);
 					d.resolve(fileMapConfig[dummyFilename]);
 				}
 				else {

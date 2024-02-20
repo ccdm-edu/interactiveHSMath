@@ -293,21 +293,6 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 /* image indicator that will start an audio introduction of this math section */
 /*******************************************************/
 
-
-/* credits to float at the bottom */
-#artistCredits_Intro{
-	position: relative;
-	top: calc(640px + var(--HEADER_LOC));
-}
-#image_credit_clefHearts{
-	position: absolute;
-	top: 10px;
-}
-#image_credit_wholeNote{
-	position: absolute;	
-	top: 30px;
-}
-
 /*****************Auto demo controls on****************************/
 #startAutoDemo{
 	visibility: visible;

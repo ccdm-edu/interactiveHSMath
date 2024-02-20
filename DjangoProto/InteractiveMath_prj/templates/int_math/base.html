@@ -92,9 +92,7 @@
                     </div>
                 </nav>
                 
-                <main role="main" class="col-md-9  ml-sm-auto col-lg-10 px-4">	
-					
-					
+                <main role="main" class="col-md-9  ml-sm-auto col-lg-10 px-4">		
                   
                     {% block body_block %}
                     {% endblock %}
@@ -102,6 +100,8 @@
                     <!-- FOOTER -->
                     <div id="Site-footer">
                     	<button type="button" class="btn btn-info" id="GoToNextPage">Next ></button>
+                        {% block artist_credit %}
+	    				{% endblock %}
                         <!-- legal precedent supports acceptance if links are capitalized, explained as links and underlined -->
                         <p id="SiteInfo-links">&copy; 2023 Interactable Math Inc, FL Corporation not-for-profit &middot; 
                         <br> By continuing on this site, you agree to the following two legal document links:  

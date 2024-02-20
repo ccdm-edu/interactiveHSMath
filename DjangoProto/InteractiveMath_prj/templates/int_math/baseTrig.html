@@ -81,7 +81,15 @@
 	                        {% get_subtopic_list topic %}
 	                    {% endblock %}
 	                    {% block legal_notices %}
-	                    <!-- only used on landing page for now, since may not always be enough room with long lists of subjects -->
+			                <div id="LegalNotice_Consent">
+			                	<p>By continuing to use this site, you agree with the <a href="{% url 'int_math:TermsOfUse' %}">TERMS OF USE</a> 
+			                	and <a href="{% url 'int_math:Privacy' %}">PRIVACY</a> policy.
+			                	For questions/comments, please see <a href="{% url 'int_math:Contact_me' %}">Contact</a> page.
+			                	Allow cookies? (default is no)<br></p>
+			                	<div id="CookieChoice">
+			                		<br><button type="button" id='yesCookies'>Yes</button><button type="button" id='noCookies'>No</button>
+			                	</div>
+			                </div>
 						{% endblock %}
 
                     </div>
@@ -179,11 +187,12 @@
                     <!-- FOOTER -->
                     <div id="Site-footer">
                     	<button type="button" class="btn btn-info" id="GoToNextPage">Next ></button>
-                    	<!-- legal precedent supports acceptance if links are capitalized, explained as links and underlined -->
+                        {% block artist_credit %}
+	    				{% endblock %}
+                        <!-- legal precedent supports acceptance if links are capitalized, explained as links and underlined -->
                         <p id="SiteInfo-links">&copy; 2023 Interactable Math Inc, FL Corporation not-for-profit &middot; 
                         <br> By continuing on this site, you agree to the following two legal document links:  
                         <a href="{% url 'int_math:Privacy' %}"><u>PRIVACY</u></a> &middot; <a href="{% url 'int_math:TermsOfUse' %}"><u>TERMS</u></a></p>
-
                     </div>
                 </main>
             </div>

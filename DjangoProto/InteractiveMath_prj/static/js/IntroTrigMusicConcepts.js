@@ -13,7 +13,7 @@ $(function() {
 	$("#UserSelectionVideo").css('display', 'none');
 	$("#IntroConceptVideo").css('display', 'none');
 	$("#IntroMusicInteractive").css('display', 'none');
-
+	// array not a list of actual filenames, only pointers into config file in binaries repo to get actual mp4 filename
 	let VIDEO_EXPLN_FILENAMES = ["IntroToFrequencyVideo", "IntroToTrigVideo", "IntroToSoundVideo"]
 	getActualFilename(VIDEO_EXPLN_FILENAMES[0])
    		.done(resp1 => {
@@ -66,6 +66,10 @@ $(function() {
 	}
 	// user doesn't want to wait till end of Triggy's intro, clean off this page and go to review topics
 	$("#ReviewConcepts").on('click', function() {
+		//It may be user aborts intro by hitting review button, need to stop audio
+		$("#trigIntro-controls").currentTime = 0;
+		//use [] to return html dom object from jquery object
+		$("#trigIntro-controls")[0].pause();
 		cleanOffPageAndReview();
     });
     // intro speech is done, go to the review page.
