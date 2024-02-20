@@ -176,14 +176,13 @@
 							</table>
 						</div> <!--  autodemo controls -->
 					</div> <!--  autodemo controls plus start image -->
-                    
-                    <canvas id="UnusedCanvas" width=1 height=1> <!--  Need to pull all this out of AutoDemo soon so don't need this kloodge -->
+                    					
+					{% block body_block %}
+                    {% endblock %}
+                    <canvas id="AutoDemoCanvas" width=1 height=1> <!-- Required for AutoDemo to get "fake" cursor on/off page for explanation of elements-->
 						Your Browser does not support canvas tag, you are missing graph capability
 					</canvas>	
 					
-					{% block body_block %}
-                    {% endblock %}
-                    
                     <!-- FOOTER -->
                     <div id="Site-footer">
                     	<button type="button" class="btn btn-info" id="GoToNextPage">Next ></button>

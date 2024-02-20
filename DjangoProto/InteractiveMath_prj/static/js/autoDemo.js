@@ -17,7 +17,7 @@ const demoEventTypes = ["CLICK_ON_CANVAS",
 						"REMOVE_LAST_CANVAS_ANNOTATION"];
 
 class AutoDemo {
-	constructor(multiSegScript, stringIDOfCanvas = 'UnusedCanvas') {
+	constructor(multiSegScript, stringIDOfCanvas = 'AutoDemoCanvas') {
 		// This script is made up of many segments, which can be run independently.  Each segment has
 		// several steps consisting of (maybe) audio, event clicking, annotations etc
 		this.fullScript = multiSegScript;
