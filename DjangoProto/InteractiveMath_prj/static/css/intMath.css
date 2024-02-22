@@ -22,18 +22,8 @@ p#headerForSubtopics {
 	margin-bottom: 20px;
 	border-style: double;
 	padding: 2px;
-	bottom: 0px;
 }
-/* legal precedent states that on the home page, browserwrap must be in upper left of home page to be "more" valid */
-#LegalNotice_Consent_Home {
-	position: absolute;
-	margin-left: 5px;
-	margin-right: 5px;
-	margin-bottom: 50px;
-	border-style: double;
-	padding: 2px;
-	top: 100px;
-}
+
 #CookieChoice{
 	position: absolute
 	 /* This puts buttons at the bottom of box */

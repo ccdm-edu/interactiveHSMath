@@ -80,22 +80,20 @@
 	                    {% block sidebar_block %}
 	                        {% get_subtopic_list topic %}
 	                    {% endblock %}
-	                    {% block legal_notices %}
-			                <div id="LegalNotice_Consent">
-			                	<p>By continuing to use this site, you agree with the <a href="{% url 'int_math:TermsOfUse' %}">TERMS OF USE</a> 
-			                	and <a href="{% url 'int_math:Privacy' %}">PRIVACY</a> policy.
-			                	For questions/comments, please see <a href="{% url 'int_math:Contact_me' %}">Contact</a> page.
-			                	Allow cookies? (default is no)<br></p>
-			                	<div id="CookieChoice">
-			                		<br><button type="button" id='yesCookies'>Yes</button><button type="button" id='noCookies'>No</button>
-			                	</div>
-			                </div>
-						{% endblock %}
-
+		                <div id="LegalNotice_Consent">
+		                	<p>By continuing to use this site, you agree with the <a href="{% url 'int_math:TermsOfUse' %}">TERMS OF USE</a> 
+		                	and <a href="{% url 'int_math:Privacy' %}">PRIVACY</a> policy.
+		                	For questions/comments, please see <a href="{% url 'int_math:Contact_me' %}">Contact</a> page.
+		                	Allow cookies? (default is no)<br></p>
+		                	<div id="CookieChoice">
+		                		<br><button type="button" id='yesCookies'>Yes</button><button type="button" id='noCookies'>No</button>
+		                	</div>
+		                </div>
                     </div>
                 </nav>
                 
                 <main role="main" class="col-md-9  ml-sm-auto col-lg-10 px-4">		
+                
                 	<!--  advanced topics popup window that can move and be reduced and brought up again and doesn't interfere with action on page -->
 					<a id="AdvancedTopicLink" href="#AdvancedTopics" data-backdrop="false" data-toggle="modal">Advanced (popup)</a>	
 					<div id="AdvancedTopics" class="modal fade">

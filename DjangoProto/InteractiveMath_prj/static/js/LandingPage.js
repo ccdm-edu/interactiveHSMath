@@ -18,6 +18,9 @@ $(function() {
 	
 	//Dont want a next button on this page so kill it here	
     $("#GoToNextPage").css('display', 'none');
+
+	//legal precedent states that on the home page, browserwrap must be in upper left of home page to be "more" valid */    
+    //$('#LegalNotice_Consent').css('top', '100px');
     //********************************************************
 	// create a "script" for the auto-demo tutorial, by now, all variables should be set
 	//********************************************************	
@@ -230,6 +233,8 @@ $(function() {
     $('#startAutoDemo').on('click', function(event) {  
 		demo.prepDemoControls();
 		demo.moveToRightForAutoDemo($('#selectNewbieOrExpert'))
+		// need to move down legal stuff to make more room for demo list of subtopics
+		$('#LegalNotice_Consent').css('top', '400px');
     });
     	
     //****************************************************************************
@@ -266,6 +271,7 @@ $(function() {
     	$('a[href="#AdvancedTopics"]').css('display', 'none');
 
     	demo.moveToLeftForAutoDemo($('#selectNewbieOrExpert'))
+    	$('#LegalNotice_Consent').css('top', '');   //let it float back up where it belongs
     });
 
 	$("#segNum").change(function(){
