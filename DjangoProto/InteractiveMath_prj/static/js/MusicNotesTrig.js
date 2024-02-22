@@ -296,6 +296,7 @@ $(function() {
 		//The label wont accept html tags for sup/sub scripts or flat symbols
 		sine_plot_100_1k.data.datasets[1].label = tuneInstrument[currTuneState];
 		sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,165,0)'
+		sine_plot_100_1k.data.datasets[0].label = 'Pitch tone y=10sin(2' + PI + '(' + tuneFundamentalFreq[currTuneState] + ')t)';
 
 		// update graphs
 		drawTone()
@@ -766,7 +767,7 @@ $(function() {
 	    data: {
 	    	labels: timeMsLong,
 	        datasets: [{
-	            label: 'Pitch tone (sine wave)',
+	            label: 'Pitch tone y=10sin(2' + PI + '(' + C5_FREQ + ')t)',
 	            data: ampLong,
 	            fill: false,
 	            borderColor: 'rgb(75, 192, 192)',  //aqua
