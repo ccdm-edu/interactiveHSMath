@@ -284,7 +284,16 @@ class ImagNumView(View):
                         }        
         response = render(request, 'int_math/imag_num.html', context=context_dict)
         return response
-    
+
+class TeacherStandardsView(View):
+    def get(self, request):
+        context_dict = {'page_tab_header': 'Teachers',
+                        'topic': None,
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        }        
+        response = render(request, 'int_math/TeacherStds.html', context=context_dict)
+        return response
+        
 class PeopleView(View):
     # give user all the info I collect about them
     def get(self, request):

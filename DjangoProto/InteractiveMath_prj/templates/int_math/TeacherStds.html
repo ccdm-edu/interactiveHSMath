@@ -1,0 +1,103 @@
+{% extends 'int_math/baseTrig.html' %}
+
+{% load static %} 
+
+{%block title_block %}
+	{{ page_tab_header }}
+{% endblock %}
+
+{%block head_block %}
+	<style>
+	table {
+	  font-family: arial, sans-serif;
+	  border-collapse: collapse;
+	  width: 100%;
+	}
+	
+	td, th {
+	  border: 1px solid #dddddd;
+	  text-align: left;
+	  padding: 8px;
+	}
+	
+	tr:nth-child(even) {
+	  background-color: #dddddd;
+	}
+	</style>
+{% endblock %}
+
+{% block body_block %}
+	<h2>Florida Teaching Standards used in this Website</h2>
+
+<table>
+  <tr>
+    <th>website page</th>
+    <th>Subject</th>
+    <th>Standard</th>
+  </tr>
+  <tr>
+    <td>Trig->TrigFunctions->1. Intro to concepts</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Trig->TrigFunctions->2. Trig functions make music</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Trig->TrigFunctions->3. Simple Sine Cosine</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Trig->TrigFunctions->4. Sine meets time</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Trig->TrigFunctions->5. Sine goes faster</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Trig->TrigFunctions->6. Trig tones become audible</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Trig->TrigFunctions->7. Trig tones within musical notes</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Trig->TrigFunctions->8. Summary of trig in music</td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+	
+	
+
+	<br>
+	<br>	
+	<!-- Bootstrap core JavaScript,jquery must be before bootstrap -->	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script>
+			<!-- in case can't get from google, load from local -->
+			var localJQ = "{% static 'js/jquery-360min.js' %}";
+			window.jQuery || document.write('<script src="${localJQ}"><\/script>')
+			
+			//Dont want a next button on this page so kill it here	
+    		$("#GoToNextPage").css('display', 'none');
+			// Dont need advanced topic link popup
+			$('a[href="#AdvancedTopics"]').css('display', 'none');
+	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+	<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
+				   
+	<!-- Custom JS for this page -->
+	<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
+	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	
+
+{% endblock %}

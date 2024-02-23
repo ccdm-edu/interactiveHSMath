@@ -32,4 +32,6 @@ urlpatterns = [
 #contact me email sending  
     path('Contact_me/', views.ContactMe.as_view(), name='Contact_me'),   
     path('ProcessContact_me/', views.ProcessContactPage.as_view(), name='ProcessContact_me'), 
+# for teachers only
+    path('TeacherStds/', views.TeacherStandardsView.as_view(), name='TeacherStds'),
 ]
