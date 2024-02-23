@@ -136,7 +136,7 @@ a:hover {
     height: 1px;
     width: 100%;
 }
-/* the advanced topic modal window is on base.html but the text to fill this box is on each html page.
+/* the advanced topic modal window is on baseTrig.html but the text to fill this box is on each html page.
 Want it on the html page to help search engines but need to hide that verbiage until user wants it */
 p.AdvTopic_Expln {
 	display: none !important;  /* dont want space allocated on page */

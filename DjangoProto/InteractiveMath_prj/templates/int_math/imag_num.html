@@ -1,4 +1,4 @@
-{% extends 'int_math/base.html' %}
+{% extends 'int_math/basePage.html' %}
 
 {% load static %} <!--  another difference from django 2 to 3.1 -->
 
@@ -18,6 +18,9 @@
 			<!-- in case can't get from google, load from local -->
 			var localJQ = "{% static 'js/jquery-360min.js' %}";
 			window.jQuery || document.write('<script src="${localJQ}"><\/script>')
+			
+			// Dont need advanced topic link popup
+			$('a[href="#AdvancedTopics"]').css('display', 'none');
 	</script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 	<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>

@@ -1,4 +1,4 @@
-{% extends 'int_math/baseTrig.html' %}
+{% extends 'int_math/basePage.html' %}
 {% load static %} <!--  another difference from django 2 to 3.1 -->
 
 {%block title_block %}
@@ -8,6 +8,10 @@
 {%block head_block %}
     <link href="{%static 'css/MusicNotesTrig.css' %}" rel="stylesheet">
 {% endblock %}
+
+{% block artist_credit %}
+	<p> Human Voice by Deborah Gum (2023)</p>
+{% endblock %}	
    
 {% block body_block %}
 
