@@ -383,7 +383,12 @@ $(function() {
 			$('#ClearOldFreq_DT1').prop('disabled', true);
     		countTime++;
     		$('#timeVal_DT1').text(roundFP(countTime * 0.1, 1)); 
-    		$('#theta_DT1').text(String(accumPhase));
+    		if (accumPhase == 360) {
+				$('#theta_DT1').text("0\u00B0 or 360\u00B0" ); // add degree symbol	
+			}
+			else {
+				$('#theta_DT1').text(String(accumPhase) + '\u00B0'); // add degree symbol
+			}
     		if ( (countTime/10 == EXPIRATION_TIME_SEC) || (stopTimerNow) ) {
     			//After EXPIRATION_TIME_SEC sec, end the experiment, first clear eventLoop
         		if (startInterval) clearInterval(startInterval);
@@ -391,7 +396,12 @@ $(function() {
         		accumPhase = 0;
         		lastIndexClicked = 0;
         		$('#ClearOldFreq_DT1').prop('disabled', false);
-        		$('#theta_DT1').text(String(accumPhase));
+        		if (accumPhase == 360) {
+					$('#theta_DT1').text("0\u00B0 or 360\u00B0" ); // add degree symbol	
+				}
+				else {
+					$('#theta_DT1').text(String(accumPhase) + '\u00B0'); // add degree symbol
+				}
     			// get rid of time value 
     			$('#timeVal_DT1').text('0');
     			prepHelpForUser(numFreqGenSoFar);  // this needs to be before stopTimeNow set to false
@@ -485,7 +495,6 @@ $(function() {
 			if (isInside(pos, dot, DOT_RADIUS)) {
 				if (timerStarted) { // force user to hit the 0 phase point first to start accumulation of phase
 					// we found the dot the user clicked on, 
-//					if ( (ind > lastIndexClicked) || ((ind == 0) && (lastIndexClicked == 0)) ){
 					if (ind > lastIndexClicked){
 						// either we are incrementing CCW from last point clicked
 						accumPhase = roundFP(accumPhase + (ind - lastIndexClicked) * ANGLE_PER_PT_DEG, 1);
@@ -621,7 +630,7 @@ $(function() {
 		}
 		ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
 		$('#timeVal_DT1').text('0');
-		$('#theta_DT1').text('0');
+		$('#theta_DT1').text('0' + '\u00B0');
 		$('#UserNotices_DT1').text('');
 		// initial condition
 		new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR, BEGIN_TEXT, 2).draw();
@@ -667,7 +676,7 @@ $(function() {
 	//********************************************************	
 	const SCRIPT_AUTO_DEMO = [
 	{ segmentName: "First frequency",
-	  headStartForAudioMillisec: 10000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 16000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
@@ -679,7 +688,7 @@ $(function() {
 			 segmentParams: 
 			 	{circleCenter: {x: TIMER_LOC_X, y: TIMER_LOC_Y, radius: 22}, 
 			 	 color: "red",
-			 	 waitTimeMillisec: 1000}
+			 	 waitTimeMillisec: 10000}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
@@ -816,7 +825,7 @@ $(function() {
 	  ]
 	},
 	  { segmentName: "Faster still",
-	  headStartForAudioMillisec: 10000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 16000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
@@ -914,7 +923,7 @@ $(function() {
     // User initiates autoDemo activity
     //****************************************************************************   
 	//*** user clicks the start demo image, iniitalize everything
-	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_DT1');  // give the demo the full script
+	let demo = new AutoDemoWithCanvas(SCRIPT_AUTO_DEMO, 'funTutorial_DT1');  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {
 		// prep the controls for user to interact with auto demo 
 		demo.prepDemoControls();

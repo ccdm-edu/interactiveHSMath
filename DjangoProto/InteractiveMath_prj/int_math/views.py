@@ -153,6 +153,7 @@ class FileMapper:
         actualFile = "none"
         if len(self.filenameMap) > 0:
             actualFile = self.filenameMap.get(genericFileName)
+            print(f' we just mapped {genericFileName} to {actualFile}')
         else:
             print(f'Software error, file mapper not found or error opening')
         return actualFile
@@ -208,7 +209,7 @@ class MusicTrigView(View):
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
-        response = render(request, 'int_math/MusicSineIntro.html', context=context_dict)
+        response = render(request, 'int_math/Pg2MusicSineIntro.html', context=context_dict)
         return response
 # page 3 Where does sine/cosine come from? of trig function section       
 class StaticTrigView(View):

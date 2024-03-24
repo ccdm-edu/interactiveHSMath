@@ -152,7 +152,7 @@ $(function() {
 		
 	];
 	// Add text on the staff for the proper note		
-	$('#LowCNote').text(CmajorNotes[0].notePlayed);
+	$('#LowCNote').text(CmajorNotes[0].notePlayed + " - middle C");
 	$('#DNote').text(CmajorNotes[1].notePlayed);
 	$('#ENote').text(CmajorNotes[2].notePlayed);
 	$('#FNote').text(CmajorNotes[3].notePlayed);
@@ -546,7 +546,7 @@ $(function() {
 			 	{element:'dropdownMenuSong',
 			 	 action: "nothing",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	waitTimeMillisec: 1000}
+			 	waitTimeMillisec: 13000}
 			},
 
 			// select desired song
@@ -556,7 +556,7 @@ $(function() {
 			 	 action: "focus",  // linger a bit here so user sees what to do
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
-			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
 			},
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
@@ -644,7 +644,7 @@ $(function() {
     // User initiates autoDemo activity
     //****************************************************************************   
 	//*** user clicks the start demo image in upper left corner, iniitalize everything
-	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_MSIntro');  // give the demo the full script
+	let demo = new AutoDemoWithCanvas(SCRIPT_AUTO_DEMO, 'funTutorial_MSIntro');  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {		
 		// just in case a note is playing, turn it off
 		resetNotes();

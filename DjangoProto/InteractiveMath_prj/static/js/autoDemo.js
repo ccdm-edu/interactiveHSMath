@@ -3,28 +3,11 @@
 //**** It is the "instructional" part of each page
 'use strict'
 
-const demoEventTypes = ["CLICK_ON_CANVAS", 
-						"PLAY_AUDIO", 
-						"ACT_ON_ELEMENT", 
-						"ANNOTATION", 
-						"ANNOTATE_ELEMENT", 
-						"REMOVE_ALL_ANNOTATE_ELEMENT",
-						"REMOVE_ACT_ON_ELEMENT",
-						"SHOW_MODAL",
-						"CHANGE_ELEMENT_VALUE",
-						"FAKE_SUBTOPICS", 
-						"REMOVE_FAKE_SUBTOPICS",
-						"REMOVE_LAST_CANVAS_ANNOTATION"];
-
 class AutoDemo {
-	constructor(multiSegScript, stringIDOfCanvas = 'AutoDemoCanvas') {
+	constructor(multiSegScript) {
 		// This script is made up of many segments, which can be run independently.  Each segment has
 		// several steps consisting of (maybe) audio, event clicking, annotations etc
 		this.fullScript = multiSegScript;
-		this.canvasID = '#' + stringIDOfCanvas;
-		let ctxDemoCanvas = this.getDemoCtx(this.canvasID);
-		// background plot is the appearance before this segment operates and will return to this value			
-		this.backgroundPlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);			
 
 		this.currSeg = 0;  // start at beginnning unless user chooses otherwise.  Autodemo runs from 0 to Max-1 but user thinks its 1 to max
 		this.helpAudio;  // placeholder, need access to this for start/stop/pause
@@ -65,19 +48,6 @@ class AutoDemo {
 		$elementToMove.css('top', newTopVal + 'px')
 	}
 	//***********End of prep for autodemo */
-	// get the context of the canvas used for the demo
-	getDemoCtx() {
-		let ctxDemoCanvas;
-		this.canvasID = this.canvasID;
-		let demoCanvas =  $(this.canvasID).get(0);  // later on, this will be used to clear the canvas
-		// get ready to start drawing on this canvas, first get the context
-		if ( $(this.canvasID).length ) {
-	    	ctxDemoCanvas = $(this.canvasID).get(0).getContext('2d');
-		} else {
-	    	console.log('Cannot obtain demo canvas context');
-		}
-		return {ctx: ctxDemoCanvas, width: demoCanvas.width, height: demoCanvas.height};
-	}
 	
 	setCurrSeg(newCurrSeg) {
 		// value newCurrSeg will be what user sees which is 1 to max.  value of this.currSeg is what we use 0 to max-1
@@ -128,8 +98,6 @@ class AutoDemo {
 
 	// the segment is over when the audio is over, time to clean up our toys to allow user to use site or play next seg
 	segmentOverCleanup(){	
-		let ctxDemoCanvas = this.getDemoCtx();
-		ctxDemoCanvas.ctx.putImageData(this.backgroundPlot, 0, 0);
 		// demo isn't over until audio is done, update to next segment
 		// increment segment value here and on screen.  User can change if they want
 		if (!this.userStopRequest) {
@@ -141,8 +109,6 @@ class AutoDemo {
 		// turn on play button and turn off pause button
 		$('#playSegment').prop('disabled', false);  
 		$('#stopSegment').prop('disabled', true);  
-		// when done, ensure demo canvas is back to background so user can interact with dots again
-		$(this.canvasID).css('z-index',-1);
 		this.removeActOnElement();  // get rid of fake cursor on an element if it exists
 		if ('undefined' !== typeof this.ModalWindow) {this.ModalWindow.modal('hide');	}	// if a modal is showing, get rid of it
 		
@@ -153,30 +119,6 @@ class AutoDemo {
 	//****************************************
 	// functions to implement possible actions in the demo
 	//****************************************
-	// Move the cursor to new location on demo canvas
-	moveCursorImgOnCanvas(segmentParams){
-	
-		// pull up the canvas that overlays all activity for the demo
-		let ctxDemoCanvas = this.getDemoCtx().ctx;
-		
-		// pull out the special demo cursor icon and place on proper location
-		let demoCursor = new Image();
-		demoCursor.src = '../../static/images/DemoCursor.svg';
-		demoCursor.id = 'demoCursorID';
-		let xyPt = segmentParams.xyCoord;
-		demoCursor.onload = function() {
-			// here we rely on the fact that demo canvas sits exactly on top of the canvas whose points we want to hit
-			const CURSOR_DIM = 40;
-			ctxDemoCanvas.drawImage(demoCursor, xyPt.x - CURSOR_DIM, xyPt.y, CURSOR_DIM,CURSOR_DIM);
-		};
-		
-		// click on the event 
-		let rect = segmentParams.canvas.getBoundingClientRect();  // need to create mouse event on canvas that correxponds to dot on associated canvas
-		const clickCanvasPt = new CustomEvent('click', {detail: {xVal:xyPt.x, yVal: xyPt.y }});
-		//console.log('clicking on point (' + xyPt.x + ' , '+ xyPt.y + ')');
-		//execute event on element
-		segmentParams.canvas.dispatchEvent(clickCanvasPt);
-	}
 	
 	// play an audio clip
 	playAudio(segmentParams){
@@ -258,18 +200,6 @@ class AutoDemo {
 					}
 			});   // done with ajax
 		// leave things as they were when user first started, all is in beginning state
-	}
-	
-	// make annotation on canvas to draw clients attention to object
-	drawAnnotation(segmentParams) {
-		// pull up the canvas that overlays all activity for the demo
-		let ctxDemoCanvas = this.getDemoCtx().ctx;
-		ctxDemoCanvas.beginPath();
-		ctxDemoCanvas.lineWidth = 3.0
-		ctxDemoCanvas.strokeStyle = segmentParams.color;
-		// put circle up at numeric count down timer
-	    ctxDemoCanvas.arc(segmentParams.circleCenter.x, segmentParams.circleCenter.y, segmentParams.circleCenter.radius, 0, Math.PI * 2, true); 
-	    ctxDemoCanvas.stroke();
 	}
 	
 	// make annotation on an element of the page.  Cant just change border or add border, that changes the element itself and
@@ -455,51 +385,28 @@ class AutoDemo {
 	}
 	// So audio generally starts first and is longer than the cursor demo.  So we start audio, then wait segment.headStartForAudioMillisec
 	// and start the timed cursor demo	
-	doTheSegmentAction(activity, nextItemBeginTime, annotateInd, annotatePlot){
+	doTheSegmentAction(activity, nextItemBeginTime, annotateInd){
 		let temp;
 		let thisObj = this;
 		let anIndex = annotateInd;
 		let nextItemStartTime = nextItemBeginTime;
 		switch (activity.segmentActivity) {
-			case (demoEventTypes[0]):
-				// CLICK_ON_CANVAS
-				// all these actions get sent to the EventLoop simultaneously, want to slow down for user
-				temp = setTimeout(function(){
-					if (nextItemStartTime > segment.headStartForAudioMillisec) {
-						// We are past first point, get rid of old cursor, we are adding a new one
-						ctxDemoCanvas.ctx.putImageData(annotatePlot, 0, 0);
-					};
-					// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
-					thisObj.moveCursorImgOnCanvas(activity.segmentParams);
-				}, nextItemStartTime);
-				nextItemStartTime = nextItemStartTime + activity.segmentParams.waitTimeMillisec;
-				this.eventLoopPtrs.push(temp);
-				break;
-			case (demoEventTypes[1]):
+			case ("PLAY_AUDIO"):
 				// PLAY_AUDIO, assume we start this first with no delay
 				this.playAudio(activity.segmentParams);
 				break;
-			case (demoEventTypes[2]):
+			case ("ACT_ON_ELEMENT"):
 				// ACT_ON_ELEMENT
+				console.log('about to act on element with time ' + nextItemStartTime + 'for activity ' + activity.segmentParams.element);
 				temp = setTimeout(function(){
 					// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
 					thisObj.actOnElement(activity.segmentParams);
 				}, nextItemStartTime);	
 				nextItemStartTime = nextItemStartTime + activity.segmentParams.waitTimeMillisec;
+				console.log('next item starttime updated to ' + nextItemStartTime);
 				this.eventLoopPtrs.push(temp);				
 				break;
-			case (demoEventTypes[3]):
-				// ANNOTATION on a canvas
-				temp = setTimeout(function(){
-					// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
-					thisObj.drawAnnotation(activity.segmentParams);
-					// want to keep annotation for awhile so save it for later use
-					annotatePlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);
-				}, nextItemStartTime);	
-				nextItemStartTime = nextItemStartTime + activity.segmentParams.waitTimeMillisec;
-				this.eventLoopPtrs.push(temp);				
-				break;
-			case (demoEventTypes[4]):
+			case ("ANNOTATE_ELEMENT"):
 				// ANNOTATE element on page
 				temp = setTimeout(function(){
 					// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
@@ -509,7 +416,7 @@ class AutoDemo {
 				this.eventLoopPtrs.push(temp);	
 				anIndex = anIndex +1;
 				break
-			case (demoEventTypes[5]):
+			case ("REMOVE_ALL_ANNOTATE_ELEMENT"):
 				// delete all ANNOTATE elements on page, since we had to add little canvases
 				temp = setTimeout(function(){
 					// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
@@ -519,7 +426,7 @@ class AutoDemo {
 				nextItemStartTime = nextItemStartTime + activity.segmentParams.waitTimeMillisec;
 				this.eventLoopPtrs.push(temp);	
 				break
-			case (demoEventTypes[6]):
+			case ("REMOVE_ACT_ON_ELEMENT"):
 				// remove cursor from screen,  REMOVE_ACT_ON_ELEMENT
 				temp = setTimeout(function(){
 					// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
@@ -528,7 +435,7 @@ class AutoDemo {
 				nextItemStartTime = nextItemStartTime + activity.segmentParams.waitTimeMillisec;
 				this.eventLoopPtrs.push(temp);	
 				break
-			case (demoEventTypes[7]):
+			case ("SHOW_MODAL"):
 				// show a modal window, unfortunately, item.click doesn't work for such things
 				temp = setTimeout(function(){
 					// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
@@ -537,7 +444,7 @@ class AutoDemo {
 				nextItemStartTime = nextItemStartTime + activity.segmentParams.waitTimeMillisec;
 				this.eventLoopPtrs.push(temp);	
 				break
-			case (demoEventTypes[8]):
+			case ("CHANGE_ELEMENT_VALUE"):
 				// change value of an element
 				temp = setTimeout(function(){
 					// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
@@ -546,7 +453,7 @@ class AutoDemo {
 				nextItemStartTime = nextItemStartTime + activity.segmentParams.waitTimeMillisec;
 				this.eventLoopPtrs.push(temp);	
 				break
-			case (demoEventTypes[9]):
+			case ("FAKE_SUBTOPICS"):
 				// change subtopics to a dummy in intro to site						
 				temp = setTimeout(function(){
 					// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
@@ -555,7 +462,7 @@ class AutoDemo {
 				nextItemStartTime = nextItemStartTime + activity.segmentParams.waitTimeMillisec;
 				this.eventLoopPtrs.push(temp);
 				break;
-			case (demoEventTypes[10]):
+			case ("REMOVE_FAKE_SUBTOPICS"):
 				// change dummy subtopics out to what it was originally					
 				temp = setTimeout(function(){
 					// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
@@ -564,15 +471,7 @@ class AutoDemo {
 				nextItemStartTime = nextItemStartTime + activity.segmentParams.waitTimeMillisec;
 				this.eventLoopPtrs.push(temp);
 				break;
-			case (demoEventTypes[11]):
-				// REMOVE_LAST_CANVAS_ANNOTATION, delete an old red cursor that leftover
-				temp = setTimeout(function(){
-					// remove last annotaton on the canvas
-					ctxDemoCanvas.ctx.putImageData(annotatePlot, 0, 0);
-				}, nextItemStartTime);	
-				nextItemStartTime = nextItemStartTime + activity.segmentParams.waitTimeMillisec;
-				this.eventLoopPtrs.push(temp);		
-				break;					
+			
 			default:
 				console.log('SW error in autoDemo switch stmt, switch select value was ' + activity.segmentActivity);
 				break;
@@ -594,16 +493,13 @@ class AutoDemo {
 			this.userStopRequest = false;  // in case coming here from a previous stop, user stop is history, lets play
 			let nextItemBeginTime = segment.headStartForAudioMillisec;  // delay index, index of items that need ever increasing delay
 			let annotateInd = 0;
-			let ctxDemoCanvas = this.getDemoCtx();
-			let annotatePlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);  // this is used during the segment
-			// make sure the canvas for demo is at top layer so all activity is visible
-			$(this.canvasID).css('z-index',100);
 
 			segment.segmentActivities.forEach(activity => {
 				// this will almost certainly not pause the demo as all the activities will be launched off  immediately
 				// and execute when setTimeout expires...  but just in case user pauses immediately...
 				if (!this.userStopRequest) {
-					[nextItemBeginTime, annotateInd] = this.doTheSegmentAction(activity, nextItemBeginTime, annotateInd, annotatePlot);
+					console.log('inside base class startDemo, nextItemBeginTime = '  + nextItemBeginTime);
+					[nextItemBeginTime, annotateInd] = this.doTheSegmentAction(activity, nextItemBeginTime, annotateInd);
 				} // end of if not pause demo
 			});  // end of forEach activity
 		} else {console.log('Coding Error, incorrect segment number called out in startDemo of ' + currSeg)};
@@ -636,12 +532,27 @@ class AutoDemoWithCanvas extends AutoDemo {
 		}
 		return {ctx: ctxDemoCanvas, width: demoCanvas.width, height: demoCanvas.height};
 	}
+	
+	// make annotation on canvas to draw clients attention to object
+	drawAnnotation(segmentParams) {
+		// pull up the canvas that overlays all activity for the demo
+		let ctxDemoCanvas = this.getDemoCtx().ctx;
+		ctxDemoCanvas.beginPath();
+		ctxDemoCanvas.lineWidth = 3.0
+		ctxDemoCanvas.strokeStyle = segmentParams.color;
+		// put circle up at numeric count down timer
+	    ctxDemoCanvas.arc(segmentParams.circleCenter.x, segmentParams.circleCenter.y, segmentParams.circleCenter.radius, 0, Math.PI * 2, true); 
+	    ctxDemoCanvas.stroke();
+	}
+	
 	// the segment is over when the audio is over, time to clean up our toys to allow user to use site or play next seg
-	segmentOverCleanupCanvas(){	
+	segmentOverCleanup(){	
 		let ctxDemoCanvas = this.getDemoCtx();
 		ctxDemoCanvas.ctx.putImageData(this.backgroundPlot, 0, 0);
 		// go finish up all other stuff
-		segmentOverCleanup();
+		super.segmentOverCleanup();
+		// when done, ensure demo canvas is back to background so user can interact with dots again
+		$(this.canvasID).css('z-index',-1);
 	}
 	// Move the cursor to new location on demo canvas
 	moveCursorImgOnCanvas(segmentParams){
@@ -668,6 +579,59 @@ class AutoDemoWithCanvas extends AutoDemo {
 		segmentParams.canvas.dispatchEvent(clickCanvasPt);
 	}
 
+	doTheSegmentAction(activity, nextItemBeginTime, annotateInd){
+		let temp;
+		let thisObj = this;
+		let anIndex = annotateInd;
+		let nextItemStartTime = nextItemBeginTime;
+		let ctxDemoCanvas = this.getDemoCtx();
+		let annotatePlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);  
+		// make sure the canvas for demo is at top layer so all activity is visible
+		$(this.canvasID).css('z-index',100);
+		switch (activity.segmentActivity) {
+			case ("CLICK_ON_CANVAS"):
+				// CLICK_ON_CANVAS
+				// all these actions get sent to the EventLoop simultaneously, want to slow down for user
+				temp = setTimeout(function(){
+					if (nextItemStartTime > nextItemBeginTime) {
+						// We are past first point, get rid of old cursor, we are adding a new one
+						ctxDemoCanvas.ctx.putImageData(annotatePlot, 0, 0);
+					};
+					// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
+					thisObj.moveCursorImgOnCanvas(activity.segmentParams);
+				}, nextItemStartTime);
+				nextItemStartTime = nextItemStartTime + activity.segmentParams.waitTimeMillisec;
+				this.eventLoopPtrs.push(temp);
+				break;
+
+			case ("ANNOTATION"):
+				// ANNOTATION on a canvas
+				temp = setTimeout(function(){
+					// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
+					thisObj.drawAnnotation(activity.segmentParams);
+					// want to keep annotation for awhile so save it for later use
+					annotatePlot = ctxDemoCanvas.ctx.getImageData(0, 0, ctxDemoCanvas.width, ctxDemoCanvas.height);
+				}, nextItemStartTime);	
+				nextItemStartTime = nextItemStartTime + activity.segmentParams.waitTimeMillisec;
+				this.eventLoopPtrs.push(temp);				
+				break;
+
+			case ("REMOVE_LAST_CANVAS_ANNOTATION"):
+				// REMOVE_LAST_CANVAS_ANNOTATION, delete an old red cursor that leftover
+				temp = setTimeout(function(){
+					// remove last annotaton on the canvas
+					ctxDemoCanvas.ctx.putImageData(annotatePlot, 0, 0);
+				}, nextItemStartTime);	
+				nextItemStartTime = nextItemStartTime + activity.segmentParams.waitTimeMillisec;
+				this.eventLoopPtrs.push(temp);		
+				break;					
+			default:
+				//This class only handles canvas actions, for all else, go to parent class
+				[nextItemStartTime, anIndex] = super.doTheSegmentAction(activity, nextItemBeginTime, annotateInd);
+				break;
+		} // end of switch stmt
+		return [nextItemStartTime, anIndex]; 
+	}
 }
 
 

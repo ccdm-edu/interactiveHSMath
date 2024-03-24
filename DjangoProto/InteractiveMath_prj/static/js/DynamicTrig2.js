@@ -388,7 +388,7 @@ $(function() {
     //**************************************************************************** 
 	const SCRIPT_AUTO_DEMO = [
 	{ segmentName: "First frequency",
-	  headStartForAudioMillisec: 19000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 27000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
@@ -425,7 +425,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'FreqSlider_DT2',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 2000} 
+			 	waitTimeMillisec: 12000} 
 			},
 			// click on freq slider to change freq to 4 hz,  offset is approx guess, user can change
 			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
@@ -434,14 +434,14 @@ $(function() {
 			 	{element:'FreqSlider_DT2',
 			 	 value: "4.0",
 			 	  offset: {x: 0, y: 10},  // in the 2Hz location
-			 	waitTimeMillisec: 8000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 6000}  // this is wait before you go on to next item
 			 },	
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'FreqSlider_DT2',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 2000} 
+			 	waitTimeMillisec: 6000} 
 			},
 			// click on freq slider to change freq to 8 hz,  offset is approx guess, user can change
 			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do

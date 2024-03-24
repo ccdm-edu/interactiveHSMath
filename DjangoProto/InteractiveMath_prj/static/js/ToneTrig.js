@@ -61,7 +61,8 @@ $(function() {
 	{	    
 	    // update title to match new parameters
 	    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
-	    let currTitleText = 'Pitch tone y = ' + $currAmp.val() + ' * sin{ 2 * \u03C0 * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }';
+//	    let currTitleText = 'Pitch tone y = ' + $currAmp.val() + ' * sin{ 2 * \u03C0 * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }';
+	    let currTitleText = 'Pitch tone y = ' + $currAmp.val() + ' ' + MULT_DOT + ' sin{ 2 ' + MULT_DOT + ' ' + PI + ' ' +  MULT_DOT +  ' (' + $currFreq.val() + ' ' + MULT_DOT + ' t + ' + $currPhase.val() + '/360) }';
 		sine_plot_100_1k.options.plugins.title.text = currTitleText;
 		// now fill the arrays and they will automatically be reread into plots
 		fillInArrays();   
@@ -332,7 +333,7 @@ $(function() {
     //**************************************************************************** 
 	const SCRIPT_AUTO_DEMO = [
 	{ segmentName: "Sine Sounds Great",
-	  headStartForAudioMillisec: 23000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 34000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
@@ -403,7 +404,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 2000} 
+			 	waitTimeMillisec: 6000} 
 			},			
 			//*****************************
 			// click on freq slider to change freq to 233 hz,  offset is approx guess, user can change
@@ -420,7 +421,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 5000} 
+			 	waitTimeMillisec: 10000} 
 			},		
 			//*****************************
 			// click on freq slider to change freq to 2 khz,  offset is approx guess, user can change
@@ -437,7 +438,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 6000} 
+			 	waitTimeMillisec: 23000} 
 			},		
 			//*****************************
 			// click on freq slider to change freq to 8 khz,  offset is approx guess, user can change
@@ -477,7 +478,7 @@ $(function() {
 	  ]
 	},
 	{ segmentName: "Amplitude and Phase",
-	  headStartForAudioMillisec: 11000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 29000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
@@ -508,7 +509,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 6000} 
+			 	waitTimeMillisec: 2000} 
 			},
 			//*****************************
 			// click on start tone  button to play default tone
@@ -518,14 +519,14 @@ $(function() {
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
-			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'toneStartButton',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 3000} 
+			 	waitTimeMillisec: 4000} 
 			},
 			//*****************************
 			// increase the volume to 10
@@ -534,7 +535,7 @@ $(function() {
 			 	{element:'in-range-amp',
 			 	 value: "10",
 			 	  offset: {x: 30, y: 10},  // turn volume up high
-			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 2000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
@@ -557,7 +558,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 2000} 
+			 	waitTimeMillisec: 3000} 
 			},	
 			//*****************************
 			// decrease the volume to 5
@@ -573,7 +574,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 8000} 
+			 	waitTimeMillisec: 18000} 
 			},		
 			//*****************************
 			// click on phase slider to make it a cosine at 90 degrees,  offset is approx guess, user can change

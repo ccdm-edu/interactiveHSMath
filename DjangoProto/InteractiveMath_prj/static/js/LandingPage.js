@@ -27,29 +27,29 @@ $(function() {
 
 	let SCRIPT_AUTO_DEMO = [
 	{ segmentName: "Intro to Auto Demo",
-	  headStartForAudioMillisec: 10000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 25000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
 			 	{filenameURL: 'LandingPageSeg0',
-			 	waitTimeMillisec: 0}
+			 	waitTimeMillisec: 1000}
 			},
 			{segmentActivity: "ANNOTATE_ELEMENT",
 			 segmentParams: 
 			 	{element: 'segNum', 
 			 	 color: "red",
-			 	 waitTimeMillisec: 5000}
+			 	 waitTimeMillisec: 2000}
 			},
 			{segmentActivity: "ANNOTATE_ELEMENT",
 			 segmentParams: 
 			 	{element: 'totalSeg', 
 			 	 color: "green",
-			 	 waitTimeMillisec: 8000}
+			 	 waitTimeMillisec: 7000}
 			},
 			{segmentActivity: "REMOVE_ALL_ANNOTATE_ELEMENT",
 			 segmentParams: 
-			 	{waitTimeMillisec: 1000}
+			 	{waitTimeMillisec: 5000}
 			},
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
@@ -57,14 +57,14 @@ $(function() {
 			 	 action: "focus",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
-			 	waitTimeMillisec: 16000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 17000}  // this is wait before you go on to next item
 			},
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'segNum',
 			 	 action: "focus",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	waitTimeMillisec: 8000}
+			 	waitTimeMillisec: 19000}
 			},
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
@@ -99,7 +99,7 @@ $(function() {
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest", so neg x is south east
 			 	 offset: {x: 0, y: 25},
-			 	waitTimeMillisec: 8000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 12000}  // this is wait before you go on to next item
 			},
 			// get rid of big red cursor but leave up the drop down menu
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
@@ -138,7 +138,7 @@ $(function() {
 			 	{element:'firstFakePage.nav-link',
 			 	 action: "focus",
 			 	 offset: {x: 0, y: 19},
-			 	waitTimeMillisec: 13000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 16000}  // this is wait before you go on to next item
 			},
 			// remove red cursor from 1st fake page
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 

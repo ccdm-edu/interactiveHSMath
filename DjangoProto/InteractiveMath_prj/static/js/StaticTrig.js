@@ -846,7 +846,7 @@ $(function() {
     // User initiates autoDemo activity
     //****************************************************************************   
 	//*** user clicks the start demo image, iniitalize everything
-	let demo = new AutoDemo(SCRIPT_AUTO_DEMO, 'funTutorial_ST');  // give the demo the full script
+	let demo = new AutoDemoWithCanvas(SCRIPT_AUTO_DEMO, 'funTutorial_ST');  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {
   		// prep the control box for user to interact with auto demo
 		demo.prepDemoControls();
