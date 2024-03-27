@@ -506,7 +506,7 @@ class AutoDemo {
 	}
 };
 class AutoDemoWithCanvas extends AutoDemo {
-	constructor(multiSegScript, stringIDOfCanvas = 'AutoDemoCanvas') {
+	constructor(multiSegScript, stringIDOfCanvas) {
 	// This script is made up of many segments, which can be run independently.  Each segment has
 	// several steps consisting of (maybe) audio, event clicking, annotations etc but we add the ability to move the
 	// cursor over canvas elements to show how they work

@@ -140,5 +140,5 @@ input[type="range"] {
 /**********************define space for footer to float at bottom***************/
 #SineCosBlock {
 	/* define space for rest of page makes footer float to bottom */
-	height: 550px;
+	height: 400px;
 }	

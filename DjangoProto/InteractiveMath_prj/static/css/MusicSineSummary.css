@@ -12,3 +12,6 @@ want to start up on page load if robot test not passed yet */
 #autoDemoCtls {
 	display: none;
 }
+#MusicVideoSummaryBlock{
+	height: 480px;
+}

@@ -10,18 +10,24 @@
 	 <link href="{%static 'css/MusicSineSummary.css' %}" rel="stylesheet">
 {% endblock %}
 
+{% block artist_credit %}
+	<p> Professor bird image by A.G. (2023) </p>
+{% endblock %}
+
 {% block body_block %}
-	<h1>Sine and Cosine Make Music</h1>
-	<h2>Summary</h2>
-
-	<video height='480' width='640' controls poster="{{ cartoonIntroTrig }}">
-		<source src="{{ musicSummaryVideo }}" type="video/mp4">
-		Your browser does not support the Video tag of html5, time for a browser upgrade!		
-	</video>
+	<div id="MusicVideoSummaryBlock">
+		<h1>Sine and Cosine Make Music</h1>
+		<h2>Summary</h2>
 	
-
-	<br>
-	<br>	
+		<video height='480' width='640' controls poster="{{ cartoonIntroTrig }}">
+			<source src="{{ musicSummaryVideo }}" type="video/mp4">
+			Your browser does not support the Video tag of html5, time for a browser upgrade!		
+		</video>
+		
+	
+		<br>
+		<br>	
+	</div>
 
 	<!--  have to put another jquery library ref here, not sure why, its in the base, this must come before the jquery ui -->	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

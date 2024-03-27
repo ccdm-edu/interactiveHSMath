@@ -106,5 +106,5 @@ h1 {
 /* set the bottom of the page for bottom notices */
 #TrigMusicVideoIntro {
 	/* define space for rest of page makes footer float to bottom */
-	height: 750px;
+	height: 500px; /* will change to larger value when we swap in the intro movies, via js */
 }

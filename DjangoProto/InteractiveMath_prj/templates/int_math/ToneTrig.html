@@ -11,98 +11,98 @@
    
 {% block body_block %}
 
-<!-- SineCosID is a placemarker for begin of link to go to sine cosine tones and musical notes -->
-<div id="SineCosID">
+	<div id="ToneTrigBlock">
 	
-    <h1 id = "musicalActivity">Synthesized Tone</h1>
-    
-    <!-- default startup, will change as user loads musician notes-->
-    <p class="AdvTopic_ToDo"> TRY THIS:  Turn on your speaker.  Hit Start Tone and adjust Frequency and notice the pitch goes up and down.  
-    Adjust Amplitude and notice only the volume changes.  Adjust Phase slowly and note there is no perceived change but if you change it quickly, you get a popping sound.  
-	</p>
-    <p class="AdvTopic_Expln"> EXPLANATION:  Synthesized Tone.  Sine and Cosine functions, when translated to voltage and sent to a speaker are just tones. Pure tones are of one frequency only. 
-    As the amplitude changes it gets louder/softer.  You can't hear slow phase changes. If you change phase very fast, it sounds like pops in the speaker because you are comparing current phase with an older version which is way off, 
-    produces a discontinuity in the waveform and this sounds like a pop.  As you change frequency, you can move from low bass up to the midrange of human hearing at 10,000 Hz.  
-    Musical notes are made up of a pitch frequency, which is one of the tones you create here plus some harmonics and overtones that give the instrument its richness.  
-    The harmonics and overtones are multiples of the pitch frequency which is why the musical instrument playing a note repeats at the rate of the pitch frequency.  
-    In fact, we could start with a sine and cosine of the pitch frequency and a calculated amplitude for each.  Then we add another sine and cosine at 2 times the pitch frequency with newly calculated amplitudes.  
-    We continue and add another sine and cosine of 3x the pitch frequency with calculated amplitudes and so on up to a very high multiple of the pitch frequency.  This is how you can mathematically represent ANY of these
-    musical instruments playing a note.  The amplitudes calculated would be different for a trumpet versus a flute versus the human voice but you could create any of these
-    waveforms of an instrument playing a note.  This is the basis for Fourier Series, a college concept for mathematically representing ANY periodic waveform.
-    </p>
-    
-    <div id="menuExplnTones">
+	    <h1 id = "musicalActivity">Synthesized Tone</h1>
 	    
-		<!--  dont put tables inside a div, they stop "working", elements aren't functional anymore -->
-	    <table>
-			<tbody>
-				<tr>
-					<td align="center">
-						<div id="toneChanges">
-							<table border="0">
-								<tbody>
-									<tr>
-										<th colspan='2'>Sine Wave (tone) Parameters</th>
-	    								<!--  this button plays the tone and is visible all the time -->
-										<input type="button" id="toneStartButton" value="Play Sine Tone" data-toggle="tooltip" data-placement="top" title="turn on speaker to hear sine wave you created">
-									</tr>	
-									<tr>		
-										<td align="left">
-											Frequency: <span id="currFreqLabel">000</span> Hz
-										</td>
-										<td align="left">
-											Amplitude: <span id="currAmpLabel">000</span>
-										</td>
-										<td align="left">
-											Phase: <span id="currPhaseLabel">000</span> degrees
-										</td>						
-									</tr>
-									<tr>
-										<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz, use bootstrap for tooltips  -->
-										<td>
-											<input id="in-range-freq" type="range" step="1" value="2000" min="100" max="10000" data-placement="left" data-toggle="tooltip" title="click on slider and use arrows for greater precision">
-										</td>
-										<td>
-											<input id="in-range-amp" type="range" step="1" value="10" min="1" max="100" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
-										</td>
-										<td>
-											<input id="in-range-phase" type="range" step="1" value="0" min="0" max="360" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-
-	 	<!-- The plots and explanation lines inbetween the plots, the div is a way to set height and width of canvases,  -->
-		<!-- See URL for explanation of how to handle chart.js in a canvas sizing:  https://www.chartjs.org/docs/latest/configuration/responsive.html#important-note -->
- 		<!--  canvas used for chart js need the size defined one level up at div -->
- 		<div id="wrap_sin_plotsLong" style="position: relative; height:250px; width:800px; top:100px">
-		 	<canvas id="sine_plotsLong" >
-		 		Your Browser does not support canvas tag, you are missing graph capability
-		 	</canvas>
-	 	</div>
-	 	<!-- this is not chart.js canvas, treat normally for sizing -->
- 		<canvas id="timeExpand" >
- 		Your Browser does not support canvas tag, you are missing graph capability
- 		</canvas>
- 		<div id="wrap_sin_plotsShort"style="position: relative; height:200px; width:800px; top:30px">
-	 		<canvas id="sine_plotsShort">
+	    <!-- default startup, will change as user loads musician notes-->
+	    <p class="AdvTopic_ToDo"> TRY THIS:  Turn on your speaker.  Hit Start Tone and adjust Frequency and notice the pitch goes up and down.  
+	    Adjust Amplitude and notice only the volume changes.  Adjust Phase slowly and note there is no perceived change but if you change it quickly, you get a popping sound.  
+		</p>
+	    <p class="AdvTopic_Expln"> EXPLANATION:  Synthesized Tone.  Sine and Cosine functions, when translated to voltage and sent to a speaker are just tones. Pure tones are of one frequency only. 
+	    As the amplitude changes it gets louder/softer.  You can't hear slow phase changes. If you change phase very fast, it sounds like pops in the speaker because you are comparing current phase with an older version which is way off, 
+	    produces a discontinuity in the waveform and this sounds like a pop.  As you change frequency, you can move from low bass up to the midrange of human hearing at 10,000 Hz.  
+	    Musical notes are made up of a pitch frequency, which is one of the tones you create here plus some harmonics and overtones that give the instrument its richness.  
+	    The harmonics and overtones are multiples of the pitch frequency which is why the musical instrument playing a note repeats at the rate of the pitch frequency.  
+	    In fact, we could start with a sine and cosine of the pitch frequency and a calculated amplitude for each.  Then we add another sine and cosine at 2 times the pitch frequency with newly calculated amplitudes.  
+	    We continue and add another sine and cosine of 3x the pitch frequency with calculated amplitudes and so on up to a very high multiple of the pitch frequency.  This is how you can mathematically represent ANY of these
+	    musical instruments playing a note.  The amplitudes calculated would be different for a trumpet versus a flute versus the human voice but you could create any of these
+	    waveforms of an instrument playing a note.  This is the basis for Fourier Series, a college concept for mathematically representing ANY periodic waveform.
+	    </p>
+    
+	    <div id="menuExplnTones">
+		    
+			<!--  dont put tables inside a div, they stop "working", elements aren't functional anymore -->
+		    <table>
+				<tbody>
+					<tr>
+						<td align="center">
+							<div id="toneChanges">
+								<table border="0">
+									<tbody>
+										<tr>
+											<th colspan='2'>Sine Wave (tone) Parameters</th>
+		    								<!--  this button plays the tone and is visible all the time -->
+											<input type="button" id="toneStartButton" value="Play Sine Tone" data-toggle="tooltip" data-placement="top" title="turn on speaker to hear sine wave you created">
+										</tr>	
+										<tr>		
+											<td align="left">
+												Frequency: <span id="currFreqLabel">000</span> Hz
+											</td>
+											<td align="left">
+												Amplitude: <span id="currAmpLabel">000</span>
+											</td>
+											<td align="left">
+												Phase: <span id="currPhaseLabel">000</span> degrees
+											</td>						
+										</tr>
+										<tr>
+											<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz, use bootstrap for tooltips  -->
+											<td>
+												<input id="in-range-freq" type="range" step="1" value="2000" min="100" max="10000" data-placement="left" data-toggle="tooltip" title="click on slider and use arrows for greater precision">
+											</td>
+											<td>
+												<input id="in-range-amp" type="range" step="1" value="10" min="1" max="100" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
+											</td>
+											<td>
+												<input id="in-range-phase" type="range" step="1" value="0" min="0" max="360" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+	
+		 	<!-- The plots and explanation lines inbetween the plots, the div is a way to set height and width of canvases,  -->
+			<!-- See URL for explanation of how to handle chart.js in a canvas sizing:  https://www.chartjs.org/docs/latest/configuration/responsive.html#important-note -->
+	 		<!--  canvas used for chart js need the size defined one level up at div -->
+	 		<div id="wrap_sin_plotsLong" style="position: relative; height:250px; width:800px; top:100px">
+			 	<canvas id="sine_plotsLong" >
+			 		Your Browser does not support canvas tag, you are missing graph capability
+			 	</canvas>
+		 	</div>
+		 	<!-- this is not chart.js canvas, treat normally for sizing -->
+	 		<canvas id="timeExpand" >
 	 		Your Browser does not support canvas tag, you are missing graph capability
 	 		</canvas>
- 		</div>
-		
-	<br>
-	<br>
+	 		<div id="wrap_sin_plotsShort"style="position: relative; height:200px; width:800px; top:30px">
+		 		<canvas id="sine_plotsShort">
+		 		Your Browser does not support canvas tag, you are missing graph capability
+		 		</canvas>
+	 		</div>
+			
+			<br>
+			<br>
+		</div>
+	</div>
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.73/Tone.js"></script>
     <!-- Get the correct cdn chart.js from https://cdnjs.com/libraries/Chart.js (see stackoverflow, use umd version)-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.umd.js" integrity="sha512-CMF3tQtjOoOJoOKlsS7/2loJlkyctwzSoDK/S40iAB+MqWSaf50uObGQSk5Ny/gfRhRCjNLvoxuCvdnERU4WGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    
-        
+           
 	<!--  this must come before the jquery ui and bootstrap-->	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
@@ -125,8 +125,5 @@
 	<script src="{% static 'js/autoDemo.js' %}" crossorigin="anonymous"></script>	    
     <script src="{% static 'js/ToneTrig.js' %}" crossorigin="anonymous"></script>	
 
-    
-
-</div>
 {% endblock %}
 

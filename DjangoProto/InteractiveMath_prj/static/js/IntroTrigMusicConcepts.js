@@ -27,6 +27,8 @@ $(function() {
 	const ACTIVE_TOPIC = "     <-- Current Topic";
 	function makeVideoActive(currVideoIndex){
 		activeVideoIndex = currVideoIndex;
+		// need to make size of page bigger so buttons/footers float to correct place at bottom
+		$("#TrigMusicVideoIntro").css('height', '650px');
 		// let user know which video is active
 		$('#VideoList > li').each(function(index) {
   			if ($(this).hasClass('active')) {
