@@ -26,7 +26,7 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	top: 50px;
 	font-size: 20px;
 }
-#TrumpetMusicalScale{
+#CMajorScale{
 	position: relative;
 	top: calc(var(--HEADER_LOC) + 20px);
 	width: auto;
@@ -68,9 +68,9 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 
 #colorfulClef{
 	position: absolute;
-	top: -25px;
+	top: -48px;
 	left: 0px;
-	height: 270px;
+	height: 300px;
 	width: 200px;
 	z-index: 20;  /*want this in front*/
 }
