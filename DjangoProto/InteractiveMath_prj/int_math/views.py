@@ -6,16 +6,19 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.html import escape
 from user_agents import parse
+from datetime import date, datetime
 import urllib.request
 import json, os
+from pytz import timezone
 # homegrown stuff
 from int_math.forms import contactForm
+from pickle import TRUE
 
 #**********************************************************
 # These are actions that will require significant server time in recaptcha and smtp calls
 #**********************************************************     
 class ProcessContactPage(View):
-    print(f"Processing contact page inputs...")
+    #print(f"Processing contact page inputs...")
     template_name = 'int_math/Contact_me.html'
     form_class = contactForm
         
@@ -72,7 +75,7 @@ class ProcessContactPage(View):
                 #trust this user for the duration of session, no need to retest them as long as client has this cookie
                 request.session['notABot'] = True
                 testHasPassed = True
-                print('Bot test PASSED')
+                #print('Bot test PASSED')
                 #get the email, name and message and ensure no html injection
                 nameOfContact = escape(self.request.POST.get('name'))
                 if nameOfContact == "":
@@ -84,8 +87,8 @@ class ProcessContactPage(View):
                 messageEscaped = escape(self.request.POST.get('message')) 
                 messageEscaped += " --From website user: " + nameOfContact + ".  At email addr: " + returnAddrEscaped
                 sendToEmailAddr = settings.EMAIL_HOST_USER
-                print(f'Subject: {subjectOfContact}')
-                print(f'Message: {messageEscaped}')
+                #print(f'Subject: {subjectOfContact}')
+                #print(f'Message: {messageEscaped}')
                 num_email_sent = 0
 
                 try:
@@ -153,7 +156,7 @@ class FileMapper:
         actualFile = "none"
         if len(self.filenameMap) > 0:
             actualFile = self.filenameMap.get(genericFileName)
-            print(f' we just mapped {genericFileName} to {actualFile}')
+            #print(f' we just mapped {genericFileName} to {actualFile}')
         else:
             print(f'Software error, file mapper not found or error opening')
         return actualFile
@@ -163,7 +166,7 @@ class FileMapper:
 #**********************************************************
 class IndexView(View):
     def get(self, request):
-        # add "help" for user to know that this site isn't tested on certain browsers or platforms
+        # add help to user based on device/browser
         ua_string = request.META['HTTP_USER_AGENT'];
         user_agent = parse(ua_string)
         usingSafari = False;
@@ -172,12 +175,35 @@ class IndexView(View):
         isMobile = user_agent.is_mobile;
         fileMap = FileMapper()
         realFileLandLogo = fileMap.readFileMapper("LandingPageLogo")
+        #check if there is an upcoming upgrade planned to site and notify users
+        upgrdSchedFile = os.path.join(os.path.dirname(__file__), '..', 'InteractiveMath_prj', 'UpgradeSchedule.txt')
+        upgradeNoticePresent = False
+        upgradeDate = ""
+        if os.path.isfile(upgrdSchedFile):
+            upgd = open(upgrdSchedFile, 'r')
+            #ignore first line of file, its comment to user
+            comment = upgd.readline()  
+            dateUpgdStr = upgd.readline()
+            date_format = '%Y-%m-%d %z'
+            dateUpgd = datetime.strptime(dateUpgdStr, date_format)
+            # get time right now and convert to EST (from UTC).  My testing shows this does NOT handle daylight savings time well
+            # but that really isn't important for this application
+            tz = timezone('EST')
+            rightNow = datetime.now(tz)
+            if (dateUpgd > rightNow):  #else, its an old notice, ignore it
+                upgradeNoticePresent = True
+                upgradeDate = dateUpgd.date
+            print(f"Reading upgd schedule, date is {dateUpgd} and right now is {rightNow}")
+            upgd.close()
+        #send all this off to requesting user
         context_dict = {'page_tab_header': 'Home',
                         'topic': None,
                         'using_safari': usingSafari,
                         'is_mobile': isMobile,
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         'landingPageLogo': static(realFileLandLogo),
+                        'upgradeNoticePresent': upgradeNoticePresent,
+                        'upgradeDate': upgradeDate
                         }        
         response = render(request, 'int_math/index.html', context=context_dict)
         return response

@@ -29,7 +29,13 @@
 		  	</fieldset>
 		</form>
 		</div>
-		
+		<div id="upgradeSchedule">
+			{%if upgradeNoticePresent %}
+				<p>This site is scheduled to be upgraded at 7-8 pm EST on {{ upgradeDate }}. 
+				If you have any questions or comments, please use the contact page to let me know.
+				</p>
+			{% endif %}
+		</div>
 	  	<img id="logo-home-page" src="{{ landingPageLogo }}" alt = "Landing Page Logo">
 		<div class="home_expln">
 			{% if is_mobile %}
