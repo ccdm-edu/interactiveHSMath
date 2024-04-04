@@ -28,7 +28,7 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 }
 #CMajorScale{
 	position: relative;
-	top: calc(var(--HEADER_LOC) - 20px);  
+	top: calc(var(--HEADER_LOC) + 30px);  
 	left: -40px;
 	width: auto;
 }
@@ -175,13 +175,13 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 ************************************************************/
 #SinusoidGraph{
 	position: relative;
-	top:  calc(140px + var(--HEADER_LOC)); 
+	top:  calc(200px + var(--HEADER_LOC)); 
 	width: 650px;
 }
 #PitchGraph{
 	position: absolute;
 	left: 0px;
-	top: 50px; 
+	top: 70px; 
 }
 #noteSelect{
 	position: absolute;
@@ -271,6 +271,7 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	font-weight: bold;
 	color: black;
 	background-color: gold;
+	z-index: 10;
 }
 /* if expert, draw attention to songs to play */
 #dropdownMenuSong.expertMode{
@@ -285,6 +286,7 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	animation-duration: 4s;
 	animation-delay: 8s;  /* delay till after the initial instructions have move off page*/
 	animation-iteration-count: infinite;
+	z-index: 10;
 }
 @keyframes tuneButtonLive {
 	0%		{background-color: red;}
