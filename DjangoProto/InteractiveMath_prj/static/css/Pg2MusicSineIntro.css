@@ -3,9 +3,9 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 *********************************/
 /* create global var for this css which will be pulled in by associated js */
 :root{
-	--HIGHEST_Y: 206px;
+	--HIGHEST_Y: 105px;
 	--LOWEST_X: 200px;
-	--DELTA_Y: 20px;  /* half a note */
+	--DELTA_Y: 10px;  /* half a note */
 	--DELTA_X: 80px;
 	--OFF_TO_SIDE_X: 40px;
 	--OFF_TO_SIDE_Y: 10px;
@@ -28,7 +28,8 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 }
 #CMajorScale{
 	position: relative;
-	top: calc(var(--HEADER_LOC) + 20px);
+	top: calc(var(--HEADER_LOC) - 20px);  
+	left: -40px;
 	width: auto;
 }
 /* Initial instructions for user with animation */
@@ -68,16 +69,16 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 
 #colorfulClef{
 	position: absolute;
-	top: -48px;
+	top: -15px; 
 	left: 0px;
-	height: 300px;
+	height: 155px;  
 	width: 200px;
 	z-index: 20;  /*want this in front*/
 }
 /* z index set so user clicking on whole notes sees the ClefWithNotes canvas xy axis of location */
 #ClefWithNotes{
 	position: absolute;
-	top: 0 px;
+	top: 0 px;  
 	left: 10px;
 	z-index: 10;
 }
@@ -135,6 +136,12 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	top:  calc(var(--HIGHEST_Y) + var(--OFF_TO_SIDE_Y));
 	left: calc( var(--LOWEST_X) + var(--OFF_TO_SIDE_X));
 }
+#LowCNotation{
+	position: absolute;
+	font-size: 15px;
+	top:  calc(var(--HIGHEST_Y) + var(--OFF_TO_SIDE_Y) + 20px);  /* off to side and a little below*/ 
+	left: calc( var(--LOWEST_X) + var(--OFF_TO_SIDE_X));	
+}
 #DNote{
 	top:  calc(var(--HIGHEST_Y) - var(--DELTA_Y) + var(--OFF_TO_SIDE_Y));
 	left: calc( var(--LOWEST_X) + var(--DELTA_X) + var(--OFF_TO_SIDE_X));
@@ -168,13 +175,13 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 ************************************************************/
 #SinusoidGraph{
 	position: relative;
-	top: calc(290px + var(--HEADER_LOC));
+	top:  calc(140px + var(--HEADER_LOC)); 
 	width: 650px;
 }
 #PitchGraph{
 	position: absolute;
 	left: 0px;
-	top: 100px;
+	top: 50px; 
 }
 #noteSelect{
 	position: absolute;

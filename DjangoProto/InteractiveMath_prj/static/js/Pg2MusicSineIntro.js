@@ -48,7 +48,7 @@ $(function() {
 	const LEFT_X = 20;
 	const RIGHT_X = 1000; 
 	const START_Y = 20;
-	const DELTA_Y = 40; 
+	const DELTA_Y = 20; 
 	for (let ind = 0; ind<5; ind++) {
 		ctxMusicCanvas.beginPath();
 		ctxMusicCanvas.moveTo(LEFT_X, START_Y + ind*DELTA_Y);
@@ -56,7 +56,7 @@ $(function() {
 		ctxMusicCanvas.stroke();
 		ctxMusicCanvas.closePath();
 	}
-	//Add small line at bottom of low C
+	//Add small line at bottom--actually called middle C in music world
 	ctxMusicCanvas.beginPath();
 	ctxMusicCanvas.moveTo(LEFT_X + 150, START_Y + 5 * DELTA_Y);
 	ctxMusicCanvas.lineTo(LEFT_X + 220, START_Y + 5 * DELTA_Y);
@@ -78,7 +78,7 @@ $(function() {
 	// bflat instrument (trumpet)
 	const CmajorNotes = [
 		{
-			// lowest C
+			// called "middle C"
 			notePlayed: "C4",
 			freqHz: 261.63, //233.08,
 			// position of center
@@ -152,7 +152,7 @@ $(function() {
 		
 	];
 	// Add text on the staff for the proper note		
-	$('#LowCNote').text(CmajorNotes[0].notePlayed + " - middle C");
+	$('#LowCNote').text(CmajorNotes[0].notePlayed);
 	$('#DNote').text(CmajorNotes[1].notePlayed);
 	$('#ENote').text(CmajorNotes[2].notePlayed);
 	$('#FNote').text(CmajorNotes[3].notePlayed);
