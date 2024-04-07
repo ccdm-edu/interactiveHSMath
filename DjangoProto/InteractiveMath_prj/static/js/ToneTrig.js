@@ -494,6 +494,13 @@ $(function() {
 			 	  offset: {x: 23, y: 10},  // in the 1000Hz location
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			 },	
+			 // remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'in-range-freq',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 1000} 
+			},	
 			//*****************************
 			// click on amplitude slider to 5,  offset is approx guess, user can change
 			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
@@ -503,13 +510,13 @@ $(function() {
 			 	 value: "5",
 			 	  offset: {x: 45, y: 10},  // in the 5 location
 			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
-			 },		
-			// remove cursor on freq slider 
+			 },	
+			// remove cursor on amp slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'in-range-freq',
+			 	{element:'in-range-amp',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 2000} 
+			 	waitTimeMillisec: 1000} 
 			},
 			//*****************************
 			// click on start tone  button to play default tone

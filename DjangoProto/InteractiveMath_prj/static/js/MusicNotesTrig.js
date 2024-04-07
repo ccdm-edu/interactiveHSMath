@@ -1104,8 +1104,8 @@ $(function() {
 	// User has selected play
     $('#playSegment').on('click', function(){	
     	// in case plots have other stuff on them from other activities, clean it up
-		
-		// get rid of any musical note legends
+		// get rid of any musical note legends and make the title "generic"
+		$("#musicalActivity").html(DEFAULT_TITLE);  //load up default
 		sine_plot_100_1k.data.datasets[1].label = "";
 		sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,255,255)'; // white for legend (invisible)
 		
