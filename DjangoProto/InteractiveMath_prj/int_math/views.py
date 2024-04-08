@@ -183,17 +183,22 @@ class IndexView(View):
             upgd = open(upgrdSchedFile, 'r')
             #ignore first line of file, its comment to user
             comment = upgd.readline()  
-            dateUpgdStr = upgd.readline()
+            dateUpgdStr = upgd.readline().rstrip('\n')
             date_format = '%Y-%m-%d %z'
-            dateUpgd = datetime.strptime(dateUpgdStr, date_format)
-            # get time right now and convert to EST (from UTC).  My testing shows this does NOT handle daylight savings time well
-            # but that really isn't important for this application
-            tz = timezone('EST')
-            rightNow = datetime.now(tz)
-            if (dateUpgd > rightNow):  #else, its an old notice, ignore it
-                upgradeNoticePresent = True
-                upgradeDate = dateUpgd.date
-            print(f"Reading upgd schedule, date is {dateUpgd} and right now is {rightNow}")
+            dateUpgd = None
+            try:
+                dateUpgd = datetime.strptime(dateUpgdStr, date_format)
+            except:
+                print(f'Failure on parsing time in UpgradeSchedule.txt, cannot parse {repr(dateUpgdStr)}')
+            if (dateUpgd is not None):
+                # get time right now and convert to EST (from UTC).  My testing shows this does NOT handle daylight savings time well
+                # but that really isn't important for this application
+                tz = timezone('EST')
+                rightNow = datetime.now(tz)
+                if (dateUpgd > rightNow):  #else, its an old notice, ignore it
+                    upgradeNoticePresent = True
+                    upgradeDate = dateUpgd.date
+                print(f"Reading upgd schedule, date is {dateUpgd} and right now is {rightNow}")
             upgd.close()
         #send all this off to requesting user
         context_dict = {'page_tab_header': 'Home',
