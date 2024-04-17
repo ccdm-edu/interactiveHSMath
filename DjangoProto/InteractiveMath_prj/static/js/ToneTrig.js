@@ -179,12 +179,16 @@ $(function() {
 					phase: $currPhase.val(),
 					type:"sine"});
 			osc.toDestination().start();	
-			$("#toneStartButton").prop("value", "Stop Sine Tone");
+			$("#toneStartButton").attr("src", '../../static/images/volume.svg');
+			$("#toneStartButton").attr("alt", 'Volume is currently on');
+			$("#toneStartButton").attr("data-original-title", 'click to turn off your sine wave');
 			$('#toneStartButton').css('background-color', STOP_COLOR);
 			ToneIsOnNow = true;
 		} else {
 			osc.toDestination().stop();
-			$("#toneStartButton").prop("value", "Play Sine Tone");
+			$("#toneStartButton").attr("src", '../../static/images/volume-off.svg');
+			$("#toneStartButton").attr("alt", 'Volume is currently off');
+			$("#toneStartButton").attr("data-original-title", 'turn on speaker and click to hear sine wave you created');
 			$('#toneStartButton').css('background-color', GO_COLOR);
 			ToneIsOnNow = false;
 		}

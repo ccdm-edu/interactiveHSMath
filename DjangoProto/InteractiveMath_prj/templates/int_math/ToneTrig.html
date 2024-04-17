@@ -8,6 +8,11 @@
 {%block head_block %}
     <link href="{%static 'css/ToneTrig.css' %}" rel="stylesheet">
 {% endblock %}
+{% block artist_credit %}
+	<a href="https://iconscout.com/icons/volume" class="text-underline font-size-sm" target="_blank">Volume</a> by <a href="https://iconscout.com/contributors/eva-icons" class="text-underline font-size-sm" target="_blank">Akveo</a>
+	<br>
+	<a href="https://iconscout.com/icons/volume-off" class="text-underline font-size-sm" target="_blank">Volume Off</a> by <a href="https://iconscout.com/contributors/eva-icons" class="text-underline font-size-sm">Akveo</a> on <a href="https://iconscout.com" class="text-underline font-size-sm">IconScout</a>
+{% endblock %}	
    
 {% block body_block %}
 
@@ -35,54 +40,57 @@
 	    <div id="menuExplnTones">
 		    
 			<!--  dont put tables inside a div, they stop "working", elements aren't functional anymore -->
-		    <table>
-				<tbody>
-					<tr>
-						<td align="center">
-							<div id="toneChanges">
-								<table border="0">
-									<tbody>
-										<tr>
-											<th colspan='2'>Sine Wave (tone) Parameters</th>
-		    								<!--  this button plays the tone and is visible all the time -->
-											<input type="button" id="toneStartButton" value="Play Sine Tone" data-toggle="tooltip" data-placement="top" title="turn on speaker to hear sine wave you created">
-										</tr>	
-										<tr>		
-											<td align="left">
-												Frequency: <span id="currFreqLabel">000</span> Hz
-											</td>
-											<td align="left">
-												Amplitude: <span id="currAmpLabel">000</span>
-											</td>
-											<td align="left">
-												Phase: <span id="currPhaseLabel">000</span> degrees
-											</td>						
-										</tr>
-										<tr>
-											<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz, use bootstrap for tooltips  -->
-											<td>
-												<input id="in-range-freq" type="range" step="1" value="2000" min="100" max="10000" data-placement="left" data-toggle="tooltip" title="click on slider and use arrows for greater precision">
-											</td>
-											<td>
-												<input id="in-range-amp" type="range" step="1" value="10" min="1" max="100" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
-											</td>
-											<td>
-												<input id="in-range-phase" type="range" step="1" value="0" min="0" max="360" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+			<div id="toneChanges">
+				<table border="0" width = "600">  
+					<tbody>
+						<tr>
+							<td colspan='4' align="center" style ="font-size:20px"><b>Sine Wave (tone) Parameters</b></td>
+						</tr>	
+						<tr>
+							<td colspan="4" align="center">
+ 	 							<!--  this button plays the tone and is visible all the time -->
+ 	 							<img id="toneStartButton" src = {% static 'images/volume-off.svg' %} alt="Volume is currently off" data-toggle="tooltip" data-placement="top" title="turn on speaker and click to hear sine wave you created"">
+							</td>
+						</tr>
+						<tr>		
+							<td align="left" style="width: 27%;">
+								<b>Max Freq on slider</b> 
+							</td>
+							<td align="left">
+								<b>Frequency:</b> <span id="currFreqLabel">2000</span> Hz 
+							</td>
+							<td align="left">
+								<b>Amplitude:</b> <span id="currAmpLabel">000</span>
+							</td>
+							<td align="left">
+								<b>Phase:</b> <span id="currPhaseLabel">000</span> degrees
+							</td>						
+						</tr>
+						<tr>
+							<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz, use bootstrap for tooltips  -->
+							<td style="width: 27%;">
+								<input id="freqMax" type = 'number' size = 3 min="1000" max="10000" value = "2000" data-placement="left" data-toggle="tooltip" title="Choose max freq for slider to the right (1000 Hz -10000 Hz)"> Hz
+							</td>
+							<td>
+								<input id="in-range-freq" type="range" step="1" value="2000" min="100" max="2000" data-placement="left" data-toggle="tooltip" title="click on slider and use arrows for greater precision, max frequency set by box to left">
+							</td>
+							<td>
+								<input id="in-range-amp" type="range" step="1" value="10" min="1" max="100" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
+							</td>
+							<td>
+								<input id="in-range-phase" type="range" step="1" value="0" min="0" max="360" data-toggle="tooltip" data-placement="left" title="click on slider and use arrows for greater precision">
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
 	
 		 	<!-- The plots and explanation lines inbetween the plots, the div is a way to set height and width of canvases,  -->
 			<!-- See URL for explanation of how to handle chart.js in a canvas sizing:  https://www.chartjs.org/docs/latest/configuration/responsive.html#important-note -->
 	 		<!--  canvas used for chart js need the size defined one level up at div -->
-	 		<div id="wrap_sin_plotsLong" style="position: relative; height:250px; width:800px; top:100px">
-			 	<canvas id="sine_plotsLong" >
+	 		<div id="wrap_sin_plotsLong">
+			 	<canvas id="sine_plotsLong">
 			 		Your Browser does not support canvas tag, you are missing graph capability
 			 	</canvas>
 		 	</div>
@@ -90,7 +98,7 @@
 	 		<canvas id="timeExpand" >
 	 		Your Browser does not support canvas tag, you are missing graph capability
 	 		</canvas>
-	 		<div id="wrap_sin_plotsShort"style="position: relative; height:200px; width:800px; top:30px">
+	 		<div id="wrap_sin_plotsShort">
 		 		<canvas id="sine_plotsShort">
 		 		Your Browser does not support canvas tag, you are missing graph capability
 		 		</canvas>

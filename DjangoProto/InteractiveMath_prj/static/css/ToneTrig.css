@@ -4,6 +4,7 @@ This is the style sheet for ToneTrig.html
 ************************/
 /* create global var for this html */
 :root{
+	--UPPER_HEADER_LOC: -15px;
 }
 
 /*****************************************************************/
@@ -14,6 +15,7 @@ This is the style sheet for ToneTrig.html
 	resize: none;
 	left: 170px;
 	width: 700px;
+	top: var(--UPPER_HEADER_LOC);
 	font-weight: bold;
 	font-size: 32px;
 	}
@@ -22,7 +24,7 @@ This is the style sheet for ToneTrig.html
 /* do NOT put a space between number and word "px" */
 #menuExplnTones {
 	position: relative;
-	top: 0px;
+	top: var(--UPPER_HEADER_LOC);
 	left: 0px;
 	height: 700px;
 }
@@ -33,13 +35,20 @@ This is the style sheet for ToneTrig.html
 	display: inline-block; 
 	border: 1px solid black;
 }
-/* start stop for tone */
-#start-stop-button{
-	position: relative;
-	left: 40px;
+/* turn on/off tone */
+#toneStartButton {
+	height: 30px;
+	width: 30px;
 }
 
 /*****************************************************************/
+/* arrange location of upper plot */
+#wrap_sin_plotsLong {
+	position: relative; 
+	height:250px; 
+	width:800px; 
+	top:120px;
+}
 /* arrange the expansion lines between the two graphs for max understandability */
 /* See https://www.chartjs.org/docs/latest/configuration/responsive.html#important-note for */
 /* how to do sizing on canvases that contain chart.js,  timeExpand does not have chart.js */
@@ -47,7 +56,15 @@ This is the style sheet for ToneTrig.html
 	 position: relative; 
 	 top: 75px;
 	 height:100px; 
-	 width:800px
+	 width:800px;
+}
+/* arrange size and location of lower expanded plot */
+#wrap_sin_plotsShort{
+	position: relative; 
+	height:200px; 
+	width:800px; 
+	top:30px;
+	
 }
 
 /*****************************************************************/
