@@ -74,6 +74,7 @@ $(function() {
 	
 	function updateFreq() {
 		//min and max freq chosen depends on audio speakers used, my speakers can just barely respond at 100 Hz
+		//max freq depends on value set by user in #freqMax
 		$currFreq= $("#in-range-freq")   // get slider value
 		$("#currFreqLabel").text($currFreq.val());   // and put it on the label as string
 		if (ToneIsOnNow==true) {
@@ -138,6 +139,13 @@ $(function() {
 	//***********************************
 	//  User instigated callback events
 	//***********************************
+	// When user changes max freq allowed, update all
+	$('#freqMax').on('change', function(){
+		let $maxFreq = $("#freqMax");
+		let $maxFreqForSlider = ($maxFreq.val());
+		$("#in-range-freq").attr("max", $maxFreqForSlider);
+	});
+	
 	// Change label on freq slider and adjust the tone as appropriate
 	$('#in-range-freq').on('change', function(){
 		updateFreq();
@@ -145,7 +153,7 @@ $(function() {
 	
 	// Change label on amplitude slider and adjust the tone as appropriate
 	$('#in-range-amp').on('change', function(){
-		$currAmp = $("#in-range-amp")
+		$currAmp = $("#in-range-amp");
 		$("#currAmpLabel").text($currAmp.val());
 		if (ToneIsOnNow==true) {
 			let tonejs_dB = -40 + 20.0 * Math.log10($currAmp.val());
@@ -197,14 +205,7 @@ $(function() {
 	//whenever any of the tone params change, redraw both graphs and update
 	$("#toneChanges").on('change',drawTone);
 	
-	// update advanced topics modal tab text
-	let todo_tab_element = "#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab011 > p";
-	let expln_tab_element = "#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab021 > p";
-	
 	function doToneOnly() {
-				
-		// clean up any Periodicity arrows/text if left over from musical notes and redraw expansion lines
-//		ctxExpandTime.putImageData(backgroundPlot, 0, 0);
 
 		// on power up, draw the expansion lines between graphs
 		DrawExpansionLinesBtwnGraphs();
@@ -312,13 +313,6 @@ $(function() {
     	console.error('Cannot obtain timeExpand context');
 	};	
 	
-	// keep a snapshot of two plots before the expansion lines inbetween show up
-	// When we move to musical instruments, the 1ms plot on bottom is irrelevant but want the space used
-	// to indicate "1ms expansion" to show periodicity
-//    let backgroundPlot; 
-//    let expandTimeCanvas = $("#timeExpand").get(0);
-//	backgroundPlot = ctxExpandTime.getImageData(0, 0, expandTimeCanvas.width, expandTimeCanvas.height);
-	
 	// on power up, draw the expansion lines between graphs
 	DrawExpansionLinesBtwnGraphs();
 	
@@ -351,32 +345,32 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 value: "100",
-			 	  offset: {x: 45, y: 10},  // in the 100Hz location
-			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			 	 offset: {x: 45, y: 10},  // in the 100Hz location
+			 	 waitTimeMillisec: 3000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 1000} 
+			 	 waitTimeMillisec: 1000} 
 			},
 			//*****************************
-			// click on start tone  button to play default tone
+			// click on start tone  button to play tone
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
-			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			 	 offset: {x: 45, y: 20},
+			 	 waitTimeMillisec: 3000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'toneStartButton',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 3000} 
+			 	 waitTimeMillisec: 3000} 
 			},
 			//*****************************
 			// increase the volume
@@ -384,15 +378,15 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 value: "80",
-			 	  offset: {x: -40, y: 10},  // turn volume up high
-			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
+			 	 offset: {x: -40, y: 10},  // turn volume up high
+			 	 waitTimeMillisec: 5000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 10000} 
+			 	 waitTimeMillisec: 10000} 
 			},
 			//*****************************
 			// turn down volume
@@ -400,15 +394,15 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 value: "5",
-			 	  offset: {x: 35, y: 10},  // turn volume way down
-			 	waitTimeMillisec: 2000}  // this is wait before you go on to next item
+			 	 offset: {x: 35, y: 10},  // turn volume way down
+			 	 waitTimeMillisec: 2000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 6000} 
+			 	 waitTimeMillisec: 6000} 
 			},			
 			//*****************************
 			// click on freq slider to change freq to 233 hz,  offset is approx guess, user can change
@@ -417,15 +411,15 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 value: "233",
-			 	  offset: {x: 38, y: 10},  // in the 233Hz location
-			 	waitTimeMillisec: 10000}  // this is wait before you go on to next item
+			 	 offset: {x: 38, y: 10},  // in the 233Hz location
+			 	 waitTimeMillisec: 10000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 10000} 
+			 	 waitTimeMillisec: 10000} 
 			},		
 			//*****************************
 			// click on freq slider to change freq to 2 khz,  offset is approx guess, user can change
@@ -434,32 +428,46 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 value: "2000",
-			 	  offset: {x: 18, y: 10},  // in the 2kHz location
-			 	waitTimeMillisec: 23000}  // this is wait before you go on to next item
+			 	 offset: {x: -60, y: 10},  // in the 2kHz location, max position
+			 	 waitTimeMillisec: 23000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 23000} 
+			 	 waitTimeMillisec: 23000} 
 			},		
 			//*****************************
 			// click on freq slider to change freq to 8 khz,  offset is approx guess, user can change
 			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
 			{segmentActivity: "CHANGE_ELEMENT_VALUE",
 			 segmentParams:
+			 	{element:'freqMax',
+			 	 value: "10000",
+			 	 offset: {x: 10, y: 10},
+			 	 waitTimeMillisec: 2000}  // this is wait before you go on to next item
+			 },		
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'freqMax',
+			 	 action: "nothing",
+			 	 waitTimeMillisec: 1000} 
+			},		
+			// now change freq slider	
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 value: "8000",
-			 	  offset: {x: -35, y: 10},  // in the 2kHz location
-			 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
+			 	 offset: {x: -35, y: 10},  // in the 8kHz location
+			 	 waitTimeMillisec: 7000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 3000} 
+			 	 waitTimeMillisec: 3000} 
 			},		
 			//*****************************
 			// click on start tone  button to stop tones
@@ -468,16 +476,45 @@ $(function() {
 			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
-			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			 	 offset: {x: 45, y: 20},
+			 	 waitTimeMillisec: 3000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'toneStartButton',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 3000} 
-			},		
+			   	 waitTimeMillisec: 19000} 
+			},	
+			//*************************************** */	
+			// go back to default values since high freq annoying
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'freqMax',
+			 	 value: "2000",
+			 	 offset: {x: 10, y: 10},
+			 	 waitTimeMillisec: 2000}  // this is wait before you go on to next item
+			 },	
+			 {segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'freqMax',
+			 	 action: "nothing",
+			 	 waitTimeMillisec: 1000} 
+			},
+			 {segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'in-range-freq',
+			 	 value: "2000",
+			 	 offset: {x: -60, y: 10},  // in the 2kHz location, max position
+			 	 waitTimeMillisec: 2000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'in-range-freq',
+			 	 action: "nothing",
+			 	 waitTimeMillisec: 2000} 
+			},	
 
 	  ]
 	},
@@ -529,7 +566,7 @@ $(function() {
 			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
+			 	 offset: {x: 45, y: 20},
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
@@ -611,7 +648,7 @@ $(function() {
 			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
+			 	 offset: {x: 45, y: 20},
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
@@ -620,7 +657,8 @@ $(function() {
 			 	{element:'toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 3000} 
-			},		
+			},	
+				
 
 	  ]
 	}
