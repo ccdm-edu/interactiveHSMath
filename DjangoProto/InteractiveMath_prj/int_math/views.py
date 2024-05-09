@@ -179,6 +179,7 @@ class IndexView(View):
         upgrdSchedFile = os.path.join(os.path.dirname(__file__), '..', 'InteractiveMath_prj', 'UpgradeSchedule.txt')
         upgradeNoticePresent = False
         upgradeDate = ""
+        upgradeDay = ""
         if os.path.isfile(upgrdSchedFile):
             upgd = open(upgrdSchedFile, 'r')
             #ignore first line of file, its comment to user
@@ -195,10 +196,14 @@ class IndexView(View):
                 # but that really isn't important for this application
                 tz = timezone('EST')
                 rightNow = datetime.now(tz)
+                daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                dayUpgdNum = dateUpgd.weekday()
+                dayUpgd = daysOfWeek[dayUpgdNum]
                 if (dateUpgd > rightNow):  #else, its an old notice, ignore it
                     upgradeNoticePresent = True
                     upgradeDate = dateUpgd.date
-                print(f"Reading upgd schedule, date is {dateUpgd} and right now is {rightNow}")
+                    upgradeDay = dayUpgd
+                print(f"Reading upgd schedule, date is {dateUpgd} , day is {dayUpgd} and right now is {rightNow}")
             upgd.close()
         #send all this off to requesting user
         context_dict = {'page_tab_header': 'Home',
@@ -208,6 +213,7 @@ class IndexView(View):
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         'landingPageLogo': static(realFileLandLogo),
                         'upgradeNoticePresent': upgradeNoticePresent,
+                        'upgradeDay': upgradeDay,
                         'upgradeDate': upgradeDate
                         }        
         response = render(request, 'int_math/index.html', context=context_dict)

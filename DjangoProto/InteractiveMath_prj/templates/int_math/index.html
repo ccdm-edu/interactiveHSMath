@@ -31,8 +31,8 @@
 		</div>
 		<div id="upgradeSchedule">
 			{%if upgradeNoticePresent %}
-				<p>This site is scheduled to be upgraded at 7-8 pm EST on {{ upgradeDate }}. 
-				If you have any questions or comments, please use the contact page to let me know.
+				<p>This site is scheduled to be upgraded at 7-10 pm EST on {{ upgradeDay }}, {{ upgradeDate }}. 
+				If you have any questions, comments or bug reports, please use the contact page to let me know.
 				</p>
 			{% endif %}
 		</div>
@@ -41,7 +41,7 @@
 			{% if is_mobile %}
 				<br>
 				<b> You are using a mobile device.  This site was designed for the larger canvas of a desktop or laptop (or perhaps notebook).  
-				Eventually it may become mobile friendly but today is not that day.  Please use on a desktop/laptop with Chrome.  </b>
+				Eventually it may become mobile friendly but today is not that day.  Please use on a desktop/laptop with latest version of Chrome.  </b>
 				<br>
 			{% else %}
 				<!-- We can work with this platform -->
