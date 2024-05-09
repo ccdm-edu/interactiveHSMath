@@ -61,7 +61,6 @@ $(function() {
 	{	    
 	    // update title to match new parameters
 	    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
-//	    let currTitleText = 'Pitch tone y = ' + $currAmp.val() + ' * sin{ 2 * \u03C0 * (' + $currFreq.val() + ' * t + ' + $currPhase.val() + '/360) }';
 	    let currTitleText = 'Pitch tone y = ' + $currAmp.val() + ' ' + MULT_DOT + ' sin{ 2 ' + MULT_DOT + ' ' + PI + ' ' +  MULT_DOT +  ' (' + $currFreq.val() + ' ' + MULT_DOT + ' t + ' + $currPhase.val() + '/360) }';
 		sine_plot_100_1k.options.plugins.title.text = currTitleText;
 		// now fill the arrays and they will automatically be reread into plots
@@ -142,8 +141,17 @@ $(function() {
 	// When user changes max freq allowed, update all
 	$('#freqMax').on('change', function(){
 		let $maxFreq = $("#freqMax");
+		//clamp max/min value for user entry
+		if ($maxFreq.val() < 1000) {
+			$maxFreq.prop('value', 1000);
+		} else if ($maxFreq.val() > 10000) {
+			$maxFreq.prop('value', 10000);
+		}
 		let $maxFreqForSlider = ($maxFreq.val());
-		$("#in-range-freq").attr("max", $maxFreqForSlider);
+		let $currToneFreq = $("#in-range-freq");
+		// setting the max will cap out current freq,if it exceeds max down to new max
+		$currToneFreq.attr("max", $maxFreqForSlider);
+		updateFreq();
 	});
 	
 	// Change label on freq slider and adjust the tone as appropriate
