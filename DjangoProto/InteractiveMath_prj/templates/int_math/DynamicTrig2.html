@@ -60,29 +60,17 @@
 	</p>
 	<p class="AdvTopic_Expln">EXPLANATION: The sine wave has infinite points per period and yet its highly predictable.  Music is made up of sine waves such as these.  Audio compression such as MP3 wants to represent these signals with as few samples as possible.  Looking at the samples on the graph, you may be able to see that if you knew it was a sine wave, two samples per period would allow you to reproduce the wave exactly.  This is the Nyquist sample rate (college level signal processing) and is part of how MP3 works.  Your ear can only detect between 20 Hz and up to 20,000 Hz of sound (if you are young and lucky).  Standard MP3 samples at 44,100 Hz which is a bit above twice the max human hearing frequency. If you sample even higher and you are generally wasting memory, sample lower and you risk cutting off frequencies many people can hear.  If you stop and calculate Time/cycles, you might not exactly get the period T. This is because I only update time evey 1/2 sec, to reduce work for the browser.  If you let it run for awhile, these imprecisions will become smaller and the number should be close to T = 1/frequency" 	
 	</p>
-
-	<!-- Bootstrap core JavaScript,jquery must be before bootstrap -->	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<script>
-			<!-- in case can't get from google, load from local -->
-			var localJQ = "{% static 'js/jquery-360min.js' %}";
-			window.jQuery || document.write('<script src="${localJQ}"><\/script>')
-	</script>
-	<!--  jquery ui needed for advanced topic draggable window -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-	<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
-			
+{% endblock %}	
+	
+{% block unique_js_block %}	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
 	<!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
 	<script>feather.replace()</script>
 	
 	<!-- Custom JS for this page -->
-	<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
-	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	
 	<script src="{% static 'js/autoDemo.js' %}" crossorigin="anonymous"></script>	    
 	<script src="{% static 'js/DynamicTrig2.js' %}" crossorigin="anonymous"></script>	 
-	
+{% endblock %}	
 	<br>
 	<br>	
 
-{% endblock %}

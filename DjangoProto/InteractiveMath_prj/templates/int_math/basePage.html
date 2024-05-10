@@ -179,7 +179,26 @@
                     					
 					{% block body_block %}
                     {% endblock %}	
-                    				
+                    
+					<!-- Bootstrap core JavaScript,jquery must be before bootstrap -->	
+    				<!-- Placed at the end of the document so the pages load faster -->
+					<!--  needed to run the drop down menus in bootstrap -->
+					<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+					<script>
+							<!-- in case can't get from google, load from local -->
+							var localJQ = "{% static 'js/jquery-371min.js' %}";
+							window.jQuery || document.write('<script src="${localJQ}"><\/script>')
+					</script>
+					<!--  jquery ui needed for advanced topic draggable window -->
+					<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.3/jquery-ui.min.js"></script>
+					<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
+					<!-- custom JS for all pages of site -->
+					<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
+					<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>
+
+   					{% block unique_js_block %}
+                    {% endblock %}
+                                     				
                     <!-- FOOTER -->
                     <div id="Site-footer">
                     	<button type="button" class="btn btn-info" id="GoToNextPage">Next ></button>

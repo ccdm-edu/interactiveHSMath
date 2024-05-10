@@ -121,26 +121,16 @@
 	
 	</p>
 
-	
-	<!-- Bootstrap core JavaScript,jquery must be before bootstrap -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<script>
-			<!-- in case can't get from google, load from local -->
-			var localJQ = "{% static 'js/jquery-360min.js' %}";
-			window.jQuery || document.write('<script src="${localJQ}"><\/script>')
-	</script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-	<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
-			
+{% endblock %}	
+
+{% block unique_js_block %}
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
 	<!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
 	<script>feather.replace()</script>
 	
 	<!-- Custom JS for this page -->
-	<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
-	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	    
 	<script src="{% static 'js/autoDemo.js' %}" crossorigin="anonymous"></script>	 
 	<script src="{% static 'js/DynamicTrig1.js' %}" crossorigin="anonymous"></script>	
+{% endblock %}
 	<br><br>
 	
-{% endblock %}

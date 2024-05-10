@@ -189,27 +189,16 @@
     <td><a href = "https://www.interactablemath.org/int_math/ToneTrig/">Trig->TrigFunctions->6. Trig tones become audible</a></td>
   </tr>
 </table>
-
-	<br>
-	
 	<br>	
-	<!-- Bootstrap core JavaScript,jquery must be before bootstrap -->	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<br>	
+{% endblock %}
+
+{% block unique_js_block %}
 	<script>
-			<!-- in case can't get from google, load from local -->
-			var localJQ = "{% static 'js/jquery-360min.js' %}";
-			window.jQuery || document.write('<script src="${localJQ}"><\/script>')
-			
 			//Dont want a next button on this page so kill it here	
     		$("#GoToNextPage").css('display', 'none');
 			// Dont need advanced topic link popup
 			$('a[href="#AdvancedTopics"]').css('display', 'none');
 	</script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-	<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
-				   
-	<!-- Custom JS for this page -->
-	<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
-	<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>	
-
+                    	   
 {% endblock %}
