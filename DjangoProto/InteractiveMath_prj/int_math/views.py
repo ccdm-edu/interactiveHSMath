@@ -175,6 +175,7 @@ class IndexView(View):
         isMobile = user_agent.is_mobile;
         fileMap = FileMapper()
         realFileLandLogo = fileMap.readFileMapper("LandingPageLogo")
+        companyName = fileMap.readFileMapper("CompanyName")
         #check if there is an upcoming upgrade planned to site and notify users
         upgrdSchedFile = os.path.join(os.path.dirname(__file__), '..', 'InteractiveMath_prj', 'UpgradeSchedule.txt')
         upgradeNoticePresent = False
@@ -206,7 +207,8 @@ class IndexView(View):
                 print(f"Reading upgd schedule, date is {dateUpgd} , day is {dayUpgd} and right now is {rightNow}")
             upgd.close()
         #send all this off to requesting user
-        context_dict = {'page_tab_header': 'Home',
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'Home',
                         'topic': None,
                         'using_safari': usingSafari,
                         'is_mobile': isMobile,
@@ -229,7 +231,9 @@ class MusicTrigConceptIntroView(View):
         realFileCartoonGIF = trigMap.readFileMapper("CartoonIntroGIF")
         realFileCartoonTrig = trigMap.readFileMapper("CartoonIntroTrig")
         realFileIntroAudio = trigMap.readFileMapper("TrigReviewIntroAudio")
-        context_dict = {'page_tab_header': 'IntroConcepts',
+        companyName = trigMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'IntroConcepts',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         'introToFreqVideo': static(realFileIntroVideo),
@@ -242,7 +246,10 @@ class MusicTrigConceptIntroView(View):
 # page 2 Music Sine Intro of trig function section    
 class MusicTrigView(View):
     def get(self, request):
-        context_dict = {'page_tab_header': 'MusicalTrig',
+        textMap = FileMapper()
+        companyName = textMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'MusicalTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
@@ -251,7 +258,10 @@ class MusicTrigView(View):
 # page 3 Where does sine/cosine come from? of trig function section       
 class StaticTrigView(View):
     def get(self, request):
-        context_dict = {'page_tab_header': 'StaticTrig',
+        textMap = FileMapper()
+        companyName = textMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'StaticTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
@@ -260,7 +270,10 @@ class StaticTrigView(View):
 # page 4 Lets add time and make frequency of trig function section    
 class DynamicTrig1View(View):
     def get(self, request):
-        context_dict = {'page_tab_header': 'DynamicTrig',
+        textMap = FileMapper()
+        companyName = textMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'DynamicTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
@@ -270,7 +283,10 @@ class DynamicTrig1View(View):
 # page 5 Lets go faster in time of trig function section
 class DynamicTrig2View(View):
     def get(self, request):
-        context_dict = {'page_tab_header': 'DynamicTrig',
+        textMap = FileMapper()
+        companyName = textMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'DynamicTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
@@ -279,7 +295,10 @@ class DynamicTrig2View(View):
 # page 6 Lets get into audible sin/cosine tones of trig function section
 class ToneTrigView(View):
     def get(self, request):
-        context_dict = {'page_tab_header': 'ToneTrig',
+        textMap = FileMapper()
+        companyName = textMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'ToneTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
@@ -289,7 +308,10 @@ class ToneTrigView(View):
 # page 7 Lets compare musical instruments to sine/cosine of same pitch of trig function section    
 class MusicNotesTrigView(View):
     def get(self, request):
-        context_dict = {'page_tab_header': 'MusicNotes',
+        textMap = FileMapper()
+        companyName = textMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'MusicNotes',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
@@ -302,7 +324,9 @@ class TrigSummaryView(View):
         trigMap = FileMapper()
         actualFilename = trigMap.readFileMapper("MusicSummaryVideo")
         realFileCartoonTrig = trigMap.readFileMapper("CartoonIntroTrig")
-        context_dict = {'page_tab_header': 'Summary',
+        companyName = trigMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'Summary',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         'musicSummaryVideo': static(actualFilename),
@@ -316,7 +340,10 @@ class TrigSummaryView(View):
     
 class ImagNumView(View):
     def get(self, request):
-        context_dict = {'page_tab_header': 'Imag_num',
+        textMap = FileMapper()
+        companyName = textMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'Imag_num',
                         'topic': Topic.objects.get(name="Imag_num"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }        
@@ -325,7 +352,10 @@ class ImagNumView(View):
 
 class TeacherStandardsView(View):
     def get(self, request):
-        context_dict = {'page_tab_header': 'Teachers',
+        textMap = FileMapper()
+        companyName = textMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'Teachers',
                         'topic': None,
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }        
@@ -335,7 +365,10 @@ class TeacherStandardsView(View):
 class PeopleView(View):
     # give user all the info I collect about them
     def get(self, request):
-        context_dict = {'page_tab_header': 'People',
+        textMap = FileMapper()
+        companyName = textMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'People',
                         'topic': Topic.objects.get(name="Thanks"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
@@ -345,7 +378,9 @@ class AckView(View):
     def get(self, request):
         trigMap = FileMapper()
         fileMap1 = trigMap.readFileMapper("Thankyou_logo1")
-        context_dict = {'page_tab_header': 'Thank You!',
+        companyName = trigMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'Thank You!',
                         'topic': Topic.objects.get(name="Thanks"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         'thankyou1': static(fileMap1)
@@ -355,7 +390,10 @@ class AckView(View):
 
 class TrigIDView(View):
     def get(self, request):
-        context_dict = {'page_tab_header': 'Trig ID',
+        textMap = FileMapper()
+        companyName = textMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'Trig ID',
                         'topic': Topic.objects.get(name="TrigIdent"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
@@ -364,7 +402,10 @@ class TrigIDView(View):
     
 class TrigIDTuneView(View):
     def get(self, request):
-        context_dict = {'page_tab_header': 'Inst Tune',
+        textMap = FileMapper()
+        companyName = textMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'Inst Tune',
                         'topic': Topic.objects.get(name="TrigIdent"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         }
@@ -375,7 +416,9 @@ class Legal_TermsOfUse(View):
     def get(self, request):
         fileMap = FileMapper()
         actualFilename = fileMap.readFileMapper("Legal_TermsCond")
-        context_dict = {'page_tab_header': 'Terms Of Use',
+        companyName = fileMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'Terms Of Use',
                         'topic': Topic.objects.get(name="Legal"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         'legalDocTerms': static(actualFilename) + "#toolbar=0",
@@ -386,7 +429,9 @@ class Legal_Privacy(View):
     def get(self, request):
         fileMap = FileMapper()
         actualFilename = fileMap.readFileMapper("Legal_Privacy")
-        context_dict = {'page_tab_header': 'Privacy Policy',
+        companyName = fileMap.readFileMapper("CompanyName")
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'Privacy Policy',
                         'topic': Topic.objects.get(name="Legal"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         'legalDocPriv': static(actualFilename) + "#toolbar=0",
@@ -396,7 +441,11 @@ class Legal_Privacy(View):
 
 class ContactMe(View):
     def get(self, request):
-        context_dict = {'page_tab_header': 'Contact Us',
+        textMap = FileMapper()
+        companyName = textMap.readFileMapper("CompanyName")
+
+        context_dict = {'CompanyName': companyName,
+                        'page_tab_header': 'Contact Us',
                         'topic': None,
                         'form': contactForm(),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,

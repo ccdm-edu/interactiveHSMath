@@ -12,7 +12,7 @@
 	    <!-- yes the icon is hardcoded, easier than adding it to all the django variables for all pages.  Only hurts test proto -->
 	    <link rel="icon" href="{% static 'static_binaries/NonPublicImages/favicon.ico' %}">
 	    <title>
-	        Interactable Math - {% block title_block %}Interactive Math starter{% endblock %}
+	        {{ CompanyName }} - {% block title_block %}page-tab-header{% endblock %}
 	    </title>
 	    
 	    <!-- Bootstrap core CSS everything breaks with bootstrap 5  :( -->
@@ -47,7 +47,7 @@
     <body>
         <header>
             <nav class="navbar navbar-expand-md navbar-light fixed-top p-0" style="background-color: #e3f2fd; font-size: 140%">
-                <a class="navbar-brand p-2" href="{% url 'int_math:index' %}">Interactable Math</a>
+                <a class="navbar-brand p-2" href="{% url 'int_math:index' %}">{{ CompanyName }}</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#upperNavbarCollapse" aria-controls="upperNavbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -206,7 +206,7 @@
 	    				{% endblock %}
 	    				<br>
                         <!-- legal precedent supports acceptance if links are capitalized, explained as links and underlined -->
-                        <p id="SiteInfo-links">&copy; 2023 Interactable Math Inc, FL Corporation not-for-profit &middot; 
+                        <p id="SiteInfo-links"> 
                         <br> Synthetic voices by <a href = "https://www.readloud.net">readloud.net</a>
                         <br> By continuing on this site, you agree to the following two legal document links:  
                         <a href="{% url 'int_math:Privacy' %}"><u>PRIVACY</u></a> &middot; <a href="{% url 'int_math:TermsOfUse' %}"><u>TERMS</u></a>
