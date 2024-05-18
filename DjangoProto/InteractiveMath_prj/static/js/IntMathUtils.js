@@ -78,6 +78,15 @@
 		return d.promise();
 	}	
 	//*************************************************
+	// constants for volume on/off icons
+	//*************************************************
+	const GO_COLOR = "LightGreen";
+	const STOP_COLOR = "LightPink";
+	const VOL_ON_ICON = '../../static/images/volume.svg';
+	const VOL_OFF_ICON = '../../static/images/volume-off.svg';
+	const VOL_ON_ALT = 'Volume is currently on';
+	const VOL_OFF_ALT = 'Volume is currently off';
+	//*************************************************
 	// constants for special characters in Javascript
 	//*************************************************
 	const PI = "\u03c0";

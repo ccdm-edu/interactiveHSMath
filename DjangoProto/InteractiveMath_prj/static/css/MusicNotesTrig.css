@@ -136,7 +136,11 @@ input[type="range"] {
     z-index: -1;
 }
 /*****************************************************************/
-
+/* turn on/off tone or musical instrument*/
+#toneStartButton, #allowNotePlay{
+	height: 30px;
+	width: 30px;
+}
 /**********************define space for footer to float at bottom***************/
 #SineCosBlock {
 	/* define space for rest of page makes footer float to bottom */

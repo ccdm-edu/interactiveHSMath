@@ -12,7 +12,7 @@ def populate():
     trig_subtopics = [
         {'title': '1. Intro to concepts', 'url':'../IntroTrigMusicConcepts'},
         {'title': '2. Trig functions make music', 'url':'../MusicSineIntro'},
-        {'title': '3. Simple sine cosine', 'url':'../StaticTrig'},
+        {'title': '3. Sine cosine angles', 'url':'../StaticTrig'},
         {'title':'4. Sine meets time', 'url':'../DynamicTrig1'},
         {'title':'5. Sine goes faster', 'url':'../DynamicTrig2'},
         {'title': '6. Trig tones become audible', 'url':'../ToneTrig'},

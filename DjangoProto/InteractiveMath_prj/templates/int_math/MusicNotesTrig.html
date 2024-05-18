@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block artist_credit %}
-	<p> Human Voice by Deborah Gum (2023)</p>
+	 Human Voice by Deborah Gum (2023)
 {% endblock %}	
    
 {% block body_block %}
@@ -42,8 +42,9 @@
 				<tbody>
 					<tr>
 						<th colspan='2'>Musical Notes Parameters</th>
-					    <!-- this only shows up when musical instrument selected, put next to start/stop tone -->
-						<input type="button" id="allowNotePlay" > 
+					    <!--  this button plays the tone and is visible only when instrument chosen -->
+ 	 					<img id="allowNotePlay" src = {% static 'images/volume-off.svg' %} alt="Volume is currently off" data-toggle="tooltip" data-placement="top" title="turn on speaker and click to hear sine wave you created"">
+						
 					</tr>	
 					<tr>		
 						<td align="left">
@@ -85,8 +86,8 @@
 				<tbody>
 					<tr>
 						<th colspan='2'>Sine Wave (tone) Parameters</th>
- 								<!--  this button plays the tone and is visible all the time -->
-						<input type="button" id="toneStartButton" value="Play Sine Tone" data-toggle="tooltip" data-placement="top" title="turn on speaker to hear sine wave you created">
+ 	 					<!--  this button plays the tone and is visible all the time -->
+ 	 					<img id="toneStartButton" src = {% static 'images/volume-off.svg' %} alt="Volume is currently off" data-toggle="tooltip" data-placement="top" title="turn on speaker and click to hear sine wave you created"">
 					</tr>	
 					<tr>		
 						<td>

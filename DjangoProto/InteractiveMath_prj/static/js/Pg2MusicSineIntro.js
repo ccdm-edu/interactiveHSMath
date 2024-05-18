@@ -318,7 +318,7 @@ $(function() {
 				osc.frequency.value = note.freqHz;
 				setTimeout(function(){
 					// put a blip in the note change
-					if (!volumeOff) {
+				if (volumeOn) {
 						//play only if volume is on, we know note is selected
 						osc.toDestination().start();
 					}	
@@ -349,34 +349,42 @@ $(function() {
 	//***********************************
 	// user turns on and off sound
 	//***********************************
-	let volumeOff = false;
-	const TURN_SOUND_OFF = "Silence";
-	const TURN_SOUND_ON = "Sound";
-	const SILENT_COLOR = "Lavender";
-	const SOUND_COLOR = "LavenderBlush";
-	// at powerup, button is a mute for volume
-	$("#VolOnOff").prop("value", TURN_SOUND_OFF);
-	$("#VolOnOff").css('background-color',SILENT_COLOR);
+	let volumeOn = true;
+	
+	// at powerup, button is on once hit a note 
+
+	$("#VolOnOff").attr("src", VOL_ON_ICON);
+	$("#VolOnOff").attr("alt", VOL_ON_ALT);
+	$("#VolOnOff").attr("data-original-title", 'click to turn off note');
+	$('#VolOnOff').css('background-color', STOP_COLOR);
+
 	// Handle user button interaction
 	$('#VolOnOff').on('click', function(event){
 		// if sound is on, button will say TURN_SOUND_OFF and vice versa
-		volumeOff = (TURN_SOUND_OFF == $('#VolOnOff').attr("value")) ? false: true;
+		volumeOn = (VOL_ON_ICON == $('#VolOnOff').attr("src")) ? true: false;
 		if (null != selectedNote) {
 			// user has selected note, let volume be on/off
-			if (volumeOff) {
-				// turn on tone				
-				osc.toDestination().start();
-				// here we change color/text on button
-				$("#VolOnOff").prop("value", TURN_SOUND_OFF);
-				$("#VolOnOff").css('background-color',SILENT_COLOR);
-				volumeOff = false;
-			} else {
+			if (volumeOn) {
 				// sound is on, we turn it off, leave sliders alone
 				osc.toDestination().stop();
 				// here we change color/text on button
-				$("#VolOnOff").prop("value", TURN_SOUND_ON);
-				$("#VolOnOff").css('background-color', SOUND_COLOR);
-				volumeOff = true;
+				$("#VolOnOff").attr("src", VOL_OFF_ICON);
+				$("#VolOnOff").attr("alt", VOL_OFF_ALT);
+				$("#VolOnOff").attr("data-original-title", 'turn on speaker and click to hear note');
+				$('#VolOnOff').css('background-color', GO_COLOR);
+				volumeOn = false;
+			} else {
+				// turn on tone				
+				osc.toDestination().start();
+				// here we change color/text on button
+				$("#VolOnOff").attr("src", VOL_ON_ICON);
+				$("#VolOnOff").attr("alt", VOL_ON_ALT);
+				$("#VolOnOff").attr("data-original-title", 'click to turn off note');
+				$('#VolOnOff').css('background-color', STOP_COLOR);
+				volumeOn = true;
+
+
+
 			}
 		} else {
 			//user has not selected a note yet, since cursor over volume button, tell them to select a note
@@ -399,6 +407,13 @@ $(function() {
 		sine_plot_100_1k.data.datasets[0].data.push(ampLong);
 		sine_plot_100_1k.update(); 
 		selectedNote = null; // dont want to play any notes since notes deselected
+		// set up volume icon as it is when first enter page, volume on but no sound since no note selected
+		volumeOn = true;
+		$("#VolOnOff").attr("src", VOL_ON_ICON);
+		$("#VolOnOff").attr("alt", VOL_ON_ALT);
+		$("#VolOnOff").attr("data-original-title", 'click to turn off note');
+		$('#VolOnOff').css('background-color', STOP_COLOR);
+	
 	};
 
 	//***********************************

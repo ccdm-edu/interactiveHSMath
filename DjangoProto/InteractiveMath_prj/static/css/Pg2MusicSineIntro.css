@@ -10,6 +10,7 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	--OFF_TO_SIDE_X: 40px;
 	--OFF_TO_SIDE_Y: 10px;
 	--HEADER_LOC: 130px;
+	--VOLUME_LEFT_MARGIN: 500px;
 }
 #MusicIntroHeaders {
 	margin: 0;
@@ -211,17 +212,18 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 }
 #noteVolLabel{
 	position: absolute;
-	left: 500px;
+	left: var(--VOLUME_LEFT_MARGIN);
 	top: 0px;
 	font-size: 15px;
 	font-weight: bold;	
 }
 #noteVol{
 	position: absolute;
-	left: 500px;
+	left: var(--VOLUME_LEFT_MARGIN);
 	top: 30px;
 	font-size: 15px;
 	font-weight: bold;	
+	z-index: 10;
 }
 #noteVolValue{
 	position: absolute;
@@ -231,16 +233,17 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 }
 #VolOnOff{
 	position: absolute;
-	width: 80px;
+	height: 30px;
+	width: 30px;
 	top: 60px;
-	left: 550px;
+	left: calc(var(--VOLUME_LEFT_MARGIN) + 80px);
 	z-index: 10;
 }
 #ResetPage{
 	position: absolute;
 	width: 50px;
 	top: 60px;
-	left: 480px;
+	left: var(--VOLUME_LEFT_MARGIN);
 	z-index: 10;	
 }
 #notesToPlayLabel{
@@ -317,5 +320,5 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	
 #MusicIntroBlock {
 	/* define space for rest of page makes footer float to bottom */
-	height: 650px;
+	height: 550px;
 }	

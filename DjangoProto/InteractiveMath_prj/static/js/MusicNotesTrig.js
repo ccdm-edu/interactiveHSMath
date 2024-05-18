@@ -50,12 +50,7 @@ $(function() {
 	let tuneFundamentalFreq = []; // initialize tone for closest approx
 	let tuneGraphLong = [[]];  // holds an array, per musical note, of graphing points for long graph (10ms)
 	let noteFilePoint = [];   // array for every instrument of InstrumentNote, will determine next point using multirate sample rate conversion
-	// DO need to handle the currTuneState = tone and we don't plot that one this way...
 	
-	const GO_COLOR = "LightGreen";
-	const STOP_COLOR = "LightPink";
-	const STOP_NOTE = "Stop Instrument";
-	const PLAY_NOTE = "Play Instrument"
 	//list of notes used
 	const C5_NOTE = "C<sub>5</sub>";
 	const C4_NOTE = "C<sub>4</sub>";
@@ -518,12 +513,16 @@ $(function() {
 					volume: tonejs_dB,
 					type:"sine"});
 			osc.toDestination().start();	
-			$("#toneStartButton").prop("value", "Stop Sine Tone");
+			$("#toneStartButton").attr("src", VOL_ON_ICON);
+			$("#toneStartButton").attr("alt", VOL_ON_ALT);
+			$("#toneStartButton").attr("data-original-title", 'click to turn off your sine wave');
 			$('#toneStartButton').css('background-color', STOP_COLOR);
 			ToneIsOnNow = true;
 		} else {
 			osc.toDestination().stop();
-			$("#toneStartButton").prop("value", "Start Sine Tone");
+			$("#toneStartButton").attr("src", VOL_OFF_ICON);
+			$("#toneStartButton").attr("alt", VOL_OFF_ALT);
+			$("#toneStartButton").attr("data-original-title", 'turn on speaker and click to hear sine wave you created');
 			$('#toneStartButton').css('background-color', GO_COLOR);
 			ToneIsOnNow = false;
 		}
@@ -627,7 +626,9 @@ $(function() {
 									updatePlotsUserAides();
 									
 									// we have new instrument mp3, allow play
-									$("#allowNotePlay").prop("value", PLAY_NOTE);
+									$("#allowNotePlay").attr("src", VOL_OFF_ICON);
+									$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
+									$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear sine wave you created');
 									$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
 									$("#allowNotePlay").css("visibility", "visible");  
 																	
@@ -657,10 +658,11 @@ $(function() {
 				// clean up the signal params and graphs and user aides for new instrument
 				updatePlotsUserAides();
 				// we have new instrument mp3, allow play
-				$("#allowNotePlay").prop("value", PLAY_NOTE);
+				$("#allowNotePlay").attr("src", '../../static/images/volume-off.svg');
+				$("#allowNotePlay").attr("alt", 'Volume is currently off');
+				$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear sine wave you created');
 				$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
 				$("#allowNotePlay").css("visibility", "visible"); 
-
 			}
 		};
     });		
@@ -698,19 +700,25 @@ $(function() {
 				// auto play
 				sourceNote.start(0);			
 				noteIsOnNow = true;
-				$("#allowNotePlay").prop("value", STOP_NOTE);
+				$("#allowNotePlay").attr("src", VOL_ON_ICON);
+				$("#allowNotePlay").attr("alt", VOL_ON_ALT);
+				$("#allowNotePlay").attr("data-original-title", 'click to turn off instrument');
 				$("#allowNotePlay").css("background-color", STOP_COLOR);
 			} else {
 	        	// someone is tired of listening to our lovely tuning note
 	        	sourceNote.stop(0); 
 				noteIsOnNow = false;
-				$("#allowNotePlay").prop("value", PLAY_NOTE);
-				$("#allowNotePlay").css("background-color", GO_COLOR);
+				$("#allowNotePlay").attr("src", VOL_OFF_ICON);
+				$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
+				$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear instrument');
+				$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
 			}
 			sourceNote.onended = () => {
 				// no longer playing the note, either by user stop or natural completion
 				noteIsOnNow = false;
-				$("#allowNotePlay").prop("value", PLAY_NOTE);
+				$("#allowNotePlay").attr("src", VOL_OFF_ICON);
+				$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
+				$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear instrument');
 				$("#allowNotePlay").css("background-color", GO_COLOR);
 			}
         }
@@ -914,7 +922,7 @@ $(function() {
 			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
+			 	 offset: {x:25, y: 20},
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
@@ -930,7 +938,7 @@ $(function() {
 			 	{element:'allowNotePlay',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
+			 	 offset: {x:25, y: 20},
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
@@ -946,7 +954,7 @@ $(function() {
 			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
+			 	 offset: {x:25, y: 20},
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
@@ -1027,7 +1035,7 @@ $(function() {
 			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
+			 	 offset: {x:25, y: 20},
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
@@ -1043,7 +1051,7 @@ $(function() {
 			 	{element:'allowNotePlay',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
+			 	 offset: {x:25, y: 20},
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
@@ -1059,7 +1067,7 @@ $(function() {
 			 	{element:'toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
+			 	 offset: {x: 25, y: 20},
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button

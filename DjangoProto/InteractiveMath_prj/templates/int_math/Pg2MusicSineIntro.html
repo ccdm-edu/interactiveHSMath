@@ -11,8 +11,11 @@
 {% endblock %}
 
 {% block artist_credit %}
-	<p> <a href = "https://openclipart.org/detail/251263/prismatic-clef-hearts-2">Prismatic Clef Hearts image </a>by Gordon Dylan Johnson.  
-	<a href = "https://openclipart.org/detail/140893/whole-note">Whole Note image </a>by Chandler Isaac Klebs</p>
+	<a href="https://iconscout.com/icons/volume" class="text-underline font-size-sm" target="_blank">Volume</a> by <a href="https://iconscout.com/contributors/eva-icons" class="text-underline font-size-sm" target="_blank">Akveo</a>.  
+	<a href="https://iconscout.com/icons/volume-off" class="text-underline font-size-sm" target="_blank">Volume Off</a> by <a href="https://iconscout.com/contributors/eva-icons" class="text-underline font-size-sm">Akveo</a> on <a href="https://iconscout.com" class="text-underline font-size-sm">IconScout</a>
+	<br>
+	<a href = "https://openclipart.org/detail/251263/prismatic-clef-hearts-2">Prismatic Clef Hearts image </a>by Gordon Dylan Johnson.  
+	<a href = "https://openclipart.org/detail/140893/whole-note">Whole Note image </a>by Chandler Isaac Klebs
 {% endblock %}	
 
 {% block body_block %}	
@@ -24,7 +27,7 @@
 		<div id="CMajorScale">
 			<!-- Two canvases that sit on top of each other, one is to measure clicks and other is to fill in notes with color when selected -->	
 			<!-- use the following to put a debug border around canvas: style="border:1px solid #000000;"  -->
-			<canvas id="ClefWithNotes" width=1000 height=250 >
+			<canvas id="ClefWithNotes" width=1000 height=250 data-toggle="tooltip" data-placement="top" title="Click on note to play note" >
 				Your Browser does not support canvas tag, you are missing graph capability
 			</canvas>
 			<canvas id="NotesFilledIn" width=1000 height=250>
@@ -72,7 +75,8 @@
 			<p id = "noteVolValue"></p>
 			<input id="noteVol" type="range" step="1" value="20" min="1" max="100" data-toggle="tooltip" data-placement="right" title="Turn on your speaker">
 			<input type="button" id="ResetPage" value="Reset" data-toggle="tooltip" data-placement="left" title="Reset page">
-			<input type="button" id="VolOnOff" value="Silence" data-toggle="tooltip" data-placement="right" title="Turn on/off tones">
+ 	 		<img id="VolOnOff" src = {% static 'images/volume.svg' %} alt="Volume is on" data-toggle="tooltip" data-placement="right" title="click to stop note">
+			
 			<!-- For debug to see where this canvas is, can add border around it with:  style="border:1px solid #000000;" -->
 			<p id = "notesToPlayLabel" data-toggle="tooltip" data-placement="right" title="Play these notes in order"></p>
 			<p id = "notesToPlay" ></p>
