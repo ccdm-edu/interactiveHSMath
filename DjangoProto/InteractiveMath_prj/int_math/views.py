@@ -236,6 +236,7 @@ class MusicTrigConceptIntroView(View):
         realFileIntroAudio = trigMap.readConfigMapper("TrigReviewIntroAudio")
         companyName = trigMap.readConfigMapper("CompanyName")
         g_analyticsID = trigMap.readConfigMapper('GoogleAnalID')
+        artistCredit = trigMap.readConfigMapper('ArtistCredits')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'IntroConcepts',
@@ -245,6 +246,7 @@ class MusicTrigConceptIntroView(View):
                         'cartoonIntroGIF': static(realFileCartoonGIF),
                         'cartoonIntroTrig': static(realFileCartoonTrig),
                         'trigReviewIntroAudio': static(realFileIntroAudio),
+                        "artistCredit": artistCredit[0],
                         }
         response = render(request, 'int_math/IntroTrigMusicConcepts.html', context=context_dict)
         return response
@@ -326,11 +328,13 @@ class MusicNotesTrigView(View):
         textMap = ConfigMapper()
         companyName = textMap.readConfigMapper("CompanyName")
         g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
+        artistCredit = textMap.readConfigMapper('ArtistCredits')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'MusicNotes',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'artistCredit': artistCredit[2],
                         }
         response = render(request, 'int_math/MusicNotesTrig.html', context=context_dict)
         return response
@@ -343,6 +347,7 @@ class TrigSummaryView(View):
         realFileCartoonTrig = trigMap.readConfigMapper("CartoonIntroTrig")
         companyName = trigMap.readConfigMapper("CompanyName")
         g_analyticsID = trigMap.readConfigMapper('GoogleAnalID')
+        artistCredit = trigMap.readConfigMapper('ArtistCredits')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'Summary',
@@ -350,6 +355,7 @@ class TrigSummaryView(View):
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         'musicSummaryVideo': static(actualFilename),
                         'cartoonIntroTrig': static(realFileCartoonTrig),
+                        'artistCredit': artistCredit[1],
                         }
         response = render(request, 'int_math/MusicSineSummary.html', context=context_dict)
         return response
