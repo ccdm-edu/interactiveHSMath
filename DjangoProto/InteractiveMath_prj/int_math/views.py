@@ -137,25 +137,25 @@ class ProcessContactPage(View):
 #**********************************************************
 # functions used by page views
 #**********************************************************
-class FileMapper:
+class ConfigMapper:
     keyFileWithMappings = os.path.join(os.path.dirname(__file__), '..', 'static', 'static_binaries', 'Configuration', 'BinaryFileNameConfig.json')
-    filenameMap = dict()
+    configMapDict = dict()
     
     def __init__(self):
-        if len(self.filenameMap) == 0:
+        if len(self.configMapDict) == 0:
             try:
                 fileObj = open(self.keyFileWithMappings, 'rt')
-                self.filenameMap = json.load(fileObj)
+                self.configMapDict = json.load(fileObj)
             except FileNotFoundError:
                 print(f'File {self.keyFileWithMappings} was not found')
             except Exception as e:
                 print(f'Error {e} in opening file {self.keyFileWithMappings}')
             fileObj.close()
             
-    def readFileMapper(self, genericFileName):
+    def readConfigMapper(self, genericFileName):
         actualFile = "none"
-        if len(self.filenameMap) > 0:
-            actualFile = self.filenameMap.get(genericFileName)
+        if len(self.configMapDict) > 0:
+            actualFile = self.configMapDict.get(genericFileName)
             #print(f' we just mapped {genericFileName} to {actualFile}')
         else:
             print(f'Software error, file mapper not found or error opening')
@@ -173,10 +173,10 @@ class IndexView(View):
         if 'safari' in user_agent.browser.family.lower(): 
             usingSafari = True;
         isMobile = user_agent.is_mobile;
-        fileMap = FileMapper()
-        realFileLandLogo = fileMap.readFileMapper("LandingPageLogo")
-        companyName = fileMap.readFileMapper("CompanyName")
-        g_analyticsID = fileMap.readFileMapper('GoogleAnalID')
+        configMap = ConfigMapper()
+        realFileLandLogo = configMap.readConfigMapper("LandingPageLogo")
+        companyName = configMap.readConfigMapper("CompanyName")
+        g_analyticsID = configMap.readConfigMapper('GoogleAnalID')
 
         #check if there is an upcoming upgrade planned to site and notify users
         upgrdSchedFile = os.path.join(os.path.dirname(__file__), '..', 'InteractiveMath_prj', 'UpgradeSchedule.txt')
@@ -229,13 +229,13 @@ class IndexView(View):
 # page 1 General Concepts Intro of trig function section
 class MusicTrigConceptIntroView(View):
     def get(self, request):
-        trigMap = FileMapper()
-        realFileIntroVideo = trigMap.readFileMapper("IntroToFrequencyVideo_html")
-        realFileCartoonGIF = trigMap.readFileMapper("CartoonIntroGIF")
-        realFileCartoonTrig = trigMap.readFileMapper("CartoonIntroTrig")
-        realFileIntroAudio = trigMap.readFileMapper("TrigReviewIntroAudio")
-        companyName = trigMap.readFileMapper("CompanyName")
-        g_analyticsID = trigMap.readFileMapper('GoogleAnalID')
+        trigMap = ConfigMapper()
+        realFileIntroVideo = trigMap.readConfigMapper("IntroToFrequencyVideo_html")
+        realFileCartoonGIF = trigMap.readConfigMapper("CartoonIntroGIF")
+        realFileCartoonTrig = trigMap.readConfigMapper("CartoonIntroTrig")
+        realFileIntroAudio = trigMap.readConfigMapper("TrigReviewIntroAudio")
+        companyName = trigMap.readConfigMapper("CompanyName")
+        g_analyticsID = trigMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'IntroConcepts',
@@ -251,9 +251,9 @@ class MusicTrigConceptIntroView(View):
 # page 2 Music Sine Intro of trig function section    
 class MusicTrigView(View):
     def get(self, request):
-        textMap = FileMapper()
-        companyName = textMap.readFileMapper("CompanyName")
-        g_analyticsID = textMap.readFileMapper('GoogleAnalID')
+        textMap = ConfigMapper()
+        companyName = textMap.readConfigMapper("CompanyName")
+        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'MusicalTrig',
@@ -265,9 +265,9 @@ class MusicTrigView(View):
 # page 3 Where does sine/cosine come from? of trig function section       
 class StaticTrigView(View):
     def get(self, request):
-        textMap = FileMapper()
-        companyName = textMap.readFileMapper("CompanyName")
-        g_analyticsID = textMap.readFileMapper('GoogleAnalID')
+        textMap = ConfigMapper()
+        companyName = textMap.readConfigMapper("CompanyName")
+        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'StaticTrig',
@@ -279,9 +279,9 @@ class StaticTrigView(View):
 # page 4 Lets add time and make frequency of trig function section    
 class DynamicTrig1View(View):
     def get(self, request):
-        textMap = FileMapper()
-        companyName = textMap.readFileMapper("CompanyName")
-        g_analyticsID = textMap.readFileMapper('GoogleAnalID')
+        textMap = ConfigMapper()
+        companyName = textMap.readConfigMapper("CompanyName")
+        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'DynamicTrig',
@@ -294,9 +294,9 @@ class DynamicTrig1View(View):
 # page 5 Lets go faster in time of trig function section
 class DynamicTrig2View(View):
     def get(self, request):
-        textMap = FileMapper()
-        companyName = textMap.readFileMapper("CompanyName")
-        g_analyticsID = textMap.readFileMapper('GoogleAnalID')
+        textMap = ConfigMapper()
+        companyName = textMap.readConfigMapper("CompanyName")
+        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'DynamicTrig',
@@ -308,9 +308,9 @@ class DynamicTrig2View(View):
 # page 6 Lets get into audible sin/cosine tones of trig function section
 class ToneTrigView(View):
     def get(self, request):
-        textMap = FileMapper()
-        companyName = textMap.readFileMapper("CompanyName")
-        g_analyticsID = textMap.readFileMapper('GoogleAnalID')
+        textMap = ConfigMapper()
+        companyName = textMap.readConfigMapper("CompanyName")
+        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'ToneTrig',
@@ -323,9 +323,9 @@ class ToneTrigView(View):
 # page 7 Lets compare musical instruments to sine/cosine of same pitch of trig function section    
 class MusicNotesTrigView(View):
     def get(self, request):
-        textMap = FileMapper()
-        companyName = textMap.readFileMapper("CompanyName")
-        g_analyticsID = textMap.readFileMapper('GoogleAnalID')
+        textMap = ConfigMapper()
+        companyName = textMap.readConfigMapper("CompanyName")
+        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'MusicNotes',
@@ -338,11 +338,11 @@ class MusicNotesTrigView(View):
 # page 8 Lets summarize this all now of trig function section
 class TrigSummaryView(View):
     def get(self, request):
-        trigMap = FileMapper()
-        actualFilename = trigMap.readFileMapper("MusicSummaryVideo")
-        realFileCartoonTrig = trigMap.readFileMapper("CartoonIntroTrig")
-        companyName = trigMap.readFileMapper("CompanyName")
-        g_analyticsID = trigMap.readFileMapper('GoogleAnalID')
+        trigMap = ConfigMapper()
+        actualFilename = trigMap.readConfigMapper("MusicSummaryVideo")
+        realFileCartoonTrig = trigMap.readConfigMapper("CartoonIntroTrig")
+        companyName = trigMap.readConfigMapper("CompanyName")
+        g_analyticsID = trigMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'Summary',
@@ -359,9 +359,9 @@ class TrigSummaryView(View):
     
 class ImagNumView(View):
     def get(self, request):
-        textMap = FileMapper()
-        companyName = textMap.readFileMapper("CompanyName")
-        g_analyticsID = textMap.readFileMapper('GoogleAnalID')
+        textMap = ConfigMapper()
+        companyName = textMap.readConfigMapper("CompanyName")
+        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'Imag_num',
@@ -373,9 +373,9 @@ class ImagNumView(View):
 
 class TeacherStandardsView(View):
     def get(self, request):
-        textMap = FileMapper()
-        companyName = textMap.readFileMapper("CompanyName")
-        g_analyticsID = textMap.readFileMapper('GoogleAnalID')
+        textMap = ConfigMapper()
+        companyName = textMap.readConfigMapper("CompanyName")
+        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'Teachers',
@@ -388,9 +388,9 @@ class TeacherStandardsView(View):
 class PeopleView(View):
     # give user all the info I collect about them
     def get(self, request):
-        textMap = FileMapper()
-        companyName = textMap.readFileMapper("CompanyName")
-        g_analyticsID = textMap.readFileMapper('GoogleAnalID')
+        textMap = ConfigMapper()
+        companyName = textMap.readConfigMapper("CompanyName")
+        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'People',
@@ -401,25 +401,44 @@ class PeopleView(View):
 
 class AckView(View):
     def get(self, request):
-        trigMap = FileMapper()
-        fileMap1 = trigMap.readFileMapper("Thankyou_logo1")
-        companyName = trigMap.readFileMapper("CompanyName")
-        g_analyticsID = trigMap.readFileMapper('GoogleAnalID')
+        #constants for writing the HTML for each contributer
+        OPENER = "<section class='contributor_contact'>"
+        H2_1 = "<h2>"
+        H2_2 = "</h2>"
+        H3_1 = "<h3>"
+        H3_2 = "</h3>"
+        CLOSER = "</section>"
+        A_Begin = "<a href='"
+        A_End = "'>"
+        A_Close = "</a>"
+        Img1 = "<img src='"
+        Img2 = "'/>"
+        trigMap = ConfigMapper()
+        ty_list = trigMap.readConfigMapper("Thankyou_list")
+        companyName = trigMap.readConfigMapper("CompanyName")
+        g_analyticsID = trigMap.readConfigMapper('GoogleAnalID')
+        #go through the list of contributors and "write" the code out to page
+        contributorString = ""
+        for contributor in ty_list:
+            contributorString += OPENER + A_Begin + contributor["url"] + A_End + Img1 + contributor["logo"] + Img2 + A_Close
+            contributorString += A_Begin + contributor["url"] + A_End + H2_1 + contributor["line1"] + H2_2 + A_Close
+            contributorString += A_Begin + contributor["url"] + A_End + H3_1 + contributor["line2"] + H3_2 + A_Close + CLOSER
+        print(f'contributor string is {contributorString}')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'Thank You!',
                         'topic': Topic.objects.get(name="Thanks"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
-                        'thankyou1': static(fileMap1)
+                        'Contributors': contributorString
                         }
         response = render(request, 'int_math/acknowledgements.html', context=context_dict)
         return response        
 
 class TrigIDView(View):
     def get(self, request):
-        textMap = FileMapper()
-        companyName = textMap.readFileMapper("CompanyName")
-        g_analyticsID = textMap.readFileMapper('GoogleAnalID')
+        textMap = ConfigMapper()
+        companyName = textMap.readConfigMapper("CompanyName")
+        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'Trig ID',
@@ -431,9 +450,9 @@ class TrigIDView(View):
     
 class TrigIDTuneView(View):
     def get(self, request):
-        textMap = FileMapper()
-        companyName = textMap.readFileMapper("CompanyName")
-        g_analyticsID = textMap.readFileMapper('GoogleAnalID')
+        textMap = ConfigMapper()
+        companyName = textMap.readConfigMapper("CompanyName")
+        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID,        
                         'CompanyName': companyName,
                         'page_tab_header': 'Inst Tune',
@@ -445,10 +464,10 @@ class TrigIDTuneView(View):
      
 class Legal_TermsOfUse(View):
     def get(self, request):
-        fileMap = FileMapper()
-        actualFilename = fileMap.readFileMapper("Legal_TermsCond")
-        g_analyticsID = fileMap.readFileMapper('GoogleAnalID') 
-        companyName = fileMap.readFileMapper("CompanyName")
+        configMap = ConfigMapper()
+        actualFilename = configMap.readConfigMapper("Legal_TermsCond")
+        g_analyticsID = configMap.readConfigMapper('GoogleAnalID') 
+        companyName = configMap.readConfigMapper("CompanyName")
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'Terms Of Use',
@@ -460,10 +479,10 @@ class Legal_TermsOfUse(View):
         return response
 class Legal_Privacy(View):
     def get(self, request):
-        fileMap = FileMapper()
-        actualFilename = fileMap.readFileMapper("Legal_Privacy")
-        companyName = fileMap.readFileMapper("CompanyName")
-        g_analyticsID = fileMap.readFileMapper('GoogleAnalID')
+        configMap = ConfigMapper()
+        actualFilename = configMap.readConfigMapper("Legal_Privacy")
+        companyName = configMap.readConfigMapper("CompanyName")
+        g_analyticsID = configMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID, 
                         'CompanyName': companyName,
                         'page_tab_header': 'Privacy Policy',
@@ -476,9 +495,9 @@ class Legal_Privacy(View):
 
 class ContactMe(View):
     def get(self, request):
-        textMap = FileMapper()
-        companyName = textMap.readFileMapper("CompanyName")
-        g_analyticsID = textMap.readFileMapper('GoogleAnalID')
+        textMap = ConfigMapper()
+        companyName = textMap.readConfigMapper("CompanyName")
+        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         context_dict = {'GoogleAnalID': g_analyticsID, 
                         'CompanyName': companyName,
                         'page_tab_header': 'Contact Us',
