@@ -388,14 +388,32 @@ $(function() {
     //**************************************************************************** 
 	const SCRIPT_AUTO_DEMO = [
 	{ segmentName: "First frequency",
-	  headStartForAudioMillisec: 27000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 20000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
 			 	{filenameURL: 'DynamicTrig2Seg0'}
 			},
-			// click on go button to start sampling at 0.5 Hz
+			// click on go button to start sampling at 0.5 Hz, in case user has played with the default freq, set it to 
+			//0.5 hz explicitely
+						// click on freq slider to change freq to 1 hz,  offset is approx guess, user can change
+			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'FreqSlider_DT2',
+			 	 value: "0.5",
+			 	  offset: {x: 45, y: 10},  
+			 	waitTimeMillisec: 9000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'FreqSlider_DT2',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 1000} 
+			},
+			// now hit go button to execute
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'GoFreq_DT2',
@@ -411,13 +429,13 @@ $(function() {
 			 	 action: "nothing",
 			 	waitTimeMillisec: 5000} 
 			},
-			// click on freq slider to change freq to 2 hz,  offset is approx guess, user can change
+			// click on freq slider to change freq to 1 hz,  offset is approx guess, user can change
 			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
 			{segmentActivity: "CHANGE_ELEMENT_VALUE",
 			 segmentParams:
 			 	{element:'FreqSlider_DT2',
-			 	 value: "2.0",
-			 	  offset: {x: 25, y: 10},  // in the 2Hz location
+			 	 value: "1.0",
+			 	  offset: {x: 0, y: 10},  
 			 	waitTimeMillisec: 9000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
@@ -427,13 +445,13 @@ $(function() {
 			 	 action: "nothing",
 			 	waitTimeMillisec: 12000} 
 			},
-			// click on freq slider to change freq to 4 hz,  offset is approx guess, user can change
+			// click on freq slider to change freq to 2 hz,  offset is approx guess, user can change
 			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
 			{segmentActivity: "CHANGE_ELEMENT_VALUE",
 			 segmentParams:
 			 	{element:'FreqSlider_DT2',
 			 	 value: "4.0",
-			 	  offset: {x: 0, y: 10},  // in the 2Hz location
+			 	  offset: {x: -65, y: 10},  // in the 2Hz location
 			 	waitTimeMillisec: 6000}  // this is wait before you go on to next item
 			 },	
 			// remove cursor on freq slider 
@@ -441,40 +459,40 @@ $(function() {
 			 segmentParams:
 			 	{element:'FreqSlider_DT2',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 6000} 
+			 	waitTimeMillisec: 10000} 
 			},
-			// click on freq slider to change freq to 8 hz,  offset is approx guess, user can change
-			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			//ALL DONE, turn off samples, go button is a toggle button
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'GoFreq_DT2',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'GoFreq_DT2',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 3000} 
+			},
+			// go back to the lowest default of 0.5 Hz
 			{segmentActivity: "CHANGE_ELEMENT_VALUE",
 			 segmentParams:
 			 	{element:'FreqSlider_DT2',
-			 	 value: "8.0",
-			 	  offset: {x: -40, y: 10},  // in the 2Hz location
-			 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
-			 },	
+			 	 value: "0.5",
+			 	  offset: {x: 45, y: 10},  
+			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			 },		
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'FreqSlider_DT2',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 2000} 
+			 	waitTimeMillisec: 1000} 
 			},
-			// click on freq slider to change freq to 10 hz,  offset is approx guess, user can change
-			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
-			{segmentActivity: "CHANGE_ELEMENT_VALUE",
-			 segmentParams:
-			 	{element:'FreqSlider_DT2',
-			 	 value: "10.0",
-			 	  offset: {x: -65, y: 10},  // in the 2Hz location
-			 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
-			 },	
-			// remove cursor on freq slider 
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'FreqSlider_DT2',
-			 	 action: "nothing",
-			 	waitTimeMillisec: 2000} 
-			},
+
 	  ]
 	}];
 	// read the config file and find the actual filenames and put in true values.  First call 'may' have to read
