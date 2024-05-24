@@ -183,12 +183,13 @@ class IndexView(View):
         upgradeNoticePresent = False
         upgradeDate = ""
         upgradeDay = ""
+        upgradeTime = ''
         if os.path.isfile(upgrdSchedFile):
             upgd = open(upgrdSchedFile, 'r')
             #ignore first line of file, its comment to user
             comment = upgd.readline()  
             dateUpgdStr = upgd.readline().rstrip('\n')
-            date_format = '%Y-%m-%d %z'
+            date_format = '%Y-%m-%d-%H %z'
             dateUpgd = None
             try:
                 dateUpgd = datetime.strptime(dateUpgdStr, date_format)
@@ -205,6 +206,7 @@ class IndexView(View):
                 if (dateUpgd > rightNow):  #else, its an old notice, ignore it
                     upgradeNoticePresent = True
                     upgradeDate = dateUpgd.date
+                    upgradeTime = dateUpgd.time
                     upgradeDay = dayUpgd
                 print(f"Reading upgd schedule, date is {dateUpgd} , day is {dayUpgd} and right now is {rightNow}")
             upgd.close()
@@ -219,7 +221,8 @@ class IndexView(View):
                         'landingPageLogo': static(realFileLandLogo),
                         'upgradeNoticePresent': upgradeNoticePresent,
                         'upgradeDay': upgradeDay,
-                        'upgradeDate': upgradeDate
+                        'upgradeDate': upgradeDate,
+                        'upgradeTime': upgradeTime
                         }        
         response = render(request, 'int_math/index.html', context=context_dict)
         return response
