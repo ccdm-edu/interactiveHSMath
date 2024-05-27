@@ -193,7 +193,10 @@ class IndexView(View):
             dateUpgd = None
             try:
                 dateUpgd = datetime.strptime(dateUpgdStr, date_format)
-            except:
+            except Exception as ex:
+                template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+                emsg = template.format(type(ex).__name__, ex.args)
+                print(f'Exception is {emsg}')
                 print(f'Failure on parsing time in UpgradeSchedule.txt, cannot parse {repr(dateUpgdStr)}')
             if (dateUpgd is not None):
                 # get time right now and convert to EST (from UTC).  My testing shows this does NOT handle daylight savings time well
