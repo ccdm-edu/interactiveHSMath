@@ -65,7 +65,8 @@
 			<div class="modal-content">
 				<div class="modal-body">
 					<h1>Time Expired!</h1>
-					<p>The purpose of this page is to accumulate 360&#176 phase within 30 seconds of time.  The faster you do it, the higher the frequency of the sine wave. 
+					<p>The purpose of this page is to accumulate 360&#176 phase within 30 seconds of time.  
+					The faster you do it, the higher the frequency of the sine wave. 
 					 Frequency = 1/T where T is how long it takes you to make a complete 360&#176 turn around the circle. 
 					 <br><b>We are going to start over. Follow the pop up box and go as fast as you can</b></p>
 				</div>
@@ -79,44 +80,66 @@
 	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  
 	At the bottom it doesn't consume space from other elements but it does give search engines a clue what page is all about. -->
-    <p class="AdvTopic_ToDo">TRY THIS: <br>1.  Start clicking yellow dots starting at zero phase going all the way around the circle counterclockwise every 30 degrees, following the red arrow prompts.  
-    You are accumulating phase as you go around.  Do this as quickly as you can (within 20 sec) and look at the period T to go all the way around.  The period is 1/freqency.  
-    The faster you go, the more "squished" up the curves will get <br>2.  Try it again starting at zero and moving counter clockwise but this time skip every other dot collecting 60 degrees per click, following the red arrow prompts, and ending at the 0 degrees dot.  
-    <br>3.  Repeat but now collect 45 degrees per click, following the red arrows.   <br>4.  You can redo this collecting 120 degrees per click and it will only take you three clicks to finish the circle.
-    <br>5.  NOW, you get the point, click 0 degrees to start the timer then click one point anywhere on the circle and click 360 degrees (same as 0 degrees) to finish the collection
-    <br>Hint:  you never really had to follow the red arrows, they were always just suggestions.  All you every really HAD to do was hit 0 degrees to start timer, hit points counter clockwise to accumulate
-    phase then hit 360 degrees to stop it.  The reason I encouraged you to follow the red arrows was so that you can see that the faster you get around the circle, the higher the frequency will be.  
-    However, most people cant get above 1 Hz clicking points.  On the next pages, we will go faster because I will click the points for you and you tell me how fast you want to go.  Your speed will then be limited by your browser and screen update rates. 
+    <p class="AdvTopic_ToDo">TRY THIS: <br>1.  Start clicking yellow dots starting at zero phase going all the way around the 
+    circle counterclockwise every 30 degrees, following the red arrow prompts.  
+    You are accumulating phase as you go around.  Do this as quickly as you can (within 20 sec) and look at the period T to 
+    go all the way around.  The period is 1/freqency.  The faster you go, the more "squished" up the curves will get 
+    <br>2.  Try it again starting at zero and moving counter clockwise but this time skip every other dot collecting 60 degrees per click, 
+    following the red arrow prompts, and ending at the 0 degrees dot.  
+    <br>3.  Repeat but now collect 45 degrees per click, following the red arrows.   <br>4.  You can redo this collecting 120 degrees per 
+    click and it will only take you three clicks to finish the circle.
+    <br>5.  NOW, you get the point, click 0 degrees to start the timer then click one point anywhere on the circle and click 360 degrees 
+    (same as 0 degrees) to finish the collection
+    <br>Hint:  you never really had to follow the red arrows, they were always just suggestions.  All you every really HAD to do was hit 
+    0 degrees to start timer, hit points counter clockwise to accumulate
+    phase then hit 360 degrees to stop it.  The reason I encouraged you to follow the red arrows was so that you can see that the faster 
+    you get around the circle, the higher the frequency will be.  
+    However, most people cant get above 1 Hz clicking points.  On the next pages, we will go faster because I will click the points for 
+    you and you tell me how fast you want to go.  Your speed will then be limited by your browser and screen update rates. 
     <br>Wanna understand this?  hit the Explanation tab in this window.  
 	</p>
 	<p class="AdvTopic_Expln">EXPLANATION: 
-	<br><u>What were we doing?</u><br>As you move counter-clockwise around the unit circle, you are adding phase until you get back to the starting place and we calculate your average phase accumulation over time (also known as frequency).  
-	The period of your sine wave is the time it took you to complete a full cycle of the sine wave (0 to 360 degrees).  The frequency (in Hz) is 1 divided by the period (in seconds).  All the waveforms are in shades of blue, the newest is dark blue
-	and waveforms get paler blue as they get "older".  Eventually they drop off.  The upper scale lets you see more time and is good for low frequency plots and the lower scale looks at a 
+	<br><u>What were we doing?</u><br>As you move counter-clockwise around the unit circle, you are adding phase until you get back to 
+	the starting place and we calculate your average phase accumulation over time (also known as frequency).  
+	The period of your sine wave is the time it took you to complete a full cycle of the sine wave (0 to 360 degrees).  The frequency (in Hz) 
+	is 1 divided by the period (in seconds).  All the waveforms are in shades of blue, the newest is dark blue
+	and waveforms get paler blue as they get "older".  Eventually they drop off.  The upper scale lets you see more time and is good for low 
+	frequency plots and the lower scale looks at a 
 	shorter time and is good as the frequency goes up.
 	
 	<br><u>Why the heck are we showing frequency by going around the unit circle?</u>
-	Well, it ties in with how you learn sine and cosine with the unit circle.  Plus, if you study signal processing in college, you will find they talk about 
-	e<sup>i(2&#960f)t</sup>= cos(2&#960ft) + isin(2&#960ft) where i is your friendly neighborhood imaginary value i = &#8730-1. The 2&#960ft = &#920 that we talked about originally on the Simple Sine Cosine page.
-	OOOH, wait a minute!  I've seen this before, yes it was hidden in plain site on the Simple Sine Cosine page!!! You just have to think of the real axis as x and the imaginary axis as y.  
+	Well, it ties in with how you learn sine and cosine with the unit circle.  Plus, if you study signal processing in college, you will 
+	find they talk about 
+	e<sup>i(2&#960f)t</sup>= cos(2&#960ft) + isin(2&#960ft) where i is your friendly neighborhood imaginary value i = &#8730-1. 
+	The 2&#960ft = &#920 that we talked about originally on the Simple Sine Cosine page.
+	OOOH, wait a minute!  I've seen this before, yes it was hidden in plain site on the Simple Sine Cosine page!!! You just have to think 
+	of the real axis as x and the imaginary axis as y.  
 	You'll see some of this in action on the pages for imaginary numbers where we show
 	that this equation is how digital radios work.  Huh?  I don't have a digital radio.  Yes you do, its your cell phone.
 	Don't worry, these are advanced junior level college classes but now you see why I introduced it this way.
 	
 	<br><u>It seems like we are cheating, clicking fewer dots as we go around?</u><br>
-	The sine waves we have plotted have a HUGE number of points.  We really don't need all those points to know its a sine wave of a certain frequency.  
-	In our digital world, we never save any more information than we absolutely have to (else your music files and videos would never fit on your phone).  
-	Back to signal processing, Nyquist theorem says as long as we sample a signal at at least twice the highest frequency, we can fully reproduce it.  Our sine waves were only one frequency and each click was a sample
-	(except for the first click at zero phase, that was just to turn on the timer).  Your really only had to click twice around the circle to preserve the information. <br>This is basically how MP3 works.  Human hearing 
+	The sine waves we have plotted have a HUGE number of points.  We really don't need all those points to know its a sine wave of a 
+	certain frequency.  
+	In our digital world, we never save any more information than we absolutely have to (else your music files and videos would never 
+	fit on your phone).  
+	Back to signal processing, Nyquist theorem says as long as we sample a signal at at least twice the highest frequency, we can fully 
+	reproduce it.  Our sine waves were only one frequency and each click was a sample
+	(except for the first click at zero phase, that was just to turn on the timer).  Your really only had to click twice around the circle 
+	to preserve the information. <br>This is basically how MP3 works.  Human hearing 
 	goes up to about 20,000 Hz.  CD quality MP3 recordings sample at 44,100 Hz, just over twice our max hearing range.  Now you know why.
-	So when I originally suggested you click every point on the curve, 12 points per cycle, you were over-sampling.  Nothing wrong with that, just wasting memory with unnecessary points.  
+	So when I originally suggested you click every point on the curve, 12 points per cycle, you were over-sampling.  
+	Nothing wrong with that, just wasting memory with unnecessary points.  
 	It was to prove a point that the slower you go around the circle, the lower your frequency.  
 	
 	<br><u>Well I can't go faster than 1Hz on this page, when will I create a frequency I can hear?</u><br>
-	When we create frequency by humans clicking points, we will naturally be slow.  On the next page Sine goes Faster, you will be selecting the frequency and your browser will be clicking the points.
-	We start out with a slow sampling rate and have to move toward the maximum Nyquist rate of two samples per frequency because most browsers have a tough time keeping up.  
-	The 10Hz maximum  is sampling around the circle faster than our eyes can see but you can see from the plots that if we tried to do less than two samples per period, we wouldn't be able 
-	to recreate the sine wave.  Human hearing starts around 20Hz but most common computer speakers start producing sound at around 100 Hz.  We'll get to these much higher frequencies on the page
+	When we create frequency by humans clicking points, we will naturally be slow.  On the next page Sine goes Faster, you will be 
+	selecting the frequency and your browser will be clicking the points.
+	We start out with a slow sampling rate and have to move toward the maximum Nyquist rate of two samples per frequency because 
+	most browsers have a tough time keeping up.  
+	Above 2Hz, the sampling around the circle is faster than our eyes can see and it just looks like a strobe to us.  To go faster, we 
+	will not be able to show the actual sampling on the unit circle.  Human hearing starts around 20Hz but most common computer speakers 
+	start producing sound at around 100 Hz.  We'll get to these much higher frequencies on the page
 	Sine/cosine Tones and Musical Notes because we won't be asking your fingers or the web browser to update super fast.
 	
 	</p>

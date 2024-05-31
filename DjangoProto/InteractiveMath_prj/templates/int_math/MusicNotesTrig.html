@@ -21,17 +21,26 @@
     	<h1 id = "musicalActivity"></h1>
     </div>
     <!-- default startup, will change as user loads musician notes-->
-    <p class="AdvTopic_ToDo"> TRY THIS:  Turn on your speaker.  Select an instrument from the drop down menu.  Hit Play Tone button to hear the sine wave frequency of this note (to within 1 Hz) then hit Start Instrument button.
-    Look at the plot of the MP3 waveform of the musician playing the note versus the sine wave basic frequency.  The period of the two waveforms are the same.  The musicians sound is much richer than the sine
+    <p class="AdvTopic_ToDo"> TRY THIS:  Turn on your speaker.  Select an instrument from the drop down menu.  
+    Hit Play Tone button to hear the sine wave frequency of this note (to within 1 Hz) then hit Start Instrument button.
+    Look at the plot of the MP3 waveform of the musician playing the note versus the sine wave basic frequency.  
+    The period of the two waveforms are the same.  The musicians sound is much richer than the sine
     wave at the pitch frequency, which you would expect by looking at the more complex waveform produced.
 	</p>
-    <p class="AdvTopic_Expln"> EXPLANATION:  Sine and Cosine functions, when translated to voltage and sent to a speaker are just tones.  Here we set the frequencies to the pitch frequency of the instrument/note played. 
-    Musical notes are made up of a pitch frequency, which is the sine wave tone shown here plus some harmonics of the pitch frequency and overtones that give the instrument its richness.  
-    The harmonics and overtones are multiples of the pitch frequency which is why the musical instrument playing a note repeats at the rate of the sine wave pitch frequency.  
-    In fact, we could start with a sine at the pitch frequency and a calculated amplitude and phase.  Then we add another sine at 2 times the pitch frequency with newly calculated amplitude and phase.  
-    We continue and add another sine and cosine of 3x the pitch frequency with calculated amplitude and phase and so on up to a very high multiple of the pitch frequency.  This is how you can mathematically represent ANY of these
-    musical instruments playing a note.  The amplitudes calculated would be different for a trumpet versus a flute versus the human voice but you could create any of these
-    waveforms of an instrument playing a note. This is the basis for Fourier Series, a college concept for mathematically representing ANY periodic waveform.  The concept is used in musical digital synthesizers to generate a wide variety of sounds.
+    <p class="AdvTopic_Expln"> EXPLANATION:  Sine and Cosine functions, when translated to voltage and sent to a speaker are just tones.  
+    Here we set the frequencies to the pitch frequency of the instrument/note played. 
+    Musical notes are made up of a pitch frequency, which is the sine wave tone shown here plus some harmonics of the pitch frequency 
+    and overtones that give the instrument its richness.  
+    The harmonics and overtones are multiples of the pitch frequency which is why the musical instrument playing a note repeats at the rate 
+    of the sine wave pitch frequency.  
+    In fact, we could start with a sine at the pitch frequency and a calculated amplitude and phase.  Then we add another sine at 
+    2 times the pitch frequency with newly calculated amplitude and phase.  
+    We continue and add another sine and cosine of 3x the pitch frequency with calculated amplitude and phase and so on up to a very 
+    high multiple of the pitch frequency.  This is how you can mathematically represent ANY of these
+    musical instruments playing a note.  The amplitudes calculated would be different for a trumpet versus a flute versus the human voice 
+    but you could create any of these
+    waveforms of an instrument playing a note. This is the basis for Fourier Series, a college concept for mathematically representing 
+    ANY periodic waveform.  The concept is used in musical digital synthesizers to generate a wide variety of sounds.
     </p>  
     
 	<!--  dont put tables inside a div, they stop "working", elements aren't functional anymore -->

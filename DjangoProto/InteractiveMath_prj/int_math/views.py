@@ -31,7 +31,7 @@ class ProcessContactPage(View):
         if form.is_valid():
             # this only checks the format of the email, all other inputs are valid, we escape all text
             #however, email is optional so a blank is ok
-            print('form is valid WOO HOO')
+            #print('form is valid WOO HOO')
             quartile = '1Q'
             
             #did a bot see the token empty box and try to fill it in? (honeypot test)
@@ -48,7 +48,7 @@ class ProcessContactPage(View):
                         'secret': secret_key}
                     data = urllib.parse.urlencode(payload).encode()
                     req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
-                    print('finished secret key decoder ring on grecaptcha')
+                    #print('finished secret key decoder ring on grecaptcha')
                     response = urllib.request.urlopen(req)
                     result = json.loads(response.read().decode())
                     #take action on robot test results
@@ -100,11 +100,12 @@ class ProcessContactPage(View):
                                     [sendToEmailAddr],
                                     fail_silently=False,
                                     )
-                except Exception as e:
+                except Exception as ex:
                     #will fail on num email sent as 0.  Could get BadHeaderError if user input <LF>, 
                     #could get auth error if Gmail rejects.  User should never ever get a 500 server error. Baaaaaad
-                    print(e)
-                    
+                    template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+                    emsg = template.format(type(ex).__name__, ex.args)
+                    print(f'Exception is {emsg}')
                     
                 if num_email_sent == 0:
                     #user has injected newlines and message rejected, could be bot?, or gmail rejects us.  Check log.  Inform user of failure
@@ -148,8 +149,10 @@ class ConfigMapper:
                 self.configMapDict = json.load(fileObj)
             except FileNotFoundError:
                 print(f'File {self.keyFileWithMappings} was not found')
-            except Exception as e:
-                print(f'Error {e} in opening file {self.keyFileWithMappings}')
+            except Exception as ex:
+                template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+                emsg = template.format(type(ex).__name__, ex.args)
+                print(f'Error {emsg} in opening file {self.keyFileWithMappings}')
             fileObj.close()
             
     def readConfigMapper(self, genericFileName):
@@ -211,7 +214,7 @@ class IndexView(View):
                     upgradeDate = dateUpgd.date
                     upgradeTime = dateUpgd.time
                     upgradeDay = dayUpgd
-                print(f"Reading upgd schedule, date is {dateUpgd} , day is {dayUpgd} and right now is {rightNow}")
+                #print(f"Reading upgd schedule, date is {dateUpgd} , day is {dayUpgd} and right now is {rightNow}")
             upgd.close()
         #send all this off to requesting user
         context_dict = {'GoogleAnalID': g_analyticsID,
@@ -435,7 +438,7 @@ class AckView(View):
             contributorString += OPENER + A_Begin + contributor["url"] + A_End + Img1 + contributor["logo"] + Img2 + A_Close
             contributorString += A_Begin + contributor["url"] + A_End + H2_1 + contributor["line1"] + H2_2 + A_Close
             contributorString += A_Begin + contributor["url"] + A_End + H3_1 + contributor["line2"] + H3_2 + A_Close + CLOSER
-        print(f'contributor string is {contributorString}')
+        #print(f'contributor string is {contributorString}')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'Thank You!',

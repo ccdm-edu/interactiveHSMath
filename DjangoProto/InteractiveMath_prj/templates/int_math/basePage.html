@@ -54,9 +54,9 @@
                 
                 <div class="collapse navbar-collapse" id="upperNavbarCollapse">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:index' %}">Home</a></li>
+                        <li class="nav-item mathy"><a class="nav-link" href="{% url 'int_math:index' %}">Home</a></li>
 				        <!-- Did this by looking at bootstrap dashboard navbar dropdown -->
-				        <li class="nav-item dropdown">
+				        <li class="nav-item dropdown mathy">
 				            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				            Trig
 				            </a>
@@ -65,11 +65,14 @@
 				                <a class="dropdown-item" href="{% url 'int_math:TrigID' %}">Trig Identities</a>
 				            </div>
 				        </li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:imag_num' %}">Imaginary</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:acknowledgements' %}">Thanks</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:TermsOfUse' %}">Legal</a></li>
-				        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:Contact_me' %}">Contact</a></li>
-				        <li class="nav-item"><a class="nav-link" href="{% url 'int_math:TeacherStds' %}">Teachers</a></li>
+                        <li class="nav-item "><a class="nav-link" href="{% url 'int_math:imag_num' %}">Imaginary</a></li>
+                    </ul>
+                    <!-- Let these items slide left since "non mathy" -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item "><a class="nav-link" href="{% url 'int_math:acknowledgements' %}">Thanks</a></li>
+                        <li class="nav-item "><a class="nav-link" href="{% url 'int_math:TermsOfUse' %}">Legal</a></li>
+				        <li class="nav-item "><a class="nav-link" href="{% url 'int_math:Contact_me' %}">Contact</a></li>
+				        <li class="nav-item "><a class="nav-link" href="{% url 'int_math:TeacherStds' %}">Teachers</a></li>
                     </ul>
                 </div>
             </nav>

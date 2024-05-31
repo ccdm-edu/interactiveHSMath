@@ -70,7 +70,7 @@ h1 {
 }
 #UserSelectionVideo{
 	position: relative;
-	top: calc(var(--SPACE_TO_SQUEEZE_OUT) - 25px);
+	top: calc(var(--SPACE_TO_SQUEEZE_OUT) - 10px);
 	float: left;
 }
 #VideoList > li.active{
@@ -79,8 +79,8 @@ h1 {
 /* the list of videos user can choose from */
 #VideoList {
 	/* need to move this up so as to not let user get lost in white space */
-	position: relative;
-	top: calc(var(--SPACE_TO_SQUEEZE_OUT) + 40px);
+	position: absolute;
+	top: 35px;
 	font-size: 25px;
 }
 /***************************measuring frequency user controls **************************/
@@ -97,12 +97,49 @@ h1 {
 .IntroMusicFreqControl {
 	margin: 10px;
 }
-/* for the numerical results, put in a box */
-.IntroMusicResult {
-	padding: 5px;
-	width: 75px;  /* arbitrary size on width of indicator */
-	border-style: solid;
+#TimeHeader{
+	font-size:20px; 
+	color:blue; 
+	border-top:2px solid blue;
+	border-left:2px solid blue;
+	border-right:2px solid blue;
 }
+#FreqHeader{
+	font-size:20px; 
+	color:green;
+	border-top:2px solid green;
+	border-left:2px solid green;
+	border-right:2px solid green;	
+}
+#ElapsedText{
+	border-left:2px solid blue;
+}
+#PeriodText{
+	border-right:2px solid blue;
+}
+#BPMText{
+	border-right:2px solid green;
+}
+#IntroFreqTime {
+	border-bottom:2px solid blue;
+	border-left:2px solid blue;	
+}
+#IntroFreqTimeReset {
+	border-bottom:2px solid blue;	
+}
+#IntroFreqPeriod {
+	border-bottom:2px solid blue;
+	border-right:2px solid blue;	
+}
+#IntroFreqHz{
+	border-left:2px solid green;
+	border-bottom:2px solid green;
+}
+#IntroFreqBPM{
+	border-right:2px solid green;
+	border-bottom:2px solid green;
+}
+
 /* set the bottom of the page for bottom notices */
 #TrigMusicVideoIntro {
 	/* define space for rest of page makes footer float to bottom */

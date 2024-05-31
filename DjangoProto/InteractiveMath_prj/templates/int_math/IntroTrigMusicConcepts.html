@@ -44,7 +44,8 @@
 		
 		<!-- ---------------------------This is the review stuff that happens after Triggy's intro-------------------------------- -->
 		<video height='480' width='640' id = "IntroConceptVideo" controls poster="{{ cartoonIntroTrig }}">
-			<source src="{{ introToFreqVideo }}" type="video/mp4">
+			<source src="{{ introToFreqV
+			ideo }}" type="video/mp4">
 			Your browser does not support the Video tag of html5, time for a browser upgrade!		
 		</video>
 		<div id=IntroMusicInteractive>
@@ -54,25 +55,29 @@
 				<p id="informUserFreqQuality" ></p>
 			</section>
 			<section class="IntroMusicFreqControl">
-				<p><strong>Time Elapsed</strong> (sec)</p>
-				<div  class = "IntroMusicResult" id="IntroFreqTime">00.0</div>
+				<table border="1px solid black" width = "600">  
+					<tbody>
+						<tr>
+							<td colspan='3' align="center" id="TimeHeader"><b>Time (sec)</b></td>
+							<td colspan="2" align="center" id="FreqHeader"><b>Frequency</b></td>
+						</tr>	
+						<tr>
+							<td align="center" id="ElapsedText"> Elapsed </td>
+							<td align="center" id="IntoPerText"> Into Period </td>
+							<td align="center" id="PeriodText"> Period (average)</td>
+							<td align="center" id="HzText"> Average (Hz)</td>
+							<td align="center" id="BPMText"> Average (beats per min)</td>
+						</tr>
+						<tr>	
+							<td align="center" id="IntroFreqTime"> 00.0 </td>
+							<td align="center" id="IntroFreqTimeReset"> 00.0</td>
+							<td align="center" id="IntroFreqPeriod"> 00.0</td>
+							<td align="center" id="IntroFreqHz"> 00.0</td>
+							<td align="center" id="IntroFreqBPM"> 00.0</td>						
+						</tr>
+					</tbody>
+				</table>
 			</section>
-			<section class="IntroMusicFreqControl">
-				<p><strong>Time into Period</strong> (sec)</p>
-				<div  class = "IntroMusicResult" id="IntroFreqTimeReset">00.0</div>
-			</section>
-			<section class="IntroMusicFreqControl">
-				<p><strong>Period</strong> (sec) <br>average</p>
-				<div class = "IntroMusicResult" id="IntroFreqPeriod">00.0</div>
-			</section>
-			<section class="IntroMusicFreqControl">
-				<p><strong>Frequency</strong> = 1/Period (Hz) <br>average</p>
-				<div class = "IntroMusicResult" id="IntroFreqHz">00.0</div>
-			</section>
-			<section class="IntroMusicFreqControl">
-				<p><strong>Frequency</strong> = (1/Period)* (60 sec/1 min) <br>average<br>(beat per minute, bpm)</p>
-				<div class = "IntroMusicResult" id="IntroFreqBPM">00.0</div>
-			</section>		
 		</div>
 		
 		<div id=UserSelectionVideo>

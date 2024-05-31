@@ -38,6 +38,10 @@ $(function() {
 	const TOTAL_NUM_DOTS = 2.0 * Math.PI/ANGLE_PER_PT_RAD;
 	const ANGLE_PER_PT = 360/TOTAL_NUM_DOTS;
 	
+	//NOTE:  we keep the rate around the circle less than 2 Hz because at about 3 Hz, can trigger epliptic attack
+	//https://epilepsysociety.org.uk/about-epilepsy/epileptic-seizures/seizure-triggers/photosensitive-epilepsy#:~:text=Photosensitive%20epilepsy%20is%20when%20seizures,feel%20disorientated%2C%20uncomfortable%20or%20unwell.
+	// between 3-30 Hz can trigger seizures.  Above 3 Hz sampling looks like flashing and the eye can't see 
+	// sampling occur so educational value is lost.
 	function findSampToSkip(freqStr) {
 		// want to keep sample period greater than 40 ms
 		let index = 0;
