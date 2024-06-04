@@ -178,8 +178,34 @@ $(function() {
 			ctxFreqPlot.stroke();
 		}
 	}
-	
+	//*************************************************
+	// Reset the page to the defaults
+	//************************************************* 
+	let DEFAULT_FREQ = 0.5; // as set in html for element
+	function resetToDefaults(){
+		// set the freq to lowest 0.5Hz
+		$("#FreqSlider_DT2").prop("value", DEFAULT_FREQ);
+		$currFreq = $("#FreqSlider_DT2");  // get slider value
+	    // and put it on the label as string
+		$("#currFreqVal_DT2").text($currFreq.val() + " Hz");
+		// update global var
+		currFreq = $currFreq.val();
+		// choose num samples/period and offset as function of chosen period
+		[ind, inc, phaseOffsetInRad] = findSampToSkip(currFreq);
+		
+		// turn off the sampler, first turn off timer
+		if (startInterval) clearInterval(startInterval);
+    	clockIsRunning = false;
+		// set up button to go again
+		$('#GoFreq_DT2').prop('value', 'GO');
+		$('#GoFreq_DT2').css('background-color', currentGreen);
+		// clear out the unit circle and graphs now that timer is stopped
+		ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
+		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
+	}
+	//*************************************************
 	//*** update unit circle to dynamically show freq
+	//*************************************************
 	let startInterval;
 	const TWO_PI_RAD = 2.0 * Math.PI;
 	function startFreqSample(){
@@ -284,7 +310,6 @@ $(function() {
 				ctxFreqPlot.closePath();
 			}
 
-
 			// every time sample, put unit circle back to "clean" initial state
 			ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
 			// draw line from center of unit circle to sample point on circle
@@ -359,12 +384,12 @@ $(function() {
     		$('#GoFreq_DT2').css('background-color', currentGreen);
     		currentGreen = (currentGreen == PALE_GREEN) ? FULL_GREEN : PALE_GREEN;
     	}
-    }, 500);
+    }, 700);  // 1/700 ms is 1.4Hz
     
     //***********************************
     //*** Change label on freq slider and adjust the tone as appropriate
 	$('#FreqSlider_DT2').on('change', function(){
-		console.log(" WE MADE IT to change on slider");
+		//console.log(" WE MADE IT to change on slider");
 		$currFreq = $("#FreqSlider_DT2");  // get slider value
 	    // and put it on the label as string
 		$("#currFreqVal_DT2").text($("#FreqSlider_DT2").val() + " Hz");
@@ -400,9 +425,7 @@ $(function() {
 			 	{filenameURL: 'DynamicTrig2Seg0'}
 			},
 			// click on go button to start sampling at 0.5 Hz, in case user has played with the default freq, set it to 
-			//0.5 hz explicitely
-						// click on freq slider to change freq to 1 hz,  offset is approx guess, user can change
-			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			//0.5 hz explicitely it must change the value directly and show user what user can do
 			{segmentActivity: "CHANGE_ELEMENT_VALUE",
 			 segmentParams:
 			 	{element:'FreqSlider_DT2',
@@ -522,6 +545,10 @@ $(function() {
 
 	// User has selected play
     $('#playSegment').on('click', function(){	
+		// in case user has been playing with site before hitting autodemo, bring all back to default state but only on start
+		if (currSeg == 0) {
+			resetToDefaults();
+		}
     	// activate pause and disable play
     	demo.startDemo();
 

@@ -654,6 +654,7 @@ $(function() {
     		// user is starting over from very beginning
         	$('#StartOver_DT1').css("visibility", "hidden");
         	clearPage();
+        	lastFreq = 0;  // used for user messages on performance, forget all frequencies generated before
         } else {
         	// we are in the middle of a demo and we want to go back to specific context sens help and 
         	// keep graphs off to right
@@ -925,6 +926,8 @@ $(function() {
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemoWithCanvas(SCRIPT_AUTO_DEMO, 'funTutorial_DT1');  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {
+		// clear out any previous user activity
+		prepHelpForUser();
 		// prep the controls for user to interact with auto demo 
 		demo.prepDemoControls();
   		// mover header out of controls area

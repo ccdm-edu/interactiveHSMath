@@ -26,8 +26,6 @@ $(function() {
 	const C5_FREQ = 466.16; // frequency in Hz of Bflat instrument playing C5
 	const C4_FREQ = 233.08;  // frequency in Hz of Bflat instrument playing C4
 	let currFreq = C5_FREQ;
-	let $currMusicAmp = $("#music-amp");
-	let $currToneAmp = $("#tone-amp");
 	
 	let noteIsOnNow = false;  // for musical note
 	let ToneIsOnNow = false;  // for synthesized tone, both musical note and tone can play additively.
@@ -460,6 +458,13 @@ $(function() {
 	//***********************************
 	//  User instigated callback events   CHANGE Musical Note Volume
 	//***********************************
+	// must do these at a global level since we allow an abort of tone playing, must keep around the original
+	// source reference
+	let sourceNote;
+	let context;
+	// Safari has implemented AudioContext as webkitAudioContext so need next LOC
+	window.AudioContext = window.AudioContext || window.webkitAudioContext;
+	context = new AudioContext();
 	
 	function changeMP3Volume(){
 		//for MP3, will use max volume setting to give factor of 2 (3db) increase.
@@ -470,27 +475,51 @@ $(function() {
 		let gainMusicNode = context.createGain();  //return is a GainNode
 		const MAX_VOL_GAIN = 10;  // need to do better here, match this with max vol from html
 		gainMusicNode.gain.value = mp3Gain * 2 / MAX_VOL_GAIN;  // between 0 and 1 is attenuation, over 1 is gain. 
-		sourceNote.disconnect(0);  // get rid of old tone volume
-		sourceNote.connect(gainMusicNode).connect(context.destination);  // bring in new volume tone
+		if (sourceNote) {
+			// otherwise, we dont have an instrument selected so nothing to do
+			sourceNote.disconnect(0);  // get rid of old tone volume
+			sourceNote.connect(gainMusicNode).connect(context.destination);  // bring in new volume tone						
+		}
+		
 	}
-	
-	// Change label on music amplitude slider and adjust the tone as appropriate
-	$('#music-amp').on('change', function(){
+	function setMusicAmp(){
 		$currMusicAmp = $("#music-amp")
 		$("#currMusicVolLabel").text($currMusicAmp.val());
 		changeMP3Volume();
+	}
+	// Change label on music amplitude slider and adjust the tone as appropriate
+	$('#music-amp').on('change', function(){
+		setMusicAmp();
 	});
 
 	//***********************************
 	//  User instigated callback events   CHANGE Tone Volume
 	//***********************************
-	// Change label on tone amplitude slider and adjust the tone as appropriate
-	$('#tone-amp').on('change', function(){
+	function setToneAmp(){
 		$currToneAmp = $("#tone-amp");
 		$("#currToneVolLabel").text($currToneAmp.val());
-		// change the volume of the tone source, we scale down by 1/10 from previous page
 		let tonejs_dB = -20 + 20.0 * Math.log10($currToneAmp.val());
-		osc.volume.value = tonejs_dB;
+		osc.volume.value = tonejs_dB;		
+	}
+	// set the default initial value to low value
+	let DEFAULT_VOL = 3; // as set in html for element
+	$("#tone-amp").prop("value", DEFAULT_VOL);
+	let $currToneAmp = $("#tone-amp");
+	setToneAmp();
+	$("#currToneVolLabel").text($("#tone-amp").val());
+	$("#music-amp").prop("value", DEFAULT_VOL);
+	let $currMusicAmp = $("#music-amp");
+	$("#currMusicVolLabel").text($("#music-amp").val());
+
+
+	// allow for user changes
+	$('#noteVol').on('input', function(){
+		setVolume();
+	});
+	
+	// Change label on tone amplitude slider and adjust the tone as appropriate
+	$('#tone-amp').on('change', function(){
+		setToneAmp();
 	});	
 	
 	//***********************************
@@ -563,12 +592,7 @@ $(function() {
 			$(todo_tab_element).html(tuneToDo[currTuneState]);
 			$(expln_tab_element).html(tuneExpln[currTuneState]);
 			$("#musicalActivity").html(tuneTitle[currTuneState]);
-			$("#currMusicNoteLabel").html(NOTE_MAPPING.get(tuneMusicalNote[currTuneState]) );
-			
-			let context;
-			// Safari has implemented AudioContext as webkitAudioContext so need next LOC
-			window.AudioContext = window.AudioContext || window.webkitAudioContext;
-			context = new AudioContext();			
+			$("#currMusicNoteLabel").html(NOTE_MAPPING.get(tuneMusicalNote[currTuneState]) );			
 
 			if (tuneBuffer == null || tuneBuffer[currTuneState] == null) {
 				// get musical note for first time, filename in config must be mp3
@@ -667,10 +691,6 @@ $(function() {
 		};
     });		
 
-	// must do these at a global level since we allow an abort of tone playing, must keep around the original
-	// source reference
-	let sourceNote;
-	let context;
 	//***********************************
 	//  User instigated callback events   User selects PLAY INSTRUMENT they have selected
 	//***********************************
@@ -798,8 +818,8 @@ $(function() {
 	fillInArrays();
 	drawTone();
 	$("#currFreqLabel").text(currFreq);
-	$("#currMusicVolLabel").text($("#music-amp").val());
-	$("#currToneVolLabel").text($("#tone-amp").val());
+//	$("#currMusicVolLabel").text($("#music-amp").val());
+//	$("#currToneVolLabel").text($("#tone-amp").val());
 
 	//***********************************
 	//initialize data fields for tone and musical notes
@@ -1126,9 +1146,30 @@ $(function() {
 		$('.Fourth_Period').css("visibility", "hidden");
 		$("#Period_Text1").css("visibility", "hidden");			
 		$('#Period_Text2').css("visibility", "hidden");
-		
 		// update graphs, to eliminate musical note if present
 		drawTone()
+		// set all volumes to default values
+		$("#tone-amp").prop("value", DEFAULT_VOL);
+		$("#currToneVolLabel").text($("#tone-amp").val());
+		setToneAmp();
+		$("#music-amp").prop("value", DEFAULT_VOL);
+		$("#currMusicVolLabel").text($("#music-amp").val());
+		setMusicAmp();
+		// turn off all sounds
+		//    turn off musical note
+	    sourceNote.stop(0); 
+		noteIsOnNow = false;
+		$("#allowNotePlay").attr("src", VOL_OFF_ICON);
+		$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
+		$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear instrument');
+		$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
+		//    turn off tone
+		osc.toDestination().stop();
+		$("#toneStartButton").attr("src", VOL_OFF_ICON);
+		$("#toneStartButton").attr("alt", VOL_OFF_ALT);
+		$("#toneStartButton").attr("data-original-title", 'turn on speaker and click to hear sine wave you created');
+		$('#toneStartButton').css('background-color', GO_COLOR);
+		ToneIsOnNow = false;
 
     	demo.startDemo();
     });

@@ -17,7 +17,31 @@ $(function() {
 		$("#startAutoDemo").addClass('newbieMode');
 	}
 
+	let ctxLong, ctxShort, ctxExpandTime;
+	//***********************************
+	//  Immediate execution here
+	//***********************************
 
+	// With the graphs drawn, prepare to draw explanatory lines between the charts
+	//https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
+	if ( $("#timeExpand").length ) {
+    	ctxExpandTime = $("#timeExpand").get(0).getContext('2d');
+	} else {
+    	console.error('Cannot obtain timeExpand context');
+	};
+	// prepare to draw the 10ms plot at top
+    if ( $("#sine_plotsLong").length ) {
+    	ctxLong = $("#sine_plotsLong").get(0).getContext('2d');
+	} else {
+    	console.error('Cannot obtain sin_plotsLo context');
+	};
+	// prepare to draw the 1ms plot below the top 10 ms plot
+    if ( $("#sine_plotsShort").length ) {
+    	ctxShort = $("#sine_plotsShort").get(0).getContext('2d');
+	} else {
+    	console.error('Cannot obtain sin_plotsHi context');
+	};
+	
 	// implement the Tone sounding and chart tools
 	let $currFreq = $("#in-range-freq");
 	let $currAmp = $("#in-range-amp");
@@ -31,9 +55,6 @@ $(function() {
 	let ampLong = [];
 	let timeMsShort = [];
 	let ampShort = [];
-	
-	const GO_COLOR = "LightGreen";
-	const STOP_COLOR = "LightPink";
 
 	const NUM_PTS_PLOT_SHORT = 200;
 	const NUM_PTS_PLOT_LONG = 1000;
@@ -213,33 +234,6 @@ $(function() {
 	//whenever any of the tone params change, redraw both graphs and update
 	$("#toneChanges").on('change',drawTone);
 	
-	function doToneOnly() {
-
-		// on power up, draw the expansion lines between graphs
-		DrawExpansionLinesBtwnGraphs();
-		
-		// update graphs, to eliminate musical note if present
-		drawTone()
-	};
-		
-	//***********************************
-	//  Immediate execution here
-	//***********************************
-
-	let ctxLong, ctxShort, ctxExpandTime;
-	// prepare to draw the 10ms plot at top
-    if ( $("#sine_plotsLong").length ) {
-    	ctxLong = $("#sine_plotsLong").get(0).getContext('2d');
-	} else {
-    	console.error('Cannot obtain sin_plotsLo context');
-	};
-	// prepare to draw the 1ms plot below the top 10 ms plot
-    if ( $("#sine_plotsShort").length ) {
-    	ctxShort = $("#sine_plotsShort").get(0).getContext('2d');
-	} else {
-    	console.error('Cannot obtain sin_plotsHi context');
-	};
-	
 	const CHART_OPTIONS = {
 		responsive: true,
 		maintainAspectRatio: false,
@@ -312,27 +306,41 @@ $(function() {
 	    },
 	    options: BOTTOM_CHART
 	});
-	 
-	// With the graphs drawn, prepare to draw explanatory lines between the charts
-	//https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
-	if ( $("#timeExpand").length ) {
-    	ctxExpandTime = $("#timeExpand").get(0).getContext('2d');
-	} else {
-    	console.error('Cannot obtain timeExpand context');
-	};	
-	
-	// on power up, draw the expansion lines between graphs
-	DrawExpansionLinesBtwnGraphs();
-	
+		
 	//***********************************
 	//initialize values for tone as page first comes up
 	//***********************************
-	fillInArrays();
-	drawTone();
-	$("#currFreqLabel").text($("#in-range-freq").val());
-	$("#currAmpLabel").text($("#in-range-amp").val());
-	$("#currPhaseLabel").text($("#in-range-phase").val());
-  
+	function initializePage(){
+		//reset all values to default wake up values
+		let DEFAULT_FREQ = 2000; // as set in html for element
+		$("#in-range-freq").prop("value", DEFAULT_FREQ);
+		let DEFAULT_AMP = 10;
+		$("#in-range-amp").prop("value", DEFAULT_AMP);
+		let DEFAULT_PHASE = 0;
+		$("#in-range-phase").prop("value", DEFAULT_PHASE);
+		$("#currFreqLabel").text($("#in-range-freq").val());
+		$("#currAmpLabel").text($("#in-range-amp").val());
+		$("#currPhaseLabel").text($("#in-range-phase").val());
+		$currFreq = $("#in-range-freq");
+		$currAmp = $("#in-range-amp");
+		$currPhase = $("#in-range-phase")
+	
+		//turn off tone initially
+		ToneIsOnNow = false;
+		osc.toDestination().stop();
+		$("#toneStartButton").attr("src", VOL_OFF_ICON);
+		$("#toneStartButton").attr("alt", VOL_OFF_ALT);
+		$("#toneStartButton").attr("data-original-title", 'turn on speaker and click to hear sine wave you created');
+		$('#toneStartButton').css('background-color', GO_COLOR);
+		// on power up, draw the expansion lines between graphs
+		DrawExpansionLinesBtwnGraphs();
+		// draw current selected freq
+		fillInArrays();
+		drawTone();
+		
+	}
+    // do on power up and as needed
+    initializePage();
     
     //****************************************************************************
     // Autodemo script for tone trig
@@ -668,9 +676,9 @@ $(function() {
 			},	
 				
 
-	  ]
-	}
-];
+	  		]
+		}
+	];
 	// read the config file and find the actual filenames and put in true values.  First call 'may' have to read
 	// from file, all succeeding calls will be faster since read from local memory
    	getActualFilename(SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL)
@@ -700,7 +708,7 @@ $(function() {
 	// User has selected play
     $('#playSegment').on('click', function(){	
     	// in case plots have other stuff on them from other activities, clean it up
-    	doToneOnly();
+    	initializePage();
     	demo.startDemo();
     });
     

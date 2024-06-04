@@ -331,27 +331,31 @@ $(function() {
 		// Now that user is getting into page, put up the audio intro "click me" verbiage
 		$("#verbalIntro").css('visibility', 'visible');
 	});	
+
+	
 	//***********************************
 	// user adjusts volume, start out with default values
 	//***********************************
-	let $currVolume = $("#noteVol");
-	$("#noteVolValue").text($currVolume.val());
-	let tonejs_dB = -40 + 20.0 * Math.log10($currVolume.val());
-	osc.volume.value = tonejs_dB;
-
-	// allow for user changes
-	$('#noteVol').on('input', function(){
+	function setVolume(){
 		$currVolume = $("#noteVol");
 		$("#noteVolValue").text($currVolume.val());
 		tonejs_dB = -40 + 20.0 * Math.log10($currVolume.val());
-		osc.volume.value = tonejs_dB;
+		osc.volume.value = tonejs_dB;		
+	}
+	// set the default initial value to low value
+	let DEFAULT_VOL = 20; // as set in html for element
+	$("#noteVol").prop("value", DEFAULT_VOL);
+	let $currVolume, tonejs_dB;
+	setVolume();
+
+	// allow for user changes
+	$('#noteVol').on('input', function(){
+		setVolume();
 	});
 	//***********************************
 	// user turns on and off sound
 	//***********************************
 	let volumeOn = true;
-	
-	// at powerup, button is on once hit a note 
 
 	$("#VolOnOff").attr("src", VOL_ON_ICON);
 	$("#VolOnOff").attr("alt", VOL_ON_ALT);
@@ -382,15 +386,13 @@ $(function() {
 				$("#VolOnOff").attr("data-original-title", 'click to turn off note');
 				$('#VolOnOff').css('background-color', STOP_COLOR);
 				volumeOn = true;
-
-
-
 			}
 		} else {
 			//user has not selected a note yet, since cursor over volume button, tell them to select a note
 			$("#VolOnOff").prop("title", "Select note from above scales first");
 		}	
 	});
+
 	//***********************************
 	// User clicks on either image or the words around the image to get the audio intro
 	//***********************************
@@ -413,7 +415,12 @@ $(function() {
 		$("#VolOnOff").attr("alt", VOL_ON_ALT);
 		$("#VolOnOff").attr("data-original-title", 'click to turn off note');
 		$('#VolOnOff').css('background-color', STOP_COLOR);
-	
+		// set the volume value to the default we start on the page (so its not too loud in case user has played with it before autodemo)
+		$("#noteVol").prop("value", DEFAULT_VOL);
+		setVolume();
+		// in case user was playing notes for a song, delete all that and put back to clear
+		$('#notesToPlay').css('display', 'none')
+  		$('#notesToPlayLabel').text("");
 	};
 
 	//***********************************
@@ -422,9 +429,6 @@ $(function() {
 	$('#ResetPage').on('click', function(event){	
 		//resets graphs, scale and sound from tones only
 		resetNotes();
-		// get rid of song notes, in case user pulled up notes from a specific song
-		$('#notesToPlay').css('display', 'none')
-  		$('#notesToPlayLabel').text("");
 	});	
 	
 	//***********************************
@@ -661,8 +665,6 @@ $(function() {
 	//*** user clicks the start demo image in upper left corner, iniitalize everything
 	let demo = new AutoDemoWithCanvas(SCRIPT_AUTO_DEMO, 'funTutorial_MSIntro');  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {		
-		// just in case a note is playing, turn it off
-		resetNotes();
 		// prep the control box for user to interact with auto demo
 		demo.prepDemoControls();
 		// here is where we get to push the titles up to the far right and squish them 
@@ -678,10 +680,8 @@ $(function() {
 	// User has selected play
     $('#playSegment').on('click', function(){	
 		// just in case a note is playing, turn it off
-		resetNotes();
-		
+		resetNotes();		
     	demo.startDemo();
-
     });
     
     $('#stopSegment').on('click', function(){	
