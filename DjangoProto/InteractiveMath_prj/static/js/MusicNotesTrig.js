@@ -1156,8 +1156,10 @@ $(function() {
 		$("#currMusicVolLabel").text($("#music-amp").val());
 		setMusicAmp();
 		// turn off all sounds
-		//    turn off musical note
-	    sourceNote.stop(0); 
+		if (sourceNote) {
+			//    turn off musical note, if its on
+	    	sourceNote.stop(0);
+	    } 
 		noteIsOnNow = false;
 		$("#allowNotePlay").attr("src", VOL_OFF_ICON);
 		$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
