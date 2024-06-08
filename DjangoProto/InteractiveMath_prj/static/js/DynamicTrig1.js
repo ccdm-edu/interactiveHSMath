@@ -374,9 +374,9 @@ $(function() {
 	
 	//********************************************************
 	//*** start the timer and stop it on expiration or if user hits 360 degrees of phase
-	let stopTimerNow = false;
+	let stopTimerNow = false;  // a request
 	function startFreqMeas(){
-        timerStarted = true;
+        timerStarted = true;  // a state
         countTime =0;
         $('#UserNotices_DT1').text('');
         startInterval = setInterval(function(){
@@ -951,6 +951,8 @@ $(function() {
     
     $('#stopSegment').on('click', function(){	
     	demo.stopThisSegment(false);  //we don't want to destroy controls box
+    	// stop the timer request
+    	stopTimerNow = true;
     	// need to get the help set up for correct segment we think we are on
     	prepHelpForUser(demo.getCurrSeg()); 
     	
@@ -959,7 +961,8 @@ $(function() {
     $('#dismissAutoDemo').on('click', function(){	
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
-		
+    	// stop the timer request
+    	stopTimerNow = true;		
   		// move header and canvas back where it was
   		demo.moveToLeftForAutoDemo($('#HeaderTrig_DT1'));
   		demo.moveBackUpForAutoDemo($('#CircleValues_DT1'));

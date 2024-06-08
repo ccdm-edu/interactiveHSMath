@@ -32,7 +32,8 @@ $(function() {
 	const MAX_AMP_AXIS = CIRC_RAD + 10;
 	const PERIOD_COLOR = 'DarkOrchid';
 	const SINE_COLOR = "blue";
-	const RADIUS_VECTOR_COLOR = "PaleTurquoise"
+	const RADIUS_VECTOR_COLOR = "green"  // to match radius of previous page
+	const SINE_OUTLINE_COLOR = "PaleTurquoise"
 	
 	const ANGLE_PER_PT_RAD = Math.PI/6;
 	const TOTAL_NUM_DOTS = 2.0 * Math.PI/ANGLE_PER_PT_RAD;
@@ -161,7 +162,7 @@ $(function() {
 		return Math.round(CIRC_RAD*Math.sin(2* Math.PI * j * currFreq + phaseInRad));
 	}
 	function drawOneSineSet(x_orig, y_orig, maxTimePlot){
-		ctxFreqPlot.strokeStyle = RADIUS_VECTOR_COLOR;
+		ctxFreqPlot.strokeStyle = SINE_OUTLINE_COLOR;
 		let T = 1/currFreq;
 		const TOT_PIX_X_AXIS = PIX_PER_MINOR_TICK * 20; // we do 20 minor ticks regardless of plot
 		let numPts = 40 + 10*maxTimePlot/T;  // higher freq gets more points on plot
@@ -542,7 +543,7 @@ $(function() {
     //****************************************************************************
     // User has interacted with autoDemo controls
     //****************************************************************************
-
+	let currSeg = parseInt($('#segNum').val());
 	// User has selected play
     $('#playSegment').on('click', function(){	
 		// in case user has been playing with site before hitting autodemo, bring all back to default state but only on start
@@ -555,16 +556,20 @@ $(function() {
     });
     
     $('#stopSegment').on('click', function(){	
+		// go back to the way it was before autodemo
+		resetToDefaults();		
     	demo.stopThisSegment(false);  //we don't want to destroy controls box
     });
     
     $('#dismissAutoDemo').on('click', function(){	
+		// go back to the way it was before autodemo
+		resetToDefaults();
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
     });
     
     $("#segNum").change(function(){
-		let currSeg = parseInt($('#segNum').val());
+		currSeg = parseInt($('#segNum').val());
 		demo.setCurrSeg(currSeg);
 		
 		// remove the class so the animation will work on next page, cant do this until animation completes

@@ -714,12 +714,15 @@ $(function() {
     
     $('#stopSegment').on('click', function(){	
     	demo.stopThisSegment(false);  //we don't want to destroy controls box
+    	// turn off sound and put page back the way it was
+    	initializePage();
     });
     
     $('#dismissAutoDemo').on('click', function(){	
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
-  		
+  		// turn off sound and put page back the way it was
+    	initializePage();
   		//Autodemo over, move elements back where they were
   		demo.moveToLeftForAutoDemo($('#musicalActivity'));
     	demo.moveToLeftForAutoDemo($('#toneChanges'));	

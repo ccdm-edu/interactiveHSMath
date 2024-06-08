@@ -1129,11 +1129,10 @@ $(function() {
     // User has interacted with autoDemo controls
     //****************************************************************************
 
-	// User has selected play
-    $('#playSegment').on('click', function(){	
-    	// in case plots have other stuff on them from other activities, clean it up
+	function resetToDefaults() {
 		// get rid of any musical note legends and make the title "generic"
 		$("#musicalActivity").html(DEFAULT_TITLE);  //load up default
+		$("#currMusicNoteLabel").html("");  // no note playing   	
 		sine_plot_100_1k.data.datasets[1].label = "";
 		sine_plot_100_1k.data.datasets[1].borderColor = 'rgb(255,255,255)'; // white for legend (invisible)
 		
@@ -1172,12 +1171,17 @@ $(function() {
 		$("#toneStartButton").attr("data-original-title", 'turn on speaker and click to hear sine wave you created');
 		$('#toneStartButton').css('background-color', GO_COLOR);
 		ToneIsOnNow = false;
-
+	}
+	// User has selected play
+    $('#playSegment').on('click', function(){	
+    	// in case plots have other stuff on them from other activities, clean it up
+		resetToDefaults();
     	demo.startDemo();
     });
     
     $('#stopSegment').on('click', function(){	
     	demo.stopThisSegment(false);  //we don't want to destroy controls box
+    	resetToDefaults();  // turn off any sound, clean up
     });
     
     $('#dismissAutoDemo').on('click', function(){	
@@ -1186,7 +1190,7 @@ $(function() {
   		//move header and tone/music controls to right when autodemo is active
     	demo.moveToLeftForAutoDemo($('#headerAndCtl_TT'));
     	demo.moveToLeftForAutoDemo($('#MusicNotesToneControl'));
-  		
+  		resetToDefaults();  // turn off any sound, clean up
     });
     
     $("#segNum").change(function(){
