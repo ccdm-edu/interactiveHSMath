@@ -84,6 +84,40 @@ $(function () {
      	let currTopIndex = sessionStorage.getItem("activeTopBarIndex");
     	let $currTopItem = $('div#upperNavbarCollapse.collapse.navbar-collapse > ul.navbar-nav.mr-auto > li.nav-item > a').eq(parseInt(currTopIndex));
     	$currTopItem.css('font-weight', 'bold');
+    	
+    	// ALLOW COOKIE SELECTION by user
+    	// allow user to change cookie selection for all pages and, eventually, save users cookie selection only if they choose yes
+    	// Right now, we don't use cookies.  Save in localStorage so its avail between pages and not sent back to server.
+    	const COOKIE_STAT_MSG = "allowCookie"
+    	let cookieStat = localStorage.getItem(COOKIE_STAT_MSG);
+    	if (cookieStat === null) {
+			// user has not chosen a cookie choice
+			$("#cookieIndicatorNo").css('display','inline-block');
+			$("#cookieIndicatorYes").css('display','none');	
+		} else {
+			if (cookieStat == "false")  {
+				// user has elected no
+				$("#cookieIndicatorNo").css('display','inline-block');
+				$("#cookieIndicatorYes").css('display','none');	
+			} else {
+				//user last selected yes to allow cookies
+				$("#cookieIndicatorYes").css('display','inline-block');
+				$("#cookieIndicatorNo").css('display','none');		
+			}
+		}
+		// Allow user to change their mind on cookies and save it for their entire session (locally on their machine)
+    	$("#yesCookies").on('click', function(){
+			// save something to remember cookies are yes (don't use cookies right now)
+			$("#cookieIndicatorYes").css('display','inline-block');
+			$("#cookieIndicatorNo").css('display','none');
+			localStorage.setItem(COOKIE_STAT_MSG, "true");
+		});
+		$("#noCookies").on('click', function(){
+			// delete the image that says cookies ok
+			$("#cookieIndicatorNo").css('display','inline-block');
+			$("#cookieIndicatorYes").css('display','none');
+			localStorage.setItem(COOKIE_STAT_MSG, "false");
+		});    	
 	});
 		
 	//***********************************

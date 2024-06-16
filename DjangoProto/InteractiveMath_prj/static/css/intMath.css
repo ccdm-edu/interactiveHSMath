@@ -27,6 +27,14 @@ p#headerForSubtopics {
 	position: absolute
 	 /* This puts buttons at the bottom of box */
 }
+/* lets user know what choice they have made (default is no) */
+.cookieIndicator {
+	position: absolute;
+	right: 5px;
+	bottom: 0px;
+	height: 40px;
+	width: 40px;
+}
 #yesCookies{
 	position: absolute;
 	top: -20px;

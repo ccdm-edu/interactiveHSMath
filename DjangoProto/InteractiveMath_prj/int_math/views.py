@@ -72,7 +72,7 @@ class ProcessContactPage(View):
             print('results on quartile is ' + quartile)
             
             if ('4Q' == quartile):
-                #trust this user for the duration of session, no need to retest them as long as client has this cookie
+                #trust this user for the duration of session, no need to retest them as long as client has this data local to their device
                 request.session['notABot'] = True
                 testHasPassed = True
                 #print('Bot test PASSED')
