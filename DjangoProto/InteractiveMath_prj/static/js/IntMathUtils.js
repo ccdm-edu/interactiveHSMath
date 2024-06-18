@@ -231,6 +231,22 @@
 			twoDCtx.stroke();
 		}
 	}
+	//********
+	// Check if localStorage/sessionStorage exists and if so, perform action else return nulls
+	localStorage.setItem(COOKIE_STAT_MSG, "true");
+	function ifLocalStorageAvail(storageItem, action, value=""){
+		try {
+			if (action == "set"){
+				localStorage.setItem(storageItem, value);
+			} else {
+				return localStorage.getItem(storageItem);
+			}
+		} catch {
+			//not much to do here, dont want to crash, will default to degraded user experience
+			console.log('local storage not available, cannot ' + action + ' on item ' + storageItem);	
+		}
+		
+	}
 	//****************
 	//want to round but leave value as number, not string, so toFixed() is out. 
 	//If x axis is a number, chart js will figure out grid lines/step size as needed

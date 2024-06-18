@@ -89,7 +89,7 @@ $(function () {
     	// allow user to change cookie selection for all pages and, eventually, save users cookie selection only if they choose yes
     	// Right now, we don't use cookies.  Save in localStorage so its avail between pages and not sent back to server.
     	const COOKIE_STAT_MSG = "allowCookie"
-    	let cookieStat = localStorage.getItem(COOKIE_STAT_MSG);
+    	let cookieStat = ifLocalStorageAvail(COOKIE_STAT_MSG, "get");
     	if (cookieStat === null) {
 			// user has not chosen a cookie choice
 			$("#cookieIndicatorNo").css('display','inline-block');
@@ -110,13 +110,16 @@ $(function () {
 			// save something to remember cookies are yes (don't use cookies right now)
 			$("#cookieIndicatorYes").css('display','inline-block');
 			$("#cookieIndicatorNo").css('display','none');
-			localStorage.setItem(COOKIE_STAT_MSG, "true");
+			ifLocalStorageAvail(COOKIE_STAT_MSG, "set", "true");
+			// legally can store a cookie telling server "allow cookies"
+			// At this time, the site does not use "extra" cookies so this is just a placeholder if that changes
 		});
 		$("#noCookies").on('click', function(){
 			// delete the image that says cookies ok
 			$("#cookieIndicatorNo").css('display','inline-block');
 			$("#cookieIndicatorYes").css('display','none');
-			localStorage.setItem(COOKIE_STAT_MSG, "false");
+			ifLocalStorageAvail(COOKIE_STAT_MSG, "set", "false");
+			// legally can store a cookie telling server "no cookies"  Google already does cookies on this site
 		});    	
 	});
 		
