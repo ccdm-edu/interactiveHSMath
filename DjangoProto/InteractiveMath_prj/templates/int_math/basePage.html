@@ -197,9 +197,9 @@
 					<!--  jquery ui needed for advanced topic draggable window -->
 					<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.3/jquery-ui.min.js"></script>
 					<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
-					<!-- custom JS for all pages of site -->
-					<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
+					<!-- custom JS for all pages of site, IntMathUtils used by all js -->
 					<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>
+					<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
 
    					{% block unique_js_block %}
                     {% endblock %}

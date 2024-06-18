@@ -233,7 +233,6 @@
 	}
 	//********
 	// Check if localStorage/sessionStorage exists and if so, perform action else return nulls
-	localStorage.setItem(COOKIE_STAT_MSG, "true");
 	function ifLocalStorageAvail(storageItem, action, value=""){
 		try {
 			if (action == "set"){
