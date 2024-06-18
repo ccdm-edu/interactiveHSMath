@@ -21,13 +21,11 @@ $(function() {
 	// set up frequency slider
 	let $currFreq = $("#FreqSlider_DT2");
 	let currFreq = $currFreq.val();
-	let ind;
-	let inc;
-	let phaseOffsetInRad = 0; // changes with every sample freq, it is phase offset on samples
 	
 	let ctxUnitCircle;
-	const EXPANDED_TIME = 0.2;  // max time on lower graph, shows 10 > freq >5
-	const MAX_TIME_SEC = 1.0  // 1Hz is min freq, max time on upper graph
+	const EXPANDED_TIME = 2;  // max time on lower graph, shows 2 > freq >0.5
+	const MAX_TIME_SEC = 10;  // 1Hz is min freq, max time on upper graph
+	const MAX_FREQ_UPPER = 1; // max frequency where all points are shown on upper graph (else it looks cluttered)
 	const PIX_PER_MINOR_TICK = 17;
 	const MAX_AMP_AXIS = CIRC_RAD + 10;
 	const PERIOD_COLOR = 'DarkOrchid';
@@ -42,33 +40,11 @@ $(function() {
 	//NOTE:  we keep the rate around the circle less than 2 Hz because at about 3 Hz, can trigger epliptic attack
 	//https://epilepsysociety.org.uk/about-epilepsy/epileptic-seizures/seizure-triggers/photosensitive-epilepsy#:~:text=Photosensitive%20epilepsy%20is%20when%20seizures,feel%20disorientated%2C%20uncomfortable%20or%20unwell.
 	// between 3-30 Hz can trigger seizures.  Above 3 Hz sampling looks like flashing and the eye can't see 
-	// sampling occur so educational value is lost.
-	function findSampToSkip(freqStr) {
-		// want to keep sample period greater than 40 ms
-		let index = 0;
-		let numIncrement = 1;
-		let freq = Number(freqStr)
-		// lower freq use lower sample rate, higher freq, use Nyquist 2*fmax sample rate
-		if (freq <= 2) {
-			numIncrement = 1;
-		} else if ((freq > 2) && (freq <= 4)) {
-			numIncrement = 2;
-		} else if ((freq > 4) && (freq <= 5)) {
-			numIncrement = 3;
-		} else if ((freq > 5) && (freq <= 8)) {
-			numIncrement = 4;
-		} else {
-			// its at max we can allow, go as fast as we can
-			numIncrement = 6;
-			index = 2;  // need to offset sample at max rate
-		}
-		return [index, numIncrement, (index * ANGLE_PER_PT_RAD)];
-	};
+	// sampling occur so educational value is lost.  We have time to use all 12 samples shown, no need to skip
+
 	// start up value
 	$("#currFreqVal_DT2").text($("#FreqSlider_DT2").val() + " Hz");
-	[ind, inc, phaseOffsetInRad] = findSampToSkip(currFreq);
 
-	
 	//*******************************************************
 	//**** Draw the unit circle with black dots and the axis off to right side for the plots
 	//*******************************************************
@@ -97,7 +73,7 @@ $(function() {
     ctxUnitCircle.stroke();
     	
 	let sample = []; // the dots will be samples
-    //*** angle in rad, draw small circles that will be sample points
+    //*** angle in radians, draw small circles that will be sample points for all sample rates
     for (let pt = 0; pt < TOTAL_NUM_DOTS; pt++) {
     	let curr_angle = pt * ANGLE_PER_PT_RAD;
     	let x = CIRC_X0 + Math.round(CIRC_RAD*Math.cos(curr_angle));
@@ -191,8 +167,6 @@ $(function() {
 		$("#currFreqVal_DT2").text($currFreq.val() + " Hz");
 		// update global var
 		currFreq = $currFreq.val();
-		// choose num samples/period and offset as function of chosen period
-		[ind, inc, phaseOffsetInRad] = findSampToSkip(currFreq);
 		
 		// turn off the sampler, first turn off timer
 		if (startInterval) clearInterval(startInterval);
@@ -212,21 +186,20 @@ $(function() {
 	function startFreqSample(){
 		let countTic=0;
 		let countFracSec = 0;
-		let phaseInRad = phaseOffsetInRad;
+		let phaseInRad = 0;
 		let numCycles = 0;
 		const EXP_AXIS = 20/EXPANDED_TIME;  // 20 ticks per top or bottom expanded axis
-		let samplesPerPeriod = TOTAL_NUM_DOTS/inc;
+		let samplesPerPeriod = TOTAL_NUM_DOTS;
 		// this value can NEVER go below 10 ms or browser will change it to 10 ms but in pracice, 
 		// it should not go below 40 ms or browser can't keep up
 		let timeIntMs = roundFP(1000/(currFreq*samplesPerPeriod), 1);		
-		//console.log(" sample time in ms is " + timeIntMs + " samples per period is " + samplesPerPeriod);
 		const TIC_IN_HALF_SEC = Math.round(500/timeIntMs);
 		if (currFreq >= 0.8) {
 			// else freq is too low and you can't see the purple circle for period
 			$('#UserNotices_DT2').html('T matches purple circle on graphs to right');
 			$('#UserNotices_DT2').css('color', PERIOD_COLOR);
 		}
-		$('#SampPerPeriod_DT2').html(samplesPerPeriod); // inc is fixed per sine freq
+		let ind = 0; // used to count way around unit circle
         startInterval = setInterval(function(){
     		let currPeriod = 1/currFreq;
     		if (0 == countTic % TIC_IN_HALF_SEC) {
@@ -234,7 +207,7 @@ $(function() {
     			countFracSec = countFracSec + 0.5;
     			$('#timeVal_DT2').text(countFracSec); 
 			}
-			phaseInRad +=  inc * ANGLE_PER_PT_RAD;
+			phaseInRad +=  ANGLE_PER_PT_RAD;
 			if (phaseInRad >= TWO_PI_RAD) {
 				// a cycle has completed, update labels and circle around T on appropriate graph
 				phaseInRad = phaseInRad % TWO_PI_RAD;
@@ -249,7 +222,6 @@ $(function() {
 					ctxFreqPlot.beginPath();
 					ctxFreqPlot.lineWidth = 2.0
 					ctxFreqPlot.strokeStyle = PERIOD_COLOR;
-					let point_y = UPPER_Y_ORIGIN;
 					ctxFreqPlot.arc(xcoord, UPPER_Y_ORIGIN, 15, 0, Math.PI * 2, true);
 					ctxFreqPlot.stroke();
 				} else {
@@ -258,38 +230,38 @@ $(function() {
 					ctxFreqPlot.beginPath();
 					ctxFreqPlot.lineWidth = 2.0
 					ctxFreqPlot.strokeStyle = PERIOD_COLOR;
-					let point_y = LOWER_Y_ORIGIN
 					ctxFreqPlot.arc(xcoord, LOWER_Y_ORIGIN, 15, 0, Math.PI * 2, true);
 					ctxFreqPlot.stroke();
 				}			
 			}
 			
-			// draw line from axis to sine sample on both graphs to the right, on higher sample rates, we put a 
-			// phase offset in there for initial point but we can't show t=0 with phase offset else
-			// period T in green won't match value calculate and nonengineers will get confused.  This
-			// simplifies things even if its slightly inaccurate.
-			let initPhaseTimeOffset = (phaseOffsetInRad/TWO_PI_RAD) * (1/currFreq);
-			let timeInS = roundFP(countTic * timeIntMs/1000,3) + initPhaseTimeOffset;
-			let sampY = calcSine(timeInS, phaseOffsetInRad);
-			//console.log(" time is " + timeInS + " samp= " + sampY + " inc = " + inc + " phaseOffset = " + phaseOffsetInRad);
+			// draw line from axis to sine sample on both graphs to the right
+			let timeInS = roundFP(countTic/(currFreq * samplesPerPeriod), 3);
+			let sampY = calcSine(timeInS);
+			let countPoint = countTic%12;  // counts which sample of unit circle you are on and resets 0,1,2,3,4,...12,0,1,2,...
 			if (timeInS <= MAX_TIME_SEC) {
-				// draw sample points on upper graph
-				let xcoord = Math.round(UPPER_X_ORIGIN + timeInS*20*PIX_PER_MINOR_TICK);
-				ctxFreqPlot.beginPath();
-				ctxFreqPlot.lineWidth = 1.0
-				ctxFreqPlot.strokeStyle = SINE_COLOR;
-				let point_y = UPPER_Y_ORIGIN;
-				ctxFreqPlot.moveTo(xcoord, UPPER_Y_ORIGIN);
-				ctxFreqPlot.lineTo(xcoord, Math.round(UPPER_Y_ORIGIN - sampY ));
-				ctxFreqPlot.stroke();
-				ctxFreqPlot.closePath();
-				// draw a tiny dot for the sample on the curve
-			    ctxFreqPlot.beginPath();
-				ctxFreqPlot.arc(xcoord,  Math.round(UPPER_Y_ORIGIN - sampY ), 3, 0, 2 * Math.PI, true);
-				ctxFreqPlot.fillStyle = SINE_COLOR;
-				ctxFreqPlot.fill();
-				ctxFreqPlot.stroke();
-				ctxFreqPlot.closePath();
+				if ( (currFreq < MAX_FREQ_UPPER) || ( (currFreq >= MAX_FREQ_UPPER) && (countPoint%3 == 0)) )
+				{
+					//basically, if the freq is too fast, only plot every 3rd point on upper graph else too cluttered 
+					//if freq is low enough, plot all points
+					// draw sample points on upper graph
+					let xcoord = Math.round(UPPER_X_ORIGIN + (timeInS/MAX_TIME_SEC)*20*PIX_PER_MINOR_TICK);
+					ctxFreqPlot.beginPath();
+					ctxFreqPlot.lineWidth = 1.0
+					ctxFreqPlot.strokeStyle = SINE_COLOR;
+					// draw the line from y=0 to y sine position
+					ctxFreqPlot.moveTo(xcoord, UPPER_Y_ORIGIN);
+					ctxFreqPlot.lineTo(xcoord, Math.round(UPPER_Y_ORIGIN - sampY ));
+					ctxFreqPlot.stroke();
+					ctxFreqPlot.closePath();
+					// draw a tiny dot for the sample on the curve, which fits above the previous line			
+				    ctxFreqPlot.beginPath();
+					ctxFreqPlot.arc(xcoord,  Math.round(UPPER_Y_ORIGIN - sampY ), 3, 0, 2 * Math.PI, true);
+					ctxFreqPlot.fillStyle = SINE_COLOR;
+					ctxFreqPlot.fill();
+					ctxFreqPlot.stroke();
+					ctxFreqPlot.closePath();
+				}
 			}
 			if (timeInS <= EXPANDED_TIME) {
 				// draw sample points on lower graph
@@ -314,7 +286,8 @@ $(function() {
 			// every time sample, put unit circle back to "clean" initial state
 			ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
 			// draw line from center of unit circle to sample point on circle
-			ind = (ind + inc) % TOTAL_NUM_DOTS;
+			ind += 1;
+			ind = ind % TOTAL_NUM_DOTS;
 			ctxUnitCircle.beginPath();
 			ctxUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
 			ctxUnitCircle.lineTo(sample[ind].x, sample[ind].y);
@@ -358,8 +331,6 @@ $(function() {
 			$('#GoFreq_DT2').css('background-color', 'hsl(0,100%,80%)');
 			//do the sampling and update time/phase plots
 			clockIsRunning = true;
-			// reset sampling index to original values
-			[ind, inc, phaseOffsetInRad] = findSampToSkip(currFreq);
 			// start the sampling and updating of values
 			startFreqSample();
 		} else {
@@ -396,8 +367,6 @@ $(function() {
 		$("#currFreqVal_DT2").text($("#FreqSlider_DT2").val() + " Hz");
 		// update global var
 		currFreq = $currFreq.val();
-		// choose num samples/period and offset as function of chosen period
-		[ind, inc, phaseOffsetInRad] = findSampToSkip(currFreq);
 		// update plots off to the right
 		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
 		// plot new freq sin graphs
