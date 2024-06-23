@@ -12,88 +12,78 @@ This is the style sheet for the DynamicTrig2.html page
 /* text header of page activity*/
 #HeaderTrig_DT2 {
 	position: absolute;
-	border: 0px;
-	left: 400px;
+	left: 350px;
 	font-weight: bold;
 	font-size: 32px;
 	resize: none;
 }
-
+.EqtnTable_DT2{
+	position: absolute;
+	top: 100px;
+}
+.Eqtn_DT2{
+	font-size: 25px;
+}
+.Eqtn2_DT2{
+	font-size: 15px;
+}
+.N_eqtn{
+	color: red;
+}
+.ThetaUC_eqtn{
+	color: red;	
+}
+.currFreqVal_DT2{
+	color: red;	
+}
+.timeVal_DT2{
+	color: red;	
+}
 /************Params that describe and control activity***************/
 
 /* this is the parent for a series of controls/labels */
 #CircleValues_DT2 {
 	position: relative;
 	left: 0px;
-	/*top: 100; */
-	top: 120px;
+	top: 300px;
 }
-/* these are the children of CircleValues_DT2 */
-/* start button z-index must outrank the todo/expln box so it can be active */
-
-#time_DT2{
-	position: absolute;
-	left: 0px;
-	top: 40px;
-}
-#timeVal_DT2{
-	position: absolute;
-	left: 0px;
-	top: 60px;	
-}
-#cyclesLabel_DT2 {
-	position: absolute;
-	left: 100px;
-	top: 40px;
-}
-#cycles_DT2 {
-	position: absolute;
-	left: 100px;
-	top: 60px;
-}
-#periodLabel_DT2{
-	position: absolute;
-	left: 200px;
-	top: 40px;
-}
-#period_DT2{
-	position: absolute;
-	left: 200px;
-	top: 60px;
-}
-#UserNotices_DT2{
-	position: absolute;
-	left: 240px;
-	top: 70px;
-	width: 150px;
-}
-		
-/* arrange the freq input labels, slider, curr val and associated go button*/
+/* arrange the freq input labels, slider, curr val*/
 #FreqLabel_DT2{
 	position: absolute;
 	left: 0px;
-	top: 140px;
+	top: 10px;
 }
-#currFreqVal_DT2{
+#currFreqValSlide_DT2{
 	position: absolute;
 	left: 100px;
-	top: 140px;
+	top: 10px;
+	color: red;
 }
 /* inputs must have max z index so they are user inputable, else they fall behind invisible canvas */
 #FreqSlider_DT2{
 	position: absolute;
 	left: 0px;
-	top: 160px;
+	top: 30px;
 	z-index: 20;
 }
 #GoFreq_DT2{
 	position: absolute;
-	left: 150px;
-	top: 150px;
+	left: 10px;
+	top: 60px;
 	z-index: 20;
 	width: 50px;
 	height: 30px;
 	font-weight: bold;
+}
+/* these are the children of CircleValues_DT2 */
+/* start button z-index must outrank the todo/expln box so it can be active */
+
+#UserNotices_DT2{
+	position: absolute;
+	left: 300px;
+	top: 250px;
+	width: 150px;
+	color: DarkOrchid;
 }
 
 /***************************/
@@ -133,6 +123,14 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	left: 480px;
 	font-size: 20px;
 	font-weight: bold;
+}
+/* if freq too high, tell user we are removing samples for clarity, place between the graphs */
+#SubSampleNotice_DT2{
+	position: absolute;
+	top: 250px;
+	left: 700px; 
+	width: 250px;
+	color: DarkOrchid;
 }
 #sinEqtnLabelLO_DT2{
 	position: absolute;

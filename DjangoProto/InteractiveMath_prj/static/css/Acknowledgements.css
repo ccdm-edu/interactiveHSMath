@@ -9,6 +9,15 @@ h1 {
 	justify-content: center;
 	align-items: center;
 }
+#VillageThanks {
+	display:grid; /* need this to get justify content and align to work */
+	font-size: 20px;
+	/* this makes the top header take up all columns */
+	grid-column: 1/4;
+	justify-content: center;
+	align-items: center;
+	color: lightcoral;
+}
 .contributor_contact img{
 	width: 250px;
 	height: 80px;	

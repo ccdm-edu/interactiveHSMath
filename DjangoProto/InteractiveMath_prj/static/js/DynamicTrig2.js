@@ -16,16 +16,11 @@ $(function() {
 		// remind user what to do 
 		$('#FirstHelp_DT2').css("visibility", "visible");
 	}
-
-	
-	// set up frequency slider
-	let $currFreq = $("#FreqSlider_DT2");
-	let currFreq = $currFreq.val();
 	
 	let ctxUnitCircle;
 	const EXPANDED_TIME = 2;  // max time on lower graph, shows 2 > freq >0.5
 	const MAX_TIME_SEC = 10;  // 1Hz is min freq, max time on upper graph
-	const MAX_FREQ_UPPER = 1; // max frequency where all points are shown on upper graph (else it looks cluttered)
+	const MAX_FREQ_ALLPT = 1; // max frequency where all points are shown on upper graph (else it looks cluttered)
 	const PIX_PER_MINOR_TICK = 17;
 	const MAX_AMP_AXIS = CIRC_RAD + 10;
 	const PERIOD_COLOR = 'DarkOrchid';
@@ -34,16 +29,12 @@ $(function() {
 	const SINE_OUTLINE_COLOR = "PaleTurquoise"
 	
 	const ANGLE_PER_PT_RAD = Math.PI/6;
-	const TOTAL_NUM_DOTS = 2.0 * Math.PI/ANGLE_PER_PT_RAD;
-	const ANGLE_PER_PT = 360/TOTAL_NUM_DOTS;
+	const TOTAL_NUM_DOTS = 12.0;
 	
 	//NOTE:  we keep the rate around the circle less than 2 Hz because at about 3 Hz, can trigger epliptic attack
 	//https://epilepsysociety.org.uk/about-epilepsy/epileptic-seizures/seizure-triggers/photosensitive-epilepsy#:~:text=Photosensitive%20epilepsy%20is%20when%20seizures,feel%20disorientated%2C%20uncomfortable%20or%20unwell.
 	// between 3-30 Hz can trigger seizures.  Above 3 Hz sampling looks like flashing and the eye can't see 
 	// sampling occur so educational value is lost.  We have time to use all 12 samples shown, no need to skip
-
-	// start up value
-	$("#currFreqVal_DT2").text($("#FreqSlider_DT2").val() + " Hz");
 
 	//*******************************************************
 	//**** Draw the unit circle with black dots and the axis off to right side for the plots
@@ -88,6 +79,22 @@ $(function() {
 		ctxUnitCircle.closePath();
      }
      
+     // Lets keep track of exact values of each sample in radians, brought over from StaticTrig.js, just need num/denom for display
+	 let thetaSamp = [];
+	 //thetaRad is in LaTeX or MathJax
+	 thetaSamp[0] = {num: 0, den: 1, thetaInRad: "0"};  // 0 deg
+	 thetaSamp[1] = {num:1, den: 6, thetaInRad: PI+"/6"};  // pi/6 angle, 30 deg
+	 thetaSamp[2] = {num:1, den: 3, thetaInRad: PI+"/3"};  // pi/3, 60 deg
+	 thetaSamp[3] = {num: 1, den: 2, thetaInRad: PI+"/2"};  // pi/2, 90 deg
+	 thetaSamp[4] = {num: 2, den: 3, thetaInRad: "2" + PI + "/3"};  // pi/2 + pi/6, 120 deg
+	 thetaSamp[5] = {num: 5, den: 6, thetaInRad: "5" + PI + "/6"};  // pi/2 + pi/3, 150 deg
+	 thetaSamp[6] = {num: 1, den: 1, thetaInRad: PI};  // pi, 180 deg
+	 thetaSamp[7] = {num: 7, den: 6, thetaInRad: "7" + PI + "/6"};  // pi + pi/6, 210 deg
+	 thetaSamp[8] = {num: 4, den: 3, thetaInRad: "4" + PI + "/3"};  // pi + pi/3, 240 deg
+	 thetaSamp[9] = {num: 3, den: 2, thetaInRad: "3" + PI + "/2"};  // 3pi/2 , 270 deg
+	 thetaSamp[10] = {num: 5, den: 3, thetaInRad: "5" + PI + "/3"};  // 3pi/2 + pi/6 = 5pi/3, 300 deg
+	 thetaSamp[11] = {num: 11, den: 6, thetaInRad: "11" + PI + "/6"};  //  3pi/2 + pi/3 = 11pi/6, 330 deg
+     
      // keep a snapshot of drawing before user interation, need to go back to it on change
      let backgroundPlot; // used when user selects a new yellow dot to clear out the values of the old dot selected
 	 backgroundPlot = ctxUnitCircle.getImageData(0, 0, circleDotsCanvas.width, circleDotsCanvas.height);
@@ -114,9 +121,14 @@ $(function() {
 	// 4 is number of major axis wanted on graph
 	drawSineAxis(ctxFreqPlot, UPPER_X_ORIGIN, UPPER_Y_ORIGIN, MAX_TIME_SEC, PIX_PER_MINOR_TICK, 4);
 	drawSineAxis(ctxFreqPlot, LOWER_X_ORIGIN, LOWER_Y_ORIGIN, MAX_TIME_SEC/5,PIX_PER_MINOR_TICK, 4);
-	// add labels above the graph S=sin(2*pi*f*t)
-	$("#sinEqtnLabelHI_DT2").text("S=sin(2" + MULT_DOT + PI + MULT_DOT + "f" + MULT_DOT + "t)");
-	$("#sinEqtnLabelLO_DT2").text("S=sin(2" + MULT_DOT + PI + MULT_DOT + "f" + MULT_DOT + "t)");
+	// start up value on freq slider
+	$(".currFreqVal_DT2").text($("#FreqSlider_DT2").val() + " Hz");
+	let $currFreq = $("#FreqSlider_DT2");
+	let currFreq = $currFreq.val();
+	// update labels on graphs to show current freq at default
+	$("#sinEqtnLabelHI_DT2").text("S=sin(2" + MULT_DOT + PI + MULT_DOT + "f" + MULT_DOT + "t)=sin(2" + MULT_DOT + PI + MULT_DOT + currFreq + MULT_DOT + "t)");
+	$("#sinEqtnLabelLO_DT2").text("S=sin(2" + MULT_DOT + PI + MULT_DOT + "f" + MULT_DOT + "t)=sin(2" + MULT_DOT + PI + MULT_DOT + currFreq + MULT_DOT + "t)");	
+
 	//*****************
 	// draw lines inbetween plots to show lower plot is expanded time of upper plot
 
@@ -164,10 +176,9 @@ $(function() {
 		$("#FreqSlider_DT2").prop("value", DEFAULT_FREQ);
 		$currFreq = $("#FreqSlider_DT2");  // get slider value
 	    // and put it on the label as string
-		$("#currFreqVal_DT2").text($currFreq.val() + " Hz");
+		$(".currFreqVal_DT2").text($currFreq.val() + " Hz");
 		// update global var
 		currFreq = $currFreq.val();
-		
 		// turn off the sampler, first turn off timer
 		if (startInterval) clearInterval(startInterval);
     	clockIsRunning = false;
@@ -185,40 +196,67 @@ $(function() {
 	const TWO_PI_RAD = 2.0 * Math.PI;
 	function startFreqSample(){
 		let countTic=0;
-		let countFracSec = 0;
 		let phaseInRad = 0;
-		let numCycles = 0;
-		const EXP_AXIS = 20/EXPANDED_TIME;  // 20 ticks per top or bottom expanded axis
-		let samplesPerPeriod = TOTAL_NUM_DOTS;
+		let numCycles = 0;  //num times around circle
+		let ind = 0; // num points processed
+		// 20 ticks per top or bottom expanded axis
+		const TICKS_PER_MAX_TIME = 20/MAX_TIME_SEC; 
+		const TICKS_PER_EXP_TIME = 20/EXPANDED_TIME;
 		// this value can NEVER go below 10 ms or browser will change it to 10 ms but in pracice, 
 		// it should not go below 40 ms or browser can't keep up
-		let timeIntMs = roundFP(1000/(currFreq*samplesPerPeriod), 1);		
-		const TIC_IN_HALF_SEC = Math.round(500/timeIntMs);
-		if (currFreq >= 0.8) {
-			// else freq is too low and you can't see the purple circle for period
-			$('#UserNotices_DT2').html('T matches purple circle on graphs to right');
-			$('#UserNotices_DT2').css('color', PERIOD_COLOR);
-		}
-		let ind = 0; // used to count way around unit circle
+		let timeIntMs = roundFP(1000/(currFreq*TOTAL_NUM_DOTS), 1);		
         startInterval = setInterval(function(){
     		let currPeriod = 1/currFreq;
-    		if (0 == countTic % TIC_IN_HALF_SEC) {
-    			// only update every portion of sec
-    			countFracSec = countFracSec + 0.5;
-    			$('#timeVal_DT2').text(countFracSec); 
+			// adding timeIntMs but simplifying to avoid round-off error
+			let timeInS = roundFP(countTic/(currFreq * TOTAL_NUM_DOTS), 3);
+			ind = ind % TOTAL_NUM_DOTS;
+			// update the user experience
+			$('.timeVal_DT2').text(roundFP(timeInS,1) + " sec");
+			$('.ThetaUC_eqtn').html(thetaSamp[ind].thetaInRad);  //look at vertical_fract in utils
+
+			// handle the left side of the equation final line
+			let observeNum = thetaSamp[ind].num;
+			let observeDen = thetaSamp[ind].den * 2;
+			if (thetaSamp[ind].num % 2 == 0) {
+				// only happens when num is 2 or 4,  have an easy divide by 2
+				observeNum = thetaSamp[ind].num/2;
+				observeDen = thetaSamp[ind].den;
 			}
+			let denomStr = "/" + observeDen;
+			if (observeNum == 0) {
+				denomStr = "";
+			}
+			$('#observeAnswer').text("2" + PI + "(" + numCycles + " + "+ observeNum + denomStr + ")");
+			//handle the right side of the equation, final line, need to turn the decimal value into fraction with same denom as left side
+			let calcVal = currFreq * timeInS;
+			let intCalcVal = Math.floor(calcVal);
+			let fracNum = Math.round( (calcVal - intCalcVal) * observeDen);
+			let obsDenomStr = "/" + observeDen;
+			if (fracNum == 0) {
+				obsDenomStr = "";
+			}
+			$("#expectAnswer").text("2" + PI + "(" + intCalcVal + " + " + fracNum + obsDenomStr + ")");
+			
 			phaseInRad +=  ANGLE_PER_PT_RAD;
-			if (phaseInRad >= TWO_PI_RAD) {
-				// a cycle has completed, update labels and circle around T on appropriate graph
+			if ( (countTic % TOTAL_NUM_DOTS ) == 0) {
+				numCycles = countTic/TOTAL_NUM_DOTS;
+				$('.N_eqtn').text(numCycles);
+			}
+
+			if (countTic == TOTAL_NUM_DOTS){
+				// first cycle has completed, update labels and circle around T on appropriate graph only once
 				phaseInRad = phaseInRad % TWO_PI_RAD;
-				numCycles++;
-				// update the two numeric values, number of cycles and period
-				$('#cycles_DT2').text(numCycles);
 				$('#period_DT2').text(roundFP(currPeriod, 3));
+				$('#UserNotices_DT2').text('T matches purple circle on graphs to right');
+				if (currFreq >= MAX_FREQ_ALLPT) {
+					$('#SubSampleNotice_DT2').text('Samples removed from above plot to improve clarity');
+				} else {
+					$('#SubSampleNotice_DT2').text('');
+				}
 				// draw a circle on the period T on the graph to right
 				if (currPeriod > EXPANDED_TIME){
 					// draw on upper graph, its a low freq signal, there are 20 minor tics on this axis
-					let xcoord = Math.round(UPPER_X_ORIGIN + 20*currPeriod*PIX_PER_MINOR_TICK);
+					let xcoord = Math.round(UPPER_X_ORIGIN + currPeriod * PIX_PER_MINOR_TICK * TICKS_PER_MAX_TIME);
 					ctxFreqPlot.beginPath();
 					ctxFreqPlot.lineWidth = 2.0
 					ctxFreqPlot.strokeStyle = PERIOD_COLOR;
@@ -226,7 +264,7 @@ $(function() {
 					ctxFreqPlot.stroke();
 				} else {
 					// draw on lower graph, its a high freq signal, there are 20 minor tics on this axis
-					let xcoord = Math.round(LOWER_X_ORIGIN  + EXP_AXIS*currPeriod*PIX_PER_MINOR_TICK);
+					let xcoord = Math.round(LOWER_X_ORIGIN  + currPeriod * PIX_PER_MINOR_TICK * TICKS_PER_EXP_TIME);
 					ctxFreqPlot.beginPath();
 					ctxFreqPlot.lineWidth = 2.0
 					ctxFreqPlot.strokeStyle = PERIOD_COLOR;
@@ -236,11 +274,10 @@ $(function() {
 			}
 			
 			// draw line from axis to sine sample on both graphs to the right
-			let timeInS = roundFP(countTic/(currFreq * samplesPerPeriod), 3);
 			let sampY = calcSine(timeInS);
 			let countPoint = countTic%12;  // counts which sample of unit circle you are on and resets 0,1,2,3,4,...12,0,1,2,...
 			if (timeInS <= MAX_TIME_SEC) {
-				if ( (currFreq < MAX_FREQ_UPPER) || ( (currFreq >= MAX_FREQ_UPPER) && (countPoint%3 == 0)) )
+				if ( (currFreq < MAX_FREQ_ALLPT) || ( (currFreq >= MAX_FREQ_ALLPT) && (countPoint%3 == 0)) )
 				{
 					//basically, if the freq is too fast, only plot every 3rd point on upper graph else too cluttered 
 					//if freq is low enough, plot all points
@@ -286,8 +323,6 @@ $(function() {
 			// every time sample, put unit circle back to "clean" initial state
 			ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
 			// draw line from center of unit circle to sample point on circle
-			ind += 1;
-			ind = ind % TOTAL_NUM_DOTS;
 			ctxUnitCircle.beginPath();
 			ctxUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
 			ctxUnitCircle.lineTo(sample[ind].x, sample[ind].y);
@@ -304,9 +339,11 @@ $(function() {
 			ctxUnitCircle.lineWidth = 1.0
 			ctxUnitCircle.stroke();
 			ctxUnitCircle.closePath();
-			
+
 			// done now, increment time to next value
+			ind += 1;
 			countTic++;
+
     	}, timeIntMs);	
     }
     	
@@ -344,13 +381,12 @@ $(function() {
     });
     
     // make a nice blinky green to attract attention on the go button and a red background when its stop
-    let blinkyInterval;
     const PALE_GREEN = 'hsl(120, 100%, 80%)';
     const FULL_GREEN = 'hsl(120, 100%, 50%)';
     let currentGreen = FULL_GREEN;
     // initialize GO button to green shade
     $('#GoFreq_DT2').css('background-color', currentGreen);
-    blinkyInterval = setInterval(function(){
+    setInterval(function(){
     	if (!clockIsRunning) {
     		// do a blinky light between two different green shades on GO button
     		$('#GoFreq_DT2').css('background-color', currentGreen);
@@ -361,10 +397,9 @@ $(function() {
     //***********************************
     //*** Change label on freq slider and adjust the tone as appropriate
 	$('#FreqSlider_DT2').on('change', function(){
-		//console.log(" WE MADE IT to change on slider");
 		$currFreq = $("#FreqSlider_DT2");  // get slider value
 	    // and put it on the label as string
-		$("#currFreqVal_DT2").text($("#FreqSlider_DT2").val() + " Hz");
+		$(".currFreqVal_DT2").text($("#FreqSlider_DT2").val() + " Hz");
 		// update global var
 		currFreq = $currFreq.val();
 		// update plots off to the right
@@ -504,9 +539,8 @@ $(function() {
     //****************************************************************************   
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
-    $('#startAutoDemo').on('click', function(event) {
-		demo.prepDemoControls();
-		
+    $('#startAutoDemo').on('click', function() {
+		demo.prepDemoControls();	
     });
    
     //****************************************************************************
