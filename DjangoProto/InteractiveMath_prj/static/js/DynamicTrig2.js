@@ -25,7 +25,7 @@ $(function() {
 	const MAX_AMP_AXIS = CIRC_RAD + 10;
 	const PERIOD_COLOR = 'DarkOrchid';
 	const SINE_COLOR = "blue";
-	const RADIUS_VECTOR_COLOR = "green"  // to match radius of previous page
+	const RADIUS_VECTOR_COLOR = "black"  
 	const SINE_OUTLINE_COLOR = "PaleTurquoise"
 	
 	const ANGLE_PER_PT_RAD = Math.PI/6;
@@ -71,29 +71,30 @@ $(function() {
 		let y = CIRC_Y0 - Math.round(CIRC_RAD*Math.sin(curr_angle));
 		sample.push({x: x, y: y});
     	ctxUnitCircle.beginPath();
-		// create dots for user clickable phase accumulation
+		// create dots for phase accumulation
 		ctxUnitCircle.arc(x, y, DOT_RADIUS, 0, 2 * Math.PI, true);
-		ctxUnitCircle.fillStyle = SINE_COLOR;
+		ctxUnitCircle.fillStyle = "yellow";
 		ctxUnitCircle.fill();
 		ctxUnitCircle.stroke();
 		ctxUnitCircle.closePath();
      }
      
      // Lets keep track of exact values of each sample in radians, brought over from StaticTrig.js, just need num/denom for display
+     // angleRadCCW draws the theta angle which we need CCW but is drawn CW--so value looks strange
 	 let thetaSamp = [];
 	 //thetaRad is in LaTeX or MathJax
-	 thetaSamp[0] = {num: 0, den: 1, thetaInRad: "0"};  // 0 deg
-	 thetaSamp[1] = {num:1, den: 6, thetaInRad: PI+"/6"};  // pi/6 angle, 30 deg
-	 thetaSamp[2] = {num:1, den: 3, thetaInRad: PI+"/3"};  // pi/3, 60 deg
-	 thetaSamp[3] = {num: 1, den: 2, thetaInRad: PI+"/2"};  // pi/2, 90 deg
-	 thetaSamp[4] = {num: 2, den: 3, thetaInRad: "2" + PI + "/3"};  // pi/2 + pi/6, 120 deg
-	 thetaSamp[5] = {num: 5, den: 6, thetaInRad: "5" + PI + "/6"};  // pi/2 + pi/3, 150 deg
-	 thetaSamp[6] = {num: 1, den: 1, thetaInRad: PI};  // pi, 180 deg
-	 thetaSamp[7] = {num: 7, den: 6, thetaInRad: "7" + PI + "/6"};  // pi + pi/6, 210 deg
-	 thetaSamp[8] = {num: 4, den: 3, thetaInRad: "4" + PI + "/3"};  // pi + pi/3, 240 deg
-	 thetaSamp[9] = {num: 3, den: 2, thetaInRad: "3" + PI + "/2"};  // 3pi/2 , 270 deg
-	 thetaSamp[10] = {num: 5, den: 3, thetaInRad: "5" + PI + "/3"};  // 3pi/2 + pi/6 = 5pi/3, 300 deg
-	 thetaSamp[11] = {num: 11, den: 6, thetaInRad: "11" + PI + "/6"};  //  3pi/2 + pi/3 = 11pi/6, 330 deg
+	 thetaSamp[0] = {num: 0, thetaInRad: "(2" + PI + ")" + MULT_DOT + "0/12",angleRadCCW: 0};  // 0 deg
+	 thetaSamp[1] = {num:1, thetaInRad: "(2" + PI + ")" + MULT_DOT + "1/12",angleRadCCW: 11*Math.PI/6};  // pi/6 ang};   30 deg
+	 thetaSamp[2] = {num:2, thetaInRad: "(2" + PI + ")" + MULT_DOT + "2/12",angleRadCCW: 5*Math.PI/3};  // pi/3, 60 deg
+	 thetaSamp[3] = {num: 3, thetaInRad: "(2" + PI + ")" + MULT_DOT + "3/12",angleRadCCW:3*Math.PI/2 };  // pi/2, 90 deg
+	 thetaSamp[4] = {num: 4, thetaInRad: "(2" + PI + ")" + MULT_DOT + "4/12",angleRadCCW: (4/3) * Math.PI };  // pi/2 + pi/6, 120 deg
+	 thetaSamp[5] = {num: 5, thetaInRad: "(2" + PI + ")" + MULT_DOT + "5/12",angleRadCCW: 7*Math.PI/6 };  // pi/2 + pi/3, 150 deg
+	 thetaSamp[6] = {num: 6, thetaInRad: "(2" + PI + ")" + MULT_DOT + "6/12",angleRadCCW:  Math.PI};  // pi, 180 deg
+	 thetaSamp[7] = {num: 7, thetaInRad: "(2" + PI + ")" + MULT_DOT + "7/12",angleRadCCW: 5*Math.PI/6 };  // pi + pi/6, 210 deg
+	 thetaSamp[8] = {num: 8, thetaInRad: "(2" + PI + ")" + MULT_DOT + "8/12",angleRadCCW:  2*Math.PI/3};  // pi + pi/3, 240 deg
+	 thetaSamp[9] = {num: 9, thetaInRad: "(2" + PI + ")" + MULT_DOT + "9/12",angleRadCCW:  Math.PI/2};  // 3pi/2 , 270 deg
+	 thetaSamp[10] = {num: 10, thetaInRad: "(2" + PI + ")" + MULT_DOT + "10/12",angleRadCCW:  Math.PI/3};  // 3pi/2 + pi/6 = 5pi/3, 300 deg
+	 thetaSamp[11] = {num: 11, thetaInRad: "(2" + PI + ")" + MULT_DOT + "11/12",angleRadCCW: Math.PI/6};  //  3pi/2 + pi/3 = 11pi/6, 330 deg
      
      // keep a snapshot of drawing before user interation, need to go back to it on change
      let backgroundPlot; // used when user selects a new yellow dot to clear out the values of the old dot selected
@@ -194,6 +195,7 @@ $(function() {
 	//*************************************************
 	let startInterval;
 	const TWO_PI_RAD = 2.0 * Math.PI;
+	const SUBSCRIPT_U = '\u1d64';  //subscript u is "theta on the unit circle"
 	function startFreqSample(){
 		let countTic=0;
 		let phaseInRad = 0;
@@ -214,28 +216,12 @@ $(function() {
 			$('.timeVal_DT2').text(roundFP(timeInS,1) + " sec");
 			$('.ThetaUC_eqtn').html(thetaSamp[ind].thetaInRad);  //look at vertical_fract in utils
 
-			// handle the left side of the equation final line
-			let observeNum = thetaSamp[ind].num;
-			let observeDen = thetaSamp[ind].den * 2;
-			if (thetaSamp[ind].num % 2 == 0) {
-				// only happens when num is 2 or 4,  have an easy divide by 2
-				observeNum = thetaSamp[ind].num/2;
-				observeDen = thetaSamp[ind].den;
-			}
-			let denomStr = "/" + observeDen;
-			if (observeNum == 0) {
-				denomStr = "";
-			}
-			$('#observeAnswer').text("2" + PI + "(" + numCycles + " + "+ observeNum + denomStr + ")");
+			$('#observeAnswer').text("2" + PI + "(" + numCycles + " + "+ thetaSamp[ind].num + "/12)");
 			//handle the right side of the equation, final line, need to turn the decimal value into fraction with same denom as left side
 			let calcVal = currFreq * timeInS;
 			let intCalcVal = Math.floor(calcVal);
-			let fracNum = Math.round( (calcVal - intCalcVal) * observeDen);
-			let obsDenomStr = "/" + observeDen;
-			if (fracNum == 0) {
-				obsDenomStr = "";
-			}
-			$("#expectAnswer").text("2" + PI + "(" + intCalcVal + " + " + fracNum + obsDenomStr + ")");
+			let fracNum = Math.round( (calcVal - intCalcVal) * 12);
+			$("#expectAnswer").text("2" + PI + "(" + intCalcVal + " + " + fracNum + "/12)");
 			
 			phaseInRad +=  ANGLE_PER_PT_RAD;
 			if ( (countTic % TOTAL_NUM_DOTS ) == 0) {
@@ -284,7 +270,7 @@ $(function() {
 					// draw sample points on upper graph
 					let xcoord = Math.round(UPPER_X_ORIGIN + (timeInS/MAX_TIME_SEC)*20*PIX_PER_MINOR_TICK);
 					ctxFreqPlot.beginPath();
-					ctxFreqPlot.lineWidth = 1.0
+					ctxFreqPlot.lineWidth = 3.0;
 					ctxFreqPlot.strokeStyle = SINE_COLOR;
 					// draw the line from y=0 to y sine position
 					ctxFreqPlot.moveTo(xcoord, UPPER_Y_ORIGIN);
@@ -304,7 +290,7 @@ $(function() {
 				// draw sample points on lower graph
 				let xcoord = Math.round(LOWER_X_ORIGIN + (timeInS/EXPANDED_TIME)*20*PIX_PER_MINOR_TICK);
 				ctxFreqPlot.beginPath();
-				ctxFreqPlot.lineWidth = 1.0
+				ctxFreqPlot.lineWidth = 3.0;
 				ctxFreqPlot.strokeStyle = SINE_COLOR;
 				let point_y = UPPER_Y_ORIGIN;
 				ctxFreqPlot.moveTo(xcoord, LOWER_Y_ORIGIN);
@@ -327,7 +313,7 @@ $(function() {
 			ctxUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
 			ctxUnitCircle.lineTo(sample[ind].x, sample[ind].y);
 			ctxUnitCircle.strokeStyle = RADIUS_VECTOR_COLOR;
-			ctxUnitCircle.lineWidth = 3.0
+			ctxUnitCircle.lineWidth = 1.0;
 			ctxUnitCircle.stroke();
 			ctxUnitCircle.closePath();
 
@@ -336,7 +322,18 @@ $(function() {
 			ctxUnitCircle.moveTo(sample[ind].x, sample[ind].y);
 			ctxUnitCircle.lineTo(sample[ind].x, CIRC_Y0);
 			ctxUnitCircle.strokeStyle = SINE_COLOR;
-			ctxUnitCircle.lineWidth = 1.0
+			ctxUnitCircle.lineWidth = 3.0;
+			ctxUnitCircle.stroke();
+			ctxUnitCircle.closePath();
+			
+			// create angle indicator
+			ctxUnitCircle.beginPath();
+			ctxUnitCircle.arc(CIRC_X0, CIRC_Y0, 2*ANGLE_IND, 0, thetaSamp[ind].angleRadCCW, true); 	
+			ctxUnitCircle.lineWidth = 1.0;
+			ctxUnitCircle.strokeStyle = 'green'; 
+			ctxUnitCircle.fillStyle = 'green';
+			ctxUnitCircle.font = '20px Arial';
+			ctxUnitCircle.fillText(THETA + SUBSCRIPT_U, CIRC_X0 + 2* ANGLE_IND, CIRC_Y0 - ANGLE_IND/2);	
 			ctxUnitCircle.stroke();
 			ctxUnitCircle.closePath();
 

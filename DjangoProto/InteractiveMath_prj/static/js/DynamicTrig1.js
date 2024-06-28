@@ -467,6 +467,7 @@ $(function() {
     //********************************************************
 	//*** user clicks a yellow dot
 	const ANGLE_PER_PT_DEG = ANGLE_PER_PT_RAD * 180 / Math.PI;
+	const RADIUS_VECTOR_COLOR = "green"  // needs to not be black so it shows up against axis
     circleDotsCanvas.addEventListener('click', (e) => {	
     	//user is active, get rid of help until they are done
     	$('#FirstHelp_DT1').css("visibility", "hidden");
@@ -506,9 +507,9 @@ $(function() {
 				  		ctxUnitCircle.beginPath();
 						ctxUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
 						ctxUnitCircle.lineTo(dot.x, dot.y);
-						ctxUnitCircle.strokeStyle = 'green';
-						ctxUnitCircle.fillStyle = 'green';
-						ctxUnitCircle.lineWidth = 3.0
+						ctxUnitCircle.strokeStyle = RADIUS_VECTOR_COLOR;
+						ctxUnitCircle.fillStyle = RADIUS_VECTOR_COLOR;
+						ctxUnitCircle.lineWidth = 3.0; // needs to show up against the axis
 						ctxUnitCircle.stroke();
 						ctxUnitCircle.closePath();
 						// update the user help for the first two tries to generate a freq
@@ -567,9 +568,9 @@ $(function() {
 				  		ctxUnitCircle.beginPath();
 						ctxUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
 						ctxUnitCircle.lineTo(dot.x, dot.y);
-						ctxUnitCircle.strokeStyle = 'green';
-						ctxUnitCircle.fillStyle = 'green';
-						ctxUnitCircle.lineWidth = 3.0
+						ctxUnitCircle.strokeStyle = RADIUS_VECTOR_COLOR;
+						ctxUnitCircle.fillStyle = RADIUS_VECTOR_COLOR;
+						ctxUnitCircle.lineWidth = 3.0;  // needs to show up against the axis
 						ctxUnitCircle.stroke();
 						ctxUnitCircle.closePath();
 						updateContextSensHelp(numFreqGenSoFar);  // update context sensitive help for user
