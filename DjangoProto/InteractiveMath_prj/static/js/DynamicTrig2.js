@@ -219,6 +219,8 @@ $(function() {
 			$('#observeAnswer').text("2" + PI + "(" + numCycles + " + "+ thetaSamp[ind].num + "/12)");
 			//handle the right side of the equation, final line, need to turn the decimal value into fraction with same denom as left side
 			let calcVal = currFreq * timeInS;
+			let decApproxVal = roundFP(2.0 * Math.PI * calcVal, 3);
+			$("#expectDecimalApprox").text(decApproxVal + " rad");
 			let intCalcVal = Math.floor(calcVal);
 			let fracNum = Math.round( (calcVal - intCalcVal) * 12);
 			$("#expectAnswer").text("2" + PI + "(" + intCalcVal + " + " + fracNum + "/12)");

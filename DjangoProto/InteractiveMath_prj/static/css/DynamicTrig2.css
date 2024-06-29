@@ -27,17 +27,20 @@ This is the style sheet for the DynamicTrig2.html page
 .Eqtn2_DT2{
 	font-size: 15px;
 }
-.N_eqtn{
+.N_color{
 	color: red;
 }
-.ThetaUC_eqtn{
-	color: red;	
+.ThetaColor{
+	color: MediumSeaGreen;	
 }
-.currFreqVal_DT2{
-	color: red;	
+.freqColor{
+	color: Magenta;	
 }
-.timeVal_DT2{
-	color: red;	
+.timeColor{
+	color: DarkOrchid;	
+}
+.InsertedVal {
+	border: 1px solid
 }
 /************Params that describe and control activity***************/
 
@@ -57,7 +60,6 @@ This is the style sheet for the DynamicTrig2.html page
 	position: absolute;
 	left: 100px;
 	top: 10px;
-	color: red;
 }
 /* inputs must have max z index so they are user inputable, else they fall behind invisible canvas */
 #FreqSlider_DT2{
@@ -109,7 +111,7 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 #FreqChange_DT2{
 	 position: absolute;
 	 top: -50px;
-	 left: 450px;
+	 left: 570px;
 	 margin-left: 0 px;
 	 padding-left: 0 px;
 	 margin-right: 0 px;
