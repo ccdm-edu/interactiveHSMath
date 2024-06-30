@@ -22,7 +22,10 @@
 						<td colspan = '3' align="left" style ="font-size:20px"><u>Given Values</u></td>
 					</tr>
 					<tr class = "Eqtn_DT2"> <!-- Master eqtn -->
-					    <td colspan='4' align="left" >(2&#960)&#8901<span class="N_color">N</span> + <span class="ThetaColor">&#952<sub>u</sub></span></td>
+					    <td align="left" >(2&#960) &#8901</td>
+					    <td align="left"><span class="N_color">N</span></td>
+					    <td align="left" width="20px"> + </td>
+					    <td align="left"><span class="ThetaColor">&#952<sub>u</sub></span></td>
 					    <td>=</td>
 					    <td>&#920</td>
 					    <td>=</td>
@@ -30,31 +33,33 @@
 					    <td align="center"><span class="freqColor">f &#160;&#160;&#160;&#160</span>&#8901</td>
 					    <td><span class="timeColor">t</span></td>
 					</tr>
+					<!-- set widths here so table won't jump around in size as values change -->
 					<tr class = "Eqtn_DT2">  <!-- Master eqtn with values filled in -->
-						<td colspan='4' align="left">(2&#960)&#8901<span class="N_eqtn N_color">0</span> + <span class="ThetaUC_eqtn ThetaColor">0</span></td>
+						<td align="left">(2&#960) &#8901</td>
+						<td align="left" width="30px"><span class="N_eqtn N_color">0</span></td>
+						<td align="left" width="20px"> + </td>
+						<td align="left" width="120px"><span class="ThetaUC_eqtn ThetaColor">0</span></td>
 						<td>=</td>
 					    <td>&#920</td>
 					    <td>=</td>
-					    <td>(2&#960) &#8901(</td>
-					    <td colspan = '2' align="left"><span class="currFreqVal_DT2 freqColor">0.1 Hz</span>)&#8901(<span class="timeVal_DT2 timeColor">0 sec</span>)</td>
+					    <td>(2&#960) &#8901 (</td>
+					    <td align="left" width="108px"><span class="currFreqVal_DT2 freqColor">0.1 Hz</span>) &#8901 </td>
+					    <!-- 120px allows 3 significant digits and one fractional i.e.  999.9 max -->
+					    <td aligh="left" width="120px">(<span class="timeVal_DT2 timeColor">0 sec</span>)</td>
 					</tr>
 					<tr class = "Eqtn2_DT2 InsertedVal">  <!-- Labels for the values on the page -->
-						<td align="center" class="N_color">N(cycles)</td>
+						<td colspan = "2" align="right" class="N_color">N(num cycles)</td>
 						<td> </td>
-						<td align="left" class="ThetaColor">&#952<sub>u</sub></td>
-						<td> </td>
-						<td> </td>
-						<td> </td>
+						<td colspan="3" align="left" class="ThetaColor">&#952<sub>u</sub> (unit circle angle)</td>
 						<td> </td>
 						<td></td>						
 					    <td align="left" class="freqColor">Frequency</td>
 					    <td align="left" class="timeColor">Time</td>
 					</tr>
 					<tr class="InsertedVal">                   <!--values on the page to be plugged into eqtns-->
-						<td align="center"><span class="N_eqtn N_color">0</span></td>
+						<td colspan="2" align="center"><span class="N_eqtn N_color">0</span></td>
 						<td> </td>
 						<td align="left"><span class="ThetaUC_eqtn ThetaColor">0</span></td>
-						<td> </td>
 						<td> </td>
 						<td> </td>
 						<td> </td>
@@ -67,7 +72,7 @@
 						<td>=</td>
 					    <td>&#920</td>
 					    <td>=</td>
-					    <td colspan="3" align="left"><span id="expectAnswer"></span> &#8776 <span id="expectDecimalApprox"></span></td>
+					    <td colspan='2' align="left" id="expectAnswer"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -78,6 +83,7 @@
 			<label id="FreqLabel_DT2"><b>Frequency:</b></label><span class="currFreqVal_DT2 freqColor" id="currFreqValSlide_DT2">000</span> 
 			<input id="FreqSlider_DT2" type="range" step="0.1" value="0.1" min="0.1" max="2" data-placement="left" data-toggle="tooltip" title="click on slider and use arrows for greater precision">
 			<input type="button" id="GoFreq_DT2" value="GO" ata-toggle="tooltip" data-placement="right" title="Adjust freq slider at any time">
+			<p id="UserNotices_DT2"></p>
 		</div>
 		
 		<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->

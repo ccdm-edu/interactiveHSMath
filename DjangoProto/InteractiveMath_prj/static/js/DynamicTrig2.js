@@ -47,7 +47,25 @@ $(function() {
     	console.log('Cannot obtain Sin/Cos unit circle context');
 	}
 	let sineAxisBkgd;
-	
+
+    // Lets keep track of exact values of each sample in radians, brought over from StaticTrig.js, just need num/denom for display
+    // angleRadCCW draws the theta angle which we need CCW but is drawn CW--so value looks strange
+    let thetaSamp = [];
+    const EPSILON = 15;  // value used to put the labels close but not on the angle dot
+    //thetaRad is in LaTeX or MathJax
+ 	thetaSamp[0] = {num: 0, thetaInRad: "(2" + PI + ")" + MULT_DOT + "0/12",angleRadCCW: 0,moveX:EPSILON, moveY: EPSILON};  // 0 deg
+	thetaSamp[1] = {num:1, thetaInRad: "(2" + PI + ")" + MULT_DOT + "1/12",angleRadCCW: 11*Math.PI/6, moveX:EPSILON, moveY: EPSILON};  // pi/6 ang};   30 deg
+	thetaSamp[2] = {num:2, thetaInRad: "(2" + PI + ")" + MULT_DOT + "2/12",angleRadCCW: 5*Math.PI/3, moveX:EPSILON, moveY: EPSILON};  // pi/3, 60 deg
+	thetaSamp[3] = {num: 3, thetaInRad: "(2" + PI + ")" + MULT_DOT + "3/12",angleRadCCW:3*Math.PI/2, moveX:EPSILON, moveY: EPSILON};  // pi/2, 90 deg
+	thetaSamp[4] = {num: 4, thetaInRad: "(2" + PI + ")" + MULT_DOT + "4/12",angleRadCCW: (4/3) * Math.PI, moveX:EPSILON, moveY: EPSILON };  // pi/2 + pi/6, 120 deg
+	thetaSamp[5] = {num: 5, thetaInRad: "(2" + PI + ")" + MULT_DOT + "5/12",angleRadCCW: 7*Math.PI/6, moveX:EPSILON, moveY: EPSILON };  // pi/2 + pi/3, 150 deg
+	thetaSamp[6] = {num: 6, thetaInRad: "(2" + PI + ")" + MULT_DOT + "6/12",angleRadCCW:  Math.PI, moveX:EPSILON, moveY: EPSILON};  // pi, 180 deg
+	thetaSamp[7] = {num: 7, thetaInRad: "(2" + PI + ")" + MULT_DOT + "7/12",angleRadCCW: 5*Math.PI/6 , moveX:EPSILON, moveY: EPSILON};  // pi + pi/6, 210 deg
+	thetaSamp[8] = {num: 8, thetaInRad: "(2" + PI + ")" + MULT_DOT + "8/12",angleRadCCW:  2*Math.PI/3, moveX:EPSILON, moveY: EPSILON};  // pi + pi/3, 240 deg
+	thetaSamp[9] = {num: 9, thetaInRad: "(2" + PI + ")" + MULT_DOT + "9/12",angleRadCCW:  Math.PI/2, moveX:EPSILON, moveY: EPSILON};  // 3pi/2 , 270 deg
+	thetaSamp[10] = {num: 10, thetaInRad: "(2" + PI + ")" + MULT_DOT + "10/12",angleRadCCW:  Math.PI/3, moveX:EPSILON, moveY: EPSILON};  // 3pi/2 + pi/6 = 5pi/3, 300 deg
+	thetaSamp[11] = {num: 11, thetaInRad: "(2" + PI + ")" + MULT_DOT + "11/12",angleRadCCW: Math.PI/6, moveX:EPSILON, moveY: EPSILON};  //  3pi/2 + pi/3 = 11pi/6, 330 deg
+     	
 	// *** Start drawing the "unit circle" 
 	const HALF_AXIS = CIRC_RAD + AXIS_OVERLAP;
 	const CIRC_X0 = 210;
@@ -77,25 +95,11 @@ $(function() {
 		ctxUnitCircle.fill();
 		ctxUnitCircle.stroke();
 		ctxUnitCircle.closePath();
+		ctxUnitCircle.font = "15px Georgia"
+		ctxUnitCircle.fillStyle = "black"
+		ctxUnitCircle.fillText(thetaSamp[pt].thetaInRad, x+thetaSamp[pt].moveX,y+thetaSamp[pt].moveY);
      }
-     
-     // Lets keep track of exact values of each sample in radians, brought over from StaticTrig.js, just need num/denom for display
-     // angleRadCCW draws the theta angle which we need CCW but is drawn CW--so value looks strange
-	 let thetaSamp = [];
-	 //thetaRad is in LaTeX or MathJax
-	 thetaSamp[0] = {num: 0, thetaInRad: "(2" + PI + ")" + MULT_DOT + "0/12",angleRadCCW: 0};  // 0 deg
-	 thetaSamp[1] = {num:1, thetaInRad: "(2" + PI + ")" + MULT_DOT + "1/12",angleRadCCW: 11*Math.PI/6};  // pi/6 ang};   30 deg
-	 thetaSamp[2] = {num:2, thetaInRad: "(2" + PI + ")" + MULT_DOT + "2/12",angleRadCCW: 5*Math.PI/3};  // pi/3, 60 deg
-	 thetaSamp[3] = {num: 3, thetaInRad: "(2" + PI + ")" + MULT_DOT + "3/12",angleRadCCW:3*Math.PI/2 };  // pi/2, 90 deg
-	 thetaSamp[4] = {num: 4, thetaInRad: "(2" + PI + ")" + MULT_DOT + "4/12",angleRadCCW: (4/3) * Math.PI };  // pi/2 + pi/6, 120 deg
-	 thetaSamp[5] = {num: 5, thetaInRad: "(2" + PI + ")" + MULT_DOT + "5/12",angleRadCCW: 7*Math.PI/6 };  // pi/2 + pi/3, 150 deg
-	 thetaSamp[6] = {num: 6, thetaInRad: "(2" + PI + ")" + MULT_DOT + "6/12",angleRadCCW:  Math.PI};  // pi, 180 deg
-	 thetaSamp[7] = {num: 7, thetaInRad: "(2" + PI + ")" + MULT_DOT + "7/12",angleRadCCW: 5*Math.PI/6 };  // pi + pi/6, 210 deg
-	 thetaSamp[8] = {num: 8, thetaInRad: "(2" + PI + ")" + MULT_DOT + "8/12",angleRadCCW:  2*Math.PI/3};  // pi + pi/3, 240 deg
-	 thetaSamp[9] = {num: 9, thetaInRad: "(2" + PI + ")" + MULT_DOT + "9/12",angleRadCCW:  Math.PI/2};  // 3pi/2 , 270 deg
-	 thetaSamp[10] = {num: 10, thetaInRad: "(2" + PI + ")" + MULT_DOT + "10/12",angleRadCCW:  Math.PI/3};  // 3pi/2 + pi/6 = 5pi/3, 300 deg
-	 thetaSamp[11] = {num: 11, thetaInRad: "(2" + PI + ")" + MULT_DOT + "11/12",angleRadCCW: Math.PI/6};  //  3pi/2 + pi/3 = 11pi/6, 330 deg
-     
+
      // keep a snapshot of drawing before user interation, need to go back to it on change
      let backgroundPlot; // used when user selects a new yellow dot to clear out the values of the old dot selected
 	 backgroundPlot = ctxUnitCircle.getImageData(0, 0, circleDotsCanvas.width, circleDotsCanvas.height);
@@ -219,8 +223,6 @@ $(function() {
 			$('#observeAnswer').text("2" + PI + "(" + numCycles + " + "+ thetaSamp[ind].num + "/12)");
 			//handle the right side of the equation, final line, need to turn the decimal value into fraction with same denom as left side
 			let calcVal = currFreq * timeInS;
-			let decApproxVal = roundFP(2.0 * Math.PI * calcVal, 3);
-			$("#expectDecimalApprox").text(decApproxVal + " rad");
 			let intCalcVal = Math.floor(calcVal);
 			let fracNum = Math.round( (calcVal - intCalcVal) * 12);
 			$("#expectAnswer").text("2" + PI + "(" + intCalcVal + " + " + fracNum + "/12)");
@@ -235,7 +237,7 @@ $(function() {
 				// first cycle has completed, update labels and circle around T on appropriate graph only once
 				phaseInRad = phaseInRad % TWO_PI_RAD;
 				$('#period_DT2').text(roundFP(currPeriod, 3));
-				$('#UserNotices_DT2').text('T matches purple circle on graphs to right');
+				$('#UserNotices_DT2').text('Period T = 1/f = 1/(' + currFreq + 'Hz) = ' + roundFP(currPeriod,1) + ' sec as shown in purple on graphs to right');
 				if (currFreq >= MAX_FREQ_ALLPT) {
 					$('#SubSampleNotice_DT2').text('Samples removed from above plot to improve clarity');
 				} else {
@@ -376,6 +378,7 @@ $(function() {
 			// allow user to adjust freq and go again
 			$('#GoFreq_DT2').prop('value', 'GO');
 			$('#GoFreq_DT2').css('background-color', currentGreen);
+			
 		}
     });
     
