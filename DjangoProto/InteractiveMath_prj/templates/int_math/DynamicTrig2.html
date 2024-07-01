@@ -82,7 +82,8 @@
 			<p id="UserNotices_DT2" ></p>
 			<label id="FreqLabel_DT2"><b>Frequency:</b></label><span class="currFreqVal_DT2 freqColor" id="currFreqValSlide_DT2">000</span> 
 			<input id="FreqSlider_DT2" type="range" step="0.1" value="0.1" min="0.1" max="2" data-placement="left" data-toggle="tooltip" title="click on slider and use arrows for greater precision">
-			<input type="button" id="GoFreq_DT2" value="GO" ata-toggle="tooltip" data-placement="right" title="Adjust freq slider at any time">
+			<input type="button" id="GoFreq_DT2" value="Start" ata-toggle="tooltip" data-placement="right" title="Start and pause and restart">
+			<input type="button" id="Clear_DT2" value="Clear" ata-toggle="tooltip" data-placement="right" title="Reset the page">			
 			<p id="UserNotices_DT2"></p>
 		</div>
 		
@@ -105,13 +106,13 @@
 		
 		<div id="FirstHelp_DT2">
 		<!--  will dynamically add elements here -->
-			<p> Select a frequency then hit Go button</p>
+			<p> Select a frequency then hit Start button</p>
 		</div>
 	</div>
 	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  
 	At the bottom it doesn't consume space from other elements but it does give search engines a clue what page is all about. -->
-	<p class="AdvTopic_ToDo">TRY THIS:  Pick a frequency on the slider and hit GO button.  The circle phases you clicked manually before will be sampled automatically.  
+	<p class="AdvTopic_ToDo">TRY THIS:  Pick a frequency on the slider and hit Start button.  The circle phases you clicked manually before will be sampled automatically.  
 	This accumulates phase much faster but speed is now limited by update rates on your browser.  
 	We use more samples at lower rates to illustrate what is happening and fewer samples at higher rates to reduce work for your browser.  
 	We could have sampled at any phase value, I just picked the ones you are used to looking at.  

@@ -25,11 +25,14 @@ $(function() {
 	const MAX_AMP_AXIS = CIRC_RAD + 10;
 	const PERIOD_COLOR = 'DarkOrchid';
 	const SINE_COLOR = "blue";
-	const RADIUS_VECTOR_COLOR = "black"  
-	const SINE_OUTLINE_COLOR = "PaleTurquoise"
+	const RADIUS_VECTOR_COLOR = "black"; 
+	const SINE_OUTLINE_COLOR = "PaleTurquoise";
+	const ANGLE_COLOR = 'green';
 	
 	const ANGLE_PER_PT_RAD = Math.PI/6;
 	const TOTAL_NUM_DOTS = 12.0;
+	const GO_BUTTON_TEXT = "Start";
+	const PAUSE_BUTTON_TEXT = "Pause"
 	
 	//NOTE:  we keep the rate around the circle less than 2 Hz because at about 3 Hz, can trigger epliptic attack
 	//https://epilepsysociety.org.uk/about-epilepsy/epileptic-seizures/seizure-triggers/photosensitive-epilepsy#:~:text=Photosensitive%20epilepsy%20is%20when%20seizures,feel%20disorientated%2C%20uncomfortable%20or%20unwell.
@@ -53,16 +56,16 @@ $(function() {
     let thetaSamp = [];
     const EPSILON = 15;  // value used to put the labels close but not on the angle dot
     //thetaRad is in LaTeX or MathJax
- 	thetaSamp[0] = {num: 0, thetaInRad: "(2" + PI + ")" + MULT_DOT + "0/12",angleRadCCW: 0,moveX:EPSILON, moveY: EPSILON};  // 0 deg
-	thetaSamp[1] = {num:1, thetaInRad: "(2" + PI + ")" + MULT_DOT + "1/12",angleRadCCW: 11*Math.PI/6, moveX:EPSILON, moveY: EPSILON};  // pi/6 ang};   30 deg
-	thetaSamp[2] = {num:2, thetaInRad: "(2" + PI + ")" + MULT_DOT + "2/12",angleRadCCW: 5*Math.PI/3, moveX:EPSILON, moveY: EPSILON};  // pi/3, 60 deg
-	thetaSamp[3] = {num: 3, thetaInRad: "(2" + PI + ")" + MULT_DOT + "3/12",angleRadCCW:3*Math.PI/2, moveX:EPSILON, moveY: EPSILON};  // pi/2, 90 deg
-	thetaSamp[4] = {num: 4, thetaInRad: "(2" + PI + ")" + MULT_DOT + "4/12",angleRadCCW: (4/3) * Math.PI, moveX:EPSILON, moveY: EPSILON };  // pi/2 + pi/6, 120 deg
-	thetaSamp[5] = {num: 5, thetaInRad: "(2" + PI + ")" + MULT_DOT + "5/12",angleRadCCW: 7*Math.PI/6, moveX:EPSILON, moveY: EPSILON };  // pi/2 + pi/3, 150 deg
-	thetaSamp[6] = {num: 6, thetaInRad: "(2" + PI + ")" + MULT_DOT + "6/12",angleRadCCW:  Math.PI, moveX:EPSILON, moveY: EPSILON};  // pi, 180 deg
-	thetaSamp[7] = {num: 7, thetaInRad: "(2" + PI + ")" + MULT_DOT + "7/12",angleRadCCW: 5*Math.PI/6 , moveX:EPSILON, moveY: EPSILON};  // pi + pi/6, 210 deg
-	thetaSamp[8] = {num: 8, thetaInRad: "(2" + PI + ")" + MULT_DOT + "8/12",angleRadCCW:  2*Math.PI/3, moveX:EPSILON, moveY: EPSILON};  // pi + pi/3, 240 deg
-	thetaSamp[9] = {num: 9, thetaInRad: "(2" + PI + ")" + MULT_DOT + "9/12",angleRadCCW:  Math.PI/2, moveX:EPSILON, moveY: EPSILON};  // 3pi/2 , 270 deg
+ 	thetaSamp[0] = {num: 0, thetaInRad: "(2" + PI + ")" + MULT_DOT + "0/12",angleRadCCW: 0,moveX:EPSILON, moveY: -EPSILON};  // 0 deg
+	thetaSamp[1] = {num:1, thetaInRad: "(2" + PI + ")" + MULT_DOT + "1/12",angleRadCCW: 11*Math.PI/6, moveX:EPSILON, moveY: 0};  // pi/6 ang};   30 deg
+	thetaSamp[2] = {num:2, thetaInRad: "(2" + PI + ")" + MULT_DOT + "2/12",angleRadCCW: 5*Math.PI/3, moveX:EPSILON, moveY: 0};  // pi/3, 60 deg
+	thetaSamp[3] = {num: 3, thetaInRad: "(2" + PI + ")" + MULT_DOT + "3/12",angleRadCCW:3*Math.PI/2, moveX:EPSILON, moveY: -EPSILON};  // pi/2, 90 deg
+	thetaSamp[4] = {num: 4, thetaInRad: "(2" + PI + ")" + MULT_DOT + "4/12",angleRadCCW: (4/3) * Math.PI, moveX:-3*EPSILON, moveY: -EPSILON };  // pi/2 + pi/6, 120 deg
+	thetaSamp[5] = {num: 5, thetaInRad: "(2" + PI + ")" + MULT_DOT + "5/12",angleRadCCW: 7*Math.PI/6, moveX:-4*EPSILON, moveY: -EPSILON };  // pi/2 + pi/3, 150 deg
+	thetaSamp[6] = {num: 6, thetaInRad: "(2" + PI + ")" + MULT_DOT + "6/12",angleRadCCW:  Math.PI, moveX:-4*EPSILON, moveY: -EPSILON};  // pi, 180 deg
+	thetaSamp[7] = {num: 7, thetaInRad: "(2" + PI + ")" + MULT_DOT + "7/12",angleRadCCW: 5*Math.PI/6 , moveX:-5*EPSILON, moveY: 0};  // pi + pi/6, 210 deg
+	thetaSamp[8] = {num: 8, thetaInRad: "(2" + PI + ")" + MULT_DOT + "8/12",angleRadCCW:  2*Math.PI/3, moveX:-5*EPSILON, moveY: 0};  // pi + pi/3, 240 deg
+	thetaSamp[9] = {num: 9, thetaInRad: "(2" + PI + ")" + MULT_DOT + "9/12",angleRadCCW:  Math.PI/2, moveX:-4.5*EPSILON, moveY: 1.5*EPSILON};  // 3pi/2 , 270 deg
 	thetaSamp[10] = {num: 10, thetaInRad: "(2" + PI + ")" + MULT_DOT + "10/12",angleRadCCW:  Math.PI/3, moveX:EPSILON, moveY: EPSILON};  // 3pi/2 + pi/6 = 5pi/3, 300 deg
 	thetaSamp[11] = {num: 11, thetaInRad: "(2" + PI + ")" + MULT_DOT + "11/12",angleRadCCW: Math.PI/6, moveX:EPSILON, moveY: EPSILON};  //  3pi/2 + pi/3 = 11pi/6, 330 deg
      	
@@ -95,8 +98,8 @@ $(function() {
 		ctxUnitCircle.fill();
 		ctxUnitCircle.stroke();
 		ctxUnitCircle.closePath();
-		ctxUnitCircle.font = "15px Georgia"
-		ctxUnitCircle.fillStyle = "black"
+		ctxUnitCircle.font = "15px Georgia";
+		ctxUnitCircle.fillStyle = ANGLE_COLOR;
 		ctxUnitCircle.fillText(thetaSamp[pt].thetaInRad, x+thetaSamp[pt].moveX,y+thetaSamp[pt].moveY);
      }
 
@@ -188,7 +191,7 @@ $(function() {
 		if (startInterval) clearInterval(startInterval);
     	clockIsRunning = false;
 		// set up button to go again
-		$('#GoFreq_DT2').prop('value', 'GO');
+		$('#GoFreq_DT2').prop('value', GO_BUTTON_TEXT);
 		$('#GoFreq_DT2').css('background-color', currentGreen);
 		// clear out the unit circle and graphs now that timer is stopped
 		ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
@@ -200,11 +203,21 @@ $(function() {
 	let startInterval;
 	const TWO_PI_RAD = 2.0 * Math.PI;
 	const SUBSCRIPT_U = '\u1d64';  //subscript u is "theta on the unit circle"
-	function startFreqSample(){
-		let countTic=0;
-		let phaseInRad = 0;
-		let numCycles = 0;  //num times around circle
-		let ind = 0; // num points processed
+	//these need to be available for resuming after a pause, initialize for first run
+	let countTic=0;
+	let phaseInRad=0;
+	let numCycles=0;  //num times around circle
+	let ind=0; // num points processed
+	function startOverValues(){
+		countTic = 0;
+		phaseInRad = 0;
+		numCycles = 0;
+		ind =  0;
+	}
+	function startFreqSample(startOver=true){
+		if (startOver) {
+			startOverValues();
+		}
 		// 20 ticks per top or bottom expanded axis
 		const TICKS_PER_MAX_TIME = 20/MAX_TIME_SEC; 
 		const TICKS_PER_EXP_TIME = 20/EXPANDED_TIME;
@@ -334,8 +347,8 @@ $(function() {
 			ctxUnitCircle.beginPath();
 			ctxUnitCircle.arc(CIRC_X0, CIRC_Y0, 2*ANGLE_IND, 0, thetaSamp[ind].angleRadCCW, true); 	
 			ctxUnitCircle.lineWidth = 1.0;
-			ctxUnitCircle.strokeStyle = 'green'; 
-			ctxUnitCircle.fillStyle = 'green';
+			ctxUnitCircle.strokeStyle = ANGLE_COLOR; 
+			ctxUnitCircle.fillStyle = ANGLE_COLOR;
 			ctxUnitCircle.font = '20px Arial';
 			ctxUnitCircle.fillText(THETA + SUBSCRIPT_U, CIRC_X0 + 2* ANGLE_IND, CIRC_Y0 - ANGLE_IND/2);	
 			ctxUnitCircle.stroke();
@@ -357,28 +370,45 @@ $(function() {
     $('#GoFreq_DT2').on('click', function(event) {
 		$('#FirstHelp_DT2').css("visibility", "hidden");  //user doesn't need help anymore
 		//This will keep going until user hits stop
-		if ("GO" == $('#GoFreq_DT2').prop("value")) {
-			// user is asking to Go, set up sampling/freq plots
-			// go back to bare plots before we redo everything
-			ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
+		if (GO_BUTTON_TEXT == $('#GoFreq_DT2').prop("value")) {
 			// plot new freq sin graphs
 			drawOneSineSet(UPPER_X_ORIGIN, UPPER_Y_ORIGIN, MAX_TIME_SEC);
 			drawOneSineSet(LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPANDED_TIME);
 			// allow user to stop, change color of button to pale red
-			$('#GoFreq_DT2').prop('value', 'Stop');
+			$('#GoFreq_DT2').prop('value', PAUSE_BUTTON_TEXT);
 			$('#GoFreq_DT2').css('background-color', 'hsl(0,100%,80%)');
 			//do the sampling and update time/phase plots
 			clockIsRunning = true;
 			// start the sampling and updating of values
-			startFreqSample();
+			startFreqSample(false);
 		} else {
 			// user is asking to stop
 		    if (startInterval) clearInterval(startInterval);
     		clockIsRunning = false;
 			// allow user to adjust freq and go again
-			$('#GoFreq_DT2').prop('value', 'GO');
+			$('#GoFreq_DT2').prop('value', GO_BUTTON_TEXT);
 			$('#GoFreq_DT2').css('background-color', currentGreen);
-			
+		}
+    });
+    
+    // User clicks the clear button indicating desire to start over with clean slate--this does not start activity or stop it
+    $('#Clear_DT2').on('click', function(event) {
+		// go back to bare plots before we redo everything
+		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
+		// plot new freq sin graphs
+		drawOneSineSet(UPPER_X_ORIGIN, UPPER_Y_ORIGIN, MAX_TIME_SEC);
+		drawOneSineSet(LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPANDED_TIME);
+		// put unit circle back to "clean" initial state
+		ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
+		//clean up the table of values back to zero
+		startOverValues();
+		if (!clockIsRunning){
+			//clock is not running, need to manually clean up the table values
+			$('.timeVal_DT2').text("0 sec");
+			$('.ThetaUC_eqtn').html(thetaSamp[0].thetaInRad);  //look at vertical_fract in utils
+			$('#observeAnswer').text("2" + PI + "(0 + "+ thetaSamp[0].num + "/12)");
+			$("#expectAnswer").text("2" + PI + "(0 + 0/12)");
+			$('.N_eqtn').text("0");
 		}
     });
     

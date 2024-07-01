@@ -78,12 +78,21 @@ This is the style sheet for the DynamicTrig2.html page
 	height: 30px;
 	font-weight: bold;
 }
+#Clear_DT2{
+	position: absolute;
+	left: 520px;
+	top: 10px;
+	z-index: 20;
+	width: 50px;
+	height: 30px;
+	font-weight: bold;	
+}
 /* these are the children of CircleValues_DT2 */
 /* start button z-index must outrank the todo/expln box so it can be active */
 
 #UserNotices_DT2{
 	position: absolute;
-	left: 350px;
+	left: 400px;
 	top: 50px;
 	width: 200px;
 	color: DarkOrchid;
@@ -123,7 +132,7 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 #sinEqtnLabelHI_DT2{
 	position: absolute;
 	top: -30px;
-	left: 520px;
+	left: 550px;
 	font-size: 20px;
 	font-weight: bold;
 }
@@ -138,7 +147,7 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 #sinEqtnLabelLO_DT2{
 	position: absolute;
 	top: 290px;
-	left: 520px;
+	left: 550px;
 	font-size: 20px;
 	font-weight: bold;
 }
