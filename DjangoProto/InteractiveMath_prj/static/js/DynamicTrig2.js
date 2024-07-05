@@ -178,9 +178,9 @@ $(function() {
 	//*************************************************
 	// Reset the page to the defaults
 	//************************************************* 
-	let DEFAULT_FREQ = 0.5; // as set in html for element
+	let DEFAULT_FREQ = 0.1; // as set in html for element
 	function resetToDefaults(){
-		// set the freq to lowest 0.5Hz
+		// set the freq to lowest 
 		$("#FreqSlider_DT2").prop("value", DEFAULT_FREQ);
 		$currFreq = $("#FreqSlider_DT2");  // get slider value
 	    // and put it on the label as string
@@ -196,6 +196,19 @@ $(function() {
 		// clear out the unit circle and graphs now that timer is stopped
 		ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
 		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
+		
+		// restart the table values
+		startOverValues();
+		//clock is not running, need to manually clean up the table values
+		$('.timeVal_DT2').text("0 sec");
+		$('.ThetaUC_eqtn').html(thetaSamp[0].thetaInRad);  //look at vertical_fract in utils
+		$('#observeAnswer').text("2" + PI + "(0 + "+ thetaSamp[0].num + "/12)");
+		$("#expectAnswer").text("2" + PI + "(0 + 0/12)");
+		$('.N_eqtn').text("0");
+		
+		// get rid of any possible user notifications about the graphs, which are now irrelevant
+		$('#UserNotices_DT2').text("");
+		$('#SubSampleNotice_DT2').text('');
 	}
 	//*************************************************
 	//*** update unit circle to dynamically show freq
@@ -367,7 +380,7 @@ $(function() {
 	//***********************************
     //*** user clicks the Go button, thereby implementing the freq chosen on slider
     let clockIsRunning = false;
-    $('#GoFreq_DT2').on('click', function(event) {
+    $('#GoFreq_DT2').on('click', function() {
 		$('#FirstHelp_DT2').css("visibility", "hidden");  //user doesn't need help anymore
 		//This will keep going until user hits stop
 		if (GO_BUTTON_TEXT == $('#GoFreq_DT2').prop("value")) {
@@ -379,7 +392,7 @@ $(function() {
 			$('#GoFreq_DT2').css('background-color', 'hsl(0,100%,80%)');
 			//do the sampling and update time/phase plots
 			clockIsRunning = true;
-			// start the sampling and updating of values
+			// start the sampling and updating of values, keep leftover values to restart later
 			startFreqSample(false);
 		} else {
 			// user is asking to stop
@@ -392,7 +405,7 @@ $(function() {
     });
     
     // User clicks the clear button indicating desire to start over with clean slate--this does not start activity or stop it
-    $('#Clear_DT2').on('click', function(event) {
+    $('#Clear_DT2').on('click', function() {
 		// go back to bare plots before we redo everything
 		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
 		// plot new freq sin graphs
@@ -410,6 +423,9 @@ $(function() {
 			$("#expectAnswer").text("2" + PI + "(0 + 0/12)");
 			$('.N_eqtn').text("0");
 		}
+		// get rid of any possible user notifications about the graphs, which are now irrelevant
+		$('#UserNotices_DT2').text("");
+		$('#SubSampleNotice_DT2').text('');
     });
     
     // make a nice blinky green to attract attention on the go button and a red background when its stop
@@ -453,30 +469,15 @@ $(function() {
     // Autodemo script for dynamic trig 2
     //**************************************************************************** 
 	const SCRIPT_AUTO_DEMO = [
-	{ segmentName: "First frequency",
-	  headStartForAudioMillisec: 20000, // generally the audio is longer than the cursor/annotate activity
+	{ segmentName: "Observed Theta",
+	  headStartForAudioMillisec: 115000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
 			 	{filenameURL: 'DynamicTrig2Seg0'}
 			},
-			// click on go button to start sampling at 0.5 Hz, in case user has played with the default freq, set it to 
-			//0.5 hz explicitely it must change the value directly and show user what user can do
-			{segmentActivity: "CHANGE_ELEMENT_VALUE",
-			 segmentParams:
-			 	{element:'FreqSlider_DT2',
-			 	 value: "0.5",
-			 	  offset: {x: 45, y: 10},  
-			 	waitTimeMillisec: 9000}  // this is wait before you go on to next item
-			 },		
-			// remove cursor on freq slider 
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'FreqSlider_DT2',
-			 	 action: "nothing",
-			 	waitTimeMillisec: 1000} 
-			},
+
 			// now hit go button to execute
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
@@ -493,46 +494,41 @@ $(function() {
 			 	 action: "nothing",
 			 	waitTimeMillisec: 5000} 
 			},
-			// click on freq slider to change freq to 1 hz,  offset is approx guess, user can change
-			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
-			{segmentActivity: "CHANGE_ELEMENT_VALUE",
-			 segmentParams:
-			 	{element:'FreqSlider_DT2',
-			 	 value: "1.0",
-			 	  offset: {x: 0, y: 10},  
-			 	waitTimeMillisec: 9000}  // this is wait before you go on to next item
-			 },		
-			// remove cursor on freq slider 
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'FreqSlider_DT2',
-			 	 action: "nothing",
-			 	waitTimeMillisec: 12000} 
+	  ]
+	},
+	{ segmentName: "Calculate theta",
+	  headStartForAudioMillisec: 55000, // generally the audio is longer than the cursor/annotate activity
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: 'DynamicTrig2Seg1'}
 			},
-			// click on freq slider to change freq to 2 hz,  offset is approx guess, user can change
-			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
-			{segmentActivity: "CHANGE_ELEMENT_VALUE",
-			 segmentParams:
-			 	{element:'FreqSlider_DT2',
-			 	 value: "4.0",
-			 	  offset: {x: -65, y: 10},  // in the 2Hz location
-			 	waitTimeMillisec: 6000}  // this is wait before you go on to next item
-			 },	
-			// remove cursor on freq slider 
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'FreqSlider_DT2',
-			 	 action: "nothing",
-			 	waitTimeMillisec: 10000} 
-			},
-			//ALL DONE, turn off samples, go button is a toggle button
+
+			// now hit go button to execute
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'GoFreq_DT2',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
-			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'GoFreq_DT2',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 21000} 
+			},
+			//Pause and calculate values to verify
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'GoFreq_DT2',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
@@ -541,29 +537,78 @@ $(function() {
 			 	 action: "nothing",
 			 	waitTimeMillisec: 3000} 
 			},
-			// go back to the lowest default of 0.5 Hz
+	  ]},
+	  { segmentName: "Increase frequency",
+	  headStartForAudioMillisec: 1000, // generally the audio is longer than the cursor/annotate activity
+	  segmentActivities: 
+	  [
+			{segmentActivity: "PLAY_AUDIO",
+			 segmentParams: 
+			 	{filenameURL: 'DynamicTrig2Seg2'}
+			},
+
+			// now hit go button to execute
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'GoFreq_DT2',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x: 15, y: 20},
+			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
+			},
+			// remove cursor on go/stop button
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'GoFreq_DT2',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 13000} 
+			},
+			//increase frequency to 0.5 Hz
+			// click on freq slider to change freq to 1 hz,  offset is approx guess, user can change
+			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
 			{segmentActivity: "CHANGE_ELEMENT_VALUE",
 			 segmentParams:
 			 	{element:'FreqSlider_DT2',
 			 	 value: "0.5",
-			 	  offset: {x: 45, y: 10},  
-			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			 	  offset: {x: 25, y: 10},  
+			 	waitTimeMillisec: 4000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'FreqSlider_DT2',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 1000} 
+			 	waitTimeMillisec: 29000} 
 			},
-
-	  ]
-	}];
+			//increase frequency to 1.5 Hz
+			// click on freq slider to change freq to 1 hz,  offset is approx guess, user can change
+			// value by clicking on slider, demo cannot, it must change the value directly and show user what user can do
+			{segmentActivity: "CHANGE_ELEMENT_VALUE",
+			 segmentParams:
+			 	{element:'FreqSlider_DT2',
+			 	 value: "1.5",
+			 	  offset: {x: -30, y: 10},  
+			 	waitTimeMillisec: 4000}  // this is wait before you go on to next item
+			 },		
+			// remove cursor on freq slider 
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'FreqSlider_DT2',
+			 	 action: "nothing",
+			 	waitTimeMillisec: 12000} 
+			},
+	  ]}
+	];
 	// read the config file and find the actual filenames and put in true values.  First call 'may' have to read
 	// from file, all succeeding calls will be faster since read from local memory
-   	getActualFilename(SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL)
+	getActualFilename(SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL)
    		.done(resp1 => {
 			  	SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL = resp1;
+			  	// these should be fast, in case previous one had to open file all this is now cached
+			  	getActualFilename(SCRIPT_AUTO_DEMO[1].segmentActivities[0].segmentParams.filenameURL)
+			  	.done(resp2 => SCRIPT_AUTO_DEMO[1].segmentActivities[0].segmentParams.filenameURL = resp2);
+			  	getActualFilename(SCRIPT_AUTO_DEMO[2].segmentActivities[0].segmentParams.filenameURL)
+			  	.done(resp3 => SCRIPT_AUTO_DEMO[2].segmentActivities[0].segmentParams.filenameURL = resp3)
 			  	});
 
     //****************************************************************************
@@ -572,7 +617,11 @@ $(function() {
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
     $('#startAutoDemo').on('click', function() {
-		demo.prepDemoControls();	
+		demo.prepDemoControls();
+		// move down the table/canvas/controls to make room for autodemo
+		demo.moveDownForAutoDemo($('.EqtnTable_DT2'));
+  		demo.moveDownForAutoDemo($('#CircleValues_DT2'));
+  		demo.moveDownForAutoDemo($('#UnitCircleAndGraphCanvas_DT2'));		
     });
    
     //****************************************************************************
@@ -581,10 +630,8 @@ $(function() {
 	let currSeg = parseInt($('#segNum').val());
 	// User has selected play
     $('#playSegment').on('click', function(){	
-		// in case user has been playing with site before hitting autodemo, bring all back to default state but only on start
-		if (currSeg == 0) {
-			resetToDefaults();
-		}
+		// bring everything back to defaults
+		resetToDefaults();
     	// activate pause and disable play
     	demo.startDemo();
 
@@ -601,6 +648,9 @@ $(function() {
 		resetToDefaults();
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
+    	demo.moveBackUpForAutoDemo($('.EqtnTable_DT2'));
+  		demo.moveBackUpForAutoDemo($('#CircleValues_DT2'));
+  		demo.moveBackUpForAutoDemo($('#UnitCircleAndGraphCanvas_DT2'));
     });
     
     $("#segNum").change(function(){
