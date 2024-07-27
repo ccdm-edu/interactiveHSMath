@@ -630,6 +630,14 @@ $(function() {
 			  x: e.clientX - rect.left,
 			  y: e.clientY - rect.top
 			};	
+		} 
+		else if (e instanceof MouseEvent) {
+			// DELETE THIS CODE when Safari and Firefox fix their bug (over 2 yrs old) referred to here
+			// https://stackoverflow.com/questions/70626381/why-chrome-emits-pointerevents-and-firefox-mouseevents-and-which-type-definition
+			pos = {
+			  x: e.clientX - rect.left,
+			  y: e.clientY - rect.top
+			};			
 		} else { console.log('ERROR:  unexpected event: ' + e);}
 		Object.freeze(pos);
 		let cntr = 0;
