@@ -226,9 +226,9 @@ div#tooltip:hover .tooltiptext {
 	border: 2px solid cyan;
 	border-radius: 10px;
 	display: none;
-	width: 310px;
-	height: 150px;
-	margin: 7px 7px 7px 7px;
+/*	width: 310px; */
+/*	height: 150px; */
+/*	margins: 10px 10px 10px 10px;   not working */
 	z-index: 500;  /* needs to be max value */
 }
 
