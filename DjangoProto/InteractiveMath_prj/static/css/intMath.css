@@ -226,9 +226,6 @@ div#tooltip:hover .tooltiptext {
 	border: 2px solid cyan;
 	border-radius: 10px;
 	display: none;
-/*	width: 310px; */
-/*	height: 150px; */
-/*	margins: 10px 10px 10px 10px;   not working */
 	z-index: 500;  /* needs to be max value */
 }
 
@@ -261,6 +258,14 @@ img#clickHereCursor.userHitPlay {
 	0%		{visibility: visible;}
 	50%		{visibility: hidden;}
 	100%	{visibility: hidden;} 
+}
+/************all pages, header and tables should not "wrap" and break line, expand browser! *****/
+h1 { 
+	white-space: nowrap; 
+}
+td { 
+	/* keep dynamicTrig2 table from collapsing if screen too small, user should expand screen--there is lots of good stuff to see */
+	white-space: nowrap; 
 }
 
 /************all pages, footer **************************/
