@@ -312,7 +312,7 @@ $(function() {
 	//***********************************
 	function initializePage(){
 		//reset all values to default wake up values
-		let DEFAULT_FREQ = 2000; // as set in html for element
+		let DEFAULT_FREQ = 1000; // as set in html for element
 		$("#in-range-freq").prop("value", DEFAULT_FREQ);
 		let DEFAULT_AMP = 10;
 		$("#in-range-amp").prop("value", DEFAULT_AMP);
@@ -520,8 +520,8 @@ $(function() {
 			 {segmentActivity: "CHANGE_ELEMENT_VALUE",
 			 segmentParams:
 			 	{element:'in-range-freq',
-			 	 value: "2000",
-			 	 offset: {x: -60, y: 10},  // in the 2kHz location, max position
+			 	 value: "1000",
+			 	 offset: {x: 0, y: 10},  // in the 1kHz, midrange
 			 	 waitTimeMillisec: 2000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
@@ -543,12 +543,12 @@ $(function() {
 			 	{filenameURL: 'ToneTrigSeg1'}
 			},
 			//*****************************
-			// click on freq slider to change freq to 1000 hz,  we last left off at 8kHz, need a less annoying freq 
+			// click on freq slider to change freq to 1000 hz, in case user moved it around
 			{segmentActivity: "CHANGE_ELEMENT_VALUE",
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 value: "1000",
-			 	  offset: {x: 23, y: 10},  // in the 1000Hz location
+			 	  offset: {x: 0, y: 10},  // in the 1000Hz location
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			 },	
 			 // remove cursor on freq slider 
