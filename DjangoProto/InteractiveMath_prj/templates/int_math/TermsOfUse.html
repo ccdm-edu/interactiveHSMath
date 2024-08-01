@@ -8,6 +8,7 @@
 {% endblock %}
     
 {% block body_block %}
+	<!-- Safari can't show multiple pages of a pdf in an iframe, need to pull in html, a well known bug from multiple years ago -->
     <iframe src="{{legalDocTerms}}" width="100%" height="600px">
     </iframe>
 
