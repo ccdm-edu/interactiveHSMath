@@ -129,7 +129,8 @@ $(function () {
     $("#AdvancedTopics").draggable({
     	//need to mousedown inside window to move it, else mousing down near the window will also move it
     	handle: ".modal-content"
-    });  
+    })
+    .touch();  
     
 	$("#AdvancedTopics>.modal-dialog>.modal-content>.modal-header>.tabs").click(function(){    
 	    $(".tabs").removeClass("active");
