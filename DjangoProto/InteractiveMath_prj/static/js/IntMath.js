@@ -129,19 +129,9 @@ $(function () {
     $("#AdvancedTopics").draggable({
     	//need to mousedown inside window to move it, else mousing down near the window will also move it
     	handle: ".modal-content"
-    })
-    .touch({
-		// See documentation on https://www.jqueryscript.net/mobile/jQuery-Plugin-For-Touch-Drag-Events-touch-js.html
-		// Turn on document tracking so stuff works even if the cursor leaves the trackpad.
-		trackDocument: true,
-		// Normalize coordinates when/if the cursor leaves the trackpad.
-		trackDocumentNormalize:true,
-		//prevent defaults so page doesn't scroll when you do this
-		preventDefault: {
-			drag: true,
-			swipe: true
-		}
-	});  
+//    })
+//    .touch();  
+    });
     
 	$("#AdvancedTopics>.modal-dialog>.modal-content>.modal-header>.tabs").click(function(){    
 	    $(".tabs").removeClass("active");
