@@ -140,7 +140,8 @@ $(function () {
 		( navigator.msMaxTouchPoints > 0 );
 	};
 	if (is_touch_enabled()) {
-		$("#advModal").attr("data-original-title", "Select and touch to move or mouse drag");
+		$("#advModal").attr("data-original-title", "Select and touch to move or mouse drag.  Double touch to close");
+		$("#advModalClose").attr("data-original-title", "Double touch to close")
 	} else {
 		// using mouse, jquery ui draggable will work fine
 		$("#advModal").attr("data-original-title", "drag me around as needed");
