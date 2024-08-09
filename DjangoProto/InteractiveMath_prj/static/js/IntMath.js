@@ -129,10 +129,24 @@ $(function () {
     $("#AdvancedTopics").draggable({
     	//need to mousedown inside window to move it, else mousing down near the window will also move it
     	handle: ".modal-content"
-//    })
-//    .touch();  
-    });
+    })
+    .touch();  
     
+    // if touch device, jquery ui doesn't handle it yet so use "bandaid" that allows click/move on touch devices--need to tell
+    // touch user what they can do
+    function is_touch_enabled() {
+		return ( 'ontouchstart' in window ) || 
+		( navigator.maxTouchPoints > 0 ) || 
+		( navigator.msMaxTouchPoints > 0 );
+	};
+	if (is_touch_enabled()) {
+		$("#advModal").attr("data-original-title", "Select and touch to move or mouse drag");
+	} else {
+		// using mouse, jquery ui draggable will work fine
+		$("#advModal").attr("data-original-title", "drag me around as needed");
+	}
+
+        
 	$("#AdvancedTopics>.modal-dialog>.modal-content>.modal-header>.tabs").click(function(){    
 	    $(".tabs").removeClass("active");
 	    $(".tabs h6").removeClass("font-weight-bold");    
