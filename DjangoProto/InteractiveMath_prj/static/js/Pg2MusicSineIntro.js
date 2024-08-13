@@ -689,6 +689,8 @@ $(function() {
 	// User has selected play
     $('#playSegment').on('click', function(){	
 		//safari hack test
+		osc.toDestination().start();
+		osc.frequency.value = 280;  // below what most speakers will play
 		osc.toDestination().stop();	
 		// end safari hack test
 
