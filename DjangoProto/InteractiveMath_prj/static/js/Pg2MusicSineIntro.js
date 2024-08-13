@@ -673,7 +673,7 @@ $(function() {
     //****************************************************************************   
 	//*** user clicks the start demo image in upper left corner, iniitalize everything
 	let demo = new AutoDemoWithCanvas(SCRIPT_AUTO_DEMO, 'funTutorial_MSIntro');  // give the demo the full script
-    $('#startAutoDemo').on('click', function(event) {		
+    $('#startAutoDemo').on('click', function(event) {			
 		// prep the control box for user to interact with auto demo
 		demo.prepDemoControls();
 		// here is where we get to push the titles up to the far right and squish them 
@@ -688,6 +688,10 @@ $(function() {
 
 	// User has selected play
     $('#playSegment').on('click', function(){	
+		//safari hack test
+		osc.toDestination().stop();	
+		// end safari hack test
+
 		// just in case a note is playing, turn it off
 		resetNotes();		
     	demo.startDemo();
