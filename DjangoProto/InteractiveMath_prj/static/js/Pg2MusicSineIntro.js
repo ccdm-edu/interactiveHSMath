@@ -688,11 +688,12 @@ $(function() {
 
 	// User has selected play
     $('#playSegment').on('click', function(){	
-		//safari hack test
+		//So Safari requires that a user touch (cant do CustomEvent) instigates a WebAudio event
+		// here we "cheat" and let user play button touch do a quick audio action to satisfy Safari before Autodemo
+		// which will play tones or music
 		osc.toDestination().start();
-		osc.frequency.value = 280;  // below what most speakers will play
+		osc.frequency.value = 80;  // below what most speakers will play
 		osc.toDestination().stop();	
-		// end safari hack test
 
 		// just in case a note is playing, turn it off
 		resetNotes();		
