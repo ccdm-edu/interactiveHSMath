@@ -71,6 +71,7 @@ h1 {
 #UserSelectionVideo{
 	position: relative;
 	top: calc(var(--SPACE_TO_SQUEEZE_OUT) - 10px);
+	white-space: nowrap; 
 }
 #VideoList > li.active{
 	color: pink;
@@ -90,7 +91,8 @@ h1 {
 	top: var(--SPACE_TO_SQUEEZE_OUT);  
 	/* set up internal elements as flex */
 	flex-direction: row;
-	justify-content: flex-start;
+	justify-content: flex-start; 
+	white-space: nowrap; 
 }
 /* for each item in the flex box */
 .IntroMusicFreqControl {
