@@ -140,10 +140,13 @@ $(function () {
 		( navigator.msMaxTouchPoints > 0 );
 	};
 	if (is_touch_enabled()) {
+		// the jquery.touch.min.js solution is suboptimal but at least we can move the window for touch devices--need to tell user
+		// they now have to double "click" to close
 		$("#advModal").attr("data-original-title", "Select and touch to move or mouse drag.  Double touch to close");
 		$("#advModalClose").attr("data-original-title", "Double touch to close")
 	} else {
-		// using mouse, jquery ui draggable will work fine
+		// using mouse, jquery ui draggable will work ok.  Have to grab it on top label to move it
+		// a bit flaky with jquery.touch.min.js in there
 		$("#advModal").attr("data-original-title", "drag me around as needed");
 	}
 

@@ -71,7 +71,6 @@ h1 {
 #UserSelectionVideo{
 	position: relative;
 	top: calc(var(--SPACE_TO_SQUEEZE_OUT) - 10px);
-	float: left;
 }
 #VideoList > li.active{
 	color: pink;
