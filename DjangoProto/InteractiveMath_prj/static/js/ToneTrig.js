@@ -402,7 +402,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 action: "nothing",
-			 	 waitTimeMillisec: 10000} 
+			 	 waitTimeMillisec: 13000} 
 			},
 			//*****************************
 			// turn down volume
@@ -418,7 +418,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 action: "nothing",
-			 	 waitTimeMillisec: 6000} 
+			 	 waitTimeMillisec: 9000} 
 			},			
 			//*****************************
 			// click on freq slider to change freq to 233 hz,  offset is approx guess, user can change
@@ -435,7 +435,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 action: "nothing",
-			 	 waitTimeMillisec: 10000} 
+			 	 waitTimeMillisec: 13000} 
 			},		
 			//*****************************
 			// click on freq slider to change freq to 2 khz,  offset is approx guess, user can change
@@ -445,7 +445,7 @@ $(function() {
 			 	{element:'in-range-freq',
 			 	 value: "2000",
 			 	 offset: {x: -60, y: 10},  // in the 2kHz location, max position
-			 	 waitTimeMillisec: 23000}  // this is wait before you go on to next item
+			 	 waitTimeMillisec: 20000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
@@ -535,7 +535,7 @@ $(function() {
 	  ]
 	},
 	{ segmentName: "Amplitude and Phase",
-	  headStartForAudioMillisec: 29000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 24000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",

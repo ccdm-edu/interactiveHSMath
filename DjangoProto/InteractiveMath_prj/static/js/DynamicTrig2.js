@@ -470,7 +470,7 @@ $(function() {
     //**************************************************************************** 
 	const SCRIPT_AUTO_DEMO = [
 	{ segmentName: "Observed Theta",
-	  headStartForAudioMillisec: 115000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 103000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
@@ -497,7 +497,7 @@ $(function() {
 	  ]
 	},
 	{ segmentName: "Calculate theta",
-	  headStartForAudioMillisec: 55000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 51000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
@@ -512,14 +512,14 @@ $(function() {
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
-			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 6000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'GoFreq_DT2',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 21000} 
+			 	waitTimeMillisec: 20000} 
 			},
 			//Pause and calculate values to verify
 			{segmentActivity: "ACT_ON_ELEMENT", 
@@ -578,7 +578,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'FreqSlider_DT2',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 29000} 
+			 	waitTimeMillisec: 20000} 
 			},
 			//increase frequency to 1.5 Hz
 			// click on freq slider to change freq to 1 hz,  offset is approx guess, user can change

@@ -9,6 +9,10 @@
 {%block head_block %}
     <link href="{%static 'css/DynamicTrig2.css' %}" rel="stylesheet">
 {% endblock %}
+
+{% block artist_credit %}
+	 {{ artistCredit }}
+{% endblock %}	
     
 {% block body_block %}
 	<div id="DynamicTrig2Block">
@@ -27,7 +31,7 @@
 					    <td align="left" width="20px"> + </td>
 					    <td align="left"><span class="ThetaColor">&#952<sub>u</sub></span></td>
 					    <td>=</td>
-					    <td>&#920</td>
+					    <td><b>&#920</b></td>
 					    <td>=</td>
 					    <td>(2&#960)&nbsp;&#8901</td>
 					    <td align="center"><span class="freqColor">f &#160;&#160;&#160;&#160</span>&#8901</td>
@@ -40,7 +44,7 @@
 						<td align="left" width="20px"> + </td>
 						<td align="left" width="120px"><span class="ThetaUC_eqtn ThetaColor">0</span></td>
 						<td>=</td>
-					    <td>&#920</td>
+					    <td><b>&#920</b></td>
 					    <td>=</td>
 					    <td>(2&#960)&nbsp;&#8901;&nbsp(</td>
 					    <td align="left" width="108px" min-width="108px"><span class="currFreqVal_DT2 freqColor">0.1&nbsp;Hz</span>)&nbsp;&#8901 </td>
@@ -70,7 +74,7 @@
 					<tr class = "Eqtn_DT2">  <!-- calculated values -->
 						<td colspan='4' align="right" id ="observeAnswer"></td>
 						<td>=</td>
-					    <td>&#920</td>
+					    <td><b>&#920</b></td>
 					    <td>=</td>
 					    <td colspan='2' align="left" id="expectAnswer"></td>
 					</tr>

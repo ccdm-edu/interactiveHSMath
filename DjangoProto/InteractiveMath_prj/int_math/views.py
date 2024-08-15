@@ -308,11 +308,13 @@ class DynamicTrig2View(View):
         textMap = ConfigMapper()
         companyName = textMap.readConfigMapper("CompanyName")
         g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
+        artistCredit = textMap.readConfigMapper('ArtistCredits')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'DynamicTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'artistCredit': artistCredit[3],
                         }
         response = render(request, 'int_math/DynamicTrig2.html', context=context_dict)
         return response
@@ -322,11 +324,13 @@ class ToneTrigView(View):
         textMap = ConfigMapper()
         companyName = textMap.readConfigMapper("CompanyName")
         g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
+        artistCredit = textMap.readConfigMapper('ArtistCredits')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'ToneTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'artistCredit': artistCredit[3],
                         }
         response = render(request, 'int_math/ToneTrig.html', context=context_dict)
         return response

@@ -930,7 +930,7 @@ $(function() {
 			 	{element: 'InstrumentSelections button[value="Trumpet"]',
 			 	 action: "nothing",
 			 	 offset: {x: 20, y: 20},
-			 	waitTimeMillisec: 58000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 57000}  // this is wait before you go on to next item
 			},
 
 			//*****************************
@@ -950,7 +950,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'toneStartButton',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 8000} 
+			 	waitTimeMillisec: 1000} 
 			},
 			// wait a bit and TURN ON trumpet
 			{segmentActivity: "ACT_ON_ELEMENT", 
@@ -1043,7 +1043,7 @@ $(function() {
 			 	{element: 'InstrumentSelections button[value="Trumpet"]',
 			 	 action: "nothing",
 			 	 offset: {x: 20, y: 20},
-			 	waitTimeMillisec: 28000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 15000}  // this is wait before you go on to next item
 			},
 
 			//*****************************
@@ -1063,9 +1063,9 @@ $(function() {
 			 segmentParams:
 			 	{element:'toneStartButton',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 3000} 
+			 	waitTimeMillisec: 1000} 
 			},
-			// wait a bit and TURN ON trumpet
+			// wait a bit and TURN ON flute
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'allowNotePlay',
@@ -1081,7 +1081,7 @@ $(function() {
 			 	 action: "nothing",
 			 	waitTimeMillisec: 6000} 
 			},			
-			// TURN OFF sine wave, Trumpet will play itself out
+			// TURN OFF sine wave, instrument will play itself out
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'toneStartButton',
