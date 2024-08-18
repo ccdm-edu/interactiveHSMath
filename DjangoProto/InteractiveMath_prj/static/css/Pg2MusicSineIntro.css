@@ -16,7 +16,7 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	margin: 0;
 	position: relative;
 	top: 20px;
-	left: calc(100px + var(--HEADER_LOC));
+	left: calc(var(--HEADER_LOC));
 }
 #bigIntro{
 	position: absolute;

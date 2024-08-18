@@ -20,16 +20,10 @@ This is the style sheet for the StaticTrig.html page
 	position: relative;
 	top: 0px;
 	left: 150px;
-}
-/* text header of page activity*/
-#HeaderTrig_ST {
-	position: absolute;
-	border: 0px;
-	left: 100px;
 	font-weight: bold;
 	font-size: 32px;
-	width: 100%
 }
+
 
 /************Params that define circle***************/
 /* arrange all the parms that feed into or get info out of circle */

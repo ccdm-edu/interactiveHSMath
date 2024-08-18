@@ -16,7 +16,7 @@ class AutoDemo {
 		// audio done doesn't know if it just finished or user hit stop, need to keep track
 		this.userStopRequest = false;
 		// How far we need to move elements to acomodate the AutoDemo controls box
-		this.MOVE_RIGHT_AUTODEMO_ACTIVE = 250;
+		this.MOVE_RIGHT_AUTODEMO_ACTIVE = 200;
 		this.MOVE_DOWN_AUTODEMO_ACTIVE = 65;
 	}
 	//***********This is more prep for Autodemo than actually doing it yet */
