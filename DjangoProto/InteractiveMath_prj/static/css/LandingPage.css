@@ -33,24 +33,14 @@ span#blinkingColor {
 /* put the home page verbiage over the logo, invisible at first then fades in after logo "burst" 
    the top is implicitly 0 so that the words would lay on top of logo*/
 #upgradeSchedule {
-	margin: 10%;
-    font-weight: bold;
     color: Violet;
-    position: absolute;
-    font-size: 18px;
-    /* 140px is top on autodemo controls, 150 is width of autodemo ctls, rest is padding */
-    /* better to redo all this with flexbox or grid */
-    top: calc(80px + 150px + 10px);	
 }
-div.home_expln p {
+div.home_expln {
 	margin: 10%;
     font-weight: bold;
     color: #000000;
     position: absolute;
     font-size: 18px;
-    /* 140px is top on autodemo controls, 150 is width of autodemo ctls, rest is padding */
-    /* better to redo all this with flexbox or grid */
-    top: calc(140px + 150px + 10px);
     opacity: 0.0;
     animation-name: expln_fade_in;
 	animation-duration: 2s;

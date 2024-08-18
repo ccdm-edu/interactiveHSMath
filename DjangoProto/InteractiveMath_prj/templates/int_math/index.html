@@ -29,19 +29,14 @@
 		  	</fieldset>
 		</form>
 		</div>
-		<div id="upgradeSchedule">
-			{%if upgradeNoticePresent %}
-				<p>This site is scheduled to be upgraded at {{ upgradeTime }} EST on {{ upgradeDay }}, {{ upgradeDate }}. 
-				If you have any questions, comments or bug reports, please use the contact page to let me know.
-				</p>
-			{% endif %}
-		</div>
+
 	  	<img id="logo-home-page" src="{{ landingPageLogo }}" alt = "Landing Page Logo">
 		<div class="home_expln">
+
 			{% if is_mobile %}
 				<br>
-				<b> You are using a mobile device.  This site was designed for the larger screen of a desktop/laptop/notebook/iPad.  
-				Eventually it may become mobile friendly but today is not that day.  Please use on a larger screen device.  </b>
+				<b> You are using a mobile device.  This site was designed for the larger screen of a desktop/laptop/notebook/iPad.  You
+				will have to adjust the screen frequently to see everything going on. </b>
 				<br>
 			{% else %}
 				<!-- We can work with this platform -->
@@ -53,15 +48,24 @@
 					<br>
 				</noscript>
 				<p>
-					This website is designed to connect the theories and equations in Algebra 2 and PreCalculus to the real world in a way that is <span id="blinkingColor">fun </span>and interactive.  
-					You will see how trig functions play into music and imaginary numbers help your cell phone send your text messages (and voice too). 
-				<br><br>
-					Only one person is writing code for this site so progress is
-					slow. It looks best on a laptop/desktop/iPad/notebook.  
-					This site needs more screen real-estate than a phone can give. <br>
-					This site will ALWAYS be FREE to learners, never a charge of any kind for ANY of the material.<br>
-					<br> Math is <b>literally</b> everywhere! <br>
-					Enjoy!
+					<span id="upgradeSchedule">
+						{%if upgradeNoticePresent %}
+						<br>
+							This site is scheduled to be upgraded at {{ upgradeTime }} EST on {{ upgradeDay }}, {{ upgradeDate }}. 
+							If you have any questions, comments or bug reports, please use the contact page to let me know.
+							
+						{% endif %}
+					</span>
+						<br>
+						This website is designed to connect the theories and equations in Algebra 2 and PreCalculus to the real world in a way that is <span id="blinkingColor">fun </span>and interactive.  
+						You will see how trig functions play into music and imaginary numbers help your cell phone send your text messages (and voice too). 
+						<br>
+						Only one person is writing code for this site so progress is
+						slow. It looks best on a laptop/desktop/iPad/notebook.  
+						This site needs more screen real-estate than a phone can give. <br>
+						This site will ALWAYS be FREE to learners, never a charge of any kind for ANY of the material.<br>
+						<br> Math is <b>literally</b> everywhere! <br>
+						Enjoy!
 				</p>
 			{% endif %}		
 	
