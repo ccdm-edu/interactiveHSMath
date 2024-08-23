@@ -9,17 +9,25 @@
 {%block head_block %}
     <link href="{%static 'css/StaticTrig.css' %}" rel="stylesheet">
 {% endblock %}
-
+    
 {% block body_block %}
+
 	<div id="StaticTrigBlock">
 		<div id ="headerAndCtl_ST">
 			<h1 >Where do sine waves come from?</h1>
 		</div>
 	
 		<div id="CircleValues">	
-			<label id="ampCircLabel"><b>Amplitude (r)</b></label>
-			<input id="ampCirc" type="number" min="0" max="2" step="0.1" value="1.0" required data-toggle="tooltip" title="Use arrows to change from unit circle">	
-			<p id="unitCircNotify">Unit Circle</p>
+
+	    	<label for="ampCirc"><b>Amplitude (r)</b></label>
+	    	<select name="ampCirc" id="ampCirc">
+			    <option value="0.8">0.8</option>
+			    <option value="0.9">0.9</option>
+			    <option value="1.0" selected>1.0</option>
+	            <option value="1.1">1.1</option>
+	    	</select>
+
+		    <p id="unitCircNotify">Unit Circle</p>  
 			<label id="xyValueLabel"><b>(x,y)</b></label>
 			<p id="xyEqtn"></p>
 			<p id ="xyFilledIn"></p>
@@ -121,7 +129,7 @@
 {% endblock %}	
 
 {% block unique_js_block %}
-                    	
+                        	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
 	<!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
 	<script>feather.replace()</script>
@@ -133,7 +141,7 @@
 	<!-- Custom JS for this page -->
 	<script src="{% static 'js/autoDemo.js' %}" crossorigin="anonymous"></script>	    
 	<script src="{% static 'js/StaticTrig.js' %}" crossorigin="anonymous"></script>	 
-	
+
 	<br><br>
 
 	

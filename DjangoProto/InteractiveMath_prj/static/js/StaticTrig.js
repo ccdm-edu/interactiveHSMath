@@ -475,45 +475,30 @@ $(function() {
     //***********************************
     // User changes amplitude of unit circle
     //***********************************
-    // fix the max/min values of amplitude(R) input so HTML matches js code
-    $("#ampCirc").attr("max", MAX_AMP.toString());  
-    $("#ampCirc").attr("min", MIN_AMP.toString());  
     // allow user to change the size of the unit circle to bring in idea of amplitude/volume to sine-cosine graphs
-    $('#ampCirc').on('input', function(){
-    	let temp = $("#ampCirc").val();
-    	// we allow first decimal place on input amplitude values, test a valid value was input
-		if ( Number.isInteger(temp * 10) ) {
-			if ( (temp >= MIN_AMP) && (temp <= MAX_AMP) ) {
-				amp = temp;
-				if (temp != 1.0) {
-					ampStr = amp.toString().concat(MULT_DOT);
-					$("#unitCircNotify").text("");
-					$('#xyEqtn').html('= (<span style="color:blue">r'+ MULT_DOT + 'cos'+THETA+'</span>, <span style="color:red">r'+ MULT_DOT + 'sin'+THETA+'</span>)');
-				} else {
-					//no need to show mpy by 1
-					ampStr = "";
-					$("#unitCircNotify").text("Unit Circle");
-					$('#xyEqtn').html('= (<span style="color:blue">cos'+THETA+'</span>, <span style="color:red">sin'+THETA+'</span>)');
-				}
-				
-				// since user might have typed in a value that is close but not allowed, put in the value we chose
-				$("#ampCirc").text(amp.toString());
-				// since amplitude changed, need to clear out old values for xy and theta
-				$('#xyExactValue').text(" ");
-				$('#xyFilledIn').text(" ");
-				$('#xyValueDecimal').text(" ");
-				$('#theta').text(" ");
-				redrawNewAmp();
-			} else {
-				console.log("Somehow, the user entered in a number outside expected range");
-				// force the value back to 1.0
-				$("#ampCirc").prop("value", 1.0);
-			}
+    $('#ampCirc').selectmenu({ style: "dropdown", width:80 });  // sets it up once and for ever
+    $('#ampCirc').on('selectmenuchange', function(event, ui){
+		let temp = ui.item.value;
+		amp = Number(temp);
+		if (amp != 1.0) {
+			ampStr = amp.toString().concat(MULT_DOT);
+			$("#unitCircNotify").text("");
+			$('#xyEqtn').html('= (<span style="color:blue">r'+ MULT_DOT + 'cos'+THETA+'</span>, <span style="color:red">r'+ MULT_DOT + 'sin'+THETA+'</span>)');
 		} else {
-			console.log("User entered in a noninteger value which will be ignored");
-			// force the value back to 1.0
-			$("#ampCirc").prop("value", 1.0);
+			//no need to show mpy by 1
+			ampStr = "";
+			$("#unitCircNotify").text("Unit Circle");
+			$('#xyEqtn').html('= (<span style="color:blue">cos'+THETA+'</span>, <span style="color:red">sin'+THETA+'</span>)');
 		}
+		
+		// since user might have typed in a value that is close but not allowed, put in the value we chose
+		$("#ampCirc").text(amp.toString());
+		// since amplitude changed, need to clear out old values for xy and theta
+		$('#xyExactValue').text(" ");
+		$('#xyFilledIn').text(" ");
+		$('#xyValueDecimal').text(" ");
+		$('#theta').text(" ");
+		redrawNewAmp();
 	});
 	
 	//console.log(" width is " + circleDotsCanvas.width + " height is " + circleDotsCanvas.height);
