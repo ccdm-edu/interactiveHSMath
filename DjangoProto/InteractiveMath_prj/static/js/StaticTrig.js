@@ -476,7 +476,7 @@ $(function() {
     // User changes amplitude of unit circle
     //***********************************
     // allow user to change the size of the unit circle to bring in idea of amplitude/volume to sine-cosine graphs
-    $('#ampCirc').selectmenu({ style: "dropdown", width:80 });  // sets it up once and for ever
+    $('#ampCirc').selectmenu({ style: "dropdown", width:80 }).position({of: "#ampCircLocation"});  // sets it up once and for ever
     $('#ampCirc').on('selectmenuchange', function(event, ui){
 		let temp = ui.item.value;
 		amp = Number(temp);

@@ -37,8 +37,8 @@ This is the style sheet for the StaticTrig.html page
 	top: var(--LABEL_Y_VAL);
 }
 /* because the canvas with unit circle and two plots takes up so much space and overlaps...*/
-/* need to ensure select box for amplitude is on top so users can input values, else up/down arrows and input not active, just visible*/
-#ampCirc {
+/* need to ensure select box for amplitude is on top (max z) so users can input values, else up/down arrows and input not active, just visible*/
+#ampCircLocation {
 	position: absolute;
 	left: var(--LABEL_X_VAL1);
 	top: var(--VALUE_Y_1);
@@ -47,7 +47,7 @@ This is the style sheet for the StaticTrig.html page
 #unitCircNotify{
 	position: absolute;
 	left: var(--LABEL_X_VAL1);
-	top: 82px;
+	top: 85px;
 }
 #xyValueLabel {
 	position: absolute;
