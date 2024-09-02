@@ -8,6 +8,7 @@ $(function() {
 	//if Next  button hit (in base template), set it up to go to intro page
 	//Changing this button will also trigger in the IntMath.js which will change which page on index to left is active
 	$("#GoToNextPage").wrap('<a href="../MusicSineIntro"></a>');
+    $("#GoToPreviousPage").css('display', 'none');
 
 	// on power up, hide all the review topics, they will assume proper location when the Triggy intro stuff goes away
 	$("#UserSelectionVideo").css('display', 'none');

@@ -7,5 +7,6 @@ $(function() {
 	
 	//Dont want a next button on this page so kill it here.  Once at end of a topic, time to pick a new topic and that can't be my choice
     $("#GoToNextPage").css('display', 'none');
+    $("#GoToPreviousPage").wrap('<a href="../MusicNotesTrig"></a>');
 
 })

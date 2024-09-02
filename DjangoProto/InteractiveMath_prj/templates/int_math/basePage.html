@@ -54,18 +54,32 @@
                 
                 <div class="collapse navbar-collapse" id="upperNavbarCollapse">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item mathy"><a class="nav-link" href="{% url 'int_math:index' %}">Home</a></li>
+                        <li class="nav-item mathy">
+                        	<a class="nav-link" href="{% url 'int_math:index' %}">Home</a></li>
 				        <!-- Did this by looking at bootstrap dashboard navbar dropdown -->
 				        <li class="nav-item dropdown mathy">
 				            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				            Trig
-				            </a>
-				            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-				                <a class="dropdown-item" id="TrigFuncTopic" href="{% url 'int_math:IntroTrigMusicConcepts' %}">Trig Functions</a>
+				            Trig</a>
+				            <ul class="dropdown-menu dropright">
+				                <a class="dropdown-toggle" id="TrigFuncTopic" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				                Trig Functions</a>	
+
+								<div class="dropright">
+					                <ul class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
+	          							<li><a class="dropdown-item" href="{% url 'int_math:IntroTrigMusicConcepts' %}">1. Intro to concepts</a></li>
+	          							<li><a class="dropdown-item" href="{% url 'int_math:MusicSineIntro' %}">2. Trig functions make music</a></li>
+	          			          		<li><a class="dropdown-item" href="{% url 'int_math:StaticTrig' %}">3. Sine cosine angles</a></li>
+	          							<li><a class="dropdown-item" href="{% url 'int_math:DynamicTrig1' %}">4. Sine meets time</a></li>
+	          			          		<li><a class="dropdown-item" href="{% url 'int_math:DynamicTrig2' %}">5. Sine goes faster</a></li>
+	          							<li><a class="dropdown-item" href="{% url 'int_math:ToneTrig' %}">6. Trig tones become audible</a></li>
+	          			          		<li><a class="dropdown-item" href="{% url 'int_math:MusicNotesTrig' %}">7. Trig tones within musical notes</a></li>
+	          							<li><a class="dropdown-item" href="{% url 'int_math:MusicSineSummary' %}">8. Summary of trig in music</a></li>         		
+	        						</ul>
+        						</div>	    
 				                <a class="dropdown-item" href="{% url 'int_math:TrigID' %}">Trig Identities</a>
-				            </div>
+				            </ul>
 				        </li>
-                        <li class="nav-item "><a class="nav-link" href="{% url 'int_math:imag_num' %}">Imaginary</a></li>
+                    <!-- save for later  <li class="nav-item "><a class="nav-link" href="{% url 'int_math:imag_num' %}">Imaginary</a></li>  -->
                     </ul>
                     <!-- Let these items slide left since "non mathy" -->
                     <ul class="navbar-nav">
@@ -202,12 +216,10 @@
 					<!-- custom JS for all pages of site, IntMathUtils used by all js -->
 					<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>
 					<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
-
-   					{% block unique_js_block %}
-                    {% endblock %}
                                      				
                     <!-- FOOTER -->
                     <div id="Site-footer">
+                    	<button type="button" class="btn btn-info" id="GoToPreviousPage">< Back</button>
                     	<button type="button" class="btn btn-info" id="GoToNextPage">Next ></button>
                     	<br>
                         <p id="SiteInfo-links"> 
@@ -219,6 +231,9 @@
                         <a href="{% url 'int_math:Privacy' %}"><u>PRIVACY</u></a> &middot; <a href="{% url 'int_math:TermsOfUse' %}"><u>TERMS</u></a>
                         </p>
                     </div>
+                    
+                    {% block unique_js_block %}
+                    {% endblock %}
                 </main>
             </div>
         </div>

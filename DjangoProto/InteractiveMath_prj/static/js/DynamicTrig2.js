@@ -6,6 +6,7 @@ $(function() {
 	
 	//if Next  button hit (in base template), set it up to go to intro page
 	$("#GoToNextPage").wrap('<a href="../ToneTrig"></a>');
+	$("#GoToPreviousPage").wrap('<a href="../DynamicTrig1"></a>');
 	
 	// user can only pick expert/newbie mode on the first home page
 	let newbieMode = sessionStorage.getItem('UserIsNew');

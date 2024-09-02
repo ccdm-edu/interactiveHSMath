@@ -179,5 +179,5 @@ We use negative value for top since we want some overlap*/
 /**********************define space for footer to float at bottom***************/
 #StaticTrigBlock {
 	/* define space for rest of page makes footer float to bottom */
-	height: 500px;
+	height: 520px;
 }	

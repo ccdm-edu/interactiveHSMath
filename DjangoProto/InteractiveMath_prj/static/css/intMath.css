@@ -260,7 +260,7 @@ img#clickHereCursor.userHitPlay {
 	100%	{visibility: hidden;} 
 }
 /************all pages, header and tables should not "wrap" and break line, expand browser! *****/
-h1 { 
+h1,h2 { 
 	white-space: nowrap; 
 }
 td { 

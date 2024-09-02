@@ -18,6 +18,7 @@ $(function() {
 	
 	//Dont want a next button on this page so kill it here	
     $("#GoToNextPage").css('display', 'none');
+    $("#GoToPreviousPage").css('display', 'none');
 
 	//legal precedent states that on the home page, browserwrap must be in upper left of home page to be "more" valid */    
     //$('#LegalNotice_Consent').css('top', '100px');
@@ -112,10 +113,17 @@ $(function() {
 			// point to first dropdown menu (which for now is just Trig)
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'TrigFuncTopic.dropdown-item',
-			 	 action: "focus",
+			 	{element:'TrigFuncTopic.dropdown-toggle',  //dropdown-item',
+			 	 action: "click",
 			 	 offset: {x: 0, y: 19},
-			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
+			},
+			// remove drop down menu
+			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'TrigFuncTopic.dropdown-toggle',
+			 	 action: "click",
+			 	waitTimeMillisec: 1000}
 			},
 			//**********FAKE SUBTOPIC LIST **************
 			// put up a fake subtopic list to show what we could do
@@ -127,7 +135,7 @@ $(function() {
 			// remove red cursor from dropdown
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'TrigFuncTopic.dropdown-item',
+			 	{element:'TrigFuncTopic.dropdown-toggle',   //dropdown-item',
 			 	 action: "focus",
 			 	 offset: {x: 0, y: 19},
 			 	waitTimeMillisec: 1000}  // this is wait doesnt matter

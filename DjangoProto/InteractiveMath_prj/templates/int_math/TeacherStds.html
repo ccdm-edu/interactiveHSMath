@@ -195,8 +195,9 @@
 
 {% block unique_js_block %}
 	<script>
-			//Dont want a next button on this page so kill it here	
+			//Dont want a next/back button on this page so kill it here	
     		$("#GoToNextPage").css('display', 'none');
+    		$("#GoToPreviousPage").css('display', 'none');
 			// Dont need advanced topic link popup
 			$('a[href="#AdvancedTopics"]').css('display', 'none');
 	</script>

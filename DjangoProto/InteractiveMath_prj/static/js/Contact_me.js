@@ -3,6 +3,10 @@
 
 
 $(function() {
+	//no buttons needed here
+	$("#GoToNextPage").css('display', 'none');
+    $("#GoToPreviousPage").css('display', 'none');
+    
 	// hide the inputs we don't want users trying to access, recaptcha v3
 	$('#id_g_recaptcha_response').css('display', 'none');  //.hide();
 	$('#id_pooh_food_test').css('display', 'none');  //.hide();
