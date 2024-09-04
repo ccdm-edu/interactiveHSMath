@@ -6,8 +6,12 @@ $(function () {
 	// tooltips are disabled by default, need to enable them all for bootstrap styling
     $('[data-toggle="tooltip"]').tooltip();
     
+    //*************** 
+    // Make the highlighted page for left menu match what is active
+    //***************
+    // ---when user clicks on different items on left menu
     // want the active topic selected to have a class active so it can look different to user
-	$('ul.nav.flex-column > li.nav-item > a').on('click', function(e) {
+	$('ul.nav.flex-column > li.nav-item > a').on('click', function() {
 		//console.log(" we hit an item in subtopic: id= " + this.getAttribute('id') + " href " +this.getAttribute('href'));
 		// remove active from all li elements
 		$('ul.nav.flex-column > li')
@@ -17,34 +21,95 @@ $(function () {
         sessionStorage.setItem("activePage", $(this).attr('href'));
 
 	});
-	
-	// we now have a NEXT > button (student request) for within a topic to go to next page when done
-	// If selected, we need the categories on the left to reflect which is active.  We never use the next button
-	// to change topics (subjects along top)
-	$("#GoToNextPage").on('click', function(event) {
-		// we wrap the <a> tag around the button for each pages js, so have to go up one level
-		let buttonSelPage = $("#GoToNextPage").parent().attr('href');
-		// get rif of the old "active" page, there may not be anything stored under sessionStorage yet so just search and remove
+	function isSamePage(url1, url2){
+		//this is a kloodge, need to use one style of URL, currently use some hardcoded values from populate*.py (relative URLs) and 
+		//Django has a different absolute style from urls.py
+		
+		//One way two urls can match, the letters after last slash match indicating same page--I realize
+		//that in general, this is bad practice but site is so small right now, all pages at one common level
+		let url1_split = url1.split('/');
+		let url2_split = url2.split('/');
+		let url1_page = url1_split[url1_split.length - 1];
+		if (url1_page === '') {
+			//url1 ended in a slash and so last char after slash is null, take before last slash
+			url1_page = url1_split[url1_split.length - 2];
+		}
+		let url2_page = url2_split[url2_split.length - 1];
+		if (url2_page ==='') {
+			//url1 ended in a slash and so last char after slash is null, take before last slash
+			url2_page = url2_split[url2_split.length - 2];
+		}
+		//console.log('last part of url1 is ' + url1_page);
+		//console.log('last part of url1 is ' + url2_page);	
+		if 	( url1_page === url2_page ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	// -- when user uses either back or next button within a topic, subpages to left should reflect whats active
+	function changeHighlightedLeftMenu(buttonSelPage) {
+		// get rid of the old "active" page, there may not be anything stored under sessionStorage yet so just search and remove
+		// buttonSelPage may not be in the same URL form as the anchor for li.nav-item--find its equivalent
+		console.log("current URL is " + $(location).attr("href"));
+		let nextURL = $(location).attr("href") + buttonSelPage; 
+		console.log("desired url is " + nextURL );
+		let equivURL = "";
 		$('ul.nav.flex-column > li.nav-item > a').each(function() {
+			// ensure no member of list is active
   			if ($(this).hasClass('active')) {
 				$(this).removeClass('active');  
 				console.log("removed active from list item " + $(this).text());
 			};
+			// desired URL may or may not exactly match string of item on list but it may be the same page
+			// get the alternate form for desired URL that does match
+			if (isSamePage($(this).attr('href'), buttonSelPage)){
+				equivURL = $(this).attr('href');
+			}
 		});
-		// if page hasnt changed yet, setting session storage will update properly	
-		sessionStorage.setItem("activePage", buttonSelPage);
-		// if page has already changed, update here as active
-		let searchItem = 'ul.nav.flex-column > li.nav-item > a[href="' + burronSelPage + '"]';
-		let $currActiveListItemATag = $(searchItem);
-		$currActiveListItemATag.addClass('active')
-    });
+		if (equivURL != "") {
+			// then it found the desired URL in the list
+			// if page hasnt changed yet, setting session storage will update properly	
+			sessionStorage.setItem("activePage", equivURL);
+			// if page has already changed, update here as active
+			let searchItem = 'ul.nav.flex-column > li.nav-item > a[href="' + equivURL + '"]';
+			let $currActiveListItemATag = $(searchItem);
+			$currActiveListItemATag.addClass('active')
+		} else {
+			// not a catastrophic error but an annoyance to user, need to fix sw bug
+			console.log('Cannot find desired URL in list of pages on left menu. Desired = ' + buttonSelPage);
+		}
+	}
 	
+	// we now have a NEXT >  and < BACK button (student request) for within a topic to go to next page when done
+	// If selected, we need the categories on the left to reflect which is active.  We never use the next button
+	// to change "big" topics (subjects along top)
+	$("#GoToNextPage").on('click', function() {
+		// we wrap the <a> tag around the button for each pages js, so have to go up one level
+		let buttonSelPage = $("#GoToNextPage").parent().attr('href');
+		changeHighlightedLeftMenu(buttonSelPage);
+    });
+    $("#GoToPreviousPage").on('click', function() {
+		// we wrap the <a> tag around the button for each pages js, so have to go up one level
+		let buttonSelPage = $("#GoToPreviousPage").parent().attr('href');		
+		changeHighlightedLeftMenu(buttonSelPage);
+    });
+    // we had to add a drop down menu since mobile devices don't get the left menu, we keep the dropdown menu regardless of device
+    $('li.mathy > ul.dropright > .dropright > ul.dropdown-menu > li > a.dropdown-item').on('click', function() {
+		let buttonSelPage = $(this).attr('href');
+		changeHighlightedLeftMenu(buttonSelPage);
+		console.log('button sel is now' + buttonSelPage)
+	});
+
+    //*************** 
+    // Make the highlighted page for upper menu bar match what is active
+    //***************	
 	// on upper menu bar, where its topics, not the subtopics over in list to left, we want selected items to appear different
-	$('div#upperNavbarCollapse.collapse.navbar-collapse > ul.navbar-nav.mr-auto > li.nav-item > a.nav-link').on('click', function(e) {
+	$('div#upperNavbarCollapse.collapse.navbar-collapse > ul.navbar-nav > li.nav-item > a.nav-link').on('click', function() {
 		$(this).css('font-weight', 'bold');
 		// can't change font on any DOM element since when new page loads, it will be crushed by reloading of subtopics.html
         // save "this" and when page loads, reset it to active
-        sessionStorage.setItem("activeTopBarIndex", $('div#upperNavbarCollapse.collapse.navbar-collapse > ul.navbar-nav.mr-auto > li.nav-item').index($(this).parent()));
+        sessionStorage.setItem("activeTopBarIndex", $('div#upperNavbarCollapse.collapse.navbar-collapse > ul.navbar-nav > li.nav-item').index($(this).parent()));
         // clear out obsolete topic, in case there is one, we want to go to first element of the subtopics
 		sessionStorage.removeItem("activePage");
 	});
@@ -82,7 +147,7 @@ $(function () {
     	// now that a new page has loaded, highlight which top menu item we are on
     	// recall whats active and change appearance
      	let currTopIndex = sessionStorage.getItem("activeTopBarIndex");
-    	let $currTopItem = $('div#upperNavbarCollapse.collapse.navbar-collapse > ul.navbar-nav.mr-auto > li.nav-item > a').eq(parseInt(currTopIndex));
+    	let $currTopItem = $('div#upperNavbarCollapse.collapse.navbar-collapse > ul.navbar-nav > li.nav-item > a').eq(parseInt(currTopIndex));
     	$currTopItem.css('font-weight', 'bold');
     	
     	// ALLOW COOKIE SELECTION by user
@@ -124,7 +189,7 @@ $(function () {
 	});
 		
 	//***********************************
- 	// Javascript for advanced popup window that is draggable and has expln/todo stuff
+ 	// Advanced popup window that is draggable and has expln/todo stuff
  	
     $("#AdvancedTopics").draggable({
     	//need to mousedown inside window to move it, else mousing down near the window will also move it
