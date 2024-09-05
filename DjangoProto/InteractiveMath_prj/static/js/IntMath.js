@@ -9,18 +9,7 @@ $(function () {
     //*************** 
     // Make the highlighted page for left menu match what is active
     //***************
-    // ---when user clicks on different items on left menu
-    // want the active topic selected to have a class active so it can look different to user
-	$('ul.nav.flex-column > li.nav-item > a').on('click', function() {
-		//console.log(" we hit an item in subtopic: id= " + this.getAttribute('id') + " href " +this.getAttribute('href'));
-		// remove active from all li elements
-		$('ul.nav.flex-column > li')
-                    .removeClass('active');
-        // can't add active to any DOM element since when new page loads, it will be crushed by reloading of subtopics.html
-        // save "this" and when page loads, reset it to active
-        sessionStorage.setItem("activePage", $(this).attr('href'));
 
-	});
 	function isSamePage(url1, url2){
 		//this is a kloodge, need to use one style of URL, currently use some hardcoded values from populate*.py (relative URLs) and 
 		//Django has a different absolute style from urls.py
@@ -38,9 +27,7 @@ $(function () {
 		if (url2_page ==='') {
 			//url1 ended in a slash and so last char after slash is null, take before last slash
 			url2_page = url2_split[url2_split.length - 2];
-		}
-		//console.log('last part of url1 is ' + url1_page);
-		//console.log('last part of url1 is ' + url2_page);	
+		}	
 		if 	( url1_page === url2_page ) {
 			return true;
 		} else {
@@ -56,7 +43,7 @@ $(function () {
 		console.log("desired url is " + nextURL );
 		let equivURL = "";
 		$('ul.nav.flex-column > li.nav-item > a').each(function() {
-			// ensure no member of list is active
+			// make all members of list inactive
   			if ($(this).hasClass('active')) {
 				$(this).removeClass('active');  
 				console.log("removed active from list item " + $(this).text());
@@ -80,26 +67,6 @@ $(function () {
 			console.log('Cannot find desired URL in list of pages on left menu. Desired = ' + buttonSelPage);
 		}
 	}
-	
-	// we now have a NEXT >  and < BACK button (student request) for within a topic to go to next page when done
-	// If selected, we need the categories on the left to reflect which is active.  We never use the next button
-	// to change "big" topics (subjects along top)
-	$("#GoToNextPage").on('click', function() {
-		// we wrap the <a> tag around the button for each pages js, so have to go up one level
-		let buttonSelPage = $("#GoToNextPage").parent().attr('href');
-		changeHighlightedLeftMenu(buttonSelPage);
-    });
-    $("#GoToPreviousPage").on('click', function() {
-		// we wrap the <a> tag around the button for each pages js, so have to go up one level
-		let buttonSelPage = $("#GoToPreviousPage").parent().attr('href');		
-		changeHighlightedLeftMenu(buttonSelPage);
-    });
-    // we had to add a drop down menu since mobile devices don't get the left menu, we keep the dropdown menu regardless of device
-    $('li.mathy > ul.dropright > .dropright > ul.dropdown-menu > li > a.dropdown-item').on('click', function() {
-		let buttonSelPage = $(this).attr('href');
-		changeHighlightedLeftMenu(buttonSelPage);
-		console.log('button sel is now' + buttonSelPage)
-	});
 
     //*************** 
     // Make the highlighted page for upper menu bar match what is active
@@ -115,35 +82,10 @@ $(function () {
 	});
 	
 	$( document ).ready(function() {
-	
-    	// now that new page is loaded, and subtopics has reloaded from scratch along with the page..
-    	// recall whats active and change appearance
-    	let firstDomEl = $('ul.nav.flex-column > li.nav-item:first > a');
-    	if (firstDomEl.length > 0) {
-    		// we have subtopics to work with, else, punt all this code
-	    	let currPage = sessionStorage.getItem("activePage");
-	    	if (currPage === null) {
-	    		// we are entering this subtopic list for the first time, no old stale values
-	    		// pick first item in list
-	    		currPage = firstDomEl.attr('href');
-	    	} else {
-		    	// check to see that the stored value is still part of this set of subtopics
-		    	let expectedDomEl = $('ul.nav.flex-column > li.nav-item > a[href="' + currPage + '"]');
-		    	if (expectedDomEl.length == 0) {
-		    		// user has changed topics and the old subtopic is now obsolete, pick first DOM element
-		    		currPage = firstDomEl.attr('href');
-		    		// clear out obsolete topic
-		    		sessionStorage.removeItem("activePage");
-		    	}
-	    	}
-	    	// now that we have currently active page subtopic, set class to active so bootstrap will color
-	    	// it differently
-	    	$('ul.nav.flex-column > li.nav-item > a[href="' + currPage + '"').addClass('active');
-    	} else {
-    		// wait till we get to a page with subtopics.  For now, clear out old stuff
-    		sessionStorage.removeItem("activePage");
-    	}
-    	
+		// when we change pages, ensure the correct left menu item is highlighted, no matter how we got there
+		let currentPageURL = $(location).attr('href');
+		changeHighlightedLeftMenu(currentPageURL);
+		    	
     	// now that a new page has loaded, highlight which top menu item we are on
     	// recall whats active and change appearance
      	let currTopIndex = sessionStorage.getItem("activeTopBarIndex");
