@@ -494,7 +494,8 @@ $(function() {
 		}
 		
 		// since user might have typed in a value that is close but not allowed, put in the value we chose
-		$("#ampCirc").text(amp.toString());
+		//$("#ampCirc").text(amp.toString());  superfluous now
+		
 		// since amplitude changed, need to clear out old values for xy and theta
 		$('#xyExactValue').text(" ");
 		$('#xyFilledIn').text(" ");
@@ -836,7 +837,25 @@ $(function() {
    		.done(resp1 => {
 			  	SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL = resp1;
 			  	});
+			  	
+	// take the page back to beginning, before user changed things
+	function resetStaticTrig(){
+		// force amplitude to unit circle for autodemo, even if already unit circle
+		amp = 1;
+		$('#ampCirc').val('1.0').selectmenu("refresh");  
+		ampStr = "";  // used in xy values as multiply factor
+		$("#unitCircNotify").text("Unit Circle");
+		$('#xyEqtn').html('= (<span style="color:blue">cos'+THETA+'</span>, <span style="color:red">sin'+THETA+'</span>)');
 
+		// since user might have typed in a value that is close but not allowed, put in the value we chose
+		//$("#ampCirc").text(amp.toString());  not needed anymore
+		// since amplitude changed, need to clear out old values for (x,y) and theta
+		$('#xyExactValue').text(" ");
+		$('#xyFilledIn').text(" ");
+		$('#xyValueDecimal').text(" ");
+		$('#theta').text(" ");
+		redrawNewAmp();		
+	}
     //****************************************************************************
     // User initiates autoDemo activity
     //****************************************************************************   
@@ -847,11 +866,6 @@ $(function() {
 		demo.prepDemoControls();
   		//Move elements to make way for autodemo control box
   		demo.moveToRightForAutoDemo($('#headerAndCtl_ST'));
-		demo.moveDownForAutoDemo($('#funTutorial_ST'));
-		demo.moveDownForAutoDemo($('#AmpSinCosCircle'));
-  		demo.moveDownForAutoDemo($('#CircleValues'));
-  		demo.moveDownForAutoDemo($('.quadIdentifiers'));
-  		demo.moveDownForAutoDemo($('#FirstHelp_ST'));		
     });
     	
     //****************************************************************************
@@ -860,6 +874,7 @@ $(function() {
 
 	// User has selected play
     $('#playSegment').on('click', function(){	
+		resetStaticTrig();  // just in case user has leftover stuff, let autodemo start fresh
     	demo.startDemo();
     });
     
@@ -873,11 +888,6 @@ $(function() {
 
 		//move elements for autodemo controls box  		
 		demo.moveToLeftForAutoDemo($('#headerAndCtl_ST'));
-		demo.moveBackUpForAutoDemo($('#funTutorial_ST'));
-		demo.moveBackUpForAutoDemo($('#AmpSinCosCircle'));
-  		demo.moveBackUpForAutoDemo($('#CircleValues'));
-  		demo.moveBackUpForAutoDemo($('.quadIdentifiers'));
-  		demo.moveBackUpForAutoDemo($('#FirstHelp_ST'));	
 
     });
     
