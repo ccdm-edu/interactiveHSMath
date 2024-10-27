@@ -117,26 +117,21 @@
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  
 	At the bottom it doesn't consume space from other elements but it does give search engines a clue what page is all about. -->
 	<p class="AdvTopic_ToDo">TRY THIS:  Pick a frequency on the slider and hit Start button.  The circle phases you clicked manually before will be sampled automatically.  
-	This accumulates phase much faster but speed is now limited by update rates on your browser.  
-	We use more samples at lower rates to illustrate what is happening and fewer samples at higher rates to reduce work for your browser.  
+	This accumulates phase much faster but speed is now limited by update rates on your browser and your eyes ability to keep up with higher rates. 
 	We could have sampled at any phase value, I just picked the ones you are used to looking at.  
-	You really only NEED two samples per complete 360 degree cycle to fully describe the sine wave.   
+	You really only NEED two samples per complete 360 degree cycle to fully describe the sine wave.  We are way over sampling to make the graphs easier to understand 
+	but there is no harm in that, just wasting storage space. 
 	The samples collected are shown as dots on the plots created to the right.  
-	The human ear can hear 20Hz to 20,000Hz but typical cheap speakers can only play down to about 100Hz.  
+	The human ear can hear 20Hz to 20,000Hz but typical common computer speakers can only play down to about 100Hz.  
 	This is why you can't hear the frequencies we generate this way.  We'll hear these frequencies on the next page 
-	where we aren't trying to show the sample collection.  Wanna understand this?  hit the Explain button above this box
+	where we aren't trying to show the sample collection.  Wanna understand this better?  hit the Explain button above this box
 	</p>
-	<p class="AdvTopic_Expln">EXPLANATION: The sine wave has infinite points per period and yet its highly predictable.  
-	Music is made up of sine waves such as these.  Audio compression such as MP3 wants to represent these signals with as few samples as possible.  
-	Looking at the samples on the graph, you may be able to see that if you knew it was a sine wave, 
-	two samples per period would allow you to reproduce the wave exactly.  This is the Nyquist sample rate 
-	(college level signal processing) and is part of how MP3 works.  Your ear can only detect between 20 Hz and 
-	up to 20,000 Hz of sound (if you are young and lucky).  Standard MP3 samples at 44,100 Hz which is a bit above 
-	twice the max human hearing frequency. If you sample even higher and you are generally wasting memory, 
-	sample lower and you risk cutting off frequencies many people can hear.  If you stop and calculate Time/cycles, 
-	you might not exactly get the period T. This is because I only update time every 1/2 sec, to reduce work 
-	for the browser.  If you let it run for awhile, these imprecisions will become 
-	smaller and the number should be close to T = 1/frequency
+	<p class="AdvTopic_Expln">EXPLANATION: What we are showing here is that the phase of a rotating vector on the unit circle is 2&#960ft.
+	When we plot the sine and cosine curves in terms of time (instead of just phase as we did on page 3 Sine and Cosine Angles), we see
+	the effects of raising and lowering the frequency, like when we move from middle C up the scale to D, E, F and G (as we did on page 2
+	Trig Functions make Music).  We examine both sides of the equation, first looking at theta and watching it increment as we go around the
+	circle.  Then we look at 2&#960ft where we know f (because you set it) and we use your computer timer to calculate time (t).  We then
+	parse both sides of the equation so that you see that they are exactly the same. 
 	</p>
 {% endblock %}	
 	
