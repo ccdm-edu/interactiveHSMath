@@ -448,18 +448,18 @@ $(function() {
 		ctxExpandableUnitCircle.font = '20px Arial';
 	  	if (1.0 == amp) {
 			// user is still using unit circle, get rid of the "r" so they won't get confused
-			ctxExpandableUnitCircle.fillText("f("+THETA+")=cos("+THETA+")", TRIG_X_ORIGIN - 110, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);
+			ctxExpandableUnitCircle.fillText("x=f("+THETA+")=cos("+THETA+")", TRIG_X_ORIGIN - 110, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);
 			ctxExpandableUnitCircle.stroke(); 
 			ctxExpandableUnitCircle.fillStyle = SINE_COLOR;
-			ctxExpandableUnitCircle.fillText("f("+THETA+")=sin("+THETA+")", TRIG_X_ORIGIN - 110, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);	
+			ctxExpandableUnitCircle.fillText("y=f("+THETA+")=sin("+THETA+")", TRIG_X_ORIGIN - 110, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);	
 			ctxExpandableUnitCircle.stroke(); 
 	  	} else {
 			// user has selected an "advanced" circle, show r values here
-			ctxExpandableUnitCircle.fillText("f("+THETA+")=r"+MULT_DOT+"cos("+THETA+")", TRIG_X_ORIGIN - 130, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);
+			ctxExpandableUnitCircle.fillText("x=f("+THETA+")=r"+MULT_DOT+"cos("+THETA+")", TRIG_X_ORIGIN - 130, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);
 			ctxExpandableUnitCircle.stroke(); 
 			ctxExpandableUnitCircle.fillStyle = SINE_COLOR;
 			ctxExpandableUnitCircle.stroke(); 
-			ctxExpandableUnitCircle.fillText("f("+THETA+")=r"+MULT_DOT+"sin("+THETA+")", TRIG_X_ORIGIN - 130, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);	
+			ctxExpandableUnitCircle.fillText("y=f("+THETA+")=r"+MULT_DOT+"sin("+THETA+")", TRIG_X_ORIGIN - 130, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);	
 		}					
 	  	
 		ctxExpandableUnitCircle.stroke(); 

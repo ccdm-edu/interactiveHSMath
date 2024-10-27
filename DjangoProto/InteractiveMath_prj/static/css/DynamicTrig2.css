@@ -56,11 +56,13 @@ This is the style sheet for the DynamicTrig2.html page
 	position: absolute;
 	left: 300px;
 	top: 0px;
+	white-space: nowrap;
 }
 #currFreqValSlide_DT2{
 	position: absolute;
 	left: 400px;
 	top: 0px;
+	white-space: nowrap;
 }
 /* inputs must have max z index so they are user inputable, else they fall behind invisible canvas */
 #FreqSlider_DT2{
@@ -96,6 +98,7 @@ This is the style sheet for the DynamicTrig2.html page
 	top: 50px;
 	width: 200px;
 	color: DarkOrchid;
+	white-space: nowrap;
 }
 
 /***************************/

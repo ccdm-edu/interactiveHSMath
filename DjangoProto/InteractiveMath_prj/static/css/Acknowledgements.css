@@ -1,41 +1,41 @@
 /***********************
 This is the style sheet for the acknowledgements.html page
 ************************/
+:root{
+	--NUM_COL: 3;
+}
+/* parent block */
+#AcknowledgementsBlock {
+  display: grid;
+  /* below header, --NUM_COL col per row */
+  grid-template-columns: repeat(--NUM_COL, 1fr);
+  grid-gap: 10px;  /* spacing between grid virtual boxes */
+  grid-auto-rows: auto;  /* makes the row thickness what it needs to be */
+  align-items: safe center;
+  justify-content: safe center;
+  margin-left: 10px;  
+}
+/*verbiage before the contributors logos/text */
 h1 {
 	display:grid; /* need this to get justify content and align to work */
 	font-size: 30px;
 	/* this makes the top header take up all columns */
-	grid-column: 1/4;
-	justify-content: center;
-	align-items: center;
+	grid-column: 1/ span var(--NUM_COL);
 }
 #VillageThanks {
 	display:grid; /* need this to get justify content and align to work */
 	font-size: 20px;
 	/* this makes the top header take up all columns */
-	grid-column: 1/4;
-	justify-content: center;
-	align-items: center;
+	grid-column: 1/ span var(--NUM_COL);
 	color: lightcoral;
 }
 .contributor_contact img{
-	width: 250px;
-	height: 80px;	
+	max-width: 250px;  /* needed to squish down some big logos */
+	max-height: 80px;	/*needed to squish down some big logos */
 }
 .contributor_contact h2{
 	font-size: 20px;	
 }
 .contributor_contact h3{
 	font-size: 15px;	
-}
-
-#AcknowledgementsBlock {
-  display: grid;
-  /* below header, 3 col per width, 5 deep (for now) */
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 10px;  /* spacing between grid virtual boxes */
-  grid-auto-rows: auto;  /* makes the row thickness what it needs to be */
-  align-items: center;
-  justify-content: center;
-  margin-left: 10px;
 }
