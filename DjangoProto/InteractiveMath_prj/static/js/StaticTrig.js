@@ -512,6 +512,8 @@ $(function() {
 	// after animation is complete, this array is destroyed till needed again
 	//***********************************
 	const NUM_ANIMATION_SIN_COS = 5;
+	const NORMAL_LINE_WIDTH = 3;
+	const ZERO_PT_WIDTH = 8;
 	let sinLineMovement = [];
 	let cosLineMovement = [];
 	let line;
@@ -521,6 +523,7 @@ $(function() {
 		let x2Graph = x2Axis;
 		let y2Axis;
 		let y2Graph;
+		let lineWidth = NORMAL_LINE_WIDTH;
 		let makeAPoint = 0;  // if sin/cos is zero, let a tiny point travel to the graph, else this does nothing
 		if (whichGraph ==="sin") {
 			 //we know x axis origin of sin graph is at SIN_Y_ORIGIN
@@ -528,7 +531,8 @@ $(function() {
 			// remember, Y grows downward (yeah, counterintuitive
 			y2Graph = y2Axis - schoolAngles[indx].ysin;
 			if (y1Circ === y1Axis) {
-				makeAPoint = 5;	// if sin = 0, want to show a tiny point moving to proper place, else nothing would move	
+				makeAPoint = 8;	// if sin = 0, want to show a tiny point moving to proper place, else nothing would move	
+				lineWidth = ZERO_PT_WIDTH; // make zero point a little bigger, as per user request
 			}
 		} else if (whichGraph == "cos") {
 			 //we know x axis origin of cos graph is at COS_Y_ORIGIN
@@ -536,8 +540,8 @@ $(function() {
 			// remember, Y grows downward (yeah, counterintuitive
 			y2Graph = y2Axis - schoolAngles[indx].xcos;
 			if (x1Circ === x1Axis) {
-				makeAPoint = 5;	// if cos = 0, want to show a tiny point moving to proper place, else nothing would move
-				console.log("COS = 0 is activated to give a point");	
+				makeAPoint = 8;	// if cos = 0, want to show a tiny point moving to proper place, else nothing would move
+				lineWidth = ZERO_PT_WIDTH; // make zero point a little bigger, as per user request
 			}
 		}
 				
@@ -550,8 +554,9 @@ $(function() {
 			line = {"begin_x": Math.round(x1Axis + i * deltaX_Ax), 
 					"begin_y": Math.round(y1Axis + i * deltaY_Ax), 
 					"end_x": Math.round(x1Circ + i * deltaX_Pt), 
-					"end_y": Math.round(y1Circ + i * deltaY_Pt + makeAPoint) };
-			//console.log(" line is begin_x=" + line.begin_x + " begin_y=" + line.begin_y + " end_x=" + line.end_x + " end_y" + line.end_y);
+					"end_y": Math.round(y1Circ + i * deltaY_Pt + makeAPoint),
+					"lineWidth": lineWidth};
+			//console.log(" line is begin_x=" + line.begin_x + " begin_y=" + line.begin_y + " end_x=" + line.end_x + " end_y" + line.end_y + " width is " + line.lineWidth);
 			if (whichGraph ==="sin") {
 				sinLineMovement.push(line);
 			} else {
@@ -572,14 +577,14 @@ $(function() {
 			ctxExpandableUnitCircle.putImageData(preAnimatePlot, 0, 0);
 			// place the sine line
 			ctxExpandableUnitCircle.beginPath();
-			ctxExpandableUnitCircle.lineWidth = 3.0;
+			ctxExpandableUnitCircle.lineWidth = sinLineMovement[ind].lineWidth;
 			ctxExpandableUnitCircle.strokeStyle = SINE_COLOR;
 			ctxExpandableUnitCircle.moveTo(sinLineMovement[ind].begin_x, sinLineMovement[ind].begin_y);
 			ctxExpandableUnitCircle.lineTo(sinLineMovement[ind].end_x, sinLineMovement[ind].end_y);
 			ctxExpandableUnitCircle.stroke();
 			// place the cosine line
 			ctxExpandableUnitCircle.beginPath();
-			ctxExpandableUnitCircle.lineWidth = 3.0;
+			ctxExpandableUnitCircle.lineWidth = cosLineMovement[ind].lineWidth;
 			ctxExpandableUnitCircle.strokeStyle = COS_COLOR;
 			ctxExpandableUnitCircle.moveTo(cosLineMovement[ind].begin_x, cosLineMovement[ind].begin_y);
 			ctxExpandableUnitCircle.lineTo(cosLineMovement[ind].end_x, cosLineMovement[ind].end_y);
@@ -642,6 +647,7 @@ $(function() {
 		  		ctxExpandableUnitCircle.beginPath();
 				ctxExpandableUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
 				ctxExpandableUnitCircle.lineTo(dot.x, dot.y);
+				ctxExpandableUnitCircle.lineWidth = NORMAL_LINE_WIDTH;
 				ctxExpandableUnitCircle.strokeStyle = 'black';
 				ctxExpandableUnitCircle.fillStyle = 'black';
 				ctxExpandableUnitCircle.font = '20px Arial';
@@ -653,7 +659,7 @@ $(function() {
 				ctxExpandableUnitCircle.beginPath();
 				ctxExpandableUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
 				ctxExpandableUnitCircle.lineTo(dot.x, CIRC_Y0);
-				ctxExpandableUnitCircle.lineWidth = 3.0;
+				ctxExpandableUnitCircle.lineWidth = NORMAL_LINE_WIDTH;
 				ctxExpandableUnitCircle.strokeStyle = COS_COLOR; 
 				ctxExpandableUnitCircle.fillStyle = COS_COLOR;
 				ctxExpandableUnitCircle.font = '20px Arial';
@@ -664,7 +670,7 @@ $(function() {
 				ctxExpandableUnitCircle.beginPath();
 				ctxExpandableUnitCircle.moveTo(dot.x, CIRC_Y0);
 				ctxExpandableUnitCircle.lineTo(dot.x, dot.y);
-				ctxExpandableUnitCircle.lineWidth = 3.0;
+				ctxExpandableUnitCircle.lineWidth = NORMAL_LINE_WIDTH;
 				ctxExpandableUnitCircle.strokeStyle = SINE_COLOR;
 				ctxExpandableUnitCircle.fillStyle = SINE_COLOR;
 				ctxExpandableUnitCircle.font = '20px Arial';	
