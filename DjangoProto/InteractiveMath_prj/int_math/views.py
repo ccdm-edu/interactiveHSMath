@@ -191,28 +191,29 @@ class IndexView(View):
             upgd = open(upgrdSchedFile, 'r')
             #ignore first line of file, its comment to user
             comment = upgd.readline()  
-            dateUpgdStr = upgd.readline().rstrip('\n')
-            date_format = '%Y-%m-%d-%H %z'
-            dateUpgd = None
+            dateTimeUpgdStr = upgd.readline().rstrip('\n')
+            #we want exact date and time for user message but only need date, not time, to decide if it should be displayed
+            dateTime_format = '%Y-%m-%d-%H %z'
+            dateTimeUpgd = None
             try:
-                dateUpgd = datetime.strptime(dateUpgdStr, date_format)
+                dateTimeUpgd = datetime.strptime(dateTimeUpgdStr, dateTime_format)
             except Exception as ex:
                 template = "An exception of type {0} occurred. Arguments:\n{1!r}"
                 emsg = template.format(type(ex).__name__, ex.args)
                 print(f'Exception is {emsg}')
-                print(f'Failure on parsing time in UpgradeSchedule.txt, cannot parse {repr(dateUpgdStr)}')
-            if (dateUpgd is not None):
-                # get time right now and convert to EST (from UTC).  My testing shows this does NOT handle daylight savings time well
-                # but that really isn't important for this application
+                print(f'Failure on parsing time in UpgradeSchedule.txt, cannot parse {repr(dateTimeUpgdStr)}')
+            if (dateTimeUpgd is not None):               
+                # get time right now and convert to EST (from UTC).  
                 tz = timezone('EST')
-                rightNow = datetime.now(tz)
+                dateNow = datetime.now(tz)                
                 daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-                dayUpgdNum = dateUpgd.weekday()
+                dayUpgdNum = dateTimeUpgd.weekday()
                 dayUpgd = daysOfWeek[dayUpgdNum]
-                if (dateUpgd > rightNow):  #else, its an old notice, ignore it
+                #if update time has passed but day is today, show the message.
+                if (dateTimeUpgd.date() >= dateNow.date()):  #else, if its more than a day old, wipe it, want message for full day of upgrade, even after upgrade begins
                     upgradeNoticePresent = True
-                    upgradeDate = dateUpgd.date
-                    upgradeTime = dateUpgd.time
+                    upgradeDate = dateTimeUpgd.date
+                    upgradeTime = dateTimeUpgd.time
                     upgradeDay = dayUpgd
                 #print(f"Reading upgd schedule, date is {dateUpgd} , day is {dayUpgd} and right now is {rightNow}")
             upgd.close()

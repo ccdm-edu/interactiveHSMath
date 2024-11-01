@@ -35,6 +35,11 @@
 
 			{% if is_mobile %}
 				<br>
+				<span id="upgradeSchedule">
+				{%if upgradeNoticePresent %}
+					Site will be upgraded at {{ upgradeTime }} EST until midnight on {{ upgradeDay }}, {{ upgradeDate }}. 		
+				{% endif %}
+				</span>
 				<b> This math website interactively shows how high school math concepts are hiding in the real world.  Currently we are looking at trig functions in music.  
 				This site was designed for the larger screen of a desktop/laptop/notebook/iPad.  You
 				will have to adjust the screen frequently to see everything going on with your smaller mobile device. </b>
@@ -52,7 +57,7 @@
 					<span id="upgradeSchedule">
 						{%if upgradeNoticePresent %}
 						<br>
-							This site is scheduled to be upgraded at {{ upgradeTime }} EST on {{ upgradeDay }}, {{ upgradeDate }}. 
+							This site is scheduled to be upgraded at {{ upgradeTime }} EST until midnight on {{ upgradeDay }}, {{ upgradeDate }}. 
 							If you have any questions, comments or bug reports, please use the contact page to let me know.
 							
 						{% endif %}
