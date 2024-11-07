@@ -264,9 +264,9 @@ $(function() {
 				// first cycle has completed, update labels and circle around T on appropriate graph only once
 				phaseInRad = phaseInRad % TWO_PI_RAD;
 				$('#period_DT2').text(roundFP(currPeriod, 3));
-				$('#UserNotices_DT2').text('Period T = 1/f = 1/(' + currFreq + 'Hz) = ' + roundFP(currPeriod,1) + ' sec as shown in purple on graphs to right');
+				$('#UserNotices_DT2').text('Period T = 1/f = 1/(' + currFreq + 'Hz) = ' + roundFP(currPeriod,1) + ' sec as circled in purple on graphs');
 				if (currFreq >= MAX_FREQ_ALLPT) {
-					$('#SubSampleNotice_DT2').text('Samples removed from above plot to improve clarity');
+					$('#SubSampleNotice_DT2').text('Samples removed from top plot to improve clarity');
 				} else {
 					$('#SubSampleNotice_DT2').text('');
 				}

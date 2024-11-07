@@ -94,9 +94,8 @@ This is the style sheet for the DynamicTrig2.html page
 
 #UserNotices_DT2{
 	position: absolute;
-	left: 400px;
+	left: 350px;
 	top: 50px;
-	width: 200px;
 	color: DarkOrchid;
 	white-space: nowrap;
 }
@@ -142,8 +141,8 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 /* if freq too high, tell user we are removing samples for clarity, place between the graphs */
 #SubSampleNotice_DT2{
 	position: absolute;
-	top: 250px;
-	left: 800px; 
+	top: 270px;
+	left: 830px; 
 	width: 250px;
 	color: DarkOrchid;
 }
