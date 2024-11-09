@@ -58,7 +58,7 @@ class AutoDemo {
 			if ( (temp >= 0) && (temp <= (this.fullScript.length - 1)) ) {
 				this.currSeg = temp;  // saved as integer
 				// ensure the text in input matches the new value
-				$('#segNum').val(this.currSeg+ 1);
+				$('#segNum').val((this.currSeg+ 1).toString());
 			} 
 		} else {
 			console.log(" CODING ERROR, setCurrSeg assumes input param is an integer but it is not");
@@ -378,7 +378,18 @@ class AutoDemo {
 		$('#autoDemoCtls').css('visibility', 'visible');
 		// fill in the controls properly
 		$('#totalSeg').text('/' + this.fullScript.length);
-		$('#segNum').attr('max', this.fullScript.length);
+		// add all the choices allowed for this set of segments of AutoDemo
+		if (this.fullScript.length > 1)
+		{
+			for (var i = 1; i < this.fullScript.length; i++) {
+	    		let newVal = (i+1).toString();
+	    		let newOption = $("<option>", {
+    				value: newVal,
+    				text: newVal
+  				});
+    			$('#segNum').append(newOption);			
+			}
+		}
 	
 		this.setCurrSeg(1);  // default start at begin
 		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play

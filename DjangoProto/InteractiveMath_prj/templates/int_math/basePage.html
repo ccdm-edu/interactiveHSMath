@@ -167,7 +167,11 @@
 										Segment Number/Total Segments:
 									</td>
 									<td align="left">
-										<input id="segNum" type="number" min="1" max="10" maxlength = '2' step="1" required data-toggle="tooltip" title="Select Demo segment to play"><span id="totalSeg">/0</span>
+										<select id="segNum">
+										<!-- JS for each page will add the correct number of options, cannot change blue color of hover items in dropdown-->
+										    <option value="1">1</option>
+										</select>
+										<span id="totalSeg">/0</span>
 									</td>
 								</tr>
 								<tr align="center">
@@ -188,7 +192,8 @@
 								        </div>
 							        </td>
 							        <td align='right'>
-							        	<button type="button" class="btn btn-primary" id='dismissAutoDemo'>I'm done</button>
+							        	<!-- btn-info is a dark cyan that contrasts to the dropdown seg num items -->
+							        	<button type="button" class="btn btn-info" id='dismissAutoDemo'>I'm done</button>
 							        </td>
 						        </tr>
 							</table>

@@ -57,7 +57,7 @@ $(function() {
 			 	{element:'segNum',
 			 	 action: "focus",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 15, y: 20},
+			 	 offset: {x: 30, y: 15},
 			 	waitTimeMillisec: 17000}  // this is wait before you go on to next item
 			},
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 

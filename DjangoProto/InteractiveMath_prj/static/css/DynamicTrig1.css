@@ -145,7 +145,7 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	font-size: 15px;
 	font-weight: bold;
 	left: 110px;
-	top: -280px; 
+	top: -150px; 
 	z-index: 10;
 	visibility: visible;
 	animation-name: showFirstBlinkyHelp;
