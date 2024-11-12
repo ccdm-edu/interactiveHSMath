@@ -11,6 +11,11 @@ p#headerForSubtopics {
 }
 
 /*****************All pages, left section legal notices********************************/
+/*Had problem with android tablets where sidebar parent was changing width as autodemo was selected or not.
+  This had effect of sometimes obscuring content on page, See AI */
+.sidebar {
+	width: 240px;  /* good width for all but mobile devices */
+}
 #sidebarMenu{
 	position: relative;
 }
