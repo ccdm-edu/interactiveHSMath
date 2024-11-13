@@ -14,7 +14,7 @@ p#headerForSubtopics {
 /*Had problem with android tablets where sidebar parent was changing width as autodemo was selected or not.
   This had effect of sometimes obscuring content on page, See AI */
 .sidebar {
-	width: 240px;  /* good width for all but mobile devices */
+	width: 240px;  /* good width for all but mobile devices, overrides bootstrap class */
 }
 #sidebarMenu{
 	position: relative;

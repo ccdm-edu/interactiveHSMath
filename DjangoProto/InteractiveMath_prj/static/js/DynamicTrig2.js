@@ -405,8 +405,8 @@ $(function() {
 		}
     });
     
-    // User clicks the clear button indicating desire to start over with clean slate--this does not start activity or stop it
-    $('#Clear_DT2').on('click', function() {
+    // allow other functions to clear for a restart
+    function clearStartOver(){
 		// go back to bare plots before we redo everything
 		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
 		// plot new freq sin graphs
@@ -427,6 +427,11 @@ $(function() {
 		// get rid of any possible user notifications about the graphs, which are now irrelevant
 		$('#UserNotices_DT2').text("");
 		$('#SubSampleNotice_DT2').text('');
+	}
+	
+    // User clicks the clear button indicating desire to start over with clean slate--this does not start activity or stop it
+    $('#Clear_DT2').on('click', function() {
+		clearStartOver();
     });
     
     // make a nice blinky green to attract attention on the go button and a red background when its stop
@@ -450,12 +455,10 @@ $(function() {
 	    // and put it on the label as string
 		$(".currFreqVal_DT2").text($("#FreqSlider_DT2").val() + " Hz");
 		// update global var
-		currFreq = $currFreq.val();
-		// update plots off to the right
-		ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
-		// plot new freq sin graphs
-		drawOneSineSet(UPPER_X_ORIGIN, UPPER_Y_ORIGIN, MAX_TIME_SEC);
-		drawOneSineSet(LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPANDED_TIME);
+		currFreq = $currFreq.val();	
+		// restart all from zero as have new graph to right and need to start time over again, much as we do when 
+		// change freq while counter is counting time	
+		clearStartOver();		
 		// update labels to show current freq
 		$("#sinEqtnLabelHI_DT2").text("S=sin(2" + MULT_DOT + PI + MULT_DOT + "f" + MULT_DOT + "t)=sin(2" + MULT_DOT + PI + MULT_DOT + currFreq + MULT_DOT + "t)");
 		$("#sinEqtnLabelLO_DT2").text("S=sin(2" + MULT_DOT + PI + MULT_DOT + "f" + MULT_DOT + "t)=sin(2" + MULT_DOT + PI + MULT_DOT + currFreq + MULT_DOT + "t)");	
