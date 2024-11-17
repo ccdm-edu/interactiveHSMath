@@ -175,7 +175,7 @@ $(function() {
 		$currToneFreq.attr("max", $maxFreqForSlider);
 		updateFreq();
 	});
-	
+
 	// Change label on freq slider and adjust the tone as appropriate
 	$('#in-range-freq').on('change', function(){
 		updateFreq();
@@ -313,11 +313,14 @@ $(function() {
 	//***********************************
 	function initializePage(){
 		//reset all values to default wake up values
-		let DEFAULT_FREQ = 1000; // as set in html for element
+		const DEFAULT_MAX_FREQ=2000; //
+		$("#freqMax").prop("value", DEFAULT_MAX_FREQ);
+		$("#in-range-freq").attr("max", DEFAULT_MAX_FREQ);
+		const DEFAULT_FREQ = 1000; // as set in html for element
 		$("#in-range-freq").prop("value", DEFAULT_FREQ);
-		let DEFAULT_AMP = 10;
+		const DEFAULT_AMP = 10;
 		$("#in-range-amp").prop("value", DEFAULT_AMP);
-		let DEFAULT_PHASE = 0;
+		const DEFAULT_PHASE = 0;
 		$("#in-range-phase").prop("value", DEFAULT_PHASE);
 		$("#currFreqLabel").text($("#in-range-freq").val());
 		$("#currAmpLabel").text($("#in-range-amp").val());

@@ -931,7 +931,7 @@ $(function() {
 			 	{element: 'InstrumentSelections button[value="Trumpet"]',
 			 	 action: "nothing",
 			 	 offset: {x: 20, y: 20},
-			 	waitTimeMillisec: 57000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 59000}  // this is wait before you go on to next item
 			},
 
 			//*****************************
@@ -967,7 +967,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'allowNotePlay',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 6000} 
+			 	waitTimeMillisec: 5000} 
 			},			
 			// TURN OFF sine wave, Trumpet will play itself out
 			{segmentActivity: "ACT_ON_ELEMENT", 
@@ -1013,7 +1013,7 @@ $(function() {
 			 	waitTimeMillisec: 1000} 
 			},
 			//*****************************
-			// show we will click on trumpet from drop down menu
+			// show we will click on flute from drop down menu
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
 			 	{element:'InstrumentSelections button[value="Flute"]',
@@ -1033,7 +1033,7 @@ $(function() {
 			// get rid of focus cursors
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element: 'InstrumentSelections  button[value="Trumpet"]',
+			 	{element: 'InstrumentSelections  button[value="Flute"]',
 			 	 action: "nothing",
 			 	 offset: {x: 20, y: 20},
 			 	waitTimeMillisec: 50}  // this is wait before you go on to next item
@@ -1041,10 +1041,10 @@ $(function() {
 			// get rid of click cursor
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element: 'InstrumentSelections button[value="Trumpet"]',
+			 	{element: 'InstrumentSelections button[value="Flute"]',
 			 	 action: "nothing",
 			 	 offset: {x: 20, y: 20},
-			 	waitTimeMillisec: 15000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 17000}  // this is wait before you go on to next item
 			},
 
 			//*****************************
@@ -1080,7 +1080,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'allowNotePlay',
 			 	 action: "nothing",
-			 	waitTimeMillisec: 6000} 
+			 	waitTimeMillisec: 5000} 
 			},			
 			// TURN OFF sine wave, instrument will play itself out
 			{segmentActivity: "ACT_ON_ELEMENT", 
