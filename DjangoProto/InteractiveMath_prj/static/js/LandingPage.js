@@ -243,6 +243,8 @@ $(function() {
 		demo.moveToRightForAutoDemo($('#selectNewbieOrExpert'))
 		// need to move down legal stuff to make more room for demo list of subtopics
 		$('#LegalNotice_Consent').css('top', '400px');
+		//mobile devices need the words to move down when autodemo controls active
+		demo.moveDownForAutoDemo($('.home_expln'));
     });
     	
     //****************************************************************************
@@ -277,7 +279,7 @@ $(function() {
 		
 		// get rid of adv topics link, was for demo only
     	$('a[href="#AdvancedTopics"]').css('display', 'none');
-
+		demo.moveBackUpForAutoDemo($('.home_expln'));
     	demo.moveToLeftForAutoDemo($('#selectNewbieOrExpert'))
     	$('#LegalNotice_Consent').css('top', '');   //let it float back up where it belongs
     });
