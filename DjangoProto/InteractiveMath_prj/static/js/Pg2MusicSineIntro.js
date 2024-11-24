@@ -546,7 +546,7 @@ $(function() {
 			// turn off the tone, and reset everything
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'ResetPage',
+			 	{element:'#ResetPage',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -555,7 +555,7 @@ $(function() {
 			// here we simply take away the red cursor from previous act but don't want to undo it
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'ResetPage',
+			 	{element:'#ResetPage',
 			 	 action: "nothing",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	waitTimeMillisec: 12000}
@@ -564,7 +564,7 @@ $(function() {
 			// first bring up drop down menu
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'dropdownMenuSong',
+			 	{element:'#dropdownMenuSong',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -572,7 +572,7 @@ $(function() {
 			},
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'dropdownMenuSong',
+			 	{element:'#dropdownMenuSong',
 			 	 action: "nothing",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	waitTimeMillisec: 13000}
@@ -581,7 +581,7 @@ $(function() {
 			// select desired song
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'Song1',
+			 	{element:'#Song1',
 			 	 action: "focus",  // linger a bit here so user sees what to do
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -589,7 +589,7 @@ $(function() {
 			},
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'Song1',
+			 	{element:'#Song1',
 			 	 action: "click",
 			 	waitTimeMillisec: 1000}
 			},
@@ -646,7 +646,7 @@ $(function() {
 			// turn off the tone and clean up the screen
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'ResetPage',
+			 	{element:'#ResetPage',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -655,7 +655,7 @@ $(function() {
 			// here we simply take away the red cursor from previous act but don't want to undo it
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'ResetPage',
+			 	{element:'#ResetPage',
 			 	 action: "nothing",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	waitTimeMillisec: 1000}

@@ -250,16 +250,16 @@ class AutoDemo {
 		$demoCursor.css('position', 'absolute');		
 		$demoCursor.css('zIndex', '2000');  // make sure cursor sits on top, bootstrap dropdown-menu show makes z index of 1000
 		$demoCursor.appendTo("body");
-		let locEl = $('#' + param.element).offset();
+		let locEl = $(param.element).offset();
 	    // location of item to be annotated is at locEl.top and locEl.left
 	    let leftPos = Math.round(locEl.left) - param.offset.x;
 	    let topPos = Math.round(locEl.top) + param.offset.y;
 	    //console.log("act on element: leftPos=" + leftPos + " top pos= " + topPos);
 	    $('#demoCursorElID').css({ 'left': leftPos + 'px', 'top': topPos + 'px' });
-	    let currID = '#' + param.element;
+	    let currID = param.element;
 		if ("focus" == param.action) {
 			// focus shows off what it looks like when user clicks on input element
-			$('#' + param.element).focus();
+			$(currID).focus();
 		} else if ("click" == param.action) {
 			// click
 			$(currID).click();
@@ -277,7 +277,6 @@ class AutoDemo {
 			console.log('FAILURE in showModal, element ' + currID + 'has length is ' + $(currID).length);
 		}
 	}
-	
 	// remove the big fake cursor
 	removeActOnElement(param = null) {
 		// get rid of demo cursor ID
@@ -286,10 +285,10 @@ class AutoDemo {
 		if (null !== param) {
 			if ('undefined' !== param.action) {
 				if ('focus' == param.action) {
-					$('#' + param.element).blur();
+					$(param.element).blur();
 				} else if ('click' == param.action) {
 					// delayed action click
-					$('#' + param.element).click();
+					$(param.element).click();
 					//console.log('clicking on ' + '#' + param.element);
 				}  // else do nothing
 			}

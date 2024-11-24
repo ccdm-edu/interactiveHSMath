@@ -24,205 +24,315 @@ $(function() {
     //$('#LegalNotice_Consent').css('top', '100px');
     //********************************************************
 	// create a "script" for the auto-demo tutorial, by now, all variables should be set
+	// The script differs for mobile since we don't have a left menu but rather a "hamburger" menu to right
 	//********************************************************	
 
-	let SCRIPT_AUTO_DEMO = [
-	{ segmentName: "Intro to Auto Demo",
-	  headStartForAudioMillisec: 25000, // generally the audio is longer than the cursor/annotate activity
-	  segmentActivities: 
-	  [
-			{segmentActivity: "PLAY_AUDIO",
-			 segmentParams: 
-			 	{filenameURL: 'LandingPageSeg0',
-			 	waitTimeMillisec: 1000}
+	const INTRO_FEATURES = 	  [
+		{segmentActivity: "PLAY_AUDIO",
+		 segmentParams: 
+		 	{filenameURL: 'LandingPageSeg0',
+		 	waitTimeMillisec: 1000}
+		},
+		{segmentActivity: "ANNOTATE_ELEMENT",
+		 segmentParams: 
+		 	{element: 'segNum', 
+		 	 color: "red",
+		 	 waitTimeMillisec: 2000}
+		},
+		{segmentActivity: "ANNOTATE_ELEMENT",
+		 segmentParams: 
+		 	{element: 'totalSeg', 
+		 	 color: "green",
+		 	 waitTimeMillisec: 7000}
+		},
+		{segmentActivity: "REMOVE_ALL_ANNOTATE_ELEMENT",
+		 segmentParams: 
+		 	{waitTimeMillisec: 9000}
+		},
+		{segmentActivity: "ACT_ON_ELEMENT", 
+		 segmentParams:
+		 	{element:'#segNum',
+		 	 action: "focus",
+		 	 // positive values for offset x and y move the cursor "southwest"
+		 	 offset: {x: 30, y: 15},
+		 	waitTimeMillisec: 17000}  // this is wait before you go on to next item
+		},
+		{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+		 segmentParams:
+		 	{element:'#segNum',
+		 	 action: "focus",
+		 	 // positive values for offset x and y move the cursor "southwest"
+		 	waitTimeMillisec: 17000}
+		},
+		{segmentActivity: "ACT_ON_ELEMENT", 
+		 segmentParams:
+		 	{element:'#AdvancedTopicLink',
+		 	 action: "click",
+		 	 // positive values for offset x and y move the cursor "southwest", so neg x is south east
+		 	 offset: {x: 0, y: 15},
+		 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+		},
+		{segmentActivity: "SHOW_MODAL",
+		 segmentParams:
+		 	{element: 'AdvancedTopics',
+		 	waitTimeMillisec: 1000},  // wait time doesn't matter here
+		 }	 
+    ];
+    
+	// the intro to the site varies whether we have a hamburger menu (generally present on mobile) or not
+	let noHamburgerMenu = $('#upperNavbarCollapse').is(":visible");
+   
+    let SCRIPT_AUTO_DEMO;
+	if (noHamburgerMenu){
+		// we get a left menu, we can demo it
+	    SCRIPT_AUTO_DEMO = [
+		{ segmentName: "Intro to Auto Demo",
+		  headStartForAudioMillisec: 25000, // generally the audio is longer than the cursor/annotate activity
+		  segmentActivities: INTRO_FEATURES
+	
+		},
+		{ segmentName: "Welcome to this site...",
+		  headStartForAudioMillisec: 8000, // generally the audio is longer than the cursor/annotate activity
+		  segmentActivities: 
+		  [
+				{segmentActivity: "PLAY_AUDIO",
+				 segmentParams: 
+				 	{filenameURL: 'LandingPageSeg1',
+				 	waitTimeMillisec: 6000}
+				},
+							
+				//we only have one item to work on so far so this is slim for now...
+				{segmentActivity: "ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#navbarDropdown',
+				 	 action: "click",
+				 	 // positive values for offset x and y move the cursor "southwest", so neg x is south east
+				 	 offset: {x: 0, y: 25},
+				 	waitTimeMillisec: 12000}  // this is wait before you go on to next item
+				},
+				// get rid of big red cursor but leave up the drop down menu
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#navbarDropdown',
+				 	 action: "focus",
+				 	waitTimeMillisec: 3000}
+				},
+				// we can't actually go to those pages else we loose this page and the autodemo stops
+				// point to first dropdown menu (which for now is just Trig)
+				{segmentActivity: "ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#TrigFuncTopic.dropdown-toggle',  //dropdown-item',
+				 	 action: "click",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
+				},
+				// "fake out" select of first menu item
+				{segmentActivity: "ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'a.dropdown-item',  //dropdown-item',
+				 	 action: "focus",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
+				},
+				// remove drop down menu
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#TrigFuncTopic.dropdown-toggle',
+				 	 action: "click",
+				 	waitTimeMillisec: 1000}
+				},
+				//**********FAKE SUBTOPIC LIST **************
+				// put up a fake subtopic list to show what we could do
+				{segmentActivity: "FAKE_SUBTOPICS", 
+				 segmentParams:
+				 	{idToGo:  'NoSubtopicAvail',
+				 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
+				},			
+				// remove red cursor from dropdown
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#TrigFuncTopic.dropdown-toggle',   //dropdown-item',
+				 	 action: "focus",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 1000}  // this is wait doesnt matter
+				},
+				// move red cursor over to 1st fake page
+				{segmentActivity: "ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#firstFakePage.nav-link',
+				 	 action: "focus",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 16000}  // this is wait before you go on to next item
+				},
+				// remove red cursor from 1st fake page
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#firstFakePage.nav-link',
+				 	 action: "focus",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 1000}  // this is wait doesnt matter
+				},
+				// move red cursor over to 2nd fake page
+				{segmentActivity: "ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#secondFakePage.nav-link',
+				 	 action: "focus",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
+				},
+				// remove red cursor from 2nd fake page
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#secondFakePage.nav-link',
+				 	 action: "focus",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 1000}  // this is wait doesnt matter
+				},
+				// move red cursor over to 3rd fake page
+				{segmentActivity: "ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#thirdFakePage.nav-link',
+				 	 action: "focus",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+				},
+				// remove red cursor from 3rd fake page
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#thirdFakePage.nav-link',
+				 	 action: "focus",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 1000}  // this is wait doesnt matter
+				},
+				// move red cursor over to 4rh fake page
+				{segmentActivity: "ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#fourthFakePage.nav-link',
+				 	 action: "focus",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+				},
+				// remove red cursor from 4th fake page
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#fourthFakePage.nav-link',
+				 	 action: "focus",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 1000}  // this is wait doesnt matter
+				},
+				// remove fake subtopic list
+							// put up a fake subtopic list to show what we could do
+				{segmentActivity: "REMOVE_FAKE_SUBTOPICS", 
+				 segmentParams:
+				 	{idToGo:  'NoSubtopicAvail',
+				 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+				},
+				// get rid of big red cursor but leave up the drop down menu
+				//***********END FAKE SUBLIST***************** 		
+				// remove drop down menu
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#navbarDropdown',
+				 	 action: "",
+				 	waitTimeMillisec: 5000}
+				},
+	
+		  ]
+		}
+		];
+	} else {
+		// MOBILE DEVICE
+		// we loose upper menu, it collapses to hamburger menu
+		SCRIPT_AUTO_DEMO = [
+			{ segmentName: "Intro to Auto Demo",
+			  headStartForAudioMillisec: 25000, // generally the audio is longer than the cursor/annotate activity
+			  segmentActivities: INTRO_FEATURES
 			},
-			{segmentActivity: "ANNOTATE_ELEMENT",
-			 segmentParams: 
-			 	{element: 'segNum', 
-			 	 color: "red",
-			 	 waitTimeMillisec: 2000}
-			},
-			{segmentActivity: "ANNOTATE_ELEMENT",
-			 segmentParams: 
-			 	{element: 'totalSeg', 
-			 	 color: "green",
-			 	 waitTimeMillisec: 7000}
-			},
-			{segmentActivity: "REMOVE_ALL_ANNOTATE_ELEMENT",
-			 segmentParams: 
-			 	{waitTimeMillisec: 5000}
-			},
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'segNum',
-			 	 action: "focus",
-			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 30, y: 15},
-			 	waitTimeMillisec: 17000}  // this is wait before you go on to next item
-			},
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'segNum',
-			 	 action: "focus",
-			 	 // positive values for offset x and y move the cursor "southwest"
-			 	waitTimeMillisec: 19000}
-			},
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'AdvancedTopicLink',
-			 	 action: "click",
-			 	 // positive values for offset x and y move the cursor "southwest", so neg x is south east
-			 	 offset: {x: 0, y: 15},
-			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
-			},
-			{segmentActivity: "SHOW_MODAL",
-			 segmentParams:
-			 	{element: 'AdvancedTopics',
-			 	waitTimeMillisec: 0},  // wait time doesn't matter here
-			 },
-			 
-	  ]
-	},
-	{ segmentName: "Welcome to this site...",
-	  headStartForAudioMillisec: 8000, // generally the audio is longer than the cursor/annotate activity
-	  segmentActivities: 
-	  [
-			{segmentActivity: "PLAY_AUDIO",
-			 segmentParams: 
-			 	{filenameURL: 'LandingPageSeg1',
-			 	waitTimeMillisec: 6000}
-			},
-						
-			//we only have one item to work on so far so this is slim for now...
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'navbarDropdown',
-			 	 action: "click",
-			 	 // positive values for offset x and y move the cursor "southwest", so neg x is south east
-			 	 offset: {x: 0, y: 25},
-			 	waitTimeMillisec: 12000}  // this is wait before you go on to next item
-			},
-			// get rid of big red cursor but leave up the drop down menu
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'navbarDropdown',
-			 	 action: "focus",
-			 	waitTimeMillisec: 3000}
-			},
-			// we can't actually go to those pages else we loose this page and the autodemo stops
-			// point to first dropdown menu (which for now is just Trig)
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'TrigFuncTopic.dropdown-toggle',  //dropdown-item',
-			 	 action: "click",
-			 	 offset: {x: 0, y: 19},
-			 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
-			},
-			// remove drop down menu
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'TrigFuncTopic.dropdown-toggle',
-			 	 action: "click",
-			 	waitTimeMillisec: 1000}
-			},
-			//**********FAKE SUBTOPIC LIST **************
-			// put up a fake subtopic list to show what we could do
-			{segmentActivity: "FAKE_SUBTOPICS", 
-			 segmentParams:
-			 	{idToGo:  'NoSubtopicAvail',
-			 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
-			},			
-			// remove red cursor from dropdown
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'TrigFuncTopic.dropdown-toggle',   //dropdown-item',
-			 	 action: "focus",
-			 	 offset: {x: 0, y: 19},
-			 	waitTimeMillisec: 1000}  // this is wait doesnt matter
-			},
-			// move red cursor over to 1st fake page
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'firstFakePage.nav-link',
-			 	 action: "focus",
-			 	 offset: {x: 0, y: 19},
-			 	waitTimeMillisec: 16000}  // this is wait before you go on to next item
-			},
-			// remove red cursor from 1st fake page
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'firstFakePage.nav-link',
-			 	 action: "focus",
-			 	 offset: {x: 0, y: 19},
-			 	waitTimeMillisec: 1000}  // this is wait doesnt matter
-			},
-			// move red cursor over to 2nd fake page
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'secondFakePage.nav-link',
-			 	 action: "focus",
-			 	 offset: {x: 0, y: 19},
-			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
-			},
-			// remove red cursor from 2nd fake page
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'secondFakePage.nav-link',
-			 	 action: "focus",
-			 	 offset: {x: 0, y: 19},
-			 	waitTimeMillisec: 1000}  // this is wait doesnt matter
-			},
-			// move red cursor over to 3rd fake page
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'thirdFakePage.nav-link',
-			 	 action: "focus",
-			 	 offset: {x: 0, y: 19},
-			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
-			},
-			// remove red cursor from 3rd fake page
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'thirdFakePage.nav-link',
-			 	 action: "focus",
-			 	 offset: {x: 0, y: 19},
-			 	waitTimeMillisec: 1000}  // this is wait doesnt matter
-			},
-			// move red cursor over to 4rh fake page
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'fourthFakePage.nav-link',
-			 	 action: "focus",
-			 	 offset: {x: 0, y: 19},
-			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
-			},
-			// remove red cursor from 4th fake page
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'fourthFakePage.nav-link',
-			 	 action: "focus",
-			 	 offset: {x: 0, y: 19},
-			 	waitTimeMillisec: 1000}  // this is wait doesnt matter
-			},
-			// remove fake subtopic list
-						// put up a fake subtopic list to show what we could do
-			{segmentActivity: "REMOVE_FAKE_SUBTOPICS", 
-			 segmentParams:
-			 	{idToGo:  'NoSubtopicAvail',
-			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
-			},
-			//***********END FAKE SUBLIST***************** 		
-			// remove drop down menu
-			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'navbarDropdown',
-			 	 action: "click",
-			 	waitTimeMillisec: 5000}
-			},
+			{ segmentName: "Welcome to this site...",
+			  headStartForAudioMillisec: 33000, // generally the audio is longer than the cursor/annotate activity
+			  segmentActivities: 
+			  [		
+				{segmentActivity: "PLAY_AUDIO",
+				   segmentParams: 
+					{filenameURL: 'LandingPageSeg1mobile',
+					waitTimeMillisec: 9000}
+				},	
+				{segmentActivity: "ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'button.navbar-toggler',
+				 	 action: "click",
+				 	 // positive values for offset x and y move the cursor "southwest", so neg x is south east
+				 	 offset: {x: 0, y: 25},
+				 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+				},
+				// get rid of big red cursor but leave up the drop down menu
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'button.navbar-toggler',
+				 	 action: "focus",
+				 	waitTimeMillisec: 3000}
+				},
+				//demo for Trig, which will drop down a Trig Functions and Trig Identities
+				{segmentActivity: "ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#navbarDropdown',
+				 	 action: "click",
+				 	 // positive values for offset x and y move the cursor "southwest", so neg x is south east
+				 	 offset: {x: 0, y: 25},
+				 	waitTimeMillisec: 4000}  // this is wait before you go on to next item
+				},
+				// get rid of big red cursor but leave up the drop down menu
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#navbarDropdown',
+				 	 action: "focus",
+				 	waitTimeMillisec: 3000}
+				},
+				// we can't actually go to those pages else we loose this page and the autodemo stops
+				// point to first dropdown menu (which for now is just Trig Functions) and expand all the topics
+				{segmentActivity: "ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#TrigFuncTopic.dropdown-toggle',  //dropdown-item',
+				 	 action: "click",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+				},
+				// "fake out" select of first menu item
+				{segmentActivity: "ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'a.dropdown-item',  //dropdown-item',
+				 	 action: "focus",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
+				},
+				// remove drop down menu
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#TrigFuncTopic.dropdown-toggle',
+				 	 action: "click",
+				 	waitTimeMillisec: 3000}
+				},
+				// get rid of dropdown hamburger menu
+				{segmentActivity: "ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'button.navbar-toggler',
+				 	 action: "click",
+				 	 // positive values for offset x and y move the cursor "southwest", so neg x is south east
+				 	 offset: {x: 0, y: 25},
+				 	waitTimeMillisec: 2000}  // this is wait before you go on to next item
+				},
+				// get rid of big red cursor but leave up the drop down menu
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'button.navbar-toggler',
+				 	 action: "focus",
+				 	waitTimeMillisec: 3000}
+				},
 
-	  ]
+			  ]
+			}
+		];		
 	}
-	];
 	// read the config file and find the actual filenames and put in true values.  First call 'may' have to read
 	// from file, all succeeding calls will be faster since read from local memory
    	getActualFilename(SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL)

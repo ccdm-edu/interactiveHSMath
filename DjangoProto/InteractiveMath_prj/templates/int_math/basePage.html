@@ -46,7 +46,7 @@
     <body>
         <header>
             <nav class="navbar navbar-expand-md navbar-light fixed-top p-0" style="background-color: #e3f2fd; font-size: 140%">
-                <a class="navbar-brand p-2" href="{% url 'int_math:index' %}">{{ CompanyName }}</a>
+            	<!-- getting rid of nav-brand anchor makes collapsible hamburger menu go to left, which is preferable and more convenient for android phones -->
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#upperNavbarCollapse" aria-controls="upperNavbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>

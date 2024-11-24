@@ -371,7 +371,7 @@ $(function() {
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'in-range-freq',
+			 	{element:'#in-range-freq',
 			 	 action: "nothing",
 			 	 waitTimeMillisec: 1000} 
 			},
@@ -379,7 +379,7 @@ $(function() {
 			// click on start tone  button to play tone
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 45, y: 20},
@@ -388,7 +388,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "nothing",
 			 	 waitTimeMillisec: 3000} 
 			},
@@ -404,7 +404,7 @@ $(function() {
 			// remove cursor on slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'in-range-amp',
+			 	{element:'#in-range-amp',
 			 	 action: "nothing",
 			 	 waitTimeMillisec: 13000} 
 			},
@@ -420,7 +420,7 @@ $(function() {
 			// remove cursor on slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'in-range-amp',
+			 	{element:'#in-range-amp',
 			 	 action: "nothing",
 			 	 waitTimeMillisec: 9000} 
 			},			
@@ -437,7 +437,7 @@ $(function() {
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'in-range-freq',
+			 	{element:'#in-range-freq',
 			 	 action: "nothing",
 			 	 waitTimeMillisec: 13000} 
 			},		
@@ -454,7 +454,7 @@ $(function() {
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'in-range-freq',
+			 	{element:'#in-range-freq',
 			 	 action: "nothing",
 			 	 waitTimeMillisec: 23000} 
 			},		
@@ -470,7 +470,7 @@ $(function() {
 			 },		
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'freqMax',
+			 	{element:'#freqMax',
 			 	 action: "nothing",
 			 	 waitTimeMillisec: 1000} 
 			},		
@@ -485,7 +485,7 @@ $(function() {
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'in-range-freq',
+			 	{element:'#in-range-freq',
 			 	 action: "nothing",
 			 	 waitTimeMillisec: 3000} 
 			},		
@@ -493,7 +493,7 @@ $(function() {
 			// click on start tone  button to stop tones
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 45, y: 20},
@@ -502,7 +502,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "nothing",
 			   	 waitTimeMillisec: 19000} 
 			},	
@@ -517,7 +517,7 @@ $(function() {
 			 },	
 			 {segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'freqMax',
+			 	{element:'#freqMax',
 			 	 action: "nothing",
 			 	 waitTimeMillisec: 1000} 
 			},
@@ -531,7 +531,7 @@ $(function() {
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'in-range-freq',
+			 	{element:'#in-range-freq',
 			 	 action: "nothing",
 			 	 waitTimeMillisec: 2000} 
 			},	
@@ -558,7 +558,7 @@ $(function() {
 			 // remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'in-range-freq',
+			 	{element:'#in-range-freq',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 1000} 
 			},	
@@ -575,7 +575,7 @@ $(function() {
 			// remove cursor on amp slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'in-range-amp',
+			 	{element:'#in-range-amp',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 1000} 
 			},
@@ -583,7 +583,7 @@ $(function() {
 			// click on start tone  button to play default tone
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 45, y: 20},
@@ -592,7 +592,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 4000} 
 			},
@@ -608,7 +608,7 @@ $(function() {
 			// remove cursor on slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'in-range-amp',
+			 	{element:'#in-range-amp',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 3000} 
 			},
@@ -624,7 +624,7 @@ $(function() {
 			// remove cursor on slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'in-range-amp',
+			 	{element:'#in-range-amp',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 3000} 
 			},	
@@ -640,7 +640,7 @@ $(function() {
 			// remove cursor on slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'in-range-amp',
+			 	{element:'#in-range-amp',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 18000} 
 			},		
@@ -657,7 +657,7 @@ $(function() {
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'in-range-phase',
+			 	{element:'#in-range-phase',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 15000} 
 			},					
@@ -665,7 +665,7 @@ $(function() {
 			// click on start tone  button to stop tones
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 45, y: 20},
@@ -674,7 +674,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 3000} 
 			},	

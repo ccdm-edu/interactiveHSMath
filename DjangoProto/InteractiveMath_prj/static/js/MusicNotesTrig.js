@@ -886,7 +886,7 @@ $(function() {
 			// click on select instrument pulldown menu 
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'InstrumentTypeSel',
+			 	{element:'#InstrumentTypeSel',
 			 	 action: "click",
 			 	 offset: {x: 20, y: 20},
 			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
@@ -903,7 +903,7 @@ $(function() {
 			// show we will click on trumpet from drop down menu
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'InstrumentSelections button[value="Trumpet"]',
+			 	{element:'#InstrumentSelections button[value="Trumpet"]',
 			 	 action: "focus",
 			 	 offset: {x: 20, y: 20},
 			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
@@ -912,7 +912,7 @@ $(function() {
 			// focus first then click so user sees what we do
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'InstrumentSelections button[value="Trumpet"]',
+			 	{element:'#InstrumentSelections button[value="Trumpet"]',
 			 	 action: "click",
 			 	 offset: {x: 20, y: 20},
 			 	waitTimeMillisec: 50}  // this is wait before you go on to next item
@@ -920,7 +920,7 @@ $(function() {
 			// get rid of focus cursors
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element: 'InstrumentSelections  button[value="Trumpet"]',
+			 	{element: '#InstrumentSelections  button[value="Trumpet"]',
 			 	 action: "nothing",
 			 	 offset: {x: 20, y: 20},
 			 	waitTimeMillisec: 50}  // this is wait before you go on to next item
@@ -928,7 +928,7 @@ $(function() {
 			// get rid of click cursor
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element: 'InstrumentSelections button[value="Trumpet"]',
+			 	{element: '#InstrumentSelections button[value="Trumpet"]',
 			 	 action: "nothing",
 			 	 offset: {x: 20, y: 20},
 			 	waitTimeMillisec: 59000}  // this is wait before you go on to next item
@@ -940,7 +940,7 @@ $(function() {
 			// TURN ON sine wave tone
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x:25, y: 20},
@@ -949,14 +949,14 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 1000} 
 			},
 			// wait a bit and TURN ON trumpet
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'allowNotePlay',
+			 	{element:'#allowNotePlay',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x:25, y: 20},
@@ -965,14 +965,14 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'allowNotePlay',
+			 	{element:'#allowNotePlay',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 5000} 
 			},			
 			// TURN OFF sine wave, Trumpet will play itself out
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x:25, y: 20},
@@ -981,7 +981,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 1000} 
 			},
@@ -999,7 +999,7 @@ $(function() {
 			// click on select instrument pulldown menu 
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'InstrumentTypeSel',
+			 	{element:'#InstrumentTypeSel',
 			 	 action: "click",
 			 	 offset: {x: 20, y: 20},
 			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
@@ -1016,7 +1016,7 @@ $(function() {
 			// show we will click on flute from drop down menu
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'InstrumentSelections button[value="Flute"]',
+			 	{element:'#InstrumentSelections button[value="Flute"]',
 			 	 action: "focus",
 			 	 offset: {x: 20, y: 20},
 			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
@@ -1025,7 +1025,7 @@ $(function() {
 			// focus first then click so user sees what we do
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'InstrumentSelections button[value="Flute"]',
+			 	{element:'#InstrumentSelections button[value="Flute"]',
 			 	 action: "click",
 			 	 offset: {x: 20, y: 20},
 			 	waitTimeMillisec: 50}  // this is wait before you go on to next item
@@ -1033,7 +1033,7 @@ $(function() {
 			// get rid of focus cursors
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element: 'InstrumentSelections  button[value="Flute"]',
+			 	{element: '#InstrumentSelections  button[value="Flute"]',
 			 	 action: "nothing",
 			 	 offset: {x: 20, y: 20},
 			 	waitTimeMillisec: 50}  // this is wait before you go on to next item
@@ -1041,7 +1041,7 @@ $(function() {
 			// get rid of click cursor
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element: 'InstrumentSelections button[value="Flute"]',
+			 	{element: '#InstrumentSelections button[value="Flute"]',
 			 	 action: "nothing",
 			 	 offset: {x: 20, y: 20},
 			 	waitTimeMillisec: 17000}  // this is wait before you go on to next item
@@ -1053,7 +1053,7 @@ $(function() {
 			// TURN ON sine wave tone
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x:25, y: 20},
@@ -1062,14 +1062,14 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 1000} 
 			},
 			// wait a bit and TURN ON flute
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'allowNotePlay',
+			 	{element:'#allowNotePlay',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x:25, y: 20},
@@ -1078,14 +1078,14 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'allowNotePlay',
+			 	{element:'#allowNotePlay',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 5000} 
 			},			
 			// TURN OFF sine wave, instrument will play itself out
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 25, y: 20},
@@ -1094,7 +1094,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'toneStartButton',
+			 	{element:'#toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 1000} 
 			},

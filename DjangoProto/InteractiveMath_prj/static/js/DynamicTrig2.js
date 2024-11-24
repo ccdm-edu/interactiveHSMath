@@ -485,7 +485,7 @@ $(function() {
 			// now hit go button to execute
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'GoFreq_DT2',
+			 	{element:'#GoFreq_DT2',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -494,7 +494,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'GoFreq_DT2',
+			 	{element:'#GoFreq_DT2',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 5000} 
 			},
@@ -512,7 +512,7 @@ $(function() {
 			// now hit go button to execute
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'GoFreq_DT2',
+			 	{element:'#GoFreq_DT2',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -521,14 +521,14 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'GoFreq_DT2',
+			 	{element:'#GoFreq_DT2',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 20000} 
 			},
 			//Pause and calculate values to verify
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'GoFreq_DT2',
+			 	{element:'#GoFreq_DT2',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -537,7 +537,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'GoFreq_DT2',
+			 	{element:'#GoFreq_DT2',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 3000} 
 			},
@@ -554,7 +554,7 @@ $(function() {
 			// now hit go button to execute
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'GoFreq_DT2',
+			 	{element:'#GoFreq_DT2',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
@@ -563,7 +563,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'GoFreq_DT2',
+			 	{element:'#GoFreq_DT2',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 13000} 
 			},
@@ -580,7 +580,7 @@ $(function() {
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'FreqSlider_DT2',
+			 	{element:'#FreqSlider_DT2',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 20000} 
 			},
@@ -597,7 +597,7 @@ $(function() {
 			// remove cursor on freq slider 
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'FreqSlider_DT2',
+			 	{element:'#FreqSlider_DT2',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 12000} 
 			},
