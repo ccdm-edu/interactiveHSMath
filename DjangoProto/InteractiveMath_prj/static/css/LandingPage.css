@@ -54,7 +54,7 @@ div.home_expln {
 }
 /*****************Auto demo controls on****************************/
 #startAutoDemo{
-	top: 180px;
+	top: 130px;
 	visibility: visible;
 	display: inline-block;
 	opacity: 0;
