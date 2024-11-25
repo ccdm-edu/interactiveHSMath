@@ -53,10 +53,11 @@ div.home_expln {
 	 100%   {opacity: 1.0;}
 }
 /*****************Auto demo controls on****************************/
+/* this image comes from basePage and is place before index.html so need absolute positioning */
 #startAutoDemo{
-	top: 130px;
-	visibility: visible;
-	display: inline-block;
+	top: 150px;
+	visibility: visible;	
+	display: block;
 	opacity: 0;
     animation-name: help_on_way;
     animation-delay: 6s;
