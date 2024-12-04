@@ -36,8 +36,8 @@
 			you can hit the Review button in the lower left below to get there faster.  Each of the topics will bring up a short 
 			video explanation and there will be stuff for you to do during the video.  I will start you on the first topic of 
 			frequency and period but you can choose as you like. Go through or skip topics as you please.  When you are done or 
-			if you already know these concepts, click the next page button on the lower left corner of this page or click on page 2 
-			over on the far left list of pages.  Have fun!					
+			if you already know these concepts, click the next page button on the lower left corner of this page if you are on a mobile 
+			or click on page 2 over on the far left list of pages if not on a mobile.  Have fun!					
 		</div>
 		<button type="button" class="btn btn-outline-info" id="ReviewConcepts">Review Concepts</button>
 		
@@ -49,7 +49,8 @@
 		<div id=IntroMusicInteractive>
 			<section class="IntroMusicFreqControl">
 				<p><strong>Measure Repetition</strong></p>
-				<button type="button" class="btn btn-primary" id="UserMeasuresFrequency" data-toggle="tooltip" data-placement="left" title="Click to count periodic events">Click Me</button>
+				<!-- data-placement on left ended up pushing it to the right on ipad and obscuring the table, went to bottom -->
+				<button type="button" class="btn btn-primary" id="UserMeasuresFrequency" data-toggle="tooltip" data-placement="bottom" title="Click to calculate period">Click Me</button>
 				<!-- paragraph below gives "help" to user if stuck -->
 				<p id="informUserFreqQuality" ></p>
 			</section>
