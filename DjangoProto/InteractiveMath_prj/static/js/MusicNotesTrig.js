@@ -1123,6 +1123,11 @@ $(function() {
   		//move header and tone/music controls to right when autodemo is active
     	demo.moveToRightForAutoDemo($('#headerAndCtl_TT'));
     	demo.moveToRightForAutoDemo($('#MusicNotesToneControl'));
+    	
+    	//TEST for iOS webaudio
+    	sourceNote = context.createBufferSource();
+		sourceNote.buffer = tuneBuffer[currTuneState];
+		sourceNote.start(0);
   		
     });
    
@@ -1181,12 +1186,12 @@ $(function() {
 		osc.toDestination().start();
 		osc.frequency.value = 80;  // below what most speakers will play
 		osc.toDestination().stop();
+		
 		// as noted above for iOS, cant instigate a WebAudio event from CustomEvent (which is how autodemo works when user hits play, 
-		// it simulates real user events).  start the WebAudio event for source note mp3 from musicians here so it can be done for real later
-					
-		sourceNote = context.createBufferSource();
-		sourceNote.buffer = tuneBuffer[currTuneState];
-		sourceNote.start(0);
+		// it simulates real user events).  start the WebAudio event for source note mp3 from musicians here so it can be done for real later			
+		//sourceNote = context.createBufferSource();
+		//sourceNote.buffer = tuneBuffer[currTuneState];
+		//sourceNote.start(0);
 		sourceNote.stop(0);
 		// end Safari hack
 		
