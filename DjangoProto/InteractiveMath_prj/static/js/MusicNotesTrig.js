@@ -1182,9 +1182,10 @@ $(function() {
 		osc.frequency.value = 80;  // below what most speakers will play
 		osc.toDestination().stop();
 		// as noted above for iOS, cant instigate a WebAudio event from CustomEvent (which is how autodemo works when user hits play, 
-		// it simulates real user events).  start the WebAudio event for source note mp3 from musicians here so it can be done for real later	
+		// it simulates real user events).  start the WebAudio event for source note mp3 from musicians here so it can be done for real later
+					
 		sourceNote = context.createBufferSource();
-		//there is no buffer for sourceNote, nothing should happen...
+		sourceNote.buffer = tuneBuffer[currTuneState];
 		sourceNote.start(0);
 		sourceNote.stop(0);
 		// end Safari hack
