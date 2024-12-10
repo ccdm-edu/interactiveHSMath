@@ -937,6 +937,26 @@ $(function() {
 			//*****************************
 			// Big gap here as we explain the periodicity of trumpet
 			//*****************************	
+			
+			
+			
+			
+			// pull out this trumpet play
+			// wait a bit and TURN ON trumpet
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'#allowNotePlay',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x:25, y: 20},
+//			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+				waitTimeMillisec: 2000}
+			},
+			
+		
+		
+		
+			
 			// TURN ON sine wave tone
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
@@ -953,15 +973,13 @@ $(function() {
 			 	 action: "nothing",
 			 	waitTimeMillisec: 1000} 
 			},
-			// wait a bit and TURN ON trumpet
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'#allowNotePlay',
-			 	 action: "click",
-			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x:25, y: 20},
-			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
-			},
+
+
+
+// where trumpet play belongs
+
+
+
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
