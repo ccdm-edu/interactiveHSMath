@@ -713,8 +713,8 @@ $(function() {
 		} else {
 			if (noteIsOnNow === false) {
 				// Safari has implemented AudioContext as webkitAudioContext so need next LOC
-				window.AudioContext = window.AudioContext || window.webkitAudioContext;
-				context = new AudioContext();	
+//				window.AudioContext = window.AudioContext || window.webkitAudioContext;
+//				context = new AudioContext();	
 				sourceNote = context.createBufferSource();
 				sourceNote.buffer = tuneBuffer[currTuneState];
 				changeMP3Volume(); // sets up gain to current user setting and start
@@ -1123,12 +1123,7 @@ $(function() {
   		//move header and tone/music controls to right when autodemo is active
     	demo.moveToRightForAutoDemo($('#headerAndCtl_TT'));
     	demo.moveToRightForAutoDemo($('#MusicNotesToneControl'));
-    	
-    	//TEST for iOS webaudio
-    	sourceNote = context.createBufferSource();
-		sourceNote.buffer = tuneBuffer[currTuneState];
-		sourceNote.start(0);
-  		
+   		
     });
    
     //****************************************************************************
@@ -1192,7 +1187,7 @@ $(function() {
 		//sourceNote = context.createBufferSource();
 		//sourceNote.buffer = tuneBuffer[currTuneState];
 		//sourceNote.start(0);
-		sourceNote.stop(0);
+		//sourceNote.stop(0);
 		// end Safari hack
 		
     	// in case plots have other stuff on them from other activities, clean it up
