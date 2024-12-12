@@ -464,9 +464,15 @@ $(function() {
 	let sourceNote;
 	let context;
 	// Safari has implemented AudioContext as webkitAudioContext so need next LOC
-	window.AudioContext = window.AudioContext || window.webkitAudioContext;
-	context = new AudioContext();
 	
+	// Do we have Web Audio API? if not, alert user to failure
+	try {
+		window.AudioContext = window.AudioContext || window.webkitAudioContext;
+		context = new AudioContext();
+	} catch (e) {
+		alert('Web Audio API is not supported in this browser');
+	}
+
 	function changeMP3Volume(){
 		//for MP3, will use max volume setting to give factor of 2 (3db) increase.
 		//middle setting is no amplification and zero setting is mute
@@ -552,7 +558,7 @@ $(function() {
 			osc.toDestination().stop();
 			$("#toneStartButton").attr("src", VOL_OFF_ICON);
 			$("#toneStartButton").attr("alt", VOL_OFF_ALT);
-			$("#toneStartButton").attr("data-original-title", 'turn on speaker and click to hear sine wave you created');
+			$("#toneStartButton").attr("data-original-title", 'turn on speaker and click to hear sine wave');
 			$('#toneStartButton').css('background-color', GO_COLOR);
 			ToneIsOnNow = false;
 		}
@@ -653,7 +659,7 @@ $(function() {
 									// we have new instrument mp3, allow play
 									$("#allowNotePlay").attr("src", VOL_OFF_ICON);
 									$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
-									$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear sine wave you created');
+									$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
 									$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
 									$("#allowNotePlay").css("visibility", "visible");  
 																	
@@ -685,7 +691,7 @@ $(function() {
 				// we have new instrument mp3, allow play
 				$("#allowNotePlay").attr("src", '../../static/images/volume-off.svg');
 				$("#allowNotePlay").attr("alt", 'Volume is currently off');
-				$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear sine wave you created');
+				$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
 				$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
 				$("#allowNotePlay").css("visibility", "visible"); 
 			}
@@ -723,7 +729,7 @@ $(function() {
 				noteIsOnNow = true;
 				$("#allowNotePlay").attr("src", VOL_ON_ICON);
 				$("#allowNotePlay").attr("alt", VOL_ON_ALT);
-				$("#allowNotePlay").attr("data-original-title", 'click to turn off instrument');
+				$("#allowNotePlay").attr("data-original-title", 'click to turn off musical note');
 				$("#allowNotePlay").css("background-color", STOP_COLOR);
 			} else {
 	        	// someone is tired of listening to our lovely tuning note
@@ -731,7 +737,7 @@ $(function() {
 				noteIsOnNow = false;
 				$("#allowNotePlay").attr("src", VOL_OFF_ICON);
 				$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
-				$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear instrument');
+				$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
 				$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
 			}
 			sourceNote.onended = () => {
@@ -739,7 +745,7 @@ $(function() {
 				noteIsOnNow = false;
 				$("#allowNotePlay").attr("src", VOL_OFF_ICON);
 				$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
-				$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear instrument');
+				$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
 				$("#allowNotePlay").css("background-color", GO_COLOR);
 			}
         }
@@ -938,25 +944,6 @@ $(function() {
 			// Big gap here as we explain the periodicity of trumpet
 			//*****************************	
 			
-			
-			
-			
-			// pull out this trumpet play
-			// wait a bit and TURN ON trumpet
-			{segmentActivity: "ACT_ON_ELEMENT", 
-			 segmentParams:
-			 	{element:'#allowNotePlay',
-			 	 action: "click",
-			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x:25, y: 20},
-//			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
-				waitTimeMillisec: 2000}
-			},
-			
-		
-		
-		
-			
 			// TURN ON sine wave tone
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
@@ -973,13 +960,15 @@ $(function() {
 			 	 action: "nothing",
 			 	waitTimeMillisec: 1000} 
 			},
-
-
-
-// where trumpet play belongs
-
-
-
+			// wait a bit and TURN ON trumpet
+			{segmentActivity: "ACT_ON_ELEMENT", 
+			 segmentParams:
+			 	{element:'#allowNotePlay',
+			 	 action: "click",
+			 	 // positive values for offset x and y move the cursor "southwest"
+			 	 offset: {x:25, y: 20},
+			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+			},
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
@@ -1181,13 +1170,13 @@ $(function() {
 		noteIsOnNow = false;
 		$("#allowNotePlay").attr("src", VOL_OFF_ICON);
 		$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
-		$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear instrument');
+		$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
 		$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
 		//    turn off tone
 		osc.toDestination().stop();
 		$("#toneStartButton").attr("src", VOL_OFF_ICON);
 		$("#toneStartButton").attr("alt", VOL_OFF_ALT);
-		$("#toneStartButton").attr("data-original-title", 'turn on speaker and click to hear sine wave you created');
+		$("#toneStartButton").attr("data-original-title", 'turn on speaker and click to hear sine wave');
 		$('#toneStartButton').css('background-color', GO_COLOR);
 		ToneIsOnNow = false;
 	}

@@ -124,6 +124,13 @@ class AutoDemo {
 	playAudio(segmentParams){
 		let context;
 		// Safari has implemented AudioContext as webkitAudioContext so need next LOC
+		// Do we have Web Audio API? if not, alert user to failure
+		try {
+			window.AudioContext = window.AudioContext || window.webkitAudioContext;
+			context = new AudioContext();
+		} catch (e) {
+			alert('Web Audio API is not supported in this browser');
+		}
 		window.AudioContext = window.AudioContext || window.webkitAudioContext;
 		context = new AudioContext();	
 		let audioURL = segmentParams.filenameURL;
