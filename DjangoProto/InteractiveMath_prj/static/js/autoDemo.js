@@ -139,9 +139,7 @@ class AutoDemo {
 			} catch (e) {
 				alert('Web Audio API is not supported in this browser');
 			}
-		}
-		window.AudioContext = window.AudioContext || window.webkitAudioContext;
-		context = new AudioContext();	
+		}	
 		let audioURL = segmentParams.filenameURL;
 		console.log('playing ' + audioURL);	
 		let thisObj = this; // done and onended will think 'this' is the Window, need to tell it its the instantiation of AutoDemo
