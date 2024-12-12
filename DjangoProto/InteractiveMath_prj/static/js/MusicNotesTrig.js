@@ -886,7 +886,8 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: 'MusicNotesTrigSeg0'}
+			 	{filenameURL: 'MusicNotesTrigSeg0',
+			 	audioContext_iOS: context}
 			},
 			//*****************************
 			// click on select instrument pulldown menu 
@@ -1190,11 +1191,9 @@ $(function() {
 		osc.toDestination().stop();
 		
 		// as noted above for iOS, cant instigate a WebAudio event from CustomEvent (which is how autodemo works when user hits play, 
-		// it simulates real user events).  start the WebAudio event for source note mp3 from musicians here so it can be done for real later			
-		//sourceNote = context.createBufferSource();
-		//sourceNote.buffer = tuneBuffer[currTuneState];
-		//sourceNote.start(0);
-		//sourceNote.stop(0);
+		// it simulates real user events).  start the WebAudio event for source note mp3 from musicians here so it can be done for real later
+		// so we will send the AudioContext used for musician notes to the autoDemo so it can be initialized with explainers voice MP3
+		// audioContext_iOS: context}  <-- part of script where we pass in WebAudio object for initialization upon user click of "play"	
 		// end Safari hack
 		
     	// in case plots have other stuff on them from other activities, clean it up
