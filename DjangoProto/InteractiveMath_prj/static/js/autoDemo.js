@@ -122,24 +122,17 @@ class AutoDemo {
 	
 	// play an audio clip
 	playAudio(segmentParams){
-		// Only in autodemos that use MP3 (like MusicNotesTrig that plays musician notes), we need to send the original webAudio context
-		// since iOS will not allow initial use of AudioContext unless initialized by user click (not CustomEvent as is done in AutoDemo).  To solve
-		// this, on user click of play button, we send over the AudioContext of playing instrument MP3, so it will play the full autoDemo with musician
-		// MP3 in response
-		// to CustomEvent.  On other pages with AutoDemo that don't play extra MP3 (other than voice that explains), this value is not set and its ok
-		// to just define it here.
-		let context = segmentParams.audioContext_iOS;
-		if (undefined === context) {
-			console.log("Defining AudioContext in autoDemo.js since no extra MP3 in this AutoDemo");		 
-			// Safari has implemented AudioContext as webkitAudioContext so need next LOC
-			// Do we have Web Audio API? if not, alert user to failure
-			try {
-				window.AudioContext = window.AudioContext || window.webkitAudioContext;
-				context = new AudioContext();
-			} catch (e) {
-				alert('Web Audio API is not supported in this browser');
-			}
-		}	
+
+		let context;
+		// Safari has implemented AudioContext as webkitAudioContext so need next LOC
+		// Do we have Web Audio API? if not, alert user to failure
+		try {
+			window.AudioContext = window.AudioContext || window.webkitAudioContext;
+			context = new AudioContext();
+		} catch (e) {
+			alert('Web Audio API is not supported in this browser');
+		}
+	
 		let audioURL = segmentParams.filenameURL;
 		console.log('playing ' + audioURL);	
 		let thisObj = this; // done and onended will think 'this' is the Window, need to tell it its the instantiation of AutoDemo
@@ -182,8 +175,7 @@ class AutoDemo {
 							thisObj.helpAudio.buffer = buffer;
 							thisObj.helpAudio.connect(context.destination);
 							// auto play the recording
-							thisObj.helpAudio.start(0);
-							// this just needs to be somewhere where helpAudio is defined to be saved for later
+							thisObj.helpAudio.start(0);							
 							thisObj.helpAudio.onended = () => 
 							{
 								// no longer playing the audio intro, either by user stop or natural completion
@@ -213,6 +205,7 @@ class AutoDemo {
 						console.error(jqXHR)
 					}
 			});   // done with ajax
+
 		// leave things as they were when user first started, all is in beginning state
 	}
 	

@@ -473,12 +473,16 @@ $(function() {
 		alert('Web Audio API is not supported in this browser');
 	}
 
-	function changeMP3Volume(){
+	function changeMP3Volume(mute = false){
 		//for MP3, will use max volume setting to give factor of 2 (3db) increase.
 		//middle setting is no amplification and zero setting is mute
 		// https://stackoverflow.com/questions/70480176/webaudio-api-change-volume-for-one-of-sources
 		// createGain can be used to mute as well
-		let mp3Gain = $currMusicAmp.val();
+		let ampVal = $currMusicAmp.val();
+		if (mute) {
+			ampVal = 0;
+		}
+		let mp3Gain = ampVal;
 		let gainMusicNode = context.createGain();  //return is a GainNode
 		const MAX_VOL_GAIN = 10;  // need to do better here, match this with max vol from html
 		gainMusicNode.gain.value = mp3Gain * 2 / MAX_VOL_GAIN;  // between 0 and 1 is attenuation, over 1 is gain. 
@@ -568,13 +572,64 @@ $(function() {
 	let todo_tab_element = "#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab011 > p";
 	let expln_tab_element = "#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab021 > p";
 	
-
+	// separate out the processing of audio data so that it can be done on a separate "promise"
+	function processAudioData(data, prepOnly = false){
+		//data, prepOnly = false) {  //cant use async/await in .done callback
+		
+		//server has responded successfully  (status = 4 and 200)
+		// using https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/decodeAudioData
+		// first time through, the decodeAudioData takes some time and its asynchronous so force a wait
+		// to play the tone.  
+		//let blobTune = new Blob([data], { 'type': 'audio/mpeg' });  // this must match what we send over
+		console.log('file size is ' + blobTune.size + ' type is ' + blobTune.type);
+		blobTune.arrayBuffer().then((blob2array) => 
+	   	    { // done converting blob to arrayBuffer, promise complete, convert blob2array to buffer
+				context.decodeAudioData(blob2array).then(buffer => {
+					// to get here means asynchronous mp3 decode is complete and successful
+					console.log("finished decoding mp3");
+					// copy AudioBuffer into array for this instrument/note so don't have to bug the server with requests
+					try {
+						console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate + " currTuneState = " + currTuneState);
+						tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate);
+						buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
+						// setup the class from which we will get points to graph the note
+						noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState, tuneFundamentalFreq[currTuneState]);
+					} catch(e) {
+						// most likely not enough space to createBuffer
+						console.error(e);
+						alert("Failed note file setup, error is " + e);
+					}
+												
+					// get array of values for both plots. 
+					tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray();
+					
+					// clean up the signal params and graphs and user aides for new instrument
+					if (!prepOnly){
+						updatePlotsUserAides();
+						
+						// we have new instrument mp3, allow play
+						$("#allowNotePlay").attr("src", VOL_OFF_ICON);
+						$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
+						$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
+						$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
+						$("#allowNotePlay").css("visibility", "visible");  
+					}							
+					// decodeAudioData is async and doesn't support promises, can't use try/catch for errors
+				},function(err) { alert("err(decodeAudioData) on file for: " + tuneInstrument[currTuneState] + " error =" + err); } )
+			}, reason => {
+					console.error("conversion of blob to arraybuffer failed");
+				}
+		)
+	}
+				
+	
 	//***********************************
 	//  User instigated callback events   User SELECTS NEW instrument
+	// prepOnly means we are just initializing sourceNote for AutoDemo since iOS will not allow init of any webAudio element from a CustomEvent 
+	// (which all autodemo events are, since they are simulated real events).
 	//***********************************
-	// user selects an instrument from dropdown menu
-	$('#InstrumentSel .dropdown-menu button').click(function () {  
-		let currInstrument = $(this).val();
+	function prepToPlayNote(chosenInstrument, prepOnly = false) {
+		let currInstrument = chosenInstrument;
 		//find the index of the selected instrument that was read in from JSON file
 		currTuneState = UNSELECTED;
 		$.each(tuneInstrument, function(index) {
@@ -583,120 +638,103 @@ $(function() {
 				currTuneState = index;
 			}
 		});
-		console.log('we clicked on drowdown menu, selected ' + $(this).val() + "index is " + currTuneState);      
+		console.log('we clicked on drowdown menu, selected ' + chosenInstrument + "index is " + currTuneState);      
 
-    	if (currTuneState === UNSELECTED) {
-			// should never happen
-			console.log('SW Bug, html does not match JSON config file')
-			updatePlotsUserAides();
-			$("#musicalActivity").html(DEFAULT_TITLE);
-			$("#allowNotePlay").css("visibility", "hidden"); 
-			$("#currMusicNoteLabel").html("");
-			return;
-		} else {	
-			console.log('currTuneState is ' + currTuneState)
-			// update advanced modal window
-			$(todo_tab_element).html(tuneToDo[currTuneState]);
-			$(expln_tab_element).html(tuneExpln[currTuneState]);
-			$("#musicalActivity").html(tuneTitle[currTuneState]);
-			$("#currMusicNoteLabel").html(NOTE_MAPPING.get(tuneMusicalNote[currTuneState]) );			
+		return new Promise((resolve) => {
 
-			if (tuneBuffer == null || tuneBuffer[currTuneState] == null) {
-				// get musical note for first time, filename in config must be mp3
-				// I don't think we need a csrf token for this ajax post.  1.  there is already a session ID required for this
-				// request 2.  Nothing is stored to database, request must be a filename we have or else get error back
-				// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
-			    $.ajax({url:  tuneFilenameURL[currTuneState],
-			    		type: 'GET',
-			    	  	data:  {instrument: tuneInstrument[currTuneState]},  // not needed anymore
-			    	  	// if all is ok, return a blob, which we will convert to arrayBuffer, else return text cuz its an error
-			    	  	xhr: function () {
-                			let xhr = new XMLHttpRequest();
-                			xhr.onreadystatechange = function () {
-                        		if (xhr.readyState == 2) {
-                        			// send() was called and headers and status are returned
-                            		if (xhr.status == 200) {
-                                		xhr.responseType = "blob";
-                            		} else {
-                                		xhr.responseType = "text";
-                            		}
-                        		}
-                			};
-                			return xhr;
-            			},
-					})
-					.done(function(data, statusText, jqXHR) {
-							// DO, rewrite this with promise syntax  https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/decodeAudioData
-							// first time through, the decodeAudioData takes some time and its asynchronous so force a wait
-							// to play the tone.  First time must be inside the success function off decodeAudioData
-							// By definition, to get here means request is done and successful, (status = 4 and 200)
-							let blobTune = new Blob([data], { 'type': 'audio/mpeg' });  // this must match what we send over
-							console.log('file size is ' + blobTune.size + ' type is ' + blobTune.type);
-							blobTune.arrayBuffer().then(blob2array => 
-								{ // done converting blob to arrayBuffer, promise complete, convert blob2array to buffer
-								context.decodeAudioData(blob2array, function(buffer) {
-									// to get here means asynchronous mp3 decode is complete and successful
-									console.log("finished decoding mp3");
-									// copy AudioBuffer into array for this instrument/note so don't have to bug the server with requests
-									try {
-										console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate + " currTuneState = " + currTuneState);
-										tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate);
-										buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
-										// setup the class from which we will get points to graph the note
-										noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState, tuneFundamentalFreq[currTuneState]);
-									} catch(e) {
-										// most likely not enough space to createBuffer
-										console.error(e);
-										alert("Failed note file setup, error is " + e);
-									}
-																
-									// get array of values for both plots. Actually no need for short plot for low freq waveforms
-									tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray();
-									
-									// clean up the signal params and graphs and user aides for new instrument
-									updatePlotsUserAides();
-									
-									// we have new instrument mp3, allow play
-									$("#allowNotePlay").attr("src", VOL_OFF_ICON);
-									$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
-									$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
-									$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
-									$("#allowNotePlay").css("visibility", "visible");  
-																	
-									// decodeAudioData is async and doesn't support promises, can't use try/catch for errors
-									},function(err) { alert("err(decodeAudioData) on file for: " + tuneInstrument[currTuneState] + " error =" + err); } )
-								}, reason => {
-									console.error("conversion of blob to arraybuffer failed");
-								}
-		
-							);
-
-						})  // done with success function
-						.fail(function(jqXHR, exception) {
-								if (jqXHR.status == 403) {
-									alert("Need to pass bot test to access server file.  No file for YOU!");  
-								} else if (jqXHR.status == 404) {
-									alert("File not found.  See Administrator");
-								} else {
-									alert("ERROR:  return status is " + jqXHR.status );
-									console.error(jqXHR)
-								}
-							}
-				);   // done with ajax
 	
-        	} else {
-				// we already have this instrument cached
-				// clean up the signal params and graphs and user aides for new instrument
+	    	if (currTuneState === UNSELECTED) {
+				// should never happen
+				console.log('SW Bug, html does not match JSON config file')
 				updatePlotsUserAides();
-				// we have new instrument mp3, allow play
-				$("#allowNotePlay").attr("src", '../../static/images/volume-off.svg');
-				$("#allowNotePlay").attr("alt", 'Volume is currently off');
-				$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
-				$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
-				$("#allowNotePlay").css("visibility", "visible"); 
+				$("#musicalActivity").html(DEFAULT_TITLE);
+				$("#allowNotePlay").css("visibility", "hidden"); 
+				$("#currMusicNoteLabel").html("");
+				resolve(true) 
+			} else {	
+				console.log('currTuneState is ' + currTuneState)
+				// update advanced modal window
+				$(todo_tab_element).html(tuneToDo[currTuneState]);
+				$(expln_tab_element).html(tuneExpln[currTuneState]);
+				if (!prepOnly){
+					$("#musicalActivity").html(tuneTitle[currTuneState]);
+					$("#currMusicNoteLabel").html(NOTE_MAPPING.get(tuneMusicalNote[currTuneState]) );	
+				}		
+	
+				if (tuneBuffer == null || tuneBuffer[currTuneState] == null) {
+					// get musical note for first time, filename in config must be mp3
+					// I don't think we need a csrf token for this ajax post. Nothing is stored to database, request must be a filename we have or else get error back
+					// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
+					fetch(tuneFilenameURL[currTuneState])
+					.then(data => data.arrayBuffer())
+					.then(arrayBuffer => context.decodeAudioData(arrayBuffer))
+					.then(buffer => {
+						// to get here means asynchronous mp3 decode is complete and successful
+						console.log("finished decoding mp3");
+						// copy AudioBuffer into array for this instrument/note so don't have to bug the server with requests
+						//try {
+							console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate + " currTuneState = " + currTuneState);
+							tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate);
+							buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
+	
+						//} catch(e) {
+							// most likely not enough space to createBuffer
+						//	console.error(e);
+						//	alert("Failed note file setup, error is " + e);
+						//}
+					
+						console.log("the length of copied tune Buffer is " + tuneBuffer[currTuneState].length)
+						// make sure we finished buffer copy before leaving
+						// get array of values for both plots. 
+						
+												// setup the class from which we will get points to graph the note
+							noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState, tuneFundamentalFreq[currTuneState]);
+						tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray();
+						
+						// clean up the signal params and graphs and user aides for new instrument
+						if (!prepOnly){
+							updatePlotsUserAides();
+							
+							// we have new instrument mp3, allow play
+							$("#allowNotePlay").attr("src", VOL_OFF_ICON);
+							$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
+							$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
+							$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
+							$("#allowNotePlay").css("visibility", "visible");  
+						}
+						resolve(true);
+					})
+																				
+						// decodeAudioData is async and doesn't support promises, can't use try/catch for errors
+					
+					//,function(err) { alert("err(decodeAudioData) on file for: " + tuneInstrument[currTuneState] + " error =" + err); } )
+					
+	        	} else {
+					// we already have this instrument cached
+					// clean up the signal params and graphs and user aides for new instrument
+					if (!prepOnly){
+						updatePlotsUserAides();
+						// we have new instrument mp3, allow play
+						$("#allowNotePlay").attr("src", '../../static/images/volume-off.svg');
+						$("#allowNotePlay").attr("alt", 'Volume is currently off');
+						$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
+						$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
+		     			$("#allowNotePlay").css("visibility", "visible"); 
+					}
+					resolve(true) 
+				}
+
 			}
-		};
-    });		
+			
+		})
+			
+		
+	}
+	
+	// user selects an instrument from dropdown menu
+	$('#InstrumentSel .dropdown-menu button').click(function () {  
+		prepToPlayNote($(this).val())
+	})		
 
 	//***********************************
 	//  User instigated callback events   User selects PLAY INSTRUMENT they have selected
@@ -717,10 +755,7 @@ $(function() {
 			}
 			console.error("Timing error, file transfer and decode not complete." + prob);
 		} else {
-			if (noteIsOnNow === false) {
-				// Safari has implemented AudioContext as webkitAudioContext so need next LOC
-//				window.AudioContext = window.AudioContext || window.webkitAudioContext;
-//				context = new AudioContext();	
+			if (noteIsOnNow === false) {	
 				sourceNote = context.createBufferSource();
 				sourceNote.buffer = tuneBuffer[currTuneState];
 				changeMP3Volume(); // sets up gain to current user setting and start
@@ -825,8 +860,6 @@ $(function() {
 	fillInArrays();
 	drawTone();
 	$("#currFreqLabel").text(currFreq);
-//	$("#currMusicVolLabel").text($("#music-amp").val());
-//	$("#currToneVolLabel").text($("#tone-amp").val());
 
 	//***********************************
 	//initialize data fields for tone and musical notes
@@ -886,8 +919,7 @@ $(function() {
 	  [
 			{segmentActivity: "PLAY_AUDIO",
 			 segmentParams: 
-			 	{filenameURL: 'MusicNotesTrigSeg0',
-			 	audioContext_iOS: context}
+			 	{filenameURL: 'MusicNotesTrigSeg0'}
 			},
 			//*****************************
 			// click on select instrument pulldown menu 
@@ -1126,11 +1158,59 @@ $(function() {
     //****************************************************************************   
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
-    $('#startAutoDemo').on('click', function(event) {
-  		demo.prepDemoControls();
+ //   $('#startAutoDemo').on('click', function(event) {
+	$('#startAutoDemo').click(function() {
+ // 		demo.prepDemoControls();
   		//move header and tone/music controls to right when autodemo is active
-    	demo.moveToRightForAutoDemo($('#headerAndCtl_TT'));
-    	demo.moveToRightForAutoDemo($('#MusicNotesToneControl'));
+ //   	demo.moveToRightForAutoDemo($('#headerAndCtl_TT'));
+ //   	demo.moveToRightForAutoDemo($('#MusicNotesToneControl'));
+    	
+    	
+    	// instantiate webaudio here so hopefully trumpet will play on custom event
+//    					sourceNote = context.createBufferSource();
+//				sourceNote.buffer = tuneBuffer[currTuneState];
+//				changeMP3Volume(); // sets up gain to current user setting and start
+				// auto play
+//				sourceNote.start(0);			
+
+
+//							thisObj.helpAudio = context.createBufferSource();
+//							thisObj.helpAudio.buffer = buffer;
+//							thisObj.helpAudio.connect(context.destination);
+//							// auto play the recording
+//							thisObj.helpAudio.start(0);
+									// Only in autodemos that use MP3 (like MusicNotesTrig that plays musician notes), we need to send the original webAudio context
+		// since iOS will not allow initial use of AudioContext unless initialized by user click (not CustomEvent as is done in AutoDemo).  To solve
+		// this, on user click of play button, we send over the AudioContext of playing instrument MP3, so it will play the full autoDemo with musician
+		// MP3 in response
+		// to CustomEvent.  On other pages with AutoDemo that don't play extra MP3 (other than voice that explains), this value is not set and its ok
+		// to just define it here.
+		if (undefined === sourceNote) {
+			// this means user hasn't played with music notes so far and autodemo will not play music notes until we initialize 
+			// sourceNote before CustomEvent happens in AutoDemo
+			console.log("We need to initialize SourceNote since extra MP3 will be played during autoDemo");	
+			// prep the SourceNote as required by iOS for Autodemo mp3 play]
+			prepToPlayNote("Trumpet", false).then( (onResolved) => {
+										// async function prepToPlayNote returns promise, need to wait till its done
+					sourceNote = context.createBufferSource();
+					sourceNote.buffer = tuneBuffer[currTuneState];
+
+					changeMP3Volume(true);  //mute the sound,
+					sourceNote.start(0);
+					sourceNote.stop(0);
+						
+				
+				}, 
+				(onRejected) => {
+					console.log("promise failed")
+				}
+			);
+
+		}
+		
+		
+
+							
    		
     });
    
