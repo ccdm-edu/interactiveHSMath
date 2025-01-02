@@ -1160,25 +1160,14 @@ $(function() {
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
  //   $('#startAutoDemo').on('click', function(event) {
 	$('#startAutoDemo').click(function() {
- // 		demo.prepDemoControls();
+  		demo.prepDemoControls();
   		//move header and tone/music controls to right when autodemo is active
- //   	demo.moveToRightForAutoDemo($('#headerAndCtl_TT'));
- //   	demo.moveToRightForAutoDemo($('#MusicNotesToneControl'));
+    	demo.moveToRightForAutoDemo($('#headerAndCtl_TT'));
+    	demo.moveToRightForAutoDemo($('#MusicNotesToneControl'));
     	
     	
     	// instantiate webaudio here so hopefully trumpet will play on custom event
-//    					sourceNote = context.createBufferSource();
-//				sourceNote.buffer = tuneBuffer[currTuneState];
-//				changeMP3Volume(); // sets up gain to current user setting and start
-				// auto play
-//				sourceNote.start(0);			
 
-
-//							thisObj.helpAudio = context.createBufferSource();
-//							thisObj.helpAudio.buffer = buffer;
-//							thisObj.helpAudio.connect(context.destination);
-//							// auto play the recording
-//							thisObj.helpAudio.start(0);
 									// Only in autodemos that use MP3 (like MusicNotesTrig that plays musician notes), we need to send the original webAudio context
 		// since iOS will not allow initial use of AudioContext unless initialized by user click (not CustomEvent as is done in AutoDemo).  To solve
 		// this, on user click of play button, we send over the AudioContext of playing instrument MP3, so it will play the full autoDemo with musician
