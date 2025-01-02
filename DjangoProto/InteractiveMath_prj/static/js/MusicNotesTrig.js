@@ -91,14 +91,12 @@ $(function() {
 				ampLongCurrNote[i] = 10 * tuneGraphLong[currTuneState][i];	
 			}	
 		}
-
 	};
 	
 	function drawTone()
 	{	
 		// now fill the arrays and push them to the plots
 		fillInArrays();   
-
 	    // make all these changes happen
 	    sine_plot_100_1k.update();	                    
 	};
@@ -133,6 +131,7 @@ $(function() {
 	var rootStyles = window.getComputedStyle(root);
 	let LEFT_EDGE_X = parseInt(rootStyles.getPropertyValue('--LEFT_EDGE_PLOT').replace('px', ''));
 	let LEFT_EDGE_Y = parseInt(rootStyles.getPropertyValue('--TOP_EDGE_PLOT').replace('px', ''));
+	// Under the graphs, show the periodicity for both C5 and C4(as approptiate) on tone and musicical note
 	function showPeriodicity(freqSelect){
 		// delete the expansion lines to make room for these periodicity indicators/verbiage
 		ctxPeriod.putImageData(backgroundPlot, 0, 0);
@@ -255,16 +254,14 @@ $(function() {
 			new AxisArrow(ctxPeriod, [SECOND_R_466_X, LEFT_EDGE_Y], 'L',"blue").draw();
 			new AxisArrow(ctxPeriod, [THIRD_L_466_X, LEFT_EDGE_Y], 'R',"blue").draw();
 						
-		} else console.log(' Coding error, unexpected input freq to showPeriodicity as ' + freqSelect);
-		
+		} else console.log(' Coding error, unexpected input freq to showPeriodicity as ' + freqSelect);	
 	}	
 
 	//***********************************
 	// adjust mp3 plots so they phase line up with sine waves in most illustrative way possible
 	//***********************************	
 	function updatePlotsUserAides() {
-		// we set up musical note for zero phase as we line it up with associated pitch sine
-		
+		// we set up musical note for zero phase as we line it up with associated pitch sine	
 		if (currTuneState == UNSELECTED) {
 			// user has chosen "no instrument"
 			// get rid of all old periodicity stuff, that overlays graphs, selectively turn on as needed later on	
@@ -313,7 +310,7 @@ $(function() {
 		constructor(buffer, tuneState, noteFreq) {
 			this.samplePeriodMp3 = 1/buffer.sampleRate;
 			// only save what we need to recreate plot and adds some more to handle extra needed to phase up to sine wave
-			// so client can see how well the musical tone matches up to its pitch sine wave
+			// so user can see how well the musical tone matches up to its pitch sine wave
 			// calculate estimate of the number of points needed to show 1 period of musical note at the buffer sample rate
 			this.POINTS_IN_NOTE_PERIOD = buffer.sampleRate / noteFreq;
 			// 1.5 adds some points to search the period for "zero phase" before changing sample rate to plot
@@ -323,8 +320,8 @@ $(function() {
 		
 		// Web Audio opens the given mp3 file and resamples it according to the destination's desired sample rate
 		// For example, all the mp3 files are at 44.1k and this is fine for many desktops but laptops seem to want
-		// 48k and resample the buffer to get that.  If I want to phase up the mp3, I need to find best place to start
-		// given we don't know sample rate apriori.  Want to find best "zero phase starting point" for musical note 
+		// 48k and resample the buffer to get that.  If I want to phase up the mp3, I need to find best place phase to start
+		// points, given we don't know sample rate apriori.  Want to find best "zero phase starting point" for musical note 
 		// and then resample upward for good plotting
 		findStartPhase(){
 			// start at begin of buffer and search for 1.5 * POINTS_IN_NOTE_PERIOD points for interval with
@@ -470,7 +467,7 @@ $(function() {
 		window.AudioContext = window.AudioContext || window.webkitAudioContext;
 		context = new AudioContext();
 	} catch (e) {
-		alert('Web Audio API is not supported in this browser');
+		alert("Web Audio API is not supported in this browser, you won't be able to hear tones/musical notes");
 	}
 
 	function changeMP3Volume(mute = false){
@@ -491,27 +488,28 @@ $(function() {
 			sourceNote.disconnect(0);  // get rid of old tone volume
 			sourceNote.connect(gainMusicNode).connect(context.destination);  // bring in new volume tone						
 		}
-		
 	}
+	
 	function setMusicAmp(){
 		$currMusicAmp = $("#music-amp")
 		$("#currMusicVolLabel").text($currMusicAmp.val());
 		changeMP3Volume();
 	}
-	// Change label on music amplitude slider and adjust the tone as appropriate
-	$('#music-amp').on('change', function(){
-		setMusicAmp();
-	});
 
-	//***********************************
-	//  User instigated callback events   CHANGE Tone Volume
-	//***********************************
 	function setToneAmp(){
 		$currToneAmp = $("#tone-amp");
 		$("#currToneVolLabel").text($currToneAmp.val());
 		let tonejs_dB = -20 + 20.0 * Math.log10($currToneAmp.val());
 		osc.volume.value = tonejs_dB;		
 	}
+	//***********************************
+	//  User instigated callback events   CHANGE Tone Volume
+	//***********************************
+	// Change label on music amplitude slider and adjust the tone as appropriate
+	$('#music-amp').on('change', function(){
+		setMusicAmp();
+	});
+	
 	// set the default initial value to low value
 	let DEFAULT_VOL = 3; // as set in html for element
 	$("#tone-amp").prop("value", DEFAULT_VOL);
@@ -572,61 +570,10 @@ $(function() {
 	let todo_tab_element = "#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab011 > p";
 	let expln_tab_element = "#AdvancedTopics > .modal-dialog > .modal-content > .modal-body > #tab021 > p";
 	
-	// separate out the processing of audio data so that it can be done on a separate "promise"
-	function processAudioData(data, prepOnly = false){
-		//data, prepOnly = false) {  //cant use async/await in .done callback
-		
-		//server has responded successfully  (status = 4 and 200)
-		// using https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/decodeAudioData
-		// first time through, the decodeAudioData takes some time and its asynchronous so force a wait
-		// to play the tone.  
-		//let blobTune = new Blob([data], { 'type': 'audio/mpeg' });  // this must match what we send over
-		console.log('file size is ' + blobTune.size + ' type is ' + blobTune.type);
-		blobTune.arrayBuffer().then((blob2array) => 
-	   	    { // done converting blob to arrayBuffer, promise complete, convert blob2array to buffer
-				context.decodeAudioData(blob2array).then(buffer => {
-					// to get here means asynchronous mp3 decode is complete and successful
-					console.log("finished decoding mp3");
-					// copy AudioBuffer into array for this instrument/note so don't have to bug the server with requests
-					try {
-						console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate + " currTuneState = " + currTuneState);
-						tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate);
-						buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
-						// setup the class from which we will get points to graph the note
-						noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState, tuneFundamentalFreq[currTuneState]);
-					} catch(e) {
-						// most likely not enough space to createBuffer
-						console.error(e);
-						alert("Failed note file setup, error is " + e);
-					}
-												
-					// get array of values for both plots. 
-					tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray();
-					
-					// clean up the signal params and graphs and user aides for new instrument
-					if (!prepOnly){
-						updatePlotsUserAides();
-						
-						// we have new instrument mp3, allow play
-						$("#allowNotePlay").attr("src", VOL_OFF_ICON);
-						$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
-						$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
-						$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
-						$("#allowNotePlay").css("visibility", "visible");  
-					}							
-					// decodeAudioData is async and doesn't support promises, can't use try/catch for errors
-				},function(err) { alert("err(decodeAudioData) on file for: " + tuneInstrument[currTuneState] + " error =" + err); } )
-			}, reason => {
-					console.error("conversion of blob to arraybuffer failed");
-				}
-		)
-	}
-				
-	
 	//***********************************
 	//  User instigated callback events   User SELECTS NEW instrument
 	// prepOnly means we are just initializing sourceNote for AutoDemo since iOS will not allow init of any webAudio element from a CustomEvent 
-	// (which all autodemo events are, since they are simulated real events).
+	// (which all autodemo events are, since they are simulated real events).  prepOnly=false is normal behavior
 	//***********************************
 	function prepToPlayNote(chosenInstrument, prepOnly = false) {
 		let currInstrument = chosenInstrument;
@@ -638,11 +585,9 @@ $(function() {
 				currTuneState = index;
 			}
 		});
-		console.log('we clicked on drowdown menu, selected ' + chosenInstrument + "index is " + currTuneState);      
 
-		return new Promise((resolve) => {
+		return new Promise((resolve,reject) => {
 
-	
 	    	if (currTuneState === UNSELECTED) {
 				// should never happen
 				console.log('SW Bug, html does not match JSON config file')
@@ -650,7 +595,7 @@ $(function() {
 				$("#musicalActivity").html(DEFAULT_TITLE);
 				$("#allowNotePlay").css("visibility", "hidden"); 
 				$("#currMusicNoteLabel").html("");
-				resolve(true) 
+				reject("SW bug, html does match JSON config file");
 			} else {	
 				console.log('currTuneState is ' + currTuneState)
 				// update advanced modal window
@@ -666,29 +611,34 @@ $(function() {
 					// I don't think we need a csrf token for this ajax post. Nothing is stored to database, request must be a filename we have or else get error back
 					// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
 					fetch(tuneFilenameURL[currTuneState])
-					.then(data => data.arrayBuffer())
-					.then(arrayBuffer => context.decodeAudioData(arrayBuffer))
+					.then(response => {
+						if (!response.ok) {
+        					throw new Error("Fetch error, status = " + response.status);
+						} else {
+							return response.arrayBuffer()
+						}		
+					})
+					.then(arrayBuffer => context.decodeAudioData(arrayBuffer),
+					                     function(err) { 
+											 alert("err(decodeAudioData) on file for: " + tuneInstrument[currTuneState] + " error =" + err); 
+											 } )
 					.then(buffer => {
 						// to get here means asynchronous mp3 decode is complete and successful
 						console.log("finished decoding mp3");
 						// copy AudioBuffer into array for this instrument/note so don't have to bug the server with requests
-						//try {
+						try {
 							console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate + " currTuneState = " + currTuneState);
 							tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate);
 							buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
-	
-						//} catch(e) {
+						} catch(e) {
 							// most likely not enough space to createBuffer
-						//	console.error(e);
-						//	alert("Failed note file setup, error is " + e);
-						//}
-					
-						console.log("the length of copied tune Buffer is " + tuneBuffer[currTuneState].length)
-						// make sure we finished buffer copy before leaving
-						// get array of values for both plots. 
-						
-												// setup the class from which we will get points to graph the note
-							noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState, tuneFundamentalFreq[currTuneState]);
+							console.error(e);
+					 		alert("Failed note file setup, error is " + e);
+						}
+			
+						console.log("the length of copied tune Buffer is " + tuneBuffer[currTuneState].length)						
+						// setup the class from which we will get points to graph the note
+						noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState, tuneFundamentalFreq[currTuneState]);
 						tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray();
 						
 						// clean up the signal params and graphs and user aides for new instrument
@@ -702,12 +652,10 @@ $(function() {
 							$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
 							$("#allowNotePlay").css("visibility", "visible");  
 						}
-						resolve(true);
-					})
-																				
-						// decodeAudioData is async and doesn't support promises, can't use try/catch for errors
-					
-					//,function(err) { alert("err(decodeAudioData) on file for: " + tuneInstrument[currTuneState] + " error =" + err); } )
+						// indicate that we did need to load this up for first time
+						resolve("Music file was successfully retrieved and decoded");
+					},function(err) { alert("error creating buffer: " + tuneInstrument[currTuneState] + " error =" + err); } )
+					.catch(error => console.log("Error in " + tuneInstrument[currTuneState] + ".  " + error))
 					
 	        	} else {
 					// we already have this instrument cached
@@ -721,14 +669,11 @@ $(function() {
 						$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
 		     			$("#allowNotePlay").css("visibility", "visible"); 
 					}
-					resolve(true) 
+					// indicate we already had this mp3 file loaded up so all good
+					resolve("Music file was already in local cache") 
 				}
-
 			}
-			
-		})
-			
-		
+		})	
 	}
 	
 	// user selects an instrument from dropdown menu
@@ -739,7 +684,7 @@ $(function() {
 	//***********************************
 	//  User instigated callback events   User selects PLAY INSTRUMENT they have selected
 	//***********************************
-	$('#allowNotePlay').on('click', function(event){
+	$('#allowNotePlay').on('click', function(){
 		if (typeof noteIsOnNow == "undefined")  {
 			// First time in, 
 			noteIsOnNow = false;
@@ -796,7 +741,6 @@ $(function() {
 	} else {
     	console.error('Cannot obtain sin_plotsLo context');
 	};
-
 			
 	//if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
 	const CHART_OPTIONS = {
@@ -906,8 +850,7 @@ $(function() {
 		}, 1000);
 	    sessionStorage.adModal = 1;
     }
-    
-    
+     
     //****************************************************************************
     // Autodemo script for tone trig
     //**************************************************************************** 
@@ -1158,49 +1101,42 @@ $(function() {
     //****************************************************************************   
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
- //   $('#startAutoDemo').on('click', function(event) {
+
 	$('#startAutoDemo').click(function() {
   		demo.prepDemoControls();
   		//move header and tone/music controls to right when autodemo is active
     	demo.moveToRightForAutoDemo($('#headerAndCtl_TT'));
     	demo.moveToRightForAutoDemo($('#MusicNotesToneControl'));
     	
-    	
-    	// instantiate webaudio here so hopefully trumpet will play on custom event
-
-									// Only in autodemos that use MP3 (like MusicNotesTrig that plays musician notes), we need to send the original webAudio context
+		// Only in autodemos that use MP3 (like MusicNotesTrig that plays musician notes), we need to send the original webAudio context
 		// since iOS will not allow initial use of AudioContext unless initialized by user click (not CustomEvent as is done in AutoDemo).  To solve
-		// this, on user click of play button, we send over the AudioContext of playing instrument MP3, so it will play the full autoDemo with musician
+		// this, on user click of start here button, we create the WebAudio that will be used in the demo (using trumpet).  We will create the tone
+		// WebAudio object when user hits play.  Both events take time, want to spread that out as much as possible
+
 		// MP3 in response
 		// to CustomEvent.  On other pages with AutoDemo that don't play extra MP3 (other than voice that explains), this value is not set and its ok
 		// to just define it here.
 		if (undefined === sourceNote) {
 			// this means user hasn't played with music notes so far and autodemo will not play music notes until we initialize 
-			// sourceNote before CustomEvent happens in AutoDemo
+			// sourceNote before the CustomEvent happens in AutoDemo
 			console.log("We need to initialize SourceNote since extra MP3 will be played during autoDemo");	
 			// prep the SourceNote as required by iOS for Autodemo mp3 play]
-			prepToPlayNote("Trumpet", false).then( (onResolved) => {
-										// async function prepToPlayNote returns promise, need to wait till its done
+			prepToPlayNote("Trumpet", true).then( (onResolved) => {
+					console.log(onResolved);  // did we need to read from scratch or did we already have it?
+					// async function prepToPlayNote returns promise, need to wait till its done
 					sourceNote = context.createBufferSource();
 					sourceNote.buffer = tuneBuffer[currTuneState];
-
+					//yes I shouldn't have to turn on the sound, but iOS requires this in order to run autodemo with musicians mp3
 					changeMP3Volume(true);  //mute the sound,
-					sourceNote.start(0);
-					sourceNote.stop(0);
-						
-				
+					sourceNote.start(0);  //turn on fast
+					sourceNote.stop(0);   // turn off fast, no one should notice									
 				}, 
 				(onRejected) => {
-					console.log("promise failed")
+					console.log("Failure instantiating sourceNote WebAudio element. " + onRejected)
 				}
 			);
-
 		}
-		
-		
-
-							
-   		
+		   		
     });
    
     //****************************************************************************
@@ -1292,6 +1228,4 @@ $(function() {
     	$('#clickHereCursor').removeClass('userHitPlay');
 	});
 	
-	
-
 })
