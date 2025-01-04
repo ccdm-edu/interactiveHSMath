@@ -49,8 +49,10 @@
 		<div id=IntroMusicInteractive>
 			<section class="IntroMusicFreqControl">
 				<p><strong>Measure Repetition</strong></p>
-				<!-- data-placement on left ended up pushing it to the right on ipad and obscuring the table, went to bottom -->
-				<button type="button" class="btn btn-primary" id="UserMeasuresFrequency" data-toggle="tooltip" data-placement="bottom" title="Click to calculate period">Click Me</button>
+				<!-- on iPad, no matter where I put this tooltip, it ended up on the right, obscuring the table and values -->
+				<!-- best to eliminate for now since mp4 audio tells you how to use the button -->
+				<!-- data-toggle="tooltip" data-placement="bottom" title="Click to calculate period" -->
+				<button type="button" class="btn btn-primary" id="UserMeasuresFrequency" >Click Me</button>
 				<!-- paragraph below gives "help" to user if stuck -->
 				<p id="informUserFreqQuality" ></p>
 			</section>
