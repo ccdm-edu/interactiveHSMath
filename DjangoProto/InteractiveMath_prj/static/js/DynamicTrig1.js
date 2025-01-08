@@ -699,7 +699,7 @@ $(function() {
 			 segmentParams: 
 			 	{circleCenter: {x: TIMER_LOC_X, y: TIMER_LOC_Y, radius: 22}, 
 			 	 color: "red",
-			 	 waitTimeMillisec: 10000}
+			 	 waitTimeMillisec: 20000}
 			},
 			{segmentActivity: "CLICK_ON_CANVAS",
 			 segmentParams: 
@@ -782,7 +782,7 @@ $(function() {
 	  ]
 	},
 	{ segmentName: "Double the speed",
-	  headStartForAudioMillisec: 15000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 20000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",

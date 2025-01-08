@@ -719,7 +719,7 @@ $(function() {
 	//******************constants for auto demo*********************************
 	const SCRIPT_AUTO_DEMO = [
 	{ segmentName: "Sine Cosine Intro",  // we have 2 column widths for title here
-	  headStartForAudioMillisec: 8000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 35000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",

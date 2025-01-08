@@ -481,7 +481,7 @@ $(function() {
     
 	const SCRIPT_AUTO_DEMO = [
 	{ segmentName: "Sine as Music",
-	  headStartForAudioMillisec: 35000, // generally the audio is longer than the cursor/annotate activity
+	  headStartForAudioMillisec: 20000, // generally the audio is longer than the cursor/annotate activity
 	  segmentActivities: 
 	  [
 			{segmentActivity: "PLAY_AUDIO",
@@ -541,7 +541,7 @@ $(function() {
 			 segmentParams: 
 			 	{xyCoord: CmajorNotes[7],   // has an x y embedded with other stuff
 			 	 canvas: ClefWithNotes,
-			 	 waitTimeMillisec: 500}
+			 	 waitTimeMillisec: 1000}
 			},
 			// turn off the tone, and reset everything
 			{segmentActivity: "ACT_ON_ELEMENT", 
@@ -558,7 +558,7 @@ $(function() {
 			 	{element:'#ResetPage',
 			 	 action: "nothing",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	waitTimeMillisec: 12000}
+			 	waitTimeMillisec: 25000}
 			},
 			// here we click on play a tune and bring up twinkle twinkle notes
 			// first bring up drop down menu
@@ -575,7 +575,7 @@ $(function() {
 			 	{element:'#dropdownMenuSong',
 			 	 action: "nothing",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	waitTimeMillisec: 13000}
+			 	waitTimeMillisec: 5000}
 			},
 
 			// select desired song
@@ -585,7 +585,7 @@ $(function() {
 			 	 action: "focus",  // linger a bit here so user sees what to do
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 15, y: 20},
-			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
+			 	waitTimeMillisec: 2000}  // this is wait before you go on to next item
 			},
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:

@@ -47,7 +47,7 @@ $(function() {
 		},
 		{segmentActivity: "REMOVE_ALL_ANNOTATE_ELEMENT",
 		 segmentParams: 
-		 	{waitTimeMillisec: 9000}
+		 	{waitTimeMillisec: 14000}
 		},
 		{segmentActivity: "ACT_ON_ELEMENT", 
 		 segmentParams:
@@ -62,7 +62,7 @@ $(function() {
 		 	{element:'#segNum',
 		 	 action: "focus",
 		 	 // positive values for offset x and y move the cursor "southwest"
-		 	waitTimeMillisec: 17000}
+		 	waitTimeMillisec: 12000}
 		},
 		{segmentActivity: "ACT_ON_ELEMENT", 
 		 segmentParams:
@@ -92,13 +92,13 @@ $(function() {
 	
 		},
 		{ segmentName: "Welcome to this site...",
-		  headStartForAudioMillisec: 8000, // generally the audio is longer than the cursor/annotate activity
+		  headStartForAudioMillisec: 12000, // generally the audio is longer than the cursor/annotate activity
 		  segmentActivities: 
 		  [
 				{segmentActivity: "PLAY_AUDIO",
 				 segmentParams: 
 				 	{filenameURL: 'LandingPageSeg1',
-				 	waitTimeMillisec: 6000}
+				 	waitTimeMillisec: 9000}
 				},
 							
 				//we only have one item to work on so far so this is slim for now...
