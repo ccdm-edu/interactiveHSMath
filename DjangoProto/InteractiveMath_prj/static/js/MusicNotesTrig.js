@@ -59,7 +59,7 @@ $(function() {
 
 	//everything is relative to the html page this code operates on, server needs to work from /static directory (without django intervention)
 	const STATIC_FILE_LOC = "../../static/static_binaries/";
-	const urlInitValJson = STATIC_FILE_LOC + "Configuration/ToneTrigConfig.json";
+	const urlInitValJson = STATIC_FILE_LOC + "Configuration/filelistofmusicalinstrumentsplayingtuningnote.json";
 	
 	const DEFAULT_TITLE = "Musical Notes and Underlying Trig";
 	$("#musicalActivity").html(DEFAULT_TITLE);  //load up default

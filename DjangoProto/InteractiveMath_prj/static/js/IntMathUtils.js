@@ -30,7 +30,7 @@
 
 	function getActualFilename(dummyFilename) {
 		const STATIC_FILE_LOC = "../../static/static_binaries/";
-		const urlFileMapJson = STATIC_FILE_LOC + "Configuration/BinaryFileNameConfig.json";
+		const urlFileMapJson = STATIC_FILE_LOC + "Configuration/binaryfilenamesforsite-portion1-rev-a.json";
 		
 		var d = new $.Deferred();
 		// try to read back old saved value, else need to open and read config json file		

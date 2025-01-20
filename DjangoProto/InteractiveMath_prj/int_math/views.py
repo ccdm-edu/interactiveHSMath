@@ -139,7 +139,7 @@ class ProcessContactPage(View):
 # functions used by page views
 #**********************************************************
 class ConfigMapper:
-    keyFileWithMappings = os.path.join(os.path.dirname(__file__), '..', 'static', 'static_binaries', 'Configuration', 'BinaryFileNameConfig.json')
+    keyFileWithMappings = os.path.join(os.path.dirname(__file__), '..', 'static', 'static_binaries', 'Configuration', 'binaryfilenamesforsite-portion1-rev-a.json')
     configMapDict = dict()
     
     def __init__(self):
