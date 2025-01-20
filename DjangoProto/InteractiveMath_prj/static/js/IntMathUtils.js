@@ -35,7 +35,7 @@
 		var d = new $.Deferred();
 		// try to read back old saved value, else need to open and read config json file		
 		let fileMapConfig, readback;
-		readback = localStorage.getItem("fileMapperConfig");
+		readback = localStorage.getItem("binaryFileMapperConfig");
 		if (readback != null) {
 			try {
 				fileMapConfig = JSON.parse(readback);
@@ -56,7 +56,7 @@
 			.done(function(fileMapConfig,status,xhr) {
 				//xhr has good stuff like status, responseJSON, statusText, progress
 				if (status === 'success') {				
-   					localStorage.setItem("fileMapperConfig", JSON.stringify(fileMapConfig));
+   					localStorage.setItem("binaryFileMapperConfig", JSON.stringify(fileMapConfig));
    					console.log('READ FROM FILE:  desired mapping is ' + fileMapConfig[dummyFilename])
    					//Object.keys(fileMapConfig).forEach(value => console.log(value + " , " + fileMapConfig[value]));
    					// game over, tell caller all is done and return requested value
