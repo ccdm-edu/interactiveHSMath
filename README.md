@@ -11,5 +11,4 @@ distribution, individually or in aggregate, subject to the terms and conditions
 of the MIT license.  See the file `LICENSE` for details.
 
 The images used in this code baseline are under the Creative Commons Zero v1.0 Public Domain License
-license (openclipart.org).  The MP3 files were produced by either myself or friends/family
-and there is no formal license.  
+license (openclipart.org).    
