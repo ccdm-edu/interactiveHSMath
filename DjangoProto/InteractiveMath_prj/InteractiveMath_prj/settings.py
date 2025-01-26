@@ -81,7 +81,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
-#    'bootstrap_modal_forms',
     'int_math',
 ]
 
@@ -94,6 +93,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'  #so the legal stuff will operate with correct headers
 
 ROOT_URLCONF = 'InteractiveMath_prj.urls'
 TEMPLATE_PATH = os.path.join(BASE_DIR,'templates')
