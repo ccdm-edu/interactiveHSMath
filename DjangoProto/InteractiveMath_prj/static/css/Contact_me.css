@@ -56,3 +56,7 @@ input[type=submit]{
 	position: absolute;
 	bottom: var(--POSITION_RESPONSE_BAD);
 }
+/* user doesn't need to see google public site key */
+#sendGRPublic {
+	display: none;
+}

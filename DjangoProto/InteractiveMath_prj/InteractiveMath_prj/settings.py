@@ -92,9 +92,19 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'  #so the legal stuff will operate with correct headers
+
+#content security policy 
+if DEBUG:
+    CSP_REPORT_ONLY = True  #do only in initial debug to get policy working with site, default is false
+    #on local host, its http so have to call that out as "ok" for self, 'unsafe-inline' cant be in a list/tuple 
+    CSP_STYLE_SRC = ('http://127.0.0.1:8000', 'https://getbootstrap.com', 'https://code.jquery.com')
+else:
+    CSP_REPORT_ONLY = False
+    CSP_STYLE_SRC = ('self', 'https://getbootstrap.com', 'https://code.jquery.com') 
 
 ROOT_URLCONF = 'InteractiveMath_prj.urls'
 TEMPLATE_PATH = os.path.join(BASE_DIR,'templates')
