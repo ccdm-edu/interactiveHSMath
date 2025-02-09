@@ -482,19 +482,18 @@ $(function() {
     $('#ampCirc').on('selectmenuchange', function(event, ui){
 		let temp = ui.item.value;
 		amp = Number(temp);
-		if (amp != 1.0) {
-			ampStr = amp.toString().concat(MULT_DOT);
-			$("#unitCircNotify").text("");
-			$('#xyEqtn').html('= (<span style="color:blue">r'+ MULT_DOT + 'cos'+THETA+'</span>, <span style="color:red">r'+ MULT_DOT + 'sin'+THETA+'</span>)');
-		} else {
+		if (1.0 == amp){
 			//no need to show mpy by 1
 			ampStr = "";
 			$("#unitCircNotify").text("Unit Circle");
-			$('#xyEqtn').html('= (<span style="color:blue">cos'+THETA+'</span>, <span style="color:red">sin'+THETA+'</span>)');
+			$('#xyEqtn_x').text('= (cos'+THETA+',');
+			$('#xyEqtn_y').text(' sin'+THETA+')');
+		} else {
+			ampStr = amp.toString().concat(MULT_DOT);
+			$("#unitCircNotify").text("");
+			$('#xyEqtn_x').text('= (r'+ MULT_DOT + 'cos'+THETA+',');
+			$('#xyEqtn_y').text(' r'+ MULT_DOT + 'sin'+THETA+')');					
 		}
-		
-		// since user might have typed in a value that is close but not allowed, put in the value we chose
-		//$("#ampCirc").text(amp.toString());  superfluous now
 		
 		// since amplitude changed, need to clear out old values for xy and theta
 		$('#xyExactValue').text(" ");
@@ -604,7 +603,8 @@ $(function() {
 	//***********************************
 	// this code is used as user interacts with the yellow dots on main circle
 	//***********************************
-	$('#xyEqtn').html('= (<span style="color:blue">cos'+THETA+'</span>, <span style="color:red">sin'+THETA+'</span>)');
+	$('#xyEqtn_x').text('= (cos'+THETA+',');
+	$('#xyEqtn_y').text(' sin'+THETA+')');
 	let userHasStarted = false;
 	circleDotsCanvas.addEventListener('click', (e) => {
 		// need to convert canvas coord into bitmap coord
@@ -690,10 +690,11 @@ $(function() {
 				
 				// put the labels up for this selection
 				if (1.0 == amp){
-					$('#xyEqtn').html('= (<span style="color:blue">cos'+THETA+'</span>, <span style="color:red">sin'+THETA+'</span>)');
+					$('#xyEqtn_x').text('= (cos'+THETA+',');
+					$('#xyEqtn_y').text(' sin'+THETA+')');
 				} else {
-					$('#xyEqtn').html('= (<span style="color:blue">r'+ MULT_DOT + 'cos'+THETA+'</span>, <span style="color:red">r'+ MULT_DOT + 'sin'+THETA+'</span>)');
-					
+					$('#xyEqtn_x').text('= (r'+ MULT_DOT + 'cos'+THETA+',');
+					$('#xyEqtn_y').text(' r'+ MULT_DOT + 'sin'+THETA+')');					
 				}
 				$('#xyFilledIn').text("= (" + ampStr + "cos" + dot.thetaRad + " , " + ampStr + "sin" + dot.thetaRad + ") ");
 				$('#xyExactValue').text(dot.xyExact);
@@ -851,8 +852,9 @@ $(function() {
 		$('#ampCirc').val('1.0').selectmenu("refresh");  
 		ampStr = "";  // used in xy values as multiply factor
 		$("#unitCircNotify").text("Unit Circle");
-		$('#xyEqtn').html('= (<span style="color:blue">cos'+THETA+'</span>, <span style="color:red">sin'+THETA+'</span>)');
-
+		$('#xyEqtn_x').text('= (cos'+THETA+',');
+		$('#xyEqtn_y').text(' sin'+THETA+')');
+		
 		// since user might have typed in a value that is close but not allowed, put in the value we chose
 		//$("#ampCirc").text(amp.toString());  not needed anymore
 		// since amplitude changed, need to clear out old values for (x,y) and theta

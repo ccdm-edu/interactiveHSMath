@@ -54,10 +54,17 @@ This is the style sheet for the StaticTrig.html page
 	left: var(--LABEL_X_VAL2);
 	top: var(--LABEL_Y_VAL);
 }
-#xyEqtn {
+#xyEqtn_x {
 	position: absolute;
 	left: var(--LABEL_X_VAL2);
 	top: var(--VALUE_Y_1);
+	color: blue;
+}
+#xyEqtn_y {
+	position: absolute;
+	left: calc(var(--LABEL_X_VAL2) + 60px);
+	top: var(--VALUE_Y_1);
+	color: red;
 }
 #xyFilledIn {
 	position: absolute;
