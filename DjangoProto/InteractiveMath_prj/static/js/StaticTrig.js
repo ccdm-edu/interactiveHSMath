@@ -1,6 +1,7 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
+
 	// put up autodemo image to introduce to students for future pages
 	$("#startAutoDemo").css('display', 'inline-block');
 	

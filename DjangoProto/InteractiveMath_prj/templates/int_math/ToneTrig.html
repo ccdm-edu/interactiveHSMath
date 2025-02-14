@@ -123,7 +123,7 @@
                     
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
 	<!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
-	<script>feather.replace()</script>
+	<script nonce="{{ request.csp_nonce }}">feather.replace()</script>
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.73/Tone.js"></script>
     <!-- Get the correct cdn chart.js from https://cdnjs.com/libraries/Chart.js (see stackoverflow, use umd version)-->

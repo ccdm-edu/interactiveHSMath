@@ -138,7 +138,7 @@
 {% block unique_js_block %}	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
 	<!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
-	<script>feather.replace()</script>
+	<script nonce="{{ request.csp_nonce }}">feather.replace()</script>
 	
 	<!-- the next two scripts bring in mathjax, which is compatible with most number of browsers, these scripts will keep up with version changes in mathjax --> 
 	<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">

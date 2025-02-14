@@ -97,14 +97,22 @@ MIDDLEWARE = [
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'  #so the legal stuff will operate with correct headers
 
-#content security policy 
+#content security policy --using this till django upgrade https://django-csp.readthedocs.io/en/3.8/configuration.html
+# also see https://django-csp.readthedocs.io/en/3.8/nonce.html
 if DEBUG:
     CSP_REPORT_ONLY = True  #do only in initial debug to get policy working with site, default is false
-    #on local host, its http so have to call that out as "ok" for self, 'unsafe-inline' cant be in a list/tuple 
+    #on local host, its http so have to call that out as "ok" for self, 'unsafe-inline' cant be in a list/tuple
     CSP_STYLE_SRC = ('http://127.0.0.1:8000', 'https://getbootstrap.com', 'https://code.jquery.com')
+    CSP_SCRIPT_SRC_ELEM = ('http://127.0.0.1:8000', 'https://www.googletagmanager.com', 'https://www.google.com', 
+                           'https://getbootstrap.com', 'https://www.gstatic.com', 'https://ajax.googleapis.com', 
+                           'https://cdnjs.cloudflare.com')
 else:
     CSP_REPORT_ONLY = False
-    CSP_STYLE_SRC = ('self', 'https://getbootstrap.com', 'https://code.jquery.com') 
+    CSP_STYLE_SRC = ('self', 'https://getbootstrap.com', 'https://code.jquery.com')
+    CSP_SCRIPT_SRC_ELEM = ('self', 'https://www.googletagmanager.com', 'https://www.google.com', 
+                           'https://getbootstrap.com', 'https://www.gstatic.com', 'https://ajax.googleapis.com', 
+                           'https://cdnjs.cloudflare.com')
+CSP_INCLUDE_NONCE_IN = ['script-src', 'script-src-elem', 'style-src']    
 
 ROOT_URLCONF = 'InteractiveMath_prj.urls'
 TEMPLATE_PATH = os.path.join(BASE_DIR,'templates')

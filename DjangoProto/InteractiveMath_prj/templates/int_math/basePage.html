@@ -19,7 +19,7 @@
 	         
 	    <!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id={{ GoogleAnalID }}"></script>
-		<script>
+		<script nonce="{{ request.csp_nonce }}">
 		  window.dataLayer = window.dataLayer || [];
 		  function gtag(){dataLayer.push(arguments);}
 		  gtag('js', new Date());
@@ -207,7 +207,7 @@
     				<!-- Placed at the end of the document so the pages load faster -->
 					<!--  needed to run the drop down menus in bootstrap -->
 					<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-					<script>
+					<script nonce="{{ request.csp_nonce }}">
 							<!-- in case can't get from google, load from local -->
 							var localJQ = "{% static 'js-lib/jquery-371min.js' %}";
 							window.jQuery || document.write('<script src="${localJQ}"><\/script>')
