@@ -23,7 +23,7 @@
 	   					
 {% block unique_js_block %}
 	<!-- Custom JS for this page -->
-	<script>
+	<script nonce="{{ request.csp_nonce }}">
 			// Dont need advanced topic link popup
 			$('a[href="#AdvancedTopics"]').css('display', 'none');
 			// no buttons needed

@@ -7,7 +7,7 @@
 {% endblock %}
 
 {%block head_block %}
-	<style>
+	<style nonce="{{ request.csp_nonce }}">
 	table {
 	  font-family: arial, sans-serif;
 	  border-collapse: collapse;
@@ -195,7 +195,7 @@
 {% endblock %}
 
 {% block unique_js_block %}
-	<script>
+	<script nonce="{{ request.csp_nonce }}">
 			//Dont want a next/back button on this page so kill it here	
     		$("#GoToNextPage").css('display', 'none');
     		$("#GoToPreviousPage").css('display', 'none');

@@ -103,16 +103,26 @@ if DEBUG:
     CSP_REPORT_ONLY = True  #do only in initial debug to get policy working with site, default is false
     #on local host, its http so have to call that out as "ok" for self, 'unsafe-inline' cant be in a list/tuple
     CSP_STYLE_SRC = ('http://127.0.0.1:8000', 'https://getbootstrap.com', 'https://code.jquery.com')
+    CSP_WORKER_SRC = ('http://127.0.0.1:8000', 'blob:')
     CSP_SCRIPT_SRC_ELEM = ('http://127.0.0.1:8000', 'https://www.googletagmanager.com', 'https://www.google.com', 
                            'https://getbootstrap.com', 'https://www.gstatic.com', 'https://ajax.googleapis.com', 
-                           'https://cdnjs.cloudflare.com')
+                           'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net')
+    CSP_IMG_SRC = ('http://127.0.0.1:8000', 'https://code.jquery.com')
+    CSP_FRAME_SRC = ('http://127.0.0.1:8000', 'https://www.google.com') 
+    CSP_FRAME_ANCESTORS = ('http://127.0.0.1:8000', 'https://www.google.com')
 else:
     CSP_REPORT_ONLY = False
     CSP_STYLE_SRC = ('self', 'https://getbootstrap.com', 'https://code.jquery.com')
+    CSP_WORKER_SRC = ('self', 'blob:')
     CSP_SCRIPT_SRC_ELEM = ('self', 'https://www.googletagmanager.com', 'https://www.google.com', 
                            'https://getbootstrap.com', 'https://www.gstatic.com', 'https://ajax.googleapis.com', 
-                           'https://cdnjs.cloudflare.com')
-CSP_INCLUDE_NONCE_IN = ['script-src', 'script-src-elem', 'style-src']    
+                           'https://cdnjs.cloudflare.com','https://cdn.jsdelivr.net')
+    CSP_FRAME_SRC = ('self', 'https://www.google.com') 
+    CSP_FRAME_ANCESTORS = ('self', 'https://www.google.com') 
+    
+CSP_INCLUDE_NONCE_IN = ['script-src', 'script-src-elem', 'style-src']  
+#not sure why google needs to embed self in iframe, could be gtagmanager, google analytics or gmail??
+ 
 
 ROOT_URLCONF = 'InteractiveMath_prj.urls'
 TEMPLATE_PATH = os.path.join(BASE_DIR,'templates')
