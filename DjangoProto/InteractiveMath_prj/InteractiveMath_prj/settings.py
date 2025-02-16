@@ -97,6 +97,9 @@ MIDDLEWARE = [
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'  #so the legal stuff will operate with correct headers
 
+#this won't help us since we don't allow user upload of files but will kill a owasp zap low error
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
 #content security policy --using this till django upgrade https://django-csp.readthedocs.io/en/3.8/configuration.html
 # also see https://django-csp.readthedocs.io/en/3.8/nonce.html
 CSP_REPORT_ONLY = False  #True only in initial debug to get policy working with site, default is false

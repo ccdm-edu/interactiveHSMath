@@ -10,13 +10,16 @@ from datetime import date, datetime
 import urllib.request
 import json, os
 from pytz import timezone
+from django.views.decorators.cache import cache_control
 # homegrown stuff
 from int_math.forms import contactForm
 from pickle import TRUE
 
+
 #**********************************************************
 # These are actions that will require significant server time in recaptcha and smtp calls
-#**********************************************************     
+#**********************************************************    
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access 
 class ProcessContactPage(View):
     #print(f"Processing contact page inputs...")
     template_name = 'int_math/Contact_me.html'
@@ -138,6 +141,7 @@ class ProcessContactPage(View):
 #**********************************************************
 # functions used by page views
 #**********************************************************
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access 
 class ConfigMapper:
     keyFileWithMappings = os.path.join(os.path.dirname(__file__), '..', 'static', 'static_binaries', 'Configuration', 'binaryfilenamesforsite-portion1-rev-a.json')
     configMapDict = dict()
@@ -167,6 +171,7 @@ class ConfigMapper:
 #**********************************************************
 # these are all page views
 #**********************************************************
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access 
 class IndexView(View):
     def get(self, request):
         # add help to user based on device/browser
@@ -237,6 +242,7 @@ class IndexView(View):
 #  Trig functions section
 #****************************************************************************************
 # page 1 General Concepts Intro of trig function section
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access 
 class MusicTrigConceptIntroView(View):
     def get(self, request):
         trigMap = ConfigMapper()
@@ -260,7 +266,8 @@ class MusicTrigConceptIntroView(View):
                         }
         response = render(request, 'int_math/IntroTrigMusicConcepts.html', context=context_dict)
         return response
-# page 2 Music Sine Intro of trig function section    
+# page 2 Music Sine Intro of trig function section 
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access    
 class MusicTrigView(View):
     def get(self, request):
         textMap = ConfigMapper()
@@ -274,7 +281,8 @@ class MusicTrigView(View):
                         }
         response = render(request, 'int_math/Pg2MusicSineIntro.html', context=context_dict)
         return response
-# page 3 Where does sine/cosine come from? of trig function section       
+# page 3 Where does sine/cosine come from? of trig function section   
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access     
 class StaticTrigView(View):
     def get(self, request):
         textMap = ConfigMapper()
@@ -288,7 +296,8 @@ class StaticTrigView(View):
                         }
         response = render(request, 'int_math/StaticTrig.html', context=context_dict)
         return response
-# page 4 Lets add time and make frequency of trig function section    
+# page 4 Lets add time and make frequency of trig function section 
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access    
 class DynamicTrig1View(View):
     def get(self, request):
         textMap = ConfigMapper()
@@ -304,6 +313,7 @@ class DynamicTrig1View(View):
         return response
     
 # page 5 Lets go faster in time of trig function section
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access 
 class DynamicTrig2View(View):
     def get(self, request):
         textMap = ConfigMapper()
@@ -320,6 +330,7 @@ class DynamicTrig2View(View):
         response = render(request, 'int_math/DynamicTrig2.html', context=context_dict)
         return response
 # page 6 Lets get into audible sin/cosine tones of trig function section
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access 
 class ToneTrigView(View):
     def get(self, request):
         textMap = ConfigMapper()
@@ -336,7 +347,8 @@ class ToneTrigView(View):
         response = render(request, 'int_math/ToneTrig.html', context=context_dict)
         return response
 
-# page 7 Lets compare musical instruments to sine/cosine of same pitch of trig function section    
+# page 7 Lets compare musical instruments to sine/cosine of same pitch of trig function section 
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access    
 class MusicNotesTrigView(View):
     def get(self, request):
         textMap = ConfigMapper()
@@ -354,6 +366,7 @@ class MusicNotesTrigView(View):
         return response
     
 # page 8 Lets summarize this all now of trig function section
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access 
 class TrigSummaryView(View):
     def get(self, request):
         trigMap = ConfigMapper()
@@ -376,7 +389,7 @@ class TrigSummaryView(View):
 #****************************************************************************************
 #  END OF Trig functions section
 #****************************************************************************************
-    
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access     
 class ImagNumView(View):
     def get(self, request):
         textMap = ConfigMapper()
@@ -391,6 +404,7 @@ class ImagNumView(View):
         response = render(request, 'int_math/imag_num.html', context=context_dict)
         return response
 
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access 
 class TeacherStandardsView(View):
     def get(self, request):
         textMap = ConfigMapper()
@@ -405,6 +419,7 @@ class TeacherStandardsView(View):
         response = render(request, 'int_math/TeacherStds.html', context=context_dict)
         return response
         
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access 
 class PeopleView(View):
     # give user all the info I collect about them
     def get(self, request):
@@ -419,6 +434,7 @@ class PeopleView(View):
                         }
         return render(request, 'int_math/acknowledgements.html', context=context_dict)
 
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access 
 class AckView(View):
     def get(self, request):
         #constants for writing the HTML for each contributer
@@ -454,6 +470,7 @@ class AckView(View):
         response = render(request, 'int_math/acknowledgements.html', context=context_dict)
         return response        
 
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access 
 class TrigIDView(View):
     def get(self, request):
         textMap = ConfigMapper()
@@ -467,7 +484,8 @@ class TrigIDView(View):
                         }
         response = render(request, 'int_math/TrigIdentity.html', context=context_dict)
         return response     
-    
+
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access    
 class TrigIDTuneView(View):
     def get(self, request):
         textMap = ConfigMapper()
@@ -481,7 +499,8 @@ class TrigIDTuneView(View):
                         }
         response = render(request, 'int_math/TrigIdent_Tune.html', context=context_dict)
         return response 
-     
+
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access      
 class Legal_TermsOfUse(View):
     def get(self, request):
         configMap = ConfigMapper()
@@ -497,6 +516,8 @@ class Legal_TermsOfUse(View):
                        }  
         response = render(request, 'int_math/TermsOfUse.html', context=context_dict)
         return response
+
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access 
 class Legal_Privacy(View):
     def get(self, request):
         configMap = ConfigMapper()
@@ -513,6 +534,7 @@ class Legal_Privacy(View):
         response = render(request, 'int_math/Privacy.html', context=context_dict)
         return response
 
+@cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0) #cache nothing--max server access 
 class ContactMe(View):
     def get(self, request):
         textMap = ConfigMapper()
