@@ -156,14 +156,15 @@ if DEBUG == False:
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
     #may need to increase this from 1 hour (3600) to 1 year (31536000) once all is working.  This forces https only
-    SECURE_HSTS_SECONDS= 3600
+    SECURE_HSTS_SECONDS= 604800 # 1 week.  # 86400 is 1 day and 31536000  # Recommended: 1 year (in seconds)  -- this used to be 3600 or 1 hour
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    # the preload variable below just allows me to submit to the browsers this is https only, i haven't
-    # actually done that submission yet
-    SECURE_HSTS_PRELOAD = True
+    # hstspreload.org recommends we set this to false--minimal protection gain from true but max hassle.
+    SECURE_HSTS_PRELOAD = False
     
     #defaulted already to true but repeating here
     SESSION_COOKIE_HTTPONLY = True
+    #more secure csrf cookie--to pass owasp test
+    CSRF_COOKIE_HTTPONLY = True
 
     
 # Database
