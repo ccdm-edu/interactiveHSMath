@@ -331,7 +331,7 @@ $(function() {
 				ysin:  Math.round((amp * CIRC_RAD)*Math.sin(4*Math.PI/3)),
 				angleRad: 2*Math.PI/3,
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( -\\frac12, {-\\sqrt{3} \\over 2} \\right) \\)',
+				xyExact: "= " + ampStr + '\\( \\left( -\\frac12, -{\\sqrt{3} \\over 2} \\right) \\)',
 				thetaRad: "\\( {{4\\mathrm\\pi} \\over 3 }\\)",
 				thetaDeg: "\\(240^\\circ \\)",
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos(4*Math.PI/3),3) + " , " + roundFP(amp*Math.sin(4*Math.PI/3),3) + ")",
@@ -356,7 +356,7 @@ $(function() {
 				ysin:  Math.round((amp * CIRC_RAD)*Math.sin(5*Math.PI/3)),
 				angleRad: Math.PI/3,
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( \\frac12, {-\\sqrt{3} \\over 2} \\right) \\)',
+				xyExact: "= " + ampStr + '\\( \\left( \\frac12, -{\\sqrt{3} \\over 2} \\right) \\)',
 				thetaRad: "\\( {{5\\mathrm\\pi} \\over 3 }\\)",
 				thetaDeg: "\\(300^\\circ \\)",
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos(5*Math.PI/3),3) + " , " + roundFP(amp*Math.sin(5*Math.PI/3),3) + ")",
