@@ -103,23 +103,16 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 #content security policy --using this till django upgrade https://django-csp.readthedocs.io/en/3.8/configuration.html
 # also see https://django-csp.readthedocs.io/en/3.8/nonce.html
 CSP_REPORT_ONLY = False  #True only in initial debug to get policy working with site, default is false
-CSP_STYLE_SRC = ['self', 'https://getbootstrap.com', 'https://code.jquery.com']
-CSP_WORKER_SRC = ['self', 'blob:']
-CSP_SCRIPT_SRC_ELEM = ['self', 'https://www.googletagmanager.com', 'https://www.google.com', 
+CSP_STYLE_SRC = ["'self'", 'https://getbootstrap.com', 'https://code.jquery.com']
+CSP_WORKER_SRC = ["'self'", 'blob:']
+CSP_SCRIPT_SRC_ELEM = ["'self'", 'https://www.googletagmanager.com', 'https://www.google.com', 
                       'https://getbootstrap.com', 'https://www.gstatic.com', 'https://ajax.googleapis.com', 
                       'https://cdnjs.cloudflare.com','https://cdn.jsdelivr.net']
-CSP_IMG_SRC = ['self', 'https://code.jquery.com']
+CSP_IMG_SRC = ["'self'", 'https://code.jquery.com']
 #not sure why google needs to embed self in iframe, could be gtagmanager, google analytics or gmail??
-CSP_FRAME_SRC = ['self', 'https://www.google.com'] 
-CSP_FRAME_ANCESTORS = ['self', 'https://www.google.com'] 
-if DEBUG:
-    #on local host, its http so have to call that out as "ok" for self, 'unsafe-inline' cant be in a list/tuple
-    CSP_STYLE_SRC[0] = 'http://127.0.0.1:8000'
-    CSP_WORKER_SRC[0] = 'http://127.0.0.1:8000'
-    CSP_SCRIPT_SRC_ELEM[0] = 'http://127.0.0.1:8000'
-    CSP_IMG_SRC[0] = 'http://127.0.0.1:8000'
-    CSP_FRAME_SRC[0] = 'http://127.0.0.1:8000'
-    CSP_FRAME_ANCESTORS[0] = 'http://127.0.0.1:8000'
+CSP_FRAME_SRC = ["'self'", 'https://www.google.com'] 
+CSP_FRAME_ANCESTORS = ["'self'", 'https://www.google.com'] 
+
    
 CSP_INCLUDE_NONCE_IN = ['script-src', 'script-src-elem', 'style-src']  
 
