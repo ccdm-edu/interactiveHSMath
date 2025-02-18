@@ -7,7 +7,7 @@ This is the style sheet for the StaticTrig.html page
 	--VALUE_Y_1: 60px;
 	--VALUE_Y_2: 90px;
 	--VALUE_Y_3: 120px;
-	--VALUE_Y_4: 150px;
+	--VALUE_Y_4: 160px;
 	--LABEL_X_VAL1: 50px;
 	--LABEL_X_VAL2: 170px;
 	--LABEL_X_VAL3: 350px;
@@ -62,7 +62,7 @@ This is the style sheet for the StaticTrig.html page
 }
 #xyEqtn_y {
 	position: absolute;
-	left: calc(var(--LABEL_X_VAL2) + 60px);
+	left: calc(var(--LABEL_X_VAL2) + 65px);
 	top: var(--VALUE_Y_1);
 	color: red;
 }
