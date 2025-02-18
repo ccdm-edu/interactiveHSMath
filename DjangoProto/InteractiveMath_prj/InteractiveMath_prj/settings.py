@@ -112,7 +112,7 @@ CSP_IMG_SRC = ["'self'", 'https://code.jquery.com']
 #not sure why google needs to embed self in iframe, could be gtagmanager, google analytics or gmail??
 CSP_FRAME_SRC = ["'self'", 'https://www.google.com'] 
 CSP_FRAME_ANCESTORS = ["'self'", 'https://www.google.com'] 
-CSP_CONNECT_SRC = ['https://www.google.com']  #needed for recaptcha
+CSP_CONNECT_SRC = ["'self'", 'https://www.google.com']  #needed for recaptcha
 
 CSP_INCLUDE_NONCE_IN = ['script-src', 'script-src-elem', 'style-src']  
 
