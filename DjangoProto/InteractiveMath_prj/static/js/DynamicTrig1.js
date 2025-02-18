@@ -3,6 +3,8 @@
 $(function() {
 	// turn on help in upper left corner
 	$('#startAutoDemo').css('display', 'inline-block');
+	// turn off advice on frequency created
+	$('#ExplnFreqMark').css("visibility", "hidden");
 	
 	//if Next  button hit (in base template), set it up to go to intro page
 	$("#GoToNextPage").wrap('<a href="../DynamicTrig2"></a>');
@@ -242,7 +244,7 @@ $(function() {
 	//********************************************************
 	// Add temporary circles and verbiage to show user their new period/freq
 	//********************************************************
-	const SHOW_FREQ_COLOR = "DarkOrchid";
+    const SHOW_FREQ_COLOR = "DarkOrchid";
 	const NEXT_PT_COLOR = "red";
 	const NEXT_PT_TXT = "Click Here";
 	const BEGIN_TEXT = "Start Here";
@@ -371,7 +373,6 @@ $(function() {
 	Object.freeze(FREQ_COLORS);
 	const LATEST_FREQ_TEXT = "   <- Most Recent";
 	const EARLIEST_FREQ_TEXT = "   <- Least Recent";
-	const FREQ_CIRCLE_EXPLN = "<p id='ExplnFreqMark' style='color:" + SHOW_FREQ_COLOR + "'>Look at the two circles.  They both reflect the time it took you to <br>accumulate 360 degrees of phase.  This is the period (T) of the waveform.  <br>The frequency of the waveform is 1/T.  Pull out your calculator and confirm!</p>";
 	
 	//********************************************************
 	//*** start the timer and stop it on expiration or if user hits 360 degrees of phase
@@ -445,14 +446,15 @@ $(function() {
         		}
         		$('#LastFrequencies_DT1').html(freqText);
         		// give user feedback on their performance
+        		$('#ExplnFreqMark').css("visibility", "visible");
         		if (lastFreq == 0) {
-        			$('#UserNotices_DT1').html('Nice work, lets try another one' + FREQ_CIRCLE_EXPLN);
+        			$('#UserNotices_DT1').text('Nice work, lets try another one');
         		} else {
         			let hzDiff = roundFP((currFreq - lastFreq), 3);
         			if (hzDiff > 0) {
-        				$('#UserNotices_DT1').html('This time your frequency was higher by ' + hzDiff + ' Hertz (Hz)' + FREQ_CIRCLE_EXPLN);
+        				$('#UserNotices_DT1').text('This time your frequency was higher by ' + hzDiff + ' Hertz (Hz)');
         			} else {
-        				$('#UserNotices_DT1').html('This time your frequency was lower by ' + (-hzDiff) + ' Hertz (Hz)' + FREQ_CIRCLE_EXPLN);
+        				$('#UserNotices_DT1').text('This time your frequency was lower by ' + (-hzDiff) + ' Hertz (Hz)');
         			}
         		}
         		lastFreq = currFreq;

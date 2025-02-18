@@ -82,7 +82,10 @@ This is the style sheet for the DynamicTrig1.html page
 	white-space: nowrap; /*prevent small screen rearrangement*/
 }
 #ExplnFreqMark{
-	color: lime
+	position: absolute;
+	color: lime;
+	left: 0px;
+	top: 140px;
 }
 
 /***************************/
