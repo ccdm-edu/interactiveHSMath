@@ -383,7 +383,7 @@ $(function() {
 				ysin: Math.round((amp * CIRC_RAD)*Math.sin(11*Math.PI/6)),
 				angleRad: Math.PI/6, 
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( {\\sqrt{3} \\over 2}, \\frac12 \\right) \\)',
+				xyExact: "= " + ampStr + '\\( \\left( {\\sqrt{3} \\over 2}, -\\frac12 \\right) \\)',
 				thetaRad: "\\( {{11\\mathrm\\pi} \\over 6 }\\)",
 				thetaDeg: "\\(330^\\circ \\)",
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos(11*Math.PI/6),3) + " , " + roundFP(amp*Math.sin(11*Math.PI/6),3) + ")",
