@@ -113,6 +113,7 @@ CSP_IMG_SRC = ["'self'", 'https://code.jquery.com']
 CSP_FRAME_SRC = ["'self'", 'https://www.google.com'] 
 CSP_FRAME_ANCESTORS = ["'self'", 'https://www.google.com'] 
 CSP_CONNECT_SRC = ["'self'", 'https://www.google.com']  #needed for recaptcha
+CSP_FORM_ACTION = ["'self'"]
 
 CSP_INCLUDE_NONCE_IN = ['script-src', 'script-src-elem', 'style-src']  
 
