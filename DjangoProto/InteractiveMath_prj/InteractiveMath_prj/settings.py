@@ -108,7 +108,8 @@ CSP_WORKER_SRC = ["'self'", 'blob:']
 CSP_SCRIPT_SRC_ELEM = ["'self'", 'https://www.googletagmanager.com', 'https://www.google.com', 
                       'https://getbootstrap.com', 'https://www.gstatic.com', 'https://ajax.googleapis.com', 
                       'https://cdnjs.cloudflare.com','https://cdn.jsdelivr.net']
-CSP_IMG_SRC = ["'self'", 'https://code.jquery.com']
+#data: is hamburger menu
+CSP_IMG_SRC = ["'self'", 'https://code.jquery.com', 'data:']  
 #not sure why google needs to embed self in iframe, could be gtagmanager, google analytics or gmail??
 CSP_FRAME_SRC = ["'self'", 'https://www.google.com'] 
 CSP_FRAME_ANCESTORS = ["'self'", 'https://www.google.com'] 
