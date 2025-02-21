@@ -110,8 +110,9 @@ CSP_SCRIPT_SRC_ELEM = ["'self'", 'https://www.googletagmanager.com', 'https://ww
                       'https://cdnjs.cloudflare.com','https://cdn.jsdelivr.net']
 #data: is hamburger menu
 CSP_IMG_SRC = ["'self'", 'https://code.jquery.com', 'data:']  
-#not sure why google needs to embed self in iframe, could be gtagmanager, google analytics or gmail??
-CSP_FRAME_SRC = ["'self'", 'https://www.google.com'] 
+#not sure why google needs to embed self in iframe, could be gtagmanager, google analytics or gmail
+#need 'data:' for androids running chrome/edge to load pdf iframes
+CSP_FRAME_SRC = ["'self'", 'data:', 'https://www.google.com'] 
 CSP_FRAME_ANCESTORS = ["'self'", 'https://www.google.com'] 
 CSP_CONNECT_SRC = ["'self'", 'https://www.google.com']  #needed for recaptcha
 CSP_FORM_ACTION = ["'self'"]
