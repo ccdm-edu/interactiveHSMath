@@ -264,6 +264,37 @@ img#clickHereCursor.userHitPlay {
 	50%		{visibility: hidden;}
 	100%	{visibility: hidden;} 
 }
+
+/* a spinner animation to show server is busy getting the file */
+#spinner{
+  visibility: hidden;  
+  width: 40px;
+  height: 40px;
+
+  border: 2px solid #f3f3f3;
+  border-top:3px solid #ff00ff;  /* Barbie pink*/
+  border-radius: 100%;
+
+  position: absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right: 0;
+  margin: auto;
+
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  from {
+      transform: rotate(0deg);
+  } to {
+      transform: rotate(360deg);
+  }
+}
+#spinner.show {
+  visibility: visible;
+}
 /************all pages, header and tables should not "wrap" and break line, expand browser! 
              user needs to know these are big pages with lots of things going on               *****/
 h1,h2 { 

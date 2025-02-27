@@ -140,6 +140,7 @@ class AutoDemo {
 		// I don't think we need a csrf token for this ajax post.  1.  there is already a session ID required for this
 		// request 2.  Nothing is stored to database, request must be a code for filename we have or else get error back
 		// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
+		spinner.className = "show";  // turn on the spinner in middle of autodemo box
 	    $.ajax({url:  audioURL,
 	    		type: 'GET',
 	    	  	// if all is ok, return a blob, which we will convert to arrayBuffer, else return text cuz its an error
@@ -163,9 +164,9 @@ class AutoDemo {
 				// By definition, to get here means request is done and successful, (status = 4 and 200)
 				let blobTune = new Blob([data], { 'type': 'audio/mpeg' });  // this must match what we send over
 				//console.log('file size is ' + blobTune.size + ' type is ' + blobTune.type);				
-		
+				spinner.className = spinner.className.replace("show", "");  // turn off spinner, server part is done
 				blobTune.arrayBuffer().then(blob2array => 
-					{ // done converting blob to arrayBuffer, promise complete, convert blob2array to buffer
+				{ // done converting blob to arrayBuffer, promise complete, convert blob2array to buffer
 					context.decodeAudioData(blob2array, function(buffer) {
 						// to get here means asynchronous mp3 decode is complete and successful
 						//console.log("finished decoding mp3");
@@ -196,14 +197,15 @@ class AutoDemo {
 	
 			})  // done with success (done) function
 			.fail(function(jqXHR, exception) {
-					if (jqXHR.status == 403) {
-						alert("Need to pass bot test to access server file.  No file for YOU!");  
-					} else if (jqXHR.status == 404) {
-						alert("File not found.  See Administrator");
-					} else {
-						alert("ERROR:  return status is " + jqXHR.status );
-						console.error(jqXHR)
-					}
+				spinner.className = spinner.className.replace("show", "");  // turn off spinner
+				if (jqXHR.status == 403) {
+					alert("Need to pass bot test to access server file.  No file for YOU!");  
+				} else if (jqXHR.status == 404) {
+					alert("File not found.  See Administrator");
+				} else {
+					alert("ERROR:  return status is " + jqXHR.status );
+					console.error(jqXHR)
+				}
 			});   // done with ajax
 
 		// leave things as they were when user first started, all is in beginning state

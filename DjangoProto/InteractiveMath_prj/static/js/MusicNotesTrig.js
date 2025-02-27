@@ -585,7 +585,6 @@ $(function() {
 				currTuneState = index;
 			}
 		});
-
 		return new Promise((resolve,reject) => {
 
 	    	if (currTuneState === UNSELECTED) {
