@@ -126,6 +126,13 @@ $(function() {
 				 	 offset: {x: 0, y: 19},
 				 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
 				},
+				// remove red arrow only
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#TrigFuncTopic.dropdown-toggle',
+				 	 action: "",
+				 	waitTimeMillisec: 1000}
+				},
 				// "fake out" select of first menu item
 				{segmentActivity: "ACT_ON_ELEMENT", 
 				 segmentParams:
@@ -133,6 +140,13 @@ $(function() {
 				 	 action: "focus",
 				 	 offset: {x: 0, y: 19},
 				 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
+				},
+				// remove select first menu item
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'a.dropdown-item',
+				 	 action: "focus",
+				 	waitTimeMillisec: 1000}
 				},
 				// remove drop down menu
 				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
@@ -162,7 +176,7 @@ $(function() {
 				 	{element:'#firstFakePage.nav-link',
 				 	 action: "focus",
 				 	 offset: {x: 0, y: 19},
-				 	waitTimeMillisec: 16000}  // this is wait before you go on to next item
+				 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
 				},
 				// remove red cursor from 1st fake page
 				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
@@ -297,6 +311,14 @@ $(function() {
 				 	 offset: {x: 0, y: 19},
 				 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
 				},
+				//get rid of red arrow
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'#TrigFuncTopic.dropdown-toggle',  //dropdown-item',
+				 	 action: "",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
+				},
 				// "fake out" select of first menu item
 				{segmentActivity: "ACT_ON_ELEMENT", 
 				 segmentParams:
@@ -304,6 +326,14 @@ $(function() {
 				 	 action: "focus",
 				 	 offset: {x: 0, y: 19},
 				 	waitTimeMillisec: 7000}  // this is wait before you go on to next item
+				},
+				// remove select of first menu item
+				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
+				 segmentParams:
+				 	{element:'a.dropdown-item',  //dropdown-item',
+				 	 action: "focus",
+				 	 offset: {x: 0, y: 19},
+				 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 				},
 				// remove drop down menu
 				{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
