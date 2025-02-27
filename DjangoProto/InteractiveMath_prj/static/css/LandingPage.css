@@ -58,16 +58,11 @@ div.home_expln {
 	top: 150px;
 	visibility: visible;	
 	display: block;
-	opacity: 0;
-    animation-name: help_on_way;
-    animation-delay: 6s;
-	animation-duration: 4s;
-	animation-fill-mode: forwards;  /* retain last value */
-}
-@keyframes help_on_way{
-	 0%   {opacity: 0.0;}
-	 50%   {opacity: 0.5;}
-	 100%   {opacity: 1.0;}
+	opacity: 0.0;
+    animation-name: expln_fade_in;
+	animation-duration: 2s;
+	animation-delay: 2s;
+	animation-fill-mode: forwards;
 }
 #autoDemoCtls{
 	top: 170px;
@@ -79,13 +74,11 @@ div.home_expln {
 #selectNewbieOrExpert{
 	position: absolute;
 	left: 250px;
-	/* make it appear same as the START HERE autodemo */
-	opacity: 0;
-	animation-name: help_on_way;
-    animation-delay: 6s;
-	animation-duration: 4s;
-	animation-fill-mode: forwards;  /* retain last value */
-	white-space: nowrap;  /* so if screen too small, it wont push out other things*/
+	opacity: 0.0;
+    animation-name: expln_fade_in;
+	animation-duration: 2s;
+	animation-delay: 2s;
+	animation-fill-mode: forwards;
 }
 fieldset {
     border: 1px solid black;

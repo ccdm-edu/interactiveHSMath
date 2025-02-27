@@ -113,7 +113,8 @@ class ProcessContactPage(View):
                     
                 if num_email_sent == 0:
                     #user has injected newlines and message rejected, could be bot?, or gmail rejects us.  Check log.  Inform user of failure
-                    testHasPassed = False  
+                    testHasPassed = False 
+                    print(f'No email was sent from {nameOfContact}') 
     
             else:
                 # tell server not to trust this client on all subsequent accesses and to retest the user
