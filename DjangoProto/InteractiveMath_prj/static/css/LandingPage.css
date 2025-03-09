@@ -36,6 +36,9 @@ span#blinkingColor {
 #upgradeSchedule {
     color: Violet;
 }
+#upgradingSiteNow {
+	color: red;
+}
 div.home_expln {
 	margin: 10%;
     font-weight: bold;

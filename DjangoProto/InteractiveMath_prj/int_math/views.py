@@ -193,6 +193,7 @@ class IndexView(View):
         upgradeDate = ""
         upgradeDay = ""
         upgradeTime = ''
+        upgradingNow = False
         if os.path.isfile(upgrdSchedFile):
             upgd = open(upgrdSchedFile, 'r')
             #ignore first line of file, its comment to user
@@ -217,11 +218,16 @@ class IndexView(View):
                 dayUpgd = daysOfWeek[dayUpgdNum]
                 #if update time has passed but day is today, show the message.
                 if (dateTimeUpgd.date() >= dateNow.date()):  #else, if its more than a day old, wipe it, want message for full day of upgrade, even after upgrade begins
-                    upgradeNoticePresent = True
-                    upgradeDate = dateTimeUpgd.date
-                    upgradeTime = dateTimeUpgd.time
-                    upgradeDay = dayUpgd
-                #print(f"Reading upgd schedule, date is {dateUpgd} , day is {dayUpgd} and right now is {rightNow}")
+                    if ( (dateTimeUpgd.date() == dateNow.date()) and (dateTimeUpgd.time() < dateNow.time()) ):
+                        #happening now, give user notice
+                        upgradingNow = True
+                    else:
+                        #happening in future, let them know when
+                        upgradeNoticePresent = True
+                        upgradeDate = dateTimeUpgd.date
+                        upgradeTime = dateTimeUpgd.time
+                        upgradeDay = dayUpgd
+                #print(f"Reading upgd schedule, date is {dateTimeUpgd.date()} , time is {dateTimeUpgd.time()} and right now is date {dateNow.date()} and time {dateNow.time()}")
             upgd.close()
         #send all this off to requesting user
         context_dict = {'GoogleAnalID': g_analyticsID,
@@ -235,7 +241,8 @@ class IndexView(View):
                         'upgradeNoticePresent': upgradeNoticePresent,
                         'upgradeDay': upgradeDay,
                         'upgradeDate': upgradeDate,
-                        'upgradeTime': upgradeTime
+                        'upgradeTime': upgradeTime,
+                        'upgradeNow': upgradingNow
                         }        
         response = render(request, 'int_math/index.html', context=context_dict)
         return response

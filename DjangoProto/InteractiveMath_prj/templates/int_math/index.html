@@ -37,6 +37,12 @@
 					Site will be upgraded at {{ upgradeTime }} EST until midnight on {{ upgradeDay }}, {{ upgradeDate }}. 		
 				{% endif %}
 				</span>
+				<span id="upgradingSiteNow">
+				{%if upgradeNow %}
+				<br>
+					This site is currently being upgraded until midnight tonight.  Some things may not work correctly during this time.
+				{% endif %}
+				</span>
 				<b> This math website interactively relates high school math and the real world.  Currently we are looking at trig functions in music.  
 				This site was designed for a larger screen.  On your mobile, you
 				will have to adjust the screen frequently to see everything going on. </b>
@@ -56,6 +62,14 @@
 						<br>
 							This site is scheduled to be upgraded at {{ upgradeTime }} EST until midnight on {{ upgradeDay }}, {{ upgradeDate }}. 
 							If you have any questions, comments or bug reports, please use the contact page to let me know.
+							
+						{% endif %}
+					</span>
+					<span id="upgradingSiteNow">
+						{%if upgradeNow %}
+						<br>
+							This site is currently being upgraded until midnight tonight.  During this time, certain items may not be available, 
+							pages may be distorted or not operate correctly.  This will all be resolved by tomorrow.
 							
 						{% endif %}
 					</span>
