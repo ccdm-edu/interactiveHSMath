@@ -3,7 +3,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                         'InteractiveMath_prj.settings')
 import django
 django.setup()
-from int_math.models import Topic, Subtopic
+from int_math.models import Topic, Subtopic, ContactAccesses
 
 def populate():
     
@@ -50,9 +50,20 @@ def populate():
         for p in top_data[0]['topic']:
             add_subtop(c,p['title'],p['url'])
     
+    #check results at build
     for t in Topic.objects.all():
         for s in Subtopic.objects.filter(topic=t):
             print(f'- {t}: {s}')
+            
+    #initialize Contact Accesses, month zero will never happen
+    numAccesses = ContactAccesses.objects.get_or_create(monthLastUpdated = 0, 
+                                                        numTimesRecaptchaAccessedPerMonth = 2, 
+                                                        numTimesSmtpAccessedPerMonth = 1, 
+                                                        numClientsDeniedPerMonth = 11)[0]
+    #double check
+    print(f' numRecaptcha is {numAccesses.numTimesRecaptchaAccessedPerMonth} numSMTP is {numAccesses.numTimesSmtpAccessedPerMonth}')
+    print(f' last month of update is  {numAccesses.monthLastUpdated} num clients denied is {numAccesses.numClientsDeniedPerMonth}')
+    numAccesses.save()
     
             
 def add_subtop(topic, title, url):

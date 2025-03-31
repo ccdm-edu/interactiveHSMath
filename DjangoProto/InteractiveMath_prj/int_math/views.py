@@ -14,14 +14,17 @@ from django.views.decorators.cache import cache_control
 from django.utils.decorators import method_decorator
 # homegrown stuff
 from int_math.forms import contactForm
-from pickle import TRUE
+from int_math.models import ContactAccesses
+# seems unused   from pickle import TRUE
 
 
 #**********************************************************
 # These are actions that will require significant server time in recaptcha and smtp calls
-#**********************************************************    
+#**********************************************************  
+MAX_FREE_RECAPTCHA = 5000  #as of 3/2025, google allows 10k for free
+MAX_NUM_EMAIL_PER_MONTH = 100   # I don't want more than this in my inbox, dammit!
+  
 class ProcessContactPage(View):
-    #print(f"Processing contact page inputs...")
     template_name = 'int_math/Contact_me.html'
     form_class = contactForm
       
@@ -32,18 +35,23 @@ class ProcessContactPage(View):
         form = self.form_class(request.POST) 
         botTestDone = False
         testHasPassed = False
+        num_email_sent = 0
         if form.is_valid():
             # this only checks the format of the email, all other inputs are valid, we escape all text
             #however, email is optional so a blank is ok
-            #print('form is valid WOO HOO')
             quartile = '1Q'
             
             #did a bot see the token empty box and try to fill it in? (honeypot test)
             honey_pot_fail = self.request.POST.get('pooh_food_test')
-            
-            # Send off token to google recaptcha
-            recaptcha_str = self.request.POST.get('g_recaptcha_response')
+                
             if not honey_pot_fail:
+
+                #to get here means user has passed recaptcha/smtp limits.  yes, they could be exceeded by the time we 
+                # get here but its more important to know that their message went through and we allow a little "overage"
+                #it would be cruel to give client a form to fill out and then reject them for slight overage on limits
+
+                #Send off token to google recaptcha
+                recaptcha_str = self.request.POST.get('g_recaptcha_response')
                 if recaptcha_str is not None:
                     #cant do this on the client since server is the only onw with secret key
                     secret_key = settings.RECAPTCHA_SECRET_KEY
@@ -52,7 +60,6 @@ class ProcessContactPage(View):
                         'secret': secret_key}
                     data = urllib.parse.urlencode(payload).encode()
                     req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
-                    #print('finished secret key decoder ring on grecaptcha')
                     response = urllib.request.urlopen(req)
                     result = json.loads(response.read().decode())
                     #take action on robot test results
@@ -68,18 +75,17 @@ class ProcessContactPage(View):
                             quartile = '4Q'
                     else:
                         # need to throw an exception or do something here, some kind of software error
-                        print(f"SW error:  bad recaptcha token, raw result was {result}")
+                        print(f"SW ERROR:  bad recaptcha token, raw result was {result}")
             else:
-                print(f"You failed the Pooh bear test, you checked an invisible honey pot")
+                print(f"ROBOT ALERT: You failed the Pooh bear test, you checked an invisible honey pot")
             
             #JS passes back text string, not a bool
-            print('results on quartile is ' + quartile)
+            print('FYI: results on quartile is ' + quartile)
             
             if ('4Q' == quartile):
                 #trust this user for the duration of session, no need to retest them as long as client has this data local to their device
                 request.session['notABot'] = True
                 testHasPassed = True
-                #print('Bot test PASSED')
                 #get the email, name and message and ensure no html injection
                 nameOfContact = escape(self.request.POST.get('name'))
                 if nameOfContact == "":
@@ -91,9 +97,6 @@ class ProcessContactPage(View):
                 messageEscaped = escape(self.request.POST.get('message')) 
                 messageEscaped += " --From website user: " + nameOfContact + ".  At email addr: " + returnAddrEscaped
                 sendToEmailAddr = settings.EMAIL_HOST_USER
-                #print(f'Subject: {subjectOfContact}')
-                #print(f'Message: {messageEscaped}')
-                num_email_sent = 0
 
                 try:
                     #the minute you use your sendTo address to log into smtp server, that becomes the "from" addr anyway
@@ -109,36 +112,42 @@ class ProcessContactPage(View):
                     #could get auth error if Gmail rejects.  User should never ever get a 500 server error. Baaaaaad
                     template = "An exception of type {0} occurred. Arguments:\n{1!r}"
                     emsg = template.format(type(ex).__name__, ex.args)
-                    print(f'Exception is {emsg}')
+                    print(f'ERROR: Contact page email Exception is {emsg}')
                     
                 if num_email_sent == 0:
                     #user has injected newlines and message rejected, could be bot?, or gmail rejects us.  Check log.  Inform user of failure
                     testHasPassed = False 
-                    print(f'No email was sent from {nameOfContact}') 
-    
+                    print(f'ERROR: No email was sent from {nameOfContact}') 
+                
+                # increment accesses for next contact me user
+                currAccesses = ContactAccesses.objects.first()
+                numRecap = currAccesses.numTimesRecaptchaAccessedPerMonth
+                numEmail= currAccesses.numTimesSmtpAccessedPerMonth
+                currAccesses.numTimesRecaptchaAccessedPerMonth = numRecap + 1
+                currAccesses.numTimesSmtpAccessedPerMonth = numEmail + num_email_sent
+                currAccesses.save()
+
             else:
                 # tell server not to trust this client on all subsequent accesses and to retest the user
                 request.session['notABot'] = False
-                print('Bot test FAILED')
+                print('ROBOT ALERT: Bot test FAILED')
             
-
         else: 
-            #the only thing this checks is email errors if the user chooses to give one.  else all passes
+            #the only thing this checks is email address errors if the user chooses to give one.  else all passes
             returnForm=form    #return users form complete with their inputs and computed errors
             
         # add results to running tab kept at server
         # retrieve model and increment the count  NOT DONE YET    
         context_dict = {'page_tab_header': 'Contact Us',
-                            'topic': None,
-                            'form': returnForm,  
-                            'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
-                            'botTestDone': botTestDone,
-                            'botTestPassed': testHasPassed
-                           } 
+                        'topic': None,
+                        'allowContactEmail': True,
+                        'form': returnForm,  
+                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'botTestDone': botTestDone,
+                        'botTestPassed': testHasPassed
+                        } 
         response = render(request, 'int_math/Contact_me.html', context=context_dict)
         return response                      
-
-  
 
 #**********************************************************
 # functions used by page views
@@ -153,11 +162,11 @@ class ConfigMapper:
                 fileObj = open(self.keyFileWithMappings, 'rt')
                 self.configMapDict = json.load(fileObj)
             except FileNotFoundError:
-                print(f'File {self.keyFileWithMappings} was not found')
+                print(f'SW ERROR:  File {self.keyFileWithMappings} was not found')
             except Exception as ex:
                 template = "An exception of type {0} occurred. Arguments:\n{1!r}"
                 emsg = template.format(type(ex).__name__, ex.args)
-                print(f'Error {emsg} in opening file {self.keyFileWithMappings}')
+                print(f'SW ERROR:  {emsg} in opening file {self.keyFileWithMappings}')
             fileObj.close()
             
     def readConfigMapper(self, genericFileName):
@@ -166,7 +175,7 @@ class ConfigMapper:
             actualFile = self.configMapDict.get(genericFileName)
             #print(f' we just mapped {genericFileName} to {actualFile}')
         else:
-            print(f'Software error, file mapper not found or error opening')
+            print(f'SW ERROR:  file mapper not found or error opening')
         return actualFile
             
 #**********************************************************
@@ -207,8 +216,8 @@ class IndexView(View):
             except Exception as ex:
                 template = "An exception of type {0} occurred. Arguments:\n{1!r}"
                 emsg = template.format(type(ex).__name__, ex.args)
-                print(f'Exception is {emsg}')
-                print(f'Failure on parsing time in UpgradeSchedule.txt, cannot parse {repr(dateTimeUpgdStr)}')
+                print(f'SW ERROR: in obtaining date Exception is {emsg}')
+                print(f'SW ERROR: Failure on parsing time in UpgradeSchedule.txt, cannot parse {repr(dateTimeUpgdStr)}')
             if (dateTimeUpgd is not None):               
                 # get time right now and convert to EST (from UTC).  
                 tz = timezone('EST')
@@ -467,7 +476,6 @@ class AckView(View):
             contributorString += OPENER + A_Begin + contributor["url"] + A_End + Img1 + contributor["logo"] + Img2 + A_Close
             contributorString += A_Begin + contributor["url"] + A_End + H2_1 + contributor["line1"] + H2_2 + A_Close
             contributorString += A_Begin + contributor["url"] + A_End + H3_1 + contributor["line2"] + H3_2 + A_Close + CLOSER
-        #print(f'contributor string is {contributorString}')
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'Thank You!',
@@ -544,15 +552,86 @@ class Legal_Privacy(View):
         return response
 
 class ContactMe(View):
+    #when user fills out contact form, will trigger ProcessContactPage(View): action above
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
         textMap = ConfigMapper()
         companyName = textMap.readConfigMapper("CompanyName")
         g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
+        
+        ####################
+        #dont want to bombard reCaptcha with requests (else we get charged over 10k), limit number of accesses to reasonable amount.
+        #Expect in future to be charged if I exceed a number of smtp access of gmail account so set that limit as well.
+        allowContact = False;  #assume all limits have been exceeded until proven otherwise
+        tz = timezone('EST')
+        dateNow = datetime.now(tz)  
+        try: 
+            #careful, every time you populate DB, you add new entry and best may be last--regen DB every time
+            #ideally there is only one entry for contact accesses
+            currAccesses = ContactAccesses.objects.first()
+        except:
+            #will put up the dont contact us page.  Should never happen.  coding error
+            print(f'DATABASE ERROR in contact page, entry not found keeping track of recaptcha/smtp. Clients cannot contact us')
+        if (currAccesses):
+            print(f' FYI: NumRecaptcha this month is {currAccesses.numTimesRecaptchaAccessedPerMonth}, numSMTP this month is {currAccesses.numTimesSmtpAccessedPerMonth}')
+            print(f' FYI: Month of update is  {currAccesses.monthLastUpdated}.  Num clients denied is {currAccesses.numClientsDeniedPerMonth}')
+            print(f' FYI: current date is {dateNow}, current month is {dateNow.month}')   
+            if (dateNow.month != currAccesses.monthLastUpdated):
+                #were any clients denied access?  if so, send server error and email me
+                if (currAccesses.numClientsDeniedPerMonth > 0):
+                    print(f'ACCESS ERROR, {currAccesses.numClientsDeniedPerMonth} clients were denied last month')
+                    print(f'{currAccesses.numTimesRecaptchaAccessedPerMonth} reCAPTCHA requests were sent and {currAccesses.numTimesSmtpAccessedPerMonth} smtp mail messages were sent')
+                    # Now send email to website designer to fix.  This should never happen. we only send email max of 1/month
+                    subjectOfContact = "SERVER ERROR: USERS denied contact access"
+                    messageEscaped = str(currAccesses.numClientsDeniedPerMonth) + \
+                        " users have been denied access to contact page for the month of " + str(currAccesses.monthLastUpdated) + \
+                        ".  There were " + str(currAccesses.numTimesRecaptchaAccessedPerMonth) + " reCaptcha accesses that month "\
+                        " and " + str(currAccesses.numTimesSmtpAccessedPerMonth) + " SMTP accesses that month.  The max number of recaptchas allowed per month is " \
+                        + str(MAX_FREE_RECAPTCHA) + " and the max num SMTP accesses is " + str(MAX_NUM_EMAIL_PER_MONTH)
+                    sendToEmailAddr = settings.EMAIL_HOST_USER
+                    try:
+                        #the minute you use your sendTo address to log into smtp server, that becomes the "from" addr anyway
+                        num_email_sent = send_mail(
+                                        subjectOfContact,
+                                        messageEscaped,
+                                        sendToEmailAddr,
+                                        [sendToEmailAddr],
+                                        fail_silently=False,
+                                        )
+                    except Exception as ex:
+                        #will fail on num email sent as 0.  Could get BadHeaderError if user input <LF>, 
+                        #could get auth error if Gmail rejects.  User should never ever get a 500 server error. Baaaaaad
+                        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+                        emsg = template.format(type(ex).__name__, ex.args)
+                        print(f'SW ERROR: Sending Server Error email Exception is {emsg}')
+                        
+                    if num_email_sent == 0:
+                        print(f'SW ERROR: Failed attempt to notify website designer via email of user contact page denials') 
+                          
+                #time to reset all the stats for new month, cant do update unless we filter() instead of get()
+                currAccesses.monthLastUpdated = dateNow.month
+                currAccesses.numTimesRecaptchaAccessedPerMonth = 0
+                currAccesses.numTimesSmtpAccessedPerMonth = 0
+                currAccesses.numClientsDeniedPerMonth = 0
+                currAccesses.save()
+                allowContact = True
+            else:
+                if (currAccesses.numTimesRecaptchaAccessedPerMonth < MAX_FREE_RECAPTCHA):
+                    if (currAccesses.numTimesSmtpAccessedPerMonth < MAX_NUM_EMAIL_PER_MONTH):
+                        allowContact = True
+                if (not allowContact):                    
+                #otherwise, client is not allowed to use contact form until next month, to keep Google cloud expenses at zero
+                #keep track of clients denied, ideally, this should be zero
+                    currAccesses.numClientsDeniedPerMonth = currAccesses.numClientsDeniedPerMonth + 1
+                    currAccesses.save()
+                    print(f'ALLOCATION EXCEEDED: ABOVE ALLOTED Contact max, allow {MAX_FREE_RECAPTCHA} MAX recaptcha requests and {MAX_NUM_EMAIL_PER_MONTH} MAX email sends')
+                    print(f'But we have {currAccesses.numTimesRecaptchaAccessedPerMonth} reCAPTCHA requests sent and {currAccesses.numTimesSmtpAccessedPerMonth} smtp mail messages were sent')
+                
         context_dict = {'GoogleAnalID': g_analyticsID, 
                         'CompanyName': companyName,
                         'page_tab_header': 'Contact Us',
                         'topic': None,
+                        'allowContactEmail': allowContact,
                         'form': contactForm(),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         'botTestDone': False,

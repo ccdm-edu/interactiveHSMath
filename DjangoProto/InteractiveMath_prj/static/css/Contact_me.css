@@ -56,6 +56,18 @@ input[type=submit]{
 	position: absolute;
 	bottom: var(--POSITION_RESPONSE_BAD);
 }
+/*message given if we get waaaayyyyy to many contact me requests in a month and are in danger of getting charged for reCaptcha use*/
+#NoGo{
+	text-align: center;
+	font-size: large;
+	color: red;	
+}
+#NoContactAllowed {
+	text-align: center;
+	margin: 10px;
+	font-size: medium;
+	color: black;
+}
 /* user doesn't need to see google public site key */
 #sendGRPublic {
 	display: none;

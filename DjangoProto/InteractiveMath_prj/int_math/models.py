@@ -1,10 +1,4 @@
 from django.db import models
-#from django.db.models.fields import BooleanField, DateTimeField
-#from django.utils import timezone
-#from datetime import datetime
-#from django.template.defaultfilters import slugify
-#from django.contrib.auth.models import User
-
 
 class Topic(models.Model):
     MAX_LEN_NAME = 128
@@ -23,23 +17,14 @@ class Subtopic(models.Model):
     
     def __str__(self):
         return self.title
+    
+class ContactAccesses(models.Model):
+    monthLastUpdated = models.IntegerField(default = 0)
+    numTimesRecaptchaAccessedPerMonth = models.IntegerField(default = 0)
+    numTimesSmtpAccessedPerMonth = models.IntegerField(default = 0)
+    numClientsDeniedPerMonth = models.IntegerField(default = 0)
+     
 
-# This is to keep track of users to site and see how well the robot checks are working
-#class BotChkResults(models.Model):
-#    pass_mathtest = models.BooleanField(default=False, help_text="Don't make this hard")
-#    RECAPTCHA_V3_QUARTILES = (
-#        ('1Q', 'Definitely_robot'),
-#        ('2Q', 'Maybe_robot'),
-#        ('3Q', 'Maybe_human'),
-#        ('4Q', 'Definitely_human'))
-#    recaptcha_v3_quartile = models.CharField(max_length=2, choices=RECAPTCHA_V3_QUARTILES)
-#    count = models.IntegerField(default = 0)
-    
- #   class Meta:
-        #its already plural
- #       verbose_name_plural = 'BotChkResults'
-    
- #   def __str__(self):
- #       return f"pass_math={self.pass_mathtest}, recaptcha_v3={self.recaptcha_v3_quartile}, count = {self.count}"
+
 
 

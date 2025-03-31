@@ -11,33 +11,41 @@
 {% endblock %}
     
 {% block body_block %}
- 	<!--  for robot checking, need to send public key, will be hidden -->
- 	<div id="sendGRPublic">{{ recaptchaPublicKey }}</div>
-	<h1>Contact {{ CompanyName }}</h1><br>
-	<!-- dont save results of robot test so whole site is no cookie -->
-	<div id="centered-form">
-        <form id="ContactUsForm" action = "{% url 'int_math:ProcessContact_me' %}" method="POST">
-            {% csrf_token %}
-			{{form.as_p}}
-				
-            <p id="ContactCompliance"> There is no guarantee of a personal or timely response.  {{ CompanyName }} reserves the right to save all information you provide.
-            Contact submissions are protected by Google reCaptcha V3.  By contacting us, you acknowledge you are over 13 years old and agree to the <a href="{% url 'int_math:TermsOfUse' %}">Terms Of Use </a> 
-		    and <a href="{% url 'int_math:Privacy' %}">Privacy Policy</a> as well as Google terms/privacy. <b>Click box to accept and continue</b>.
-            </p>
-          	<br>
-          	
-		    {% if botTestDone %}
-		  		{% if botTestPassed %}
-		  			<p id="notABot"> Thank you for taking the time to contact us. Your message was successfully transmitted. </p>
-		  		{% else %}
-		  			<p id="urABot"> Sorry, your message was not transmitted.  Perhaps you had "new line" character in your input.  You can go to home page and come back and try again. </p>
-		  		{% endif %}
-		  	{% else %}
-		    	<input type="submit" value="Submit">
-		    {% endif %}
-    
-        </form>
-    </div>
+	{% if allowContactEmail %}
+	 	<!--  for robot checking, need to send public key, will be hidden -->
+	 	<div id="sendGRPublic">{{ recaptchaPublicKey }}</div>
+		<h1>Contact {{ CompanyName }}</h1><br>
+		<!-- dont save results of robot test so whole site is no cookie -->
+		<div id="centered-form">
+	        <form id="ContactUsForm" action = "{% url 'int_math:ProcessContact_me' %}" method="POST">
+	            {% csrf_token %}
+				{{form.as_p}}
+					
+	            <p id="ContactCompliance"> There is no guarantee of a personal or timely response.  {{ CompanyName }} reserves the right to save all information you provide.
+	            Contact submissions are protected by Google reCaptcha V3.  By contacting us, you acknowledge you are over 13 years old and agree to the <a href="{% url 'int_math:TermsOfUse' %}">Terms Of Use </a> 
+			    and <a href="{% url 'int_math:Privacy' %}">Privacy Policy</a> as well as Google terms/privacy. <b>Click box to accept and continue</b>.
+	            </p>
+	          	<br>
+	          	
+			    {% if botTestDone %}
+			  		{% if botTestPassed %}
+			  			<p id="notABot"> Thank you for taking the time to contact us. Your message was successfully transmitted. </p>
+			  		{% else %}
+			  			<p id="urABot"> Sorry, your message was not transmitted.  Perhaps you had "new line" character in your input.  You can go to home page and come back and try again. </p>
+			  		{% endif %}
+			  	{% else %}
+			    	<input type="submit" value="Submit">
+			    {% endif %}
+	    
+	        </form>
+	    </div>
+	{% else %}
+		<!-- This should never happen unless bots are bombarding this page. Server makes that call. Need to keep reCAPTCHA costs down -->
+		<p id="NoGo"> Contact Page Not Available </p>
+		<p id="NoContactAllowed"> There has been a large, unexpected rise in accesses to this Contact page.  The problem is currently being investigated and this page
+		will be restored when it has been resolved.  All other site pages should work fine.
+	    </p>
+	{% endif %}
 
 	<!-- consider using <select> <option> dropdown form for "topic" error, suggestion etc -->
 	<br>
