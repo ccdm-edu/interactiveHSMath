@@ -57,9 +57,9 @@ def populate():
             
     #initialize Contact Accesses, month zero will never happen
     numAccesses = ContactAccesses.objects.get_or_create(monthLastUpdated = 0, 
-                                                        numTimesRecaptchaAccessedPerMonth = 2, 
-                                                        numTimesSmtpAccessedPerMonth = 1, 
-                                                        numClientsDeniedPerMonth = 11)[0]
+                                                        numTimesRecaptchaAccessedPerMonth = 0, 
+                                                        numTimesSmtpAccessedPerMonth = 0, 
+                                                        numClientsDeniedPerMonth = 0)[0]
     #double check
     print(f' numRecaptcha is {numAccesses.numTimesRecaptchaAccessedPerMonth} numSMTP is {numAccesses.numTimesSmtpAccessedPerMonth}')
     print(f' last month of update is  {numAccesses.monthLastUpdated} num clients denied is {numAccesses.numClientsDeniedPerMonth}')
