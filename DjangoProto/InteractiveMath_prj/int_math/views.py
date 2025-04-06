@@ -36,6 +36,9 @@ class ProcessContactPage(View):
         botTestDone = False
         testHasPassed = False
         num_email_sent = 0
+        num_recapcha_sent = 0
+        # increment accesses for next contact me user
+        currAccesses = ContactAccesses.objects.first()
         if form.is_valid():
             # this only checks the format of the email, all other inputs are valid, we escape all text
             #however, email is optional so a blank is ok
@@ -62,20 +65,34 @@ class ProcessContactPage(View):
                     req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
                     response = urllib.request.urlopen(req)
                     result = json.loads(response.read().decode())
-                    #take action on robot test results
-                    if (result['success'] and result['action'] == 'ContactUsForm'):
+                    #sending the second encrypted verify request to recaptcha counts toward max monthly total, log this
+                    num_recapcha_sent = 1
+                    #take action on robot test results.  we can get success but if score is low, we get action=verify
+                    #asking us to use another way to verify the user.  We don't do that at this time, we just reject low scores
+                    if (result['success']):
                         botTestDone = True
-                        if (result['score'] < 0.25):
-                            quartile = '1Q'
-                        elif (result['score'] < 0.5): 
-                            quartile = '2Q'
-                        elif (result['score'] < 0.75):
-                            quartile = '3Q'
+                        if (result['action'] == 'ContactUsForm'):
+                            if (result['score'] < 0.25):
+                                quartile = '1Q'
+                            elif (result['score'] < 0.5): 
+                                quartile = '2Q'
+                            elif (result['score'] < 0.75):
+                                quartile = '3Q'
+                            else:
+                                quartile = '4Q'
+                        
+                        elif (result['action'] == 'verify'):
+                            #this means bot was smart enough not to hit honeypot but we had to send recaptcha to find out its a bot
+                            print(f"ROBOT ALERT:  reCAPTCHA is asking for further verification of low score")
+                            #which we choose to reject at this time
                         else:
-                            quartile = '4Q'
+                            # perhaps an old token was sent or bot wrote junk into recaptcha values??  reject client
+                            print(f"ERROR:  bad recaptcha token returned, raw result was {result}")
                     else:
-                        # need to throw an exception or do something here, some kind of software error
-                        print(f"SW ERROR:  bad recaptcha token, raw result was {result}")
+                        print(f"ERROR:  failed recaptcha token, raw result was {result}")
+                else:
+                    #we didnt get initial response on recaptcha
+                    print(f"SW ERROR: did not get a string on initial recaptcha response ")
             else:
                 print(f"ROBOT ALERT: You failed the Pooh bear test, you checked an invisible honey pot")
             
@@ -118,23 +135,24 @@ class ProcessContactPage(View):
                     #user has injected newlines and message rejected, could be bot?, or gmail rejects us.  Check log.  Inform user of failure
                     testHasPassed = False 
                     print(f'ERROR: No email was sent from {nameOfContact}') 
-                
-                # increment accesses for next contact me user
-                currAccesses = ContactAccesses.objects.first()
-                numRecap = currAccesses.numTimesRecaptchaAccessedPerMonth
-                numEmail= currAccesses.numTimesSmtpAccessedPerMonth
-                currAccesses.numTimesRecaptchaAccessedPerMonth = numRecap + 1
-                currAccesses.numTimesSmtpAccessedPerMonth = numEmail + num_email_sent
-                currAccesses.save()
 
             else:
                 # tell server not to trust this client on all subsequent accesses and to retest the user
+                #we don't save cookies so this is not used
                 request.session['notABot'] = False
-                print('ROBOT ALERT: Bot test FAILED')
+                #Count these up in the server log and just above this, will have reason
+                print('ROBOT FOUND: Bot test FAILED')
             
         else: 
             #the only thing this checks is email address errors if the user chooses to give one.  else all passes
             returnForm=form    #return users form complete with their inputs and computed errors
+            
+        # increment accesses for next contact me user
+        numEmail= currAccesses.numTimesSmtpAccessedPerMonth
+        currAccesses.numTimesSmtpAccessedPerMonth = numEmail + num_email_sent
+        numRecap = currAccesses.numTimesRecaptchaAccessedPerMonth
+        currAccesses.numTimesRecaptchaAccessedPerMonth = numRecap + num_recapcha_sent
+        currAccesses.save()
             
         # add results to running tab kept at server
         # retrieve model and increment the count  NOT DONE YET    
@@ -226,6 +244,7 @@ class IndexView(View):
                 dayUpgdNum = dateTimeUpgd.weekday()
                 dayUpgd = daysOfWeek[dayUpgdNum]
                 #if update time has passed but day is today, show the message.
+                #WHEN US is on daylight savings time, the upgradeNow will be an hour late.
                 if (dateTimeUpgd.date() >= dateNow.date()):  #else, if its more than a day old, wipe it, want message for full day of upgrade, even after upgrade begins
                     if ( (dateTimeUpgd.date() == dateNow.date()) and (dateTimeUpgd.time() < dateNow.time()) ):
                         #happening now, give user notice
