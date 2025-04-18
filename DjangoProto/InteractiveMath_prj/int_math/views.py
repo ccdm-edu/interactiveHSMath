@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
+from django.urls import reverse
 from int_math.models import Topic
 from django.templatetags.static import static
 from django.conf import settings
@@ -90,18 +91,18 @@ class ProcessContactPage(View):
                             print(f"ERROR:  bad recaptcha token returned, raw result was {result}")
                     else:
                         print(f"ERROR:  failed recaptcha token, raw result was {result}")
+                    
+                    print('FYI: gRecaptcha sent, results on quartile is ' + quartile)
                 else:
                     #we didnt get initial response on recaptcha
                     print(f"SW ERROR: did not get a string on initial recaptcha response ")
+
             else:
+                #no need for recaptcha, honeypot test failed.
+                botTestDone = True
                 print(f"ROBOT ALERT: You failed the Pooh bear test, you checked an invisible honey pot")
             
-            #JS passes back text string, not a bool
-            print('FYI: results on quartile is ' + quartile)
-            
             if ('4Q' == quartile):
-                #trust this user for the duration of session, no need to retest them as long as client has this data local to their device
-                request.session['notABot'] = True
                 testHasPassed = True
                 #get the email, name and message and ensure no html injection
                 nameOfContact = escape(self.request.POST.get('name'))
@@ -117,6 +118,7 @@ class ProcessContactPage(View):
 
                 try:
                     #the minute you use your sendTo address to log into smtp server, that becomes the "from" addr anyway
+                    #as of Apr2025, you can send 500 emails per day for free using smtp service
                     num_email_sent = send_mail(
                                     subjectOfContact,
                                     messageEscaped,
@@ -137,34 +139,34 @@ class ProcessContactPage(View):
                     print(f'ERROR: No email was sent from {nameOfContact}') 
 
             else:
-                # tell server not to trust this client on all subsequent accesses and to retest the user
-                #we don't save cookies so this is not used
-                request.session['notABot'] = False
                 #Count these up in the server log and just above this, will have reason
-                print('ROBOT FOUND: Bot test FAILED')
+                print('ROBOT DETECTED: Bot test FAILED, see above robot alert for details')
+                
+            # increment accesses for next contact me user
+            numEmail= currAccesses.numTimesSmtpAccessedPerMonth
+            currAccesses.numTimesSmtpAccessedPerMonth = numEmail + num_email_sent
+            numRecap = currAccesses.numTimesRecaptchaAccessedPerMonth
+            currAccesses.numTimesRecaptchaAccessedPerMonth = numRecap + num_recapcha_sent
+            currAccesses.save()
+                
+            #must use redirect to avoid a POST that will happen automatically when user refreshes
+            #could not get keywords to be sent in a redirect, this is safe since if bot fakes this URL, 
+            #they just get a false message and no submit button
+            response = redirect(reverse('int_math:Contact_me') + f'?botTestPassed={testHasPassed}' )
             
         else: 
-            #the only thing this checks is email address errors if the user chooses to give one.  else all passes
+            #the only thing this form checks is email address errors if the user chooses to give one and makes user user puts something in msg
             returnForm=form    #return users form complete with their inputs and computed errors
-            
-        # increment accesses for next contact me user
-        numEmail= currAccesses.numTimesSmtpAccessedPerMonth
-        currAccesses.numTimesSmtpAccessedPerMonth = numEmail + num_email_sent
-        numRecap = currAccesses.numTimesRecaptchaAccessedPerMonth
-        currAccesses.numTimesRecaptchaAccessedPerMonth = numRecap + num_recapcha_sent
-        currAccesses.save()
-            
-        # add results to running tab kept at server
-        # retrieve model and increment the count  NOT DONE YET    
-        context_dict = {'page_tab_header': 'Contact Us',
+            context_dict = {'page_tab_header': 'Contact Us',
                         'topic': None,
                         'allowContactEmail': True,
                         'form': returnForm,  
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
-                        'botTestDone': botTestDone,
-                        'botTestPassed': testHasPassed
+                        'botTestDone': False,
+                        'botTestPassed': False
                         } 
-        response = render(request, 'int_math/Contact_me.html', context=context_dict)
+            response = render(request, 'int_math/Contact_me.html', context=context_dict)
+              
         return response                      
 
 #**********************************************************
@@ -578,6 +580,15 @@ class ContactMe(View):
         companyName = textMap.readConfigMapper("CompanyName")
         g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         
+        #did we get here on a redirect? if so, update parameters
+        botTestDone = False
+        botTestPassed = False
+        param1 = request.GET.get('botTestPassed')
+        if param1:
+            if (param1 == "True"):
+                botTestPassed = True;
+            botTestDone = True;  #whether test passed or not, we are here by redirect and bot test was done
+        
         ####################
         #dont want to bombard reCaptcha with requests (else we get charged over 10k), limit number of accesses to reasonable amount.
         #Expect in future to be charged if I exceed a number of smtp access of gmail account so set that limit as well.
@@ -653,8 +664,8 @@ class ContactMe(View):
                         'allowContactEmail': allowContact,
                         'form': contactForm(),
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
-                        'botTestDone': False,
-                        'botTestPassed': False
+                        'botTestDone': botTestDone,
+                        'botTestPassed': botTestPassed
                        } 
         response = render(request, 'int_math/Contact_me.html', context=context_dict)
         return response
