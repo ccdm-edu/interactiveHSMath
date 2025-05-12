@@ -32,9 +32,9 @@ jobs:
           list-files: 'csv'
           filters: |
             static:
-              - 'static/css/**'
-              - 'static/images/**'
-              - 'static/js/**'
+              - '**/static/css/**'
+              - '**/static/images/**'
+              - '**/static/js/**'
 
       # run only if some file in static code folder was changed
       - if: steps.changes.outputs.static == 'true'
