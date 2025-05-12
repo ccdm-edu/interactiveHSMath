@@ -1,0 +1,41 @@
+---
+# Figure out static code files that have changed and copy/slam the new version into Cloudflare R2 bucket
+# Dont have an existing action to delete from R2 bucket--do manually since no problem having junk files in R2 bucket
+name: update_r2bucket
+run-name: ${{ github.actor }} is updating R2 bucket for static code/public images
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths: 
+    - 'static'
+
+jobs:
+  files-changed:
+    name: detect what files changed
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+
+    steps:
+      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: Paths Changes Filter
+        uses: dorny/paths-filter@v3.0.2
+        id: changes
+        with:
+          list-files: 'csv'
+          filters: |
+            static:
+              - 'static/css/**'
+              - 'static/images/**'
+              - 'static/js/**'
+
+      # run only if some file in static code folder was changed
+      - if: steps.changes.outputs.static == 'true'
+        run: echo "static file changes found" >> $GITHUB_OUTPUT
+
+...
