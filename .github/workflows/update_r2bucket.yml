@@ -17,7 +17,6 @@ jobs:
     name: detect what files changed
     runs-on: ubuntu-latest
     timeout-minutes: 3
-    outputs:
 
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
