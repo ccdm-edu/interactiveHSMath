@@ -39,7 +39,6 @@ jobs:
       # run only if some file in static code folder was changed
       - if: steps.changes.outputs.static == 'true'
         run: |
-          echo "static file changes found" >> $GITHUB_OUTPUT
           echo "Changed static files: ${{ steps.changes.outputs.static_files }}"
 
 ...
