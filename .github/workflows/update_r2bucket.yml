@@ -26,6 +26,7 @@ jobs:
         uses: dorny/paths-filter@v3.0.2
         id: changes
         with:
+          token: ${{ github.token }}
           list-files: 'csv'
           filters: |
             static:
