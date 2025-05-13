@@ -14,13 +14,13 @@ jobs:
     name: detect what files changed
     runs-on: ubuntu-latest
     timeout-minutes: 3
-
+    outputs:
+      static_files_changed: ${{ steps.changes.outputs.static_files }}
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - run: echo "🔎 The name of the branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
 
-      #not sure this or the token is required????
       - name: Checkout repository
         uses: actions/checkout@v4
         
@@ -28,7 +28,6 @@ jobs:
         uses: dorny/paths-filter@v3.0.2
         id: changes
         with:
-          token: ${{ github.token }}
           list-files: 'csv'
           filters: |
             static:
