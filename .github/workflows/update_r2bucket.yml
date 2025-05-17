@@ -40,7 +40,7 @@ jobs:
       - id: string_to_array
         if: steps.changes.outputs.static == 'true'
         run: |
-          #echo "Changed static files: ${{ steps.changes.outputs.static_files }}"
+          echo "Changed static files: ${{ steps.changes.outputs.static_files }}"
           python3
           array_static_files_changed = ${{ steps.changes.outputs.static_files }}.split(',')
           print(array_static_files_changed)
