@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     outputs:
-      static_files_changed: ${{ steps.changes.outputs.static_files }}
+      static_files_changed: ${{ steps.changes.outputs.static_files }}.split(',')
       run_the_upload: ${{ steps.changes.outputs.static }}
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
@@ -39,18 +39,20 @@ jobs:
       # run only if some file in static code folder was changed
       - if: steps.changes.outputs.static == 'true'
         run: |
-          echo "Changed static files: ${{ steps.changes.outputs.static_files }}"
+          #echo "Changed static files: ${{ steps.changes.outputs.static_files }}"
+          var array_static_files_changed: ${{ steps.changes.outputs.static_files }}.split(',')
+          echo "arrayStaticfiles : ${{ array_static_files_changed }}"
 
   #idea here is we have a list of files to be uploaded to bucket, create a matrix of jobs for each of these
   #seems to be a way GitHub actions allows looping
-  loop-thru-files:
-    strategy: 
-      matrix:
-        files2use: static_files_changed.split(',')
-    runs-on: ubuntu-latest
-    steps: 
-      - if: run_the_upload == 'true'
-        run: |
-          echo "We have file meeting the criterion ${{ matrix.files2use }}"
+  #loop-thru-files:
+    #strategy: 
+      #matrix:
+        #files2use: static_files_changed
+    #runs-on: ubuntu-latest
+    #steps: 
+      #- if: run_the_upload == 'true'
+        #run: |
+          #echo "We have file meeting the criterion ${{ matrix.files2use }}"
 
 ...
