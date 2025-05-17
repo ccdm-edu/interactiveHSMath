@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     outputs:
-      static_files_changed: ${{ steps.changes.outputs.static_files }}.split(',')
+      static_files_changed: ${{ steps.changes.outputs.static_files }}
       run_the_upload: ${{ steps.changes.outputs.static }}
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
@@ -40,8 +40,10 @@ jobs:
       - if: steps.changes.outputs.static == 'true'
         run: |
           #echo "Changed static files: ${{ steps.changes.outputs.static_files }}"
-          var array_static_files_changed: ${{ steps.changes.outputs.static_files }}.split(',')
-          echo "arrayStaticfiles : ${{ array_static_files_changed }}"
+          python3
+          array_static_files_changed = ${{ steps.changes.outputs.static_files }}.split(',')
+          print(array_static_files_changed)
+          exit()
 
   #idea here is we have a list of files to be uploaded to bucket, create a matrix of jobs for each of these
   #seems to be a way GitHub actions allows looping
