@@ -42,7 +42,8 @@ jobs:
         run: |
           echo "Changed static files: ${{ steps.changes.outputs.static_files }}"
           python3 -b
-          print(f'is this a string? {isinstance(${{ steps.changes.outputs.static_files }}, str)} ')
+          testStr = isinstance(${{ steps.changes.outputs.static_files }}, str)
+          print(f'is this a string: {testStr} ')
           #array_static_files_changed = str(${{ steps.changes.outputs.static_files }}).split(',')
           #print(array_static_files_changed)
           exit()
