@@ -41,9 +41,10 @@ jobs:
         if: steps.changes.outputs.static == 'true'
         run: |
           echo "Changed static files: ${{ steps.changes.outputs.static_files }}"
-          python3
-          array_static_files_changed = str(${{ steps.changes.outputs.static_files }}).split(',')
-          print(array_static_files_changed)
+          python3 -b
+          print(f'is this a string? {isinstance(${{ steps.changes.outputs.static_files }}, str)} ')
+          #array_static_files_changed = str(${{ steps.changes.outputs.static_files }}).split(',')
+          #print(array_static_files_changed)
           exit()
 
   #idea here is we have a list of files to be uploaded to bucket, create a matrix of jobs for each of these
