@@ -42,7 +42,7 @@ jobs:
         run: |
           echo "Changed static files: ${{ steps.changes.outputs.static_files }}"
           python3
-          array_static_files_changed = ${{ steps.changes.outputs.static_files }}.split(',')
+          array_static_files_changed = str(${{ steps.changes.outputs.static_files }}).split(',')
           print(array_static_files_changed)
           exit()
 
