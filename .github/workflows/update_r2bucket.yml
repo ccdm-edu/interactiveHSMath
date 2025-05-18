@@ -37,16 +37,13 @@ jobs:
               - '**/static/js/**'
 
       # run only if some file in static code folder was changed
-      - id: string_to_array
+      - name: get array of static files
+        id: string_to_array
+        shell: python
         if: steps.changes.outputs.static == 'true'
         run: |
-          echo "Changed static files: ${{ steps.changes.outputs.static_files }}"
-          python3 -b
           testStr = isinstance(${{ steps.changes.outputs.static_files }}, str)
           print(f'is this a string: {testStr} ')
-          #array_static_files_changed = str(${{ steps.changes.outputs.static_files }}).split(',')
-          #print(array_static_files_changed)
-          exit()
 
   #idea here is we have a list of files to be uploaded to bucket, create a matrix of jobs for each of these
   #seems to be a way GitHub actions allows looping
