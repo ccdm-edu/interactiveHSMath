@@ -42,7 +42,8 @@ jobs:
         shell: python
         if: steps.changes.outputs.static == 'true'
         run: |
-          testStr = isinstance(${{ steps.changes.outputs.static_files }}, str)
+          str_ver = "${{ steps.changes.outputs.static_files }}"
+          testStr = isinstance(str_ver, str)
           print(f'is this a string: {testStr} ')
 
   #idea here is we have a list of files to be uploaded to bucket, create a matrix of jobs for each of these
