@@ -43,6 +43,6 @@ jobs:
           str_ver = "${{ steps.changes.outputs.static_files }}"
           array_of_files = str(str_ver).split(',')
           print(f'what we have now {array_of_files} ')
-	        #print(f"{file_array}={array_of_files}")
+          #print(f"{file_array}={array_of_files}")
 
 
