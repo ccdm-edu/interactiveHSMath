@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     outputs:
-      upload_file_str: ${{ steps.string_to_array.outputs.array_of_files }}
+      upload_file_str: ${{ steps.string_to_array.outputs.file_array }}
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -37,14 +37,12 @@ jobs:
 
       - name: parse the string
         id: string_to_array
+        shell: python
         if:  steps.changes.outputs.static == 'true'
         run: |
-          #!/bin/bash
-          IFS = ','
-          read -ra file_array <<< "${{ steps.changes.outputs.static_files }}"
-          echo "Array elements:"
-          for i in "${file_array[@]}"; do
-            echo "$i"
-          done
-          #echo "array_of_files=${{ file_array }}" >> $GITHUB_OUTPUT
-...
+          str_ver = "${{ steps.changes.outputs.static_files }}"
+          array_of_files = str(str_ver).split(',')
+          print(f'what we have now {array_of_files} ')
+	        #print(f"{file_array}={array_of_files}")
+
+
