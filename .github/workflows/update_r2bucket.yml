@@ -47,6 +47,17 @@ jobs:
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"file_array={array_of_files}")
 
+  test_file_array: 
+    # test we got the array ok
+    name: delete me when tested, I wanna array
+    runs-on: ubuntu-latest
+    needs: [files-changed]
+    steps:
+      - name: test results
+        id: test_results
+        run: |
+          echo 'what we have now, in new job is ${{ needs.files-changed.outputs.upload_file_str }} '    
+
           
 
 
