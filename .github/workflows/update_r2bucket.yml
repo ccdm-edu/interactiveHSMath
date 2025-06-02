@@ -39,6 +39,7 @@ jobs:
         id: string_to_array
         if:  steps.changes.outputs.static == 'true'
         run: |
+          #!/bin/bash
           IFS = ','
           read -ra file_array <<< "${{ steps.changes.outputs.static_files }}"
           echo "Array elements:"
