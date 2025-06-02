@@ -15,8 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     outputs:
-      out_static_files_changed: ${{ steps.string_to_array.array_static_files_changed }}
-      run_the_upload: ${{ steps.changes.outputs.static }}
+      upload_file_str: ${{ steps.string_to_array.outputs.array_of_files }}
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -36,26 +35,15 @@ jobs:
               - '**/static/images/**'
               - '**/static/js/**'
 
-      # run only if some file in static code folder was changed
-      - name: get array of static files
+      - name: parse the string
         id: string_to_array
-        shell: python
-        if: steps.changes.outputs.static == 'true'
+        if:  steps.changes.outputs.static == 'true'
         run: |
-          str_ver = "${{ steps.changes.outputs.static_files }}"
-          array_static_files_changed = str(str_ver).split(',')
-          print(f'what we have now {array_static_files_changed} ')
-
-  #idea here is we have a list of files to be uploaded to bucket, create a matrix of jobs for each of these
-  #seems to be a way GitHub actions allows looping
-  #loop-thru-files:
-    #strategy: 
-      #matrix:
-        #files2use: out_static_files_changed
-    #runs-on: ubuntu-latest
-    #steps: 
-      #- if: run_the_upload == 'true'
-        #run: |
-          #echo "We have file meeting the criterion ${{ matrix.files2use }}"
-
+          IFS = ','
+          read -ra file_array <<< "${{ steps.changes.outputs.static_files }}"
+          echo "Array elements:"
+          for i in "${file_array[@]}"; do
+            echo "$i"
+          done
+          echo "array_of_files=${{ file_array }}" >> $GITHUB_OUTPUT
 ...
