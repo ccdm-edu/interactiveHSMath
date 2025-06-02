@@ -45,5 +45,5 @@ jobs:
           for i in "${file_array[@]}"; do
             echo "$i"
           done
-          echo "array_of_files=${{ file_array }}" >> $GITHUB_OUTPUT
+          #echo "array_of_files=${{ file_array }}" >> $GITHUB_OUTPUT
 ...
