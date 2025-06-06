@@ -61,6 +61,7 @@ jobs:
           echo 'what we have now, in new job is ${{ needs.files-changed.outputs.upload_file_str }} '  
           
   push_new_files_up:
+    if: ${{ needs.files-changed.outputs.run_the_upload }} == "true"
     # push up the new files modified or created by creating new job for each file
     name: push files to CF R2 bucket
     runs-on: ubuntu-latest
@@ -71,7 +72,6 @@ jobs:
     steps:
       - name: upload files
         id: upload_static_files
-        #if: needs.files-changed.outputs.run_the_upload == "true"
         run: |
           #echo "Uploading ${{ matrix.files2use }} to Cloudflare R2 storage bucket"
           echo "get this working"
