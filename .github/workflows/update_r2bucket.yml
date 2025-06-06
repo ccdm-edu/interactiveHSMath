@@ -44,7 +44,7 @@ jobs:
           import os
           str_ver = "${{ steps.changes.outputs.static_files }}"
           array_of_files = str(str_ver).split(',')
-          json_array_of_files = "{'file_array':" + array_of_files + "}"
+          json_array_of_files = "{'file_array':" + str_ver + "}"
           print(f'string_to_array parsing to json format is {json_array_of_files} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"file_array={json_array_of_files}")
