@@ -56,6 +56,7 @@ jobs:
     steps:
       - name: test results
         id: test_results
+        if: needs.files-changed.outputs.run_the_upload == "true"
         run: |
           echo 'what we have now, in new job is ${{ needs.files-changed.outputs.upload_file_str }} '  
           
@@ -70,9 +71,10 @@ jobs:
     steps:
       - name: upload files
         id: upload_static_files
-        if: needs.files-changed.outputs.run_the_upload == "true"
+        #if: needs.files-changed.outputs.run_the_upload == "true"
         run: |
-          echo "Uploading ${{ matrix.files2use }} to Cloudflare R2 storage bucket"
+          #echo "Uploading ${{ matrix.files2use }} to Cloudflare R2 storage bucket"
+          echo "get this working"
 
 
           
