@@ -44,7 +44,7 @@ jobs:
           import os
           str_ver = "${{ steps.changes.outputs.static_files }}"
           array_of_files = str(str_ver).split(',')
-          print(f'what we have now {array_of_files} ')
+          print(f'string_to_array parsing is {array_of_files} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"file_array={array_of_files}")
 
@@ -58,7 +58,7 @@ jobs:
         id: test_results
         if: ${{ needs.files-changed.outputs.run_the_upload }} == "true"
         run: |
-          echo 'what we have now, in new job is ${{ needs.files-changed.outputs.upload_file_str }} '  
+          echo 'test_file_array what we have now, in new job is ${{ needs.files-changed.outputs.upload_file_str }} '  
           
   push_new_files_up:
     if: ${{ needs.files-changed.outputs.run_the_upload }} == "true"
@@ -74,7 +74,7 @@ jobs:
         id: upload_static_files
         run: |
           #echo "Uploading ${{ matrix.files2use }} to Cloudflare R2 storage bucket"
-          echo "get this working"
+          echo " push_new_files_up:  get this working"
 
 
           
