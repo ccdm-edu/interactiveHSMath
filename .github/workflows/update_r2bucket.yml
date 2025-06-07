@@ -48,7 +48,7 @@ jobs:
           for i in array_of_files:
             json_array_of_files = json_array_of_files + '"' + i + '",'
           #remove last extra , and close off json format
-          json_array_of_files = json_array_of_files{:-1] + ']}'
+          json_array_of_files = json_array_of_files[:-1] + ']}'
           print(f'string_to_array parsing to json format is {json_array_of_files} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"file_array={json_array_of_files}")
