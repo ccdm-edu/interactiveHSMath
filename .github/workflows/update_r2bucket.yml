@@ -44,14 +44,18 @@ jobs:
           import os
           str_ver = "${{ steps.changes.outputs.static_files }}"
           array_of_files = str(str_ver).split(',')
-          json_array_of_files = "{'file_array':[" + str_ver + "]}"
+          json_array_of_files = '{"file_array":['                  
+          for i in array_of_files:
+            json_array_of_files = json_array_of_files + '"' + i + '",'
+          #remove last extra , and close off json format
+          json_array_of_files = json_array_of_files{:-1] + ']}'
           print(f'string_to_array parsing to json format is {json_array_of_files} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"file_array={json_array_of_files}")
 
   test_file_array: 
     # test we got the array ok
-    name: delete me when tested, I wanna array
+    name: delete me when tested, look at results before used
     runs-on: ubuntu-latest
     needs: [files-changed]
     steps:
