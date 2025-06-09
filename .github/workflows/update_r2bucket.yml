@@ -58,7 +58,7 @@ jobs:
               array_of_dir_path.append(currDir)
           for i in array_of_dir_path:
             print(f'dir = {i}')
-            json_array_of_files = json_array_of_files + '"' + i + '",'
+            json_array_of_files = json_array_of_files + '"' + str(i) + '",'
           #remove last extra , and close off json format
           json_array_of_files = json_array_of_files[:-1] + ']}'
           print(f'string_to_array parsing to json format is {json_array_of_files} ')
