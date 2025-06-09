@@ -87,7 +87,7 @@ jobs:
     needs: [files-changed]
     steps: 
       - name: did we get array
-        id: check array
+        id: check_array
         run: |
           echo "We have file meeting the criterion ${{ matrix.files2use }}"
 
