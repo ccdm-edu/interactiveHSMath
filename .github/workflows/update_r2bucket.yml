@@ -42,7 +42,8 @@ jobs:
         #if:  steps.changes.outputs.static == 'true'
         run: |
           import os
-          str_ver = "${{ steps.changes.outputs.static_files }}"
+          #str_ver = "${{ steps.changes.outputs.static_files }}"
+          str_ver = "DjangoProto/InteractiveMath_prj/static/css/FakeCSStestFile.css,DjangoProto/InteractiveMath_prj/static/js/FakeJStestFile.js,DjangoProto/InteractiveMath_prj/static/js/FakeJStestFile2.js,DjangoProto/InteractiveMath_prj/static/css/FakeCSStestFile2.css"
           print(f'this is what the first job puts out: {str_ver}')
           array_of_files = str(str_ver).split(',')
           json_array_of_files = '{"file_array":['                  
