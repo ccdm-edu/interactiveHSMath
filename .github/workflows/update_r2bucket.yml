@@ -44,42 +44,41 @@ jobs:
         run: |
           import os
           import pathlib
+          #what we get from paths-filter is list of files that changed from specified directories of interest
           #str_ver = "${{ steps.changes.outputs.static_files }}"
           str_ver = "DjangoProto/InteractiveMath_prj/static/css/FakeCSStestFile.css,DjangoProto/InteractiveMath_prj/static/js/FakeJStestFile.js,DjangoProto/InteractiveMath_prj/static/js/FakeJStestFile2.js,DjangoProto/InteractiveMath_prj/static/css/FakeCSStestFile2.css"
           print(f'this is what the first job puts out: {str_ver}')
           array_of_files = str(str_ver).split(',')
           array_of_dir_path = []
-          #json_array_of_files = '{"file_array":['                  
+          json_array_of_files = '{"file_array":['                  
           for i in array_of_files:
             currPath = pathlib.Path(i)
             currDir = currPath.parent
             if currDir not in array_of_dir_path:
               array_of_dir_path.append(currDir)
-            #json_array_of_files = json_array_of_files + '"' + i + '",'
-          #remove last extra , and close off json format
-          #json_array_of_files = json_array_of_files[:-1] + ']}'
-          #print(f'string_to_array parsing to json format is {json_array_of_files} ')
-          #with open(os.environ['GITHUB_OUTPUT'], "a") as f:
-            #f.write(f"file_array={json_array_of_files}")
-          cnt = 0
           for i in array_of_dir_path:
-            print(f'dir({cnt}) = {i}')
-            cnt = cnt+1
+            print(f'dir = {i}')
+            json_array_of_files = json_array_of_files + '"' + i + '",'
+          #remove last extra , and close off json format
+          json_array_of_files = json_array_of_files[:-1] + ']}'
+          print(f'string_to_array parsing to json format is {json_array_of_files} ')
+          with open(os.environ['GITHUB_OUTPUT'], "a") as f:
+            f.write(f"file_array={json_array_of_files}")
           
 
   test_file_array: 
     # test we got the array ok
-    if: 'false'
     name: delete me when tested, look at results before used
     runs-on: ubuntu-latest
     needs: [files-changed]
     steps:
       - name: test results
         id: test_results
-        if: ${{ needs.files-changed.outputs.run_the_upload == 'true' }} 
+        #if: ${{ needs.files-changed.outputs.run_the_upload == 'true' }} 
         run: |
           echo 'the run-the-upload value is ${{ needs.files-changed.outputs.run_the_upload }} '
-          #echo 'test_file_array what we have now, in new job is ${{ fromJSON(needs.files-changed.outputs.upload_file_str) }} '  
+          echo 'we read the results of previous job as ${{ needs.files-changed.outputs.upload_file_str }}
+          echo 'test_file_array what we have now, converted from json, in new job is ${{ fromJSON(needs.files-changed.outputs.upload_file_str) }} '  
           
   push_new_files_up:
     #if: ${{ needs.files-changed.outputs.run_the_upload == 'true' }} 
