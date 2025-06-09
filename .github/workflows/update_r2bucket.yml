@@ -51,7 +51,7 @@ jobs:
           array_of_dir_path = []
           #json_array_of_files = '{"file_array":['                  
           for i in array_of_files:
-            currPath = pathlib.Path(array_of_files[i])
+            currPath = pathlib.Path(i)
             currDir = currPath.parent
             if currDir not in array_of_dir_path:
               array_of_dir_path.append(currDir)
@@ -61,8 +61,10 @@ jobs:
           #print(f'string_to_array parsing to json format is {json_array_of_files} ')
           #with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             #f.write(f"file_array={json_array_of_files}")
+          cnt = 0
           for i in array_of_dir_path:
-            print(f'dir({i}) = {array_of_dir_path[i]}')
+            print(f'dir({cnt}) = {i}')
+            cnt = cnt+1
           
 
   test_file_array: 
