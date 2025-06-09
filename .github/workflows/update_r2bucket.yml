@@ -39,7 +39,7 @@ jobs:
       - name: parse the string
         id: string_to_array
         shell: python
-        if:  steps.changes.outputs.static == 'true'
+        #if:  steps.changes.outputs.static == 'true'
         run: |
           import os
           str_ver = "${{ steps.changes.outputs.static_files }}"
