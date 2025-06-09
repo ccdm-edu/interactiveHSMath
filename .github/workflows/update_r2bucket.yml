@@ -78,7 +78,21 @@ jobs:
         run: |
           echo 'the run-the-upload value is ${{ needs.files-changed.outputs.run_the_upload }} '
           echo 'we read the results of previous job as ${{ needs.files-changed.outputs.upload_file_str }}'
-          echo 'test_file_array what we have now, converted from json, in new job is ${{ fromJSON(needs.files-changed.outputs.upload_file_str).file_array }}[@] '  
+
+  loop-thru-files:
+    strategy: 
+      matrix:
+        files2use: ${{ fromJSON(needs.files-changed.outputs.upload_file_str).file_array }}
+    runs-on: ubuntu-latest
+    needs: [files-changed]
+    steps: 
+      - name: did we get array
+        id: check array
+        run: |
+          echo "We have file meeting the criterion ${{ matrix.files2use }}"
+
+
+
           
   push_new_files_up:
     #if: ${{ needs.files-changed.outputs.run_the_upload == 'true' }} 
