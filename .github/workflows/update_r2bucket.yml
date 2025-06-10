@@ -1,6 +1,8 @@
 ---
 # Figure out static code files that have changed and copy/slam the new version into Cloudflare R2 bucket
-# Dont have an existing action to delete from R2 bucket--do manually since no problem having junk files in R2 bucket
+# I chose to use existing Github actions that were well accepted by community. Therefore, it uses an action that copies a whole 
+# directory to a Cloudflare directory (with matching name).  Yes, this will use up unneeded "write" actions but should be ok.  There is no 
+# delete of removed files--this will leave excess clutter in Cloudflare bucket to be (maybe) manually cleaned but not a problem at this point.
 name: update_r2bucket
 run-name: ${{ github.actor }} is updating R2 bucket for static code/public images
 
@@ -40,14 +42,13 @@ jobs:
         id: string_to_array
         shell: python
         # need a list of directories with a changed file since r2_upload_action only works at dir level
-        #if:  steps.changes.outputs.static == 'true'
+        if:  steps.changes.outputs.static == 'true'
         run: |
           import os
           import pathlib
           #what we get from paths-filter is list of files that changed from specified directories of 
           #interest, we need the unique directories
-          #str_ver = "${{ steps.changes.outputs.static_files }}"
-          str_ver = "DjangoProto/InteractiveMath_prj/static/css/FakeCSStestFile.css,DjangoProto/InteractiveMath_prj/static/js/FakeJStestFile.js,DjangoProto/InteractiveMath_prj/static/js/FakeJStestFile2.js,DjangoProto/InteractiveMath_prj/static/css/FakeCSStestFile2.css"
+          str_ver = "${{ steps.changes.outputs.static_files }}"
           array_of_files = str(str_ver).split(',')
           array_of_dir_path = []
           json_array_of_dir = '{"dir_array":['                  
@@ -59,30 +60,19 @@ jobs:
           #array results need to be stored as json format to be read back in as array
           # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
           for i in array_of_dir_path:
-            json_array_of_dir = json_array_of_dir + '{"src":"' + str(i) + '", "dest":"' + str(i.name) + '" },'
+            json_array_of_dir = json_array_of_dir + '{"src":"' + str(i) + '", "dest":"' + str(i.name) + '/" },'
           #remove last extra , and close off json format
           json_array_of_dir = json_array_of_dir[:-1] + ']}'
-          print(f'string_to_array parsing to json format is {json_array_of_dir} ')
+          print(f'string_to_array parsing output to json format is {json_array_of_dir} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"dir_array={json_array_of_dir}")
-
-  loop-thru-files:
+          
+  push_new_files_up:
+    if: ${{ needs.files-changed.outputs.run_the_upload == 'true' }} 
     strategy: 
       matrix:
         # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
-        CONFIG_upload: ${{ fromJSON(needs.files-changed.outputs.upload_dir).dir_array }}
-    runs-on: ubuntu-latest
-    needs: [files-changed]
-    steps: 
-      - name: did we get array
-        id: check_array
-        run: |
-          echo "We have file meeting the criterion source dir = ${{ matrix.CONFIG_upload.src }} and dest dir= ${{ matrix.CONFIG_upload.dest }}"
-
-          
-  push_new_files_up:
-    #if: ${{ needs.files-changed.outputs.run_the_upload == 'true' }} 
-    if: 'false'
+        CONFIG_upload: ${{ fromJSON(needs.files-changed.outputs.upload_dir).dir_array }}  
     runs-on: ubuntu-latest
     needs: [files-changed]
     steps:
@@ -97,8 +87,8 @@ jobs:
           r2-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
           r2-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           r2-bucket: ${{ secrets.R2_BUCKET }}
-          source-dir: DjangoProto/InteractiveMath_prj/static/css/
-          destination-dir: css/
+          source-dir: ${{ matrix.CONFIG_upload.src }}
+          destination-dir: ${{ matrix.CONFIG_upload.dest }}
           keep-file-fresh: 'true'
           
 ...
