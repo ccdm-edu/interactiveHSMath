@@ -65,18 +65,31 @@ jobs:
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"dir_array={json_array_of_dir}")
 
+  test_file_array: 
+    # test we got the array ok
+    if: 'false'
+    name: delete me when tested, look at results before used
+    runs-on: ubuntu-latest
+    needs: [files-changed]
+    steps:
+      - name: test results
+        id: test_results
+        run: |
+          echo 'the run-the-upload value is ${{ needs.files-changed.outputs.run_the_upload }} '
+          echo 'we read the results of previous job as ${{ needs.files-changed.outputs.upload_src_dir }}'
+          echo 'we read the from json as ${{ fromJSON(needs.files-changed.outputs.upload_src_dir).dir_array }}
+
   loop-thru-files:
     strategy: 
       matrix:
-        src_dir: ${{ fromJSON(needs.files-changed.outputs.upload_src_dir).dir_array.src }}
-        dest_dir: ${{ fromJSON(needs.files-changed.outputs.upload_src_dir).dir_array.dest }}
+        CONFIG_upload: ${{ fromJSON(needs.files-changed.outputs.upload_src_dir).dir_array }}
     runs-on: ubuntu-latest
     needs: [files-changed]
     steps: 
       - name: did we get array
         id: check_array
         run: |
-          echo "We have file meeting the criterion source dir = ${{ matrix.src_dir }} and dest dir= ${{ matrix.dest_dir }}"
+          echo "We have file meeting the criterion source dir = ${{ matrix.CONFIG_upload.src }} and dest dir= ${{ matrix.CONFIG_upload.dest }}"
 
           
   push_new_files_up:
