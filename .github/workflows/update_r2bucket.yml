@@ -63,7 +63,7 @@ jobs:
           json_array_of_dir = json_array_of_dir[:-1] + ']}'
           print(f'string_to_array parsing to json format is {json_array_of_dir} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
-            f.write(f"file_array={json_array_of_dir}")
+            f.write(f"dir_array={json_array_of_dir}")
 
   loop-thru-files:
     strategy: 
