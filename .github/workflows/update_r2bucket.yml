@@ -58,7 +58,7 @@ jobs:
               array_of_dir_path.append(currDir)
           #array results need to be stored as json format to be read back in as array
           for i in array_of_dir_path:
-            json_array_of_dir = json_array_of_dir + '"' + str(i) + '",'
+            json_array_of_dir = json_array_of_dir + '{"src":"' + str(i) + '", "dest":"3" },'
           #remove last extra , and close off json format
           json_array_of_dir = json_array_of_dir[:-1] + ']}'
           print(f'string_to_array parsing to json format is {json_array_of_dir} ')
@@ -68,14 +68,15 @@ jobs:
   loop-thru-files:
     strategy: 
       matrix:
-        src_dir: ${{ fromJSON(needs.files-changed.outputs.upload_src_dir).dir_array }}
+        src_dir: ${{ fromJSON(needs.files-changed.outputs.upload_src_dir).dir_array.src }}
+        dest_dir: ${{ fromJSON(needs.files-changed.outputs.upload_src_dir).dir_array.dest }}
     runs-on: ubuntu-latest
     needs: [files-changed]
     steps: 
       - name: did we get array
         id: check_array
         run: |
-          echo "We have file meeting the criterion ${{ matrix.src_dir }}"
+          echo "We have file meeting the criterion source dir = ${{ matrix.src_dir }} and dest dir= ${{ matrix.dest_dir }}"
 
           
   push_new_files_up:
