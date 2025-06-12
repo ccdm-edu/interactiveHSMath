@@ -39,6 +39,7 @@ jobs:
               - '**/static/css/**'
               - '**/static/images/**'
               - '**/static/js/**'
+              - '**/static/js-lib/**'
 
       - name: parse the string
         id: string_to_array
