@@ -20,7 +20,7 @@ jobs:
       upload_dir: ${{ steps.string_to_array.outputs.dir_array }}
       run_the_upload: ${{ steps.changes.outputs.static }}
     steps:
-      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "The update_r2bucket was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of the branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
 
@@ -43,11 +43,12 @@ jobs:
         shell: python
         # need a list of directories with a changed file since r2_upload_action only works at dir level
         if:  steps.changes.outputs.static == 'true'
+        #nothing to do if no files in key directories changed...
         run: |
           import os
           import pathlib
           #what we get from paths-filter is list of files that changed from specified directories of 
-          #interest, we need the unique directories
+          #interest, we need to convert this to unique directories
           str_ver = "${{ steps.changes.outputs.static_files }}"
           array_of_files = str(str_ver).split(',')
           array_of_dir_path = []
@@ -63,7 +64,7 @@ jobs:
             json_array_of_dir = json_array_of_dir + '{"src":"' + str(i) + '", "dest":"' + str(i.name) + '/" },'
           #remove last extra , and close off json format
           json_array_of_dir = json_array_of_dir[:-1] + ']}'
-          print(f'string_to_array parsing output to json format is {json_array_of_dir} ')
+          print(f'Directories of interest with file changes: (string_to_array json output) {json_array_of_dir} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"dir_array={json_array_of_dir}")
           
@@ -71,6 +72,7 @@ jobs:
     if: ${{ needs.files-changed.outputs.run_the_upload == 'true' }} 
     strategy: 
       matrix:
+        # CF R2 bucket directory structure is set up similar to static directories of interest
         # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
         CONFIG_upload: ${{ fromJSON(needs.files-changed.outputs.upload_dir).dir_array }}  
     runs-on: ubuntu-latest
