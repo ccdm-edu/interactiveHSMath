@@ -1,8 +1,10 @@
 ---
-# Figure out static code files that have changed and copy/slam the new version into Cloudflare R2 bucket
+# Figure out the github repo files of interest that have changed and copy/slam the new version into Cloudflare R2 bucket
 # I chose to use existing Github actions that were well accepted by community. Therefore, it uses an action that copies a whole 
-# directory to a Cloudflare directory (with matching name).  Yes, this will use up unneeded "write" actions but should be ok.  There is no 
-# delete of removed files--this will leave excess clutter in Cloudflare bucket to be (maybe) manually cleaned but not a problem at this point.
+# directory to a Cloudflare directory (with matching name).  Yes, this will use up unneeded "write" actions since not all files in directory changed but should be ok.  
+# In Github actions marketplace, there is no delete of removed files from R2 bucket--this will leave excess clutter in Cloudflare bucket to be 
+# (maybe) manually cleaned but not a problem at this point.  All of this and its inefficiencies consumes way less space in Cloudflare R2 than allowing
+# a clone of the repo into the bucket.  At this time, it saves me a factor of 10 is space.
 name: update_r2bucket
 run-name: ${{ github.actor }} is updating R2 bucket for static code/public images
 
@@ -97,7 +99,7 @@ jobs:
       - name: check results
         id: check_CF_write
         run: |
-          echo 'The write to Cloudflare R2 staic code bucket success boolean:  ${{ steps.push_GH_dir_2_R2.outputs.result }}'
+          echo 'The write to Cloudflare R2 static code bucket success boolean:  ${{ steps.push_GH_dir_2_R2.outputs.result }}'
           echo 'The resulting URLs written were ${{ steps.push_GH_dir_2_R2.outputs.file-urls }}'
           
 ...
