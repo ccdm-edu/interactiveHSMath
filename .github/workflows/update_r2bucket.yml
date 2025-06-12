@@ -83,6 +83,7 @@ jobs:
         uses: actions/checkout@v4
         
       - name: push dir to CF R2 bucket
+        id: push_GH_dir_2_R2
         uses: ryand56/r2-upload-action@v1.4
         with:
           r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
@@ -92,6 +93,12 @@ jobs:
           source-dir: ${{ matrix.CONFIG_upload.src }}
           destination-dir: ${{ matrix.CONFIG_upload.dest }}
           keep-file-fresh: 'true'
+
+      - name: check results
+        id: check_CF_write
+        run: |
+          echo 'The write to Cloudflare R2 ${{ secrets.R2_BUCKET }} bucket success boolean is ${{ steps.push_GH_dir_2_R2.outputs.result }}'
+          echo 'The resulting URLs written were ${{ steps.push_GH_dir_2_R2.outputs.result }}'
           
 ...
 
