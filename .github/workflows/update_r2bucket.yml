@@ -97,8 +97,8 @@ jobs:
       - name: check results
         id: check_CF_write
         run: |
-          echo 'The write to Cloudflare R2 ${{ secrets.R2_BUCKET }} bucket success boolean is ${{ steps.push_GH_dir_2_R2.outputs.result }}'
-          echo 'The resulting URLs written were ${{ steps.push_GH_dir_2_R2.outputs.result }}'
+          echo 'The write to Cloudflare R2 staic code bucket success boolean:  ${{ steps.push_GH_dir_2_R2.outputs.result }}'
+          echo 'The resulting URLs written were ${{ steps.push_GH_dir_2_R2.outputs.file-urls }}'
           
 ...
 
