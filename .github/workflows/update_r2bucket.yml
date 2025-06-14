@@ -3,7 +3,9 @@
 # I chose to use existing Github actions that were well accepted by community. Therefore, it uses an action that copies a whole 
 # directory to a Cloudflare directory (with matching name).  Yes, this will use up unneeded "write" actions since not all files in directory changed but should be ok.  
 # In Github actions marketplace, there is no delete of removed files from R2 bucket--this will leave excess clutter in Cloudflare bucket to be 
-# (maybe) manually cleaned but not a problem at this point.  All of this and its inefficiencies consumes way less space in Cloudflare R2 than allowing
+# (maybe) manually cleaned but not a problem at this point.  Another inefficiency is when a file is deleted in repo, this is marked as change and whole
+# directory is copied over again, needlessly, and the deleted file still remains in r2.
+# All of this and its inefficiencies consumes way less space in Cloudflare R2 than allowing
 # a clone of the repo into the bucket.  At this time, it saves me a factor of 10 is space.
 name: update_r2bucket
 run-name: ${{ github.actor }} is updating R2 bucket for static code/public images
