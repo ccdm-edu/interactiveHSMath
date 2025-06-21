@@ -50,7 +50,7 @@ jobs:
         run: |
           import os
           import json
-          with open('r2testing_config.json', "r") as f:
+          with open('r2upload_config.json', "r") as f:
             config = json.load(f)
           if isinstance(config, dict):
             print(config.get('key_name'))
