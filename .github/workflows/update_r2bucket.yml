@@ -23,6 +23,7 @@ jobs:
     outputs:
       upload_dir: ${{ steps.string_to_array.outputs.dir_array }}
       run_the_upload: ${{ steps.changes.outputs.static }}
+      is_testing_complete: ${{ steps.test_check.outputs.testing_done }}
     steps:
       - run: echo "The update_r2bucket was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -42,7 +43,18 @@ jobs:
               - '**/static/images/**'
               - '**/static/js/**'
               - '**/static/js-lib/**'
-
+              
+      - name: check if testing done
+        id: test_check
+        shell: python 
+        run: |
+          import os
+          import json
+          with open('r2testing_config.json', "r") as f:
+            config = json.load(f)
+          if isinstance(config, dict):
+            print(config.get('key_name'))
+          
       - name: parse the string
         id: string_to_array
         shell: python
