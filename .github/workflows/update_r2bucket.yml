@@ -74,7 +74,8 @@ jobs:
             f.write(f"dir_array={json_array_of_dir}")
           
   push_new_files_up:
-    if: ${{ needs.files-changed.outputs.run_the_upload == 'true' }} 
+    #if: ${{ needs.files-changed.outputs.run_the_upload == 'true' }} 
+    if: 'false'
     strategy: 
       matrix:
         # CF R2 bucket directory structure is set up similar to static directories of interest
