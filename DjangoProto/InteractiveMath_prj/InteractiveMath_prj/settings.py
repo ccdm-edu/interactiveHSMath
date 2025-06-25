@@ -151,7 +151,7 @@ if DEBUG == False:
     # security for https deployment
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = False  # now that we are using Cloudflare for reverse proxy and https, don't do it here
     #may need to increase this from 1 hour (3600) to 1 year (31536000) once all is working.  This forces https only
     SECURE_HSTS_SECONDS= 604800 # 1 week.  # 86400 is 1 day and 31536000  # Recommended: 1 year (in seconds)  -- this used to be 3600 or 1 hour
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
