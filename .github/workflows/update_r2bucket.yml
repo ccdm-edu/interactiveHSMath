@@ -95,15 +95,16 @@ jobs:
       
       - name: save these dir since not done testing
         id: save_these_dir
-        if: ${{ needs.files-changed.outputs.is_testing_complete == 'false' }}
+        #if: ${{ needs.files-changed.outputs.is_testing_complete == 'false' }}
         run: |
-          echo 'Testing NOT complete, save these directories in the config file for future'
+          echo 'we read in ${{ needs.files-changed.outputs.is_testing_complete }}
+          #echo 'Testing NOT complete, save these directories in the config file for future'
 
       - name: testing done, retrieve all dir changed
         id: retrieve_these_dir
-        if: ${{ needs.files-changed.outputs.is_testing_complete == 'true' }}
+        #if: ${{ needs.files-changed.outputs.is_testing_complete == 'true' }}
         run: |
-          echo 'Testing complete, pull all directories touched into list to be written to R2 bucket'
+          #echo 'Testing complete, pull all directories touched into list to be written to R2 bucket'
           
   push_new_files_up:
     #if: ${{ needs.files-changed.outputs.is_testing_complete == 'true' }} 
