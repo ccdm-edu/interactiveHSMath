@@ -62,7 +62,7 @@ jobs:
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"testing_done = {testing_done}")
             
-          
+      
       - name: parse the string
         id: string_to_array
         shell: python
@@ -92,6 +92,18 @@ jobs:
           print(f'Directories of interest with file changes: (string_to_array json output) {json_array_of_dir} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"dir_array={json_array_of_dir}")
+      
+      - name: save these dir since not done testing
+        id: save_these dir
+        if: ${{ needs.files-changed.outputs.is_testing_complete == 'false' }}
+        run: |
+          echo 'Testing NOT complete, save these directories in the config file for future'
+
+      - name: testing done, retrieve all dir changed
+        id: retrieve_these dir
+        if: ${{ needs.files-changed.outputs.is_testing_complete == 'true' }}
+        run: |
+          echo 'Testing complete, pull all directories touched into list to be written to R2 bucket'
           
   push_new_files_up:
     #if: ${{ needs.files-changed.outputs.is_testing_complete == 'true' }} 
