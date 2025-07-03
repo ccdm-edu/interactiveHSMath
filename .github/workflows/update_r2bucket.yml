@@ -55,7 +55,7 @@ jobs:
           with open(config_file, 'r') as f:
             config = json.load(f)
             print(config)
-            pring(config['TestingComplete'])
+            print(config['TestingComplete'])
           if isinstance(config, dict):
             print(config.get('key_name'))
           
