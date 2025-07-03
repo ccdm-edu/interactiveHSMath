@@ -54,6 +54,8 @@ jobs:
           config_file = '.github/workflows/r2upload_config.json'
           with open(config_file, 'r') as f:
             config = json.load(f)
+            print(config)
+            pring(config['TestingComplete'])
           if isinstance(config, dict):
             print(config.get('key_name'))
           
