@@ -57,7 +57,7 @@ jobs:
           with open(config_file, 'r') as f:
             config = json.load(f)
           if isinstance(config, dict):
-            testing_done = bool(config['TestingComplete'])
+            testing_done = config['TestingComplete'].lower()
             print(f' value is {testing_done}')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"testing_done = {testing_done}")
