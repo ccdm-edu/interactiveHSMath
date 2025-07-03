@@ -52,12 +52,16 @@ jobs:
           import json
           #config_file = 'https://github.com/ccdm-edu/interactiveHSMath/.github/workflows/r2upload_config.json'
           config_file = '.github/workflows/r2upload_config.json'
+          config = {}
+          testing_done = true
           with open(config_file, 'r') as f:
             config = json.load(f)
-            print(config)
-            print(config['TestingComplete'])
           if isinstance(config, dict):
-            print(config.get('key_name'))
+            testing_done = bool(config['TestingComplete'])
+            print(f' value is {testing_done}'
+          with open(os.environ['GITHUB_OUTPUT'], "a") as f:
+            f.write(f"testing_done = {testing_done}")
+            
           
       - name: parse the string
         id: string_to_array
@@ -90,7 +94,7 @@ jobs:
             f.write(f"dir_array={json_array_of_dir}")
           
   push_new_files_up:
-    #if: ${{ needs.files-changed.outputs.run_the_upload == 'true' }} 
+    #if: ${{ needs.files-changed.outputs.is_testing_complete == 'true' }} 
     if: 'false'
     strategy: 
       matrix:
