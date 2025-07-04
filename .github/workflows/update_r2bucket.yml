@@ -82,12 +82,13 @@ jobs:
             currDir = currPath.parent
             print(f'current dir is {currDir}')
             print(f'array of dir is {array_of_dir_path}')
-            if currDir not in array_of_dir_path:
+            if str(currDir) not in array_of_dir_path:
               array_of_dir_path.append(str(currDir))
           #array results need to be stored as json format to be read back in as array
           # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
           for i in array_of_dir_path:
-            json_array_of_dir = json_array_of_dir + '{"src":"' + str(i) + '", "dest":"' + str(i.name) + '/" },'
+            #json_array_of_dir = json_array_of_dir + '{"src":"' + str(i) + '", "dest":"' + str(i.name) + '/" },'
+            json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + i.name + '/" },'
           #remove last extra , and close off json format
           json_array_of_dir = json_array_of_dir[:-1] + ']}'
           print(f'Directories of interest with file changes: (string_to_array json output) {json_array_of_dir} ')
