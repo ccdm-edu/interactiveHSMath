@@ -99,10 +99,10 @@ jobs:
       
       - name: save these dir since not done testing
         id: save_these_dir
-        shell: python
         #if: ${{ needs.files-changed.outputs.is_testing_complete == 'false' }}
         run: |
-          echo "NEW we read in ${{ needs.files-changed.outputs.is_testing_complete }}"
+          val="${{ needs.files-changed.outputs.is_testing_complete }}"
+          echo "NEW we read in $val"
           #echo 'Testing NOT complete, save these directories in the config file for future'
 
       - name: testing done, retrieve all dir changed
