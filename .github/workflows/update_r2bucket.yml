@@ -49,8 +49,8 @@ jobs:
         run: |
           import os
           import json
-          #config_file = 'https://github.com/ccdm-edu/interactiveHSMath/.github/workflows/r2upload_config.json'
-          config_file = '.github/workflows/r2upload_config.json'
+          #config_file = 'https://github.com/ccdm-edu/interactiveHSMath/.github/config/r2upload_config.json'
+          config_file = '.github/config/r2upload_config.json'
           config = {}
           testing_done = True
           with open(config_file, 'r') as f:
@@ -103,8 +103,8 @@ jobs:
           print(f'Testing NOT complete, save these directories in the config file for future')
           import os
           import json
-          #config_file = 'https://github.com/ccdm-edu/interactiveHSMath/.github/workflows/r2upload_config.json'
-          config_file = '.github/workflows/r2upload_config.json'
+          #config_file = 'https://github.com/ccdm-edu/interactiveHSMath/.github/config/r2upload_config.json'
+          config_file = '.github/config/r2upload_config.json'
           #slam the old file with new info and files
           with open(config_file, 'w') as f:
             f.write("{\n'TestingComplete':'false',")
