@@ -111,8 +111,8 @@ jobs:
           config_file = '.github/config/r2upload_config.json'
           #slam the old file with new info and files
           with open(config_file, 'w') as f:
-            f.write("{\n'TestingComplete':'false',")
-            print("{\n'TestingComplete':'false',")
+            f.write('{\n"TestingComplete":"false",')
+            print('{\n"TestingComplete":"false",')
             dir_entry = str(${{ steps.string_to_array.outputs.dir_array }})
             #remove first superfluous parenthesis
             dir_entry = dir_entry[1:]
