@@ -88,7 +88,7 @@ jobs:
           # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
           for i in array_of_dir_path:
             #json_array_of_dir = json_array_of_dir + '{"src":"' + str(i) + '", "dest":"' + str(i.name) + '/" },'
-            json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + i.name + '/" },'
+            json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + i + '/" },'
           #remove last extra , and close off json format
           json_array_of_dir = json_array_of_dir[:-1] + ']}'
           print(f'Directories of interest with file changes: (string_to_array json output) {json_array_of_dir} ')
