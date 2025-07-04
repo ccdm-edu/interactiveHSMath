@@ -114,6 +114,13 @@ jobs:
             dir_entry = dir_entry[1:]
             f.write(dir_entry)
             print(dir_entry)
+              - name: Save changes to config file
+          # the file is now only on the runner, need to push to my repo
+          os.system('git config --local user.email "actions@github.com"')
+          os.system('git config --local user.name "GitHub Actions"')
+          os.system('git add .github/workflows/r2upload_config.json')
+          os.system('git commit -m "Update config file from workflow"')
+          os.system('git push')
 
       - name: testing done, retrieve all dir changed
         id: retrieve_these_dir
