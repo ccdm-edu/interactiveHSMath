@@ -73,7 +73,7 @@ jobs:
           #what we get from paths-filter is list of files that changed from specified directories of 
           #interest, we need to convert this to unique directories
           #               str_ver = "${{ steps.changes.outputs.static_files }}"
-          str_ver = "dir1/file1.css, dir1/file2.css, dir2/file3.js"
+          str_ver = "dir1/file1.css,dir1/file2.css,dir2/file3.js"
           array_of_files = str(str_ver).split(',')
           array_of_dir_path = []
           json_array_of_dir = '{"dir_array":['                  
