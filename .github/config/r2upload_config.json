@@ -1,2 +1,2 @@
 {
-"TestingComplete":"false","dir_array": [{"src": "dir1", "dest": "dir1/"}, {"src": "dir2", "dest": "dir2/"}]}
+"TestingComplete":"false",'dir_array': [{'src': 'dir1', 'dest': 'dir1/'}, {'src': 'dir2', 'dest': 'dir2/'}]}
