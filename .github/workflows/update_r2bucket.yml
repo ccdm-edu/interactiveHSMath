@@ -19,6 +19,10 @@ jobs:
   files-changed:
     name: detect what files changed
     runs-on: ubuntu-latest
+    #allow us to save off to a config file all the changes we make to repo while testing static code for 
+    #write to R2 bucket when testing is complete
+    permissions:
+      contents: write
     timeout-minutes: 3
     outputs:
       upload_dir: ${{ steps.string_to_array.outputs.dir_array }}
@@ -114,10 +118,11 @@ jobs:
             dir_entry = dir_entry[1:]
             f.write(dir_entry)
             print(dir_entry)
-          # the file is now closed but only on the runner, need to push to my repo
+          # the file is now closed but only on the runner, need to push to my repo, first give runner the permission to do so
+          os.system('git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git')
           os.system('git config --local user.email "actions@github.com"')
           os.system('git config --local user.name "GitHub Actions"')
-          os.system('git add .github/workflows/r2upload_config.json')
+          os.system('git add .github/config/r2upload_config.json')
           os.system('git commit -m "Update config file from workflow"')
           os.system('git push')
 
