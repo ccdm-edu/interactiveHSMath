@@ -61,19 +61,19 @@ jobs:
             f.write(f"testing_done={testing_done}")
             print(f"testing_done={testing_done}")
             
-      
       - name: parse the string
         id: string_to_array
         shell: python
         # need a list of directories with a changed file since r2_upload_action only works at dir level
-        if:  steps.changes.outputs.static == 'true'
+        #                  if:  steps.changes.outputs.static == 'true'
         #nothing to do if no files in key directories changed...
         run: |
           import os
           import pathlib
           #what we get from paths-filter is list of files that changed from specified directories of 
           #interest, we need to convert this to unique directories
-          str_ver = "${{ steps.changes.outputs.static_files }}"
+          #               str_ver = "${{ steps.changes.outputs.static_files }}"
+          str_ver = "dir1/file1.css, dir1/file2.css, dir2/file3.js"
           array_of_files = str(str_ver).split(',')
           array_of_dir_path = []
           json_array_of_dir = '{"dir_array":['                  
@@ -105,7 +105,7 @@ jobs:
           #slam the old file with new info and files
           with open(config_file, 'w') as f:
             #f.write(f"'{TestingComplete':'false'}")
-            print(f"'{TestingComplete':'false'}")
+            print(f"{\n'TestingComplete':'false'")
             print(f'${{ steps.string_to_array.outputs.dir_array }}')
 
       - name: testing done, retrieve all dir changed
