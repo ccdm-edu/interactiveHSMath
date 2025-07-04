@@ -95,13 +95,13 @@ jobs:
           print(f'Directories of interest with file changes: (string_to_array json output) {json_array_of_dir} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"dir_array={json_array_of_dir}")
-            printf(f"dir_array={json_array_of_dir}")
+            print(f"dir_array={json_array_of_dir}")
       
       - name: save these dir since not done testing
         id: save_these_dir
         #if: ${{ needs.files-changed.outputs.is_testing_complete == 'false' }}
         run: |
-          echo 'NEW: we read in ${{ fromJSON(needs.files-changed.outputs.is_testing_complete).testing_done }}'
+          #echo 'NEW: we read in ${{ fromJSON(needs.files-changed.outputs.is_testing_complete).testing_done }}'
           echo 'OLD: we read in ${{ fromJSON(needs.files-changed.outputs.upload_dir).dir_array }}'
           #echo 'Testing NOT complete, save these directories in the config file for future'
 
