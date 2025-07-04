@@ -100,7 +100,7 @@ jobs:
         id: save_these_dir
         #if: ${{ needs.files-changed.outputs.is_testing_complete == 'false' }}
         run: |
-          val="${{ steps.test_check.outputs.is_testing_complete }}"
+          val="${{ steps.test_check.outputs.testing_done }}"
           echo "NEW we read in $val"
           #echo 'Testing NOT complete, save these directories in the config file for future'
 
