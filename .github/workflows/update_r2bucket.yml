@@ -80,6 +80,8 @@ jobs:
           for i in array_of_files:
             currPath = pathlib.Path(i)
             currDir = currPath.parent
+            print(f'current dir is {currDir}')
+            print(f'array of dir is {array_of_dir_path}')
             if currDir not in array_of_dir_path:
               array_of_dir_path.append(currDir)
           #array results need to be stored as json format to be read back in as array
@@ -106,7 +108,10 @@ jobs:
           with open(config_file, 'w') as f:
             #f.write()
             print("{\n'TestingComplete':'false',")
-            print(${{ steps.string_to_array.outputs.dir_array }})
+            dir_entry = ${{ steps.string_to_array.outputs.dir_array }}
+            #remove first superfluous parenthesis
+            dir_entry = dir_entry[1:]
+            print(dir_entry)
 
       - name: testing done, retrieve all dir changed
         id: retrieve_these_dir
