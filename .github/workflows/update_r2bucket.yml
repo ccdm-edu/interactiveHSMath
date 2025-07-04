@@ -108,7 +108,7 @@ jobs:
           with open(config_file, 'w') as f:
             #f.write()
             print("{\n'TestingComplete':'false',")
-            dir_entry = ${{ steps.string_to_array.outputs.dir_array }}
+            dir_entry = str(${{ steps.string_to_array.outputs.dir_array }})
             #remove first superfluous parenthesis
             dir_entry = dir_entry[1:]
             print(dir_entry)
