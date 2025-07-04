@@ -23,7 +23,6 @@ jobs:
     outputs:
       upload_dir: ${{ steps.string_to_array.outputs.dir_array }}
       run_the_upload: ${{ steps.changes.outputs.static }}
-      is_testing_complete: ${{ steps.test_check.outputs.testing_done }}
     steps:
       - run: echo "The update_r2bucket was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -59,11 +58,11 @@ jobs:
           if isinstance(config, dict):
             testing_done = config['TestingComplete'].lower()
             #make it json format
-            testing_done = "'" + testing_done + "'"
+            #testing_done = "'" + testing_done + "'"
             #print(f' value is {testing_done}')
-          with open(os.environ['GITHUB_OUTPUT'], "a") as f:
-            f.write(f"testing_done={testing_done}")
-            print(f"testing_done={testing_done}")
+          #with open(os.environ['GITHUB_OUTPUT'], "a") as f:
+            #f.write(f"testing_done={testing_done}")
+            #print(f"testing_done={testing_done}")
             
       
       - name: parse the string
