@@ -104,9 +104,9 @@ jobs:
           config_file = '.github/workflows/r2upload_config.json'
           #slam the old file with new info and files
           with open(config_file, 'w') as f:
-            #f.write(f"'{TestingComplete':'false'}")
-            print("{\n'TestingComplete':'false'")
-            print(f'${{ steps.string_to_array.outputs.dir_array }}')
+            #f.write()
+            print("{\n'TestingComplete':'false',")
+            print(${{ steps.string_to_array.outputs.dir_array }})
 
       - name: testing done, retrieve all dir changed
         id: retrieve_these_dir
