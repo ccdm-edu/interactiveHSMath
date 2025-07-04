@@ -103,7 +103,7 @@ jobs:
         #if: ${{ needs.files-changed.outputs.is_testing_complete == 'false' }}
         run: |
           #echo 'NEW: we read in ${{ fromJSON(needs.files-changed.outputs.is_testing_complete).testing_done }}'
-          print(f'OLD: we read in ${{ fromJSON(needs.files-changed.outputs.upload_dir)["dir_array"][0]["src"] }}')
+          print(f'OLD: we read in ${{ fromJSON(needs.files-changed.outputs.upload_dir).dir_array.[0] }}')
           #echo 'Testing NOT complete, save these directories in the config file for future'
 
       - name: testing done, retrieve all dir changed
