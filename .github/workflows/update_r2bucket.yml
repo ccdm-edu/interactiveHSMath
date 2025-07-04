@@ -57,9 +57,6 @@ jobs:
             config = json.load(f)
           if isinstance(config, dict):
             testing_done = config['TestingComplete'].lower()
-            #make it json format
-            #testing_done = "'" + testing_done + "'"
-            #print(f' value is {testing_done}')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"testing_done={testing_done}")
             print(f"testing_done={testing_done}")
@@ -94,15 +91,22 @@ jobs:
           print(f'Directories of interest with file changes: (string_to_array json output) {json_array_of_dir} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"dir_array={json_array_of_dir}")
-            #print(f"dir_array={json_array_of_dir}")
       
       - name: save these dir since not done testing
         id: save_these_dir
+        shell: python 
         if: ${{ steps.test_check.outputs.testing_done == 'false' }}
         run: |
-          val="${{ steps.test_check.outputs.testing_done }}"
-          echo "NEW we read in $val"
-          echo 'Testing NOT complete, save these directories in the config file for future'
+          print(f'Testing NOT complete, save these directories in the config file for future')
+          import os
+          import json
+          #config_file = 'https://github.com/ccdm-edu/interactiveHSMath/.github/workflows/r2upload_config.json'
+          config_file = '.github/workflows/r2upload_config.json'
+          #slam the old file with new info and files
+          with open(config_file, 'w') as f:
+            #f.write(f"'{TestingComplete':'false'}")
+            print(f"'{TestingComplete':'false'}")
+            print(f'${{ steps.string_to_array.outputs.dir_array }}')
 
       - name: testing done, retrieve all dir changed
         id: retrieve_these_dir
