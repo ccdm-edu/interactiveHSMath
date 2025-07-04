@@ -84,8 +84,6 @@ jobs:
           for i in array_of_files:
             currPath = pathlib.Path(i)
             currDir = currPath.parent
-            print(f'current dir is {currDir}')
-            print(f'array of dir is {array_of_dir_path}')
             if str(currDir) not in array_of_dir_path:
               array_of_dir_path.append(str(currDir))
           #array results need to be stored as json format to be read back in as array
@@ -97,7 +95,7 @@ jobs:
           json_array_of_dir = json_array_of_dir[:-1] + ']}'
           print(f'Directories of interest with file changes: (string_to_array json output) {json_array_of_dir} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
-            f.write(f"dir_array={json_array_of_dir}")
+            f.write(f'\ndir_array={json_array_of_dir}')
       
       - name: save these dir since not done testing
         id: save_these_dir
