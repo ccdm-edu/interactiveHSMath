@@ -105,7 +105,7 @@ jobs:
           #slam the old file with new info and files
           with open(config_file, 'w') as f:
             #f.write(f"'{TestingComplete':'false'}")
-            print(f"{\n'TestingComplete':'false'")
+            print("{\n'TestingComplete':'false'")
             print(f'${{ steps.string_to_array.outputs.dir_array }}')
 
       - name: testing done, retrieve all dir changed
