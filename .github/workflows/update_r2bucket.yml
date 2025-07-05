@@ -47,7 +47,7 @@ jobs:
               - '**/static/js/**'
               - '**/static/js-lib/**'
               
-      - name: check if testing done
+      - name: check if testing done and collect any old directories modified during test
         id: test_check
         shell: python 
         run: |
@@ -61,9 +61,12 @@ jobs:
             config = json.load(f)
           if isinstance(config, dict):
             testing_done = config['TestingComplete'].lower()
+            list_past_dirs = config['dir_array']
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"testing_done={testing_done}")
+            f.write(f"list_past_dirs=[list_past_dirs}")
             print(f"testing_done={testing_done}")
+            print(f"list of past dirs = {list_past_dirs}")
             
       - name: parse the string
         id: string_to_array
@@ -95,7 +98,7 @@ jobs:
           json_array_of_dir = json_array_of_dir[:-1] + ']}'
           print(f'Directories of interest with file changes: (string_to_array json output) {json_array_of_dir} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
-            f.write(f'\ndir_array={json_array_of_dir}')
+            f.write(f'dir_array={json_array_of_dir}')
       
       - name: save these dir since not done testing
         id: save_these_dir
