@@ -64,7 +64,7 @@ jobs:
             list_past_dirs = config['dir_array']
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"testing_done={testing_done}")
-            f.write(f"list_past_dirs=[list_past_dirs}")
+            f.write(f"list_past_dirs={list_past_dirs}")
             print(f"testing_done={testing_done}")
             print(f"list of past dirs = {list_past_dirs}")
             
