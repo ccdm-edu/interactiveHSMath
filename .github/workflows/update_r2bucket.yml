@@ -1,4 +1,13 @@
 ---
+#Github action update_r2bucket.yml
+# GOAL:
+# Changes are made to static code repo and are tested on test website for various devices.  These changes->testing->changes etc
+# can result in several files from several directories being updated.  We want to save all these updates in a config file so 
+# when testing is finally done we have a full list of files (or really directories) that have changed since we last completed
+# testing and that need to be written to R2 bucket.  It is anticipated that a human will write True/False to the config file TestingComplete 
+# pair in the config file (r2upload_config.json) to signify testing is ongoing or complete.
+
+# DESIGN NOTES
 # Figure out the github repo files of interest that have changed and copy/slam the new version into Cloudflare R2 bucket
 # I chose to use existing Github actions that were well accepted by community. Therefore, it uses an action that copies a whole 
 # directory to a Cloudflare directory (with matching name).  Yes, this will use up unneeded "write" actions since not all files in directory changed but should be ok.  
@@ -46,7 +55,8 @@ jobs:
               - '**/static/images/**'
               - '**/static/js/**'
               - '**/static/js-lib/**'
-              
+
+      # Read the config file to see if we are done testing and if any directories have been modified in the past
       - name: check if testing done and collect any old directories modified during test
         id: test_check
         shell: python 
@@ -67,7 +77,9 @@ jobs:
             f.write(f"list_past_dirs={list_past_dirs}")
             print(f"testing_done={testing_done}")
             print(f"list of past dirs = {list_past_dirs}")
-            
+
+      # look in current check in to see what files were updated.  Will later add this to the saved old directories to 
+      # make a list for R2 bucket update when testing is complete
       - name: parse the string
         id: string_to_array
         shell: python
@@ -80,7 +92,7 @@ jobs:
           #what we get from paths-filter is list of files that changed from specified directories of 
           #interest, we need to convert this to unique directories
           #               str_ver = "${{ steps.changes.outputs.static_files }}"
-          str_ver = "dir1/file1.css,dir1/file2.css,dir2/file3.js"
+          str_ver = "dir1/file1.css,dir1/file2.css,dir3/file3.js"
           array_of_files = str(str_ver).split(',')
           array_of_dir_path = []
           json_array_of_dir = '{"dir_array":['                  
@@ -99,7 +111,9 @@ jobs:
           print(f'Directories of interest with file changes: (string_to_array json output) {json_array_of_dir} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f'dir_array={json_array_of_dir}')
-      
+
+      # combine the old directories with new directories so as to preserve only the unique values and write out to config
+      # file, waiting for testing to be done so can write it all to R2 buckets
       - name: save these dir since not done testing
         id: save_these_dir
         shell: python 
@@ -108,12 +122,22 @@ jobs:
           print(f'Testing NOT complete, save these directories in the config file for future')
           import os
           import json
+
+          # read in old dir array list.  Go through new dir array items and add to list if they are unique
+          old_dir_list = fromJSON(${{ steps.test_check.outputs.list_past_dirs }})
+          new_dir_list = fromJSON(${{ steps.string_to_array.outputs.dir_array }})
+          for i in old_dir_list:
+            print(f'The old dir list source dir is {i.src}
+
+          
           #config_file = 'https://github.com/ccdm-edu/interactiveHSMath/.github/config/r2upload_config.json'
           config_file = '.github/config/r2upload_config.json'
           #slam the old file with new info and files
           with open(config_file, 'w') as f:
             f.write('{\n"TestingComplete":"false",\n')
             print('{\n"TestingComplete":"false",\n')
+
+            
             dir_entry = str(${{ steps.string_to_array.outputs.dir_array }})
             #remove first superfluous parenthesis
             dir_entry = dir_entry[1:]
