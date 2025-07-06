@@ -117,7 +117,7 @@ jobs:
       - name: save these dir since not done testing
         id: save_these_dir
         shell: python 
-        if: ${{ steps.test_check.outputs.testing_done == "false" }}
+        if: ${{ steps.test_check.outputs.testing_done == 'false' }}
         run: |
           print(f'Testing NOT complete, save these directories in the config file for future')
           import os
@@ -154,7 +154,7 @@ jobs:
 
       - name: testing done, retrieve all dir changed
         id: retrieve_these_dir
-        if: ${{ steps.test_check.outputs.testing_done == "true" }}
+        if: ${{ steps.test_check.outputs.testing_done == 'true' }}
         run: |
           echo 'Testing complete, pull all directories touched into list to be written to R2 bucket'
           
