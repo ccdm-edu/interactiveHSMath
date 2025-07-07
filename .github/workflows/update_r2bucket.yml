@@ -111,7 +111,10 @@ jobs:
           print(f'Directories of interest with file changes: (string_to_array json output) {json_array_of_dir} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f'dir_array={json_array_of_dir}')
-
+            
+      - name: Debug testing_done output
+        run: echo "Testing done is: '${{ steps.test_check.outputs.testing_done }}'"
+  
       # combine the old directories with new directories so as to preserve only the unique values and write out to config
       # file, waiting for testing to be done so can write it all to R2 buckets
       - name: save these dir since not done testing
