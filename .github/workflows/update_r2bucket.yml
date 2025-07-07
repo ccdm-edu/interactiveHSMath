@@ -73,10 +73,10 @@ jobs:
             testing_done = config['TestingComplete'].lower()
             list_past_dirs = config['dir_array']
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
-            #need space after var value so it doesn't blend into nextoutput
             f.write(f"testing_done={testing_done} ")
-            f.write(f"list_past_dirs={list_past_dirs}")
             print(f"testing_done={testing_done}")
+          with open(os.environ['GITHUB_OUTPUT'], "a") as f:
+            f.write(f"list_past_dirs={list_past_dirs}")
             print(f"list of past dirs = {list_past_dirs}")
 
       # look in current check in to see what files were updated.  Will later add this to the saved old directories to 
