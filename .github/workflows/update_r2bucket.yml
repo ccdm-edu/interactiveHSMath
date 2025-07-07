@@ -133,7 +133,7 @@ jobs:
           old_dir_list = fromJSON(${{ steps.test_check.outputs.list_past_dirs }})
           new_dir_list = fromJSON(${{ steps.string_to_array.outputs.dir_array }})
           for i in old_dir_list:
-            print(f'The old dir list source dir is {i.src})
+            print(f'The old dir list source dir is {i.src}')
 
           
           #config_file = 'https://github.com/ccdm-edu/interactiveHSMath/.github/config/r2upload_config.json'
