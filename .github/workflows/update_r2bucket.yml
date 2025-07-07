@@ -113,7 +113,9 @@ jobs:
             f.write(f'dir_array={json_array_of_dir}')
             
       - name: Debug testing_done output
-        run: echo "Testing done is: '${{ steps.test_check.outputs.testing_done }}'"
+        id: why_read_fail
+        run: |
+          echo "Testing done is: '${{ steps.test_check.outputs.testing_done }}'"
   
       # combine the old directories with new directories so as to preserve only the unique values and write out to config
       # file, waiting for testing to be done so can write it all to R2 buckets
