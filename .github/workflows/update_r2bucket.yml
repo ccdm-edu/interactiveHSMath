@@ -73,11 +73,11 @@ jobs:
             testing_done = config['TestingComplete'].lower()
             list_past_dirs = config['dir_array']
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
-            f.write(f"testing_done={testing_done} ")
-            print(f"testing_done={testing_done}")
-          with open(os.environ['GITHUB_OUTPUT'], "a") as f:
-            f.write(f"list_past_dirs={list_past_dirs}")
-            print(f"list of past dirs = {list_past_dirs}")
+            #need new line to ensure variables are treated as separate in yaml
+            f.write(f"testing_done={testing_done}\n ")
+            print(f"testing_done={testing_done}\n ")
+            f.write(f"list_past_dirs={json.dumps(list_past_dirs)}\n")
+            print(f"list of past dirs = {json.dumps(list_past_dirs)}\n")
 
       # look in current check in to see what files were updated.  Will later add this to the saved old directories to 
       # make a list for R2 bucket update when testing is complete
