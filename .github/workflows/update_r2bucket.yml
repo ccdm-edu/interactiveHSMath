@@ -118,8 +118,7 @@ jobs:
       - name: Debug testing_done output
         id: why_read_fail
         run: |
-          echo "List Past Dir is: '${{ steps.test_check.outputs.list_past_dirs }}'"
-
+          echo "List Past Dir is: ${{ steps.test_check.outputs.list_past_dirs }}"
           
       # combine the old directories with new directories so as to preserve only the unique values and write out to config
       # file, waiting for testing to be done so can write it all to R2 buckets
