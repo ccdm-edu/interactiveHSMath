@@ -130,8 +130,8 @@ jobs:
           import json
 
           # read in old dir array list.  Go through new dir array items and add to list if they are unique
-          old_dir_list = fromJSON(${{ steps.test_check.outputs.list_past_dirs }})
-          new_dir_list = fromJSON(${{ steps.string_to_array.outputs.dir_array }})
+          old_dir_list = json.loads(${{ steps.test_check.outputs.list_past_dirs }})
+          new_dir_list = json.loads(${{ steps.string_to_array.outputs.dir_array }})
           for i in old_dir_list:
             print(f'The old dir list source dir is {i.src}')
 
