@@ -73,8 +73,8 @@ jobs:
             testing_done = config['TestingComplete'].lower()
             list_past_dirs = config['dir_array']
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
-            #need new line to ensure variables are treated as separate in yaml, no space between var, = and value.
-            f.write(f"testing_done={testing_done}\n ")
+            #need new line to ensure variables are treated as separate in yaml, no space between var, =, \n and value.
+            f.write(f"testing_done={testing_done}\n")
             print(f"testing_done={testing_done}\n ")
             f.write(f"list_past_dirs={json.dumps(list_past_dirs)}\n")
             print(f"list of past dirs = {json.dumps(list_past_dirs)}\n")
