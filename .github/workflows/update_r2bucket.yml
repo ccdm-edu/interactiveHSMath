@@ -159,7 +159,7 @@ jobs:
             dir_entry = dir_entry[1:]
             #need dir_entry to be double quoted, so it can be read in as json.  print(dir_entry) is double quoted
             #f.write(dir_entry.replace("'","\""))
-            print(f'just before writing to file, dir entry is {dir_entry})
+            print(f'just before writing to file, dir entry is {dir_entry}')
           # the file is now closed but only on the runner, need to push to my repo, first give runner the permission to do so
           #os.system('git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git')
           #os.system('git config --local user.email "actions@github.com"')
