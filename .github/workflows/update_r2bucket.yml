@@ -73,11 +73,10 @@ jobs:
             testing_done = config['TestingComplete'].lower()
             list_past_dirs = config['dir_array']
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
-            #need new line to ensure variables are treated as separate in yaml
+            #need new line to ensure variables are treated as separate in yaml, no space between var, = and value.
             f.write(f"testing_done={testing_done}\n ")
             print(f"testing_done={testing_done}\n ")
-            #f.write(f"list_past_dirs={json.dumps(list_past_dirs)}\n")
-            f.write(f"list_past_dirs={list_past_dirs}\n")
+            f.write(f"list_past_dirs={json.dumps(list_past_dirs)}\n")
             print(f"list of past dirs = {list_past_dirs}\n")
 
       # look in current check in to see what files were updated.  Will later add this to the saved old directories to 
@@ -119,6 +118,9 @@ jobs:
         id: why_read_fail
         run: |
           echo "List Past Dir is: ${{ steps.test_check.outputs.list_past_dirs }}"
+          # If you want to use it as a list in a subsequent step, use fromJson:
+          # dirs=${{ fromJson(steps.test_check.outputs.list_past_dirs) }}
+    
           
       # combine the old directories with new directories so as to preserve only the unique values and write out to config
       # file, waiting for testing to be done so can write it all to R2 buckets
@@ -132,10 +134,10 @@ jobs:
           import json
 
           # read in old dir array list.  Go through new dir array items and add to list if they are unique
-          #old_dir_list = ${{ steps.test_check.outputs.list_past_dirs }}
+          old_dir_list = ${{ fromJson(steps.test_check.outputs.list_past_dirs) }}
           new_dir_list = ${{ steps.string_to_array.outputs.dir_array }}
-          #for i in old_dir_list:
-          #  print(f'The old dir list source dir is {i.src}')
+          for i in old_dir_list:
+            print(f'The old dir list source dir is {i.src}')
 
           
           #config_file = 'https://github.com/ccdm-edu/interactiveHSMath/.github/config/r2upload_config.json'
