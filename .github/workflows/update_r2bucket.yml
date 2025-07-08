@@ -77,7 +77,14 @@ jobs:
             f.write(f"testing_done={testing_done}\n ")
             print(f"testing_done={testing_done}\n ")
             f.write(f"list_past_dirs={json.dumps(list_past_dirs)}\n")
-            print(f"list of past dirs = {list_past_dirs}\n")
+            print(f"list of past dirs = {json.dumps(list_past_dirs)}\n")
+
+      - name: Debug testing_done output
+        id: why_read_fail
+        run: |
+          echo "List Past Dir is: ${{ steps.test_check.outputs.list_past_dirs }}"
+          # If you want to use it as a list in a subsequent step, use fromJson:
+          # dirs=${{ fromJson(steps.test_check.outputs.list_past_dirs) }}
 
       # look in current check in to see what files were updated.  Will later add this to the saved old directories to 
       # make a list for R2 bucket update when testing is complete
@@ -112,15 +119,6 @@ jobs:
           print(f'Directories of interest with file changes: (string_to_array json output) {json_array_of_dir} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f'dir_array={json_array_of_dir}')
-
-
-      - name: Debug testing_done output
-        id: why_read_fail
-        run: |
-          echo "List Past Dir is: ${{ steps.test_check.outputs.list_past_dirs }}"
-          # If you want to use it as a list in a subsequent step, use fromJson:
-          # dirs=${{ fromJson(steps.test_check.outputs.list_past_dirs) }}
-    
           
       # combine the old directories with new directories so as to preserve only the unique values and write out to config
       # file, waiting for testing to be done so can write it all to R2 buckets
