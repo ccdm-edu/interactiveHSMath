@@ -35,7 +35,7 @@ jobs:
       contents: write
     timeout-minutes: 3
     outputs:
-      upload_dir: ${{ steps.string_to_array.outputs.dir_array }}
+      upload_dir: ${{ steps.retrieve_these_dir.outputs.old_dir_list }}
       run_the_upload: ${{ steps.changes.outputs.static }}
     steps:
       - run: echo "The update_r2bucket was automatically triggered by a ${{ github.event_name }} event."
@@ -85,8 +85,6 @@ jobs:
         id: why_read_fail
         run: |
           echo "List Past Dir is: ${{ steps.test_check.outputs.list_past_dirs }}"
-          # If you want to use it as a list in a subsequent step, use fromJson:
-          # dirs=${{ fromJson(steps.test_check.outputs.list_past_dirs) }}
 
       #-----------For each file of interest that changed, create unique Key/val pair for writing to R2 buckets---------------
       # look in current check in to see what files were updated.  Will later add this to the saved old directories to 
@@ -95,15 +93,15 @@ jobs:
         id: string_to_array
         shell: python
         # need a list of directories with a changed file since r2_upload_action only works at dir level
-        #                  if:  steps.changes.outputs.static == 'true'
+        if:  steps.changes.outputs.static == 'true'
         #nothing to do if no files in key directories changed...
         run: |
           import os
           import pathlib
           #what we get from paths-filter is list of files that changed from specified directories of 
           #interest, we need to convert this to unique directories
-          #               str_ver = "${{ steps.changes.outputs.static_files }}"
-          str_ver = "dir1/file1.css,dir1/file2.css,dir3/file3.js"
+          str_ver = "${{ steps.changes.outputs.static_files }}"
+          # test only: str_ver = "dir1/file1.css,dir1/file2.css,dir3/file3.js"
           array_of_files = str(str_ver).split(',')
           array_of_dir_path = []
           json_array_of_dir = '{"dir_array":['                  
@@ -132,43 +130,49 @@ jobs:
         shell: python 
         if: ${{ steps.test_check.outputs.testing_done == 'false' }}
         run: |
-          print(f'Testing NOT complete, save these directories in the config file for future')
           import os
           import json
-          # read in old dir array list.  Go through new dir array items and add to list if they are unique
-          old_dir_list = ${{ steps.test_check.outputs.list_past_dirs }}
-          new_dir_list = ${{ steps.string_to_array.outputs.dir_array }}["dir_array"]
-          print(f'old_dir_list is {old_dir_list}')
-          print(f'new_dir_list is {new_dir_list}')
-          new_stuff_added = False
-          for i in new_dir_list:
-            if i not in old_dir_list:
-              old_dir_list.append(i)
-              new_stuff_added = True
-              print(f'added new item {i}, will need to write file')
-          #config_file = 'https://github.com/ccdm-edu/interactiveHSMath/.github/config/r2upload_config.json'
-          config_file = '.github/config/r2upload_config.json'
-          if (new_stuff_added):
-            #slam the old file with new info and files
-            with open(config_file, 'w') as f:
-              f.write('{\n"TestingComplete":"false",\n')
-              print('{\n"TestingComplete":"false",\n')  
-              dir_entry = str(old_dir_list)
-              #remove first superfluous parenthesis
-              dir_entry = dir_entry[1:]
-              #need dir_entry to be double quoted, so it can be read in as json.  
-              dir_entry = dir_entry.replace("'","\"")
-              #need to add the key part of key value pair and tack on a \n} at end
-              dir_entry = '"dir_array":[' + dir_entry + "}"
-              f.write(dir_entry)
-              print(f'just before writing to file, dir entry is {dir_entry}')
-            # the file is now closed but only on the runner, need to push to my repo, first give runner the permission to do so
-            os.system('git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git')
-            os.system('git config --local user.email "actions@github.com"')
-            os.system('git config --local user.name "GitHub Actions"')
-            os.system('git add .github/config/r2upload_config.json')
-            os.system('git commit -m "Update config file from workflow"')
-            os.system('git push')
+          # if there is no new stuff in dir of interest, no need to do this step at all, config file will not change
+          if ${{ steps.changes.outputs.static == 'true' }}:
+            print(f'Testing NOT complete, save these directories in the config file for future')
+            # read in old dir array list.  Go through new dir array items and add to list if they are unique
+            old_dir_list = ${{ steps.test_check.outputs.list_past_dirs }}
+            new_dir_list = ${{ steps.string_to_array.outputs.dir_array }}["dir_array"]
+            print(f'old_dir_list is {old_dir_list}')
+            print(f'new_dir_list is {new_dir_list}')
+            new_stuff_added = False
+            for i in new_dir_list:
+              if i not in old_dir_list:
+                old_dir_list.append(i)
+                new_stuff_added = True
+                print(f'added new item {i}, will need to write file')
+            #config_file = 'https://github.com/ccdm-edu/interactiveHSMath/.github/config/r2upload_config.json'
+            config_file = '.github/config/r2upload_config.json'
+            if (new_stuff_added):
+              #slam the old file with new info and files
+              with open(config_file, 'w') as f:
+                f.write('{\n"TestingComplete":"false",\n')
+                print('{\n"TestingComplete":"false",\n')  
+                dir_entry = str(old_dir_list)
+                #remove first superfluous parenthesis
+                dir_entry = dir_entry[1:]
+                #need dir_entry to be double quoted, so it can be read in as json.  
+                dir_entry = dir_entry.replace("'","\"")
+                #need to add the key part of key value pair and tack on a \n} at end
+                dir_entry = '"dir_array":[' + dir_entry + "}"
+                f.write(dir_entry)
+                print(f'just before writing to file, dir entry is {dir_entry}')
+              # the file is now closed but only on the runner, need to push to my repo, first give runner the permission to do so
+              os.system('git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git')
+              os.system('git config --local user.email "actions@github.com"')
+              os.system('git config --local user.name "GitHub Actions"')
+              os.system('git add .github/config/r2upload_config.json')
+              os.system('git commit -m "Update config file from workflow"')
+              os.system('git push')
+            else:
+              print('no need to write out to config file, all is up to date')
+          else:
+            print('Testing not done but no new directories to keep track of on this commit')
 
       #-------------Testing Complete:  take old directories changed and uniquely combine with new directories changed-----------
       #---------------prepare to write out to R2 buckets.  Overwrite config file for next coding/testing session----------------
@@ -178,13 +182,39 @@ jobs:
       - name: testing done, retrieve all dir changed
         id: retrieve_these_dir
         if: ${{ steps.test_check.outputs.testing_done == 'true' }}
+        shell: python
         run: |
-          echo 'Testing complete, pull all directories touched into list to be written to R2 bucket'
-          
+          import os
+          import json
+          print('Testing complete, pull all directories touched into list to be written to R2 bucket')
+          # read in old dir array list.  Go through new dir array items, if any, and add to list if they are unique
+          old_dir_list = ${{ steps.test_check.outputs.list_past_dirs }}
+          print(f'old_dir_list is {old_dir_list}')
+          if ${{ steps.changes.outputs.static == 'true' }}:
+            new_dir_list = ${{ steps.string_to_array.outputs.dir_array }}["dir_array"]
+            print(f'new_dir_list is {new_dir_list}')
+            for i in new_dir_list:
+              if i not in old_dir_list:
+                old_dir_list.append(i)
+                print(f'added new item {i}, will need to write file')
+          #ok, old_dir_list now setup for later R2 bucket write.  Set up config file for next code/test cycle
+          config_file = '.github/config/r2upload_config.json'
+          with open(config_file, 'w') as f:
+            # no leftover directories, in testing
+            f.write('{\n"TestingComplete":"false"\n}')
+            # the file is now closed but only on the runner, need to push to my repo, first give runner the permission to do so
+            os.system('git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git')
+            os.system('git config --local user.email "actions@github.com"')
+            os.system('git config --local user.name "GitHub Actions"')
+            os.system('git add .github/config/r2upload_config.json')
+            os.system('git commit -m "Update config file from workflow"')
+            os.system('git push')  
+
+            
   #######################################################################################################################         
   push_new_files_up:
-    #if: ${{ needs.files-changed.outputs.is_testing_complete == 'true' }} 
-    if: 'false'
+    if: ${{ needs.files-changed.outputs.is_testing_complete == 'true' }} 
+    #if: false
     strategy: 
       matrix:
         # CF R2 bucket directory structure is set up similar to static directories of interest
