@@ -133,7 +133,7 @@ jobs:
           import os
           import json
           # if there is no new stuff in dir of interest, no need to do this step at all, config file will not change
-          if (${{ steps.changes.outputs.static }} == 'true'):
+          if ('${{ steps.changes.outputs.static }}'== 'true'):
             print(f'Testing NOT complete, save these directories in the config file for future')
             # read in old dir array list.  Go through new dir array items and add to list if they are unique
             old_dir_list = ${{ steps.test_check.outputs.list_past_dirs }}
