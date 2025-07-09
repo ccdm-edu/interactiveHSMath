@@ -140,32 +140,35 @@ jobs:
           new_dir_list = ${{ steps.string_to_array.outputs.dir_array }}["dir_array"]
           print(f'old_dir_list is {old_dir_list}')
           print(f'new_dir_list is {new_dir_list}')
+          new_stuff_added = False
           for i in new_dir_list:
             if i not in old_dir_list:
               old_dir_list.append(i)
-            print(f'The new dir list source/dest dir is {i}')
+              new_stuff_added = True
+              print(f'added new item {i}, will need to write file')
           #config_file = 'https://github.com/ccdm-edu/interactiveHSMath/.github/config/r2upload_config.json'
           config_file = '.github/config/r2upload_config.json'
-          #slam the old file with new info and files
-          with open(config_file, 'w') as f:
-            f.write('{\n"TestingComplete":"false",\n')
-            print('{\n"TestingComplete":"false",\n')  
-            dir_entry = str(old_dir_list)
-            #remove first superfluous parenthesis
-            dir_entry = dir_entry[1:]
-            #need dir_entry to be double quoted, so it can be read in as json.  
-            dir_entry = dir_entry.replace("'","\"")
-            #need to add the key part of key value pair and tack on a \n} at end
-            dir_entry = '"dir_array":[' + dir_entry + "}"
-            f.write(dir_entry)
-            print(f'just before writing to file, dir entry is {dir_entry}')
-          # the file is now closed but only on the runner, need to push to my repo, first give runner the permission to do so
-          os.system('git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git')
-          os.system('git config --local user.email "actions@github.com"')
-          os.system('git config --local user.name "GitHub Actions"')
-          os.system('git add .github/config/r2upload_config.json')
-          os.system('git commit -m "Update config file from workflow"')
-          os.system('git push')
+          if (new_stuff_added):
+            #slam the old file with new info and files
+            with open(config_file, 'w') as f:
+              f.write('{\n"TestingComplete":"false",\n')
+              print('{\n"TestingComplete":"false",\n')  
+              dir_entry = str(old_dir_list)
+              #remove first superfluous parenthesis
+              dir_entry = dir_entry[1:]
+              #need dir_entry to be double quoted, so it can be read in as json.  
+              dir_entry = dir_entry.replace("'","\"")
+              #need to add the key part of key value pair and tack on a \n} at end
+              dir_entry = '"dir_array":[' + dir_entry + "}"
+              f.write(dir_entry)
+              print(f'just before writing to file, dir entry is {dir_entry}')
+            # the file is now closed but only on the runner, need to push to my repo, first give runner the permission to do so
+            os.system('git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git')
+            os.system('git config --local user.email "actions@github.com"')
+            os.system('git config --local user.name "GitHub Actions"')
+            os.system('git add .github/config/r2upload_config.json')
+            os.system('git commit -m "Update config file from workflow"')
+            os.system('git push')
 
       #-------------Testing Complete:  take old directories changed and uniquely combine with new directories changed-----------
       #---------------prepare to write out to R2 buckets.  Overwrite config file for next coding/testing session----------------
