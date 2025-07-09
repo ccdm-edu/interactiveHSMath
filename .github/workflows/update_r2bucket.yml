@@ -155,8 +155,11 @@ jobs:
             dir_entry = str(old_dir_list)
             #remove first superfluous parenthesis
             dir_entry = dir_entry[1:]
-            #need dir_entry to be double quoted, so it can be read in as json.  print(dir_entry) is double quoted
-            f.write(dir_entry.replace("'","\""))
+            #need dir_entry to be double quoted, so it can be read in as json.  
+            dir_entry = dir_entry.replace("'","\"")
+            #need to add the key part of key value pair and tack on a \n} at end
+            dir_entry = '"dir_array":[' + dir_entry + "}"
+            f.write(dir_entry)
             print(f'just before writing to file, dir entry is {dir_entry}')
           # the file is now closed but only on the runner, need to push to my repo, first give runner the permission to do so
           os.system('git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git')
