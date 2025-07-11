@@ -68,8 +68,6 @@ jobs:
         run: |
           import os
           import json
-          #config_file = 'https://github.com/ccdm-edu/interactiveHSMath/.github/config/r2upload_config.json'
-          #config_file = '.github/config/r2upload_config.json'
           config = {}
           testing_done = True
           with open('${{ env.CONFIG_FILE_NAME }}', 'r') as f:
@@ -116,7 +114,6 @@ jobs:
           #array results need to be stored as json format to be read back in as array
           # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
           for i in array_of_dir_path:
-            #json_array_of_dir = json_array_of_dir + '{"src":"' + str(i) + '", "dest":"' + str(i.name) + '/" },'
             json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + i + '/" },'
           #remove last extra , and close off json format
           json_array_of_dir = json_array_of_dir[:-1] + ']}'
@@ -149,11 +146,9 @@ jobs:
                 old_dir_list.append(i)
                 new_stuff_added = True
                 print(f'added new item {i}, will need to write file')
-            #config_file = 'https://github.com/ccdm-edu/interactiveHSMath/.github/config/r2upload_config.json'
-            config_file = '.github/config/r2upload_config.json'
             if (new_stuff_added):
               #slam the old file with new info and files
-              with open(config_file, 'w') as f:
+              with open('${{ env.CONFIG_FILE_NAME }}', 'w') as f:
                 f.write('{\n"TestingComplete":"false",\n')
                 print('{\n"TestingComplete":"false",\n')  
                 dir_entry = str(old_dir_list)
@@ -173,9 +168,9 @@ jobs:
               os.system('git commit -m "Update config file from workflow"')
               os.system('git push')
             else:
-              print('no need to write out to config file, all is up to date')
+              print('NO need to update config file, no new directorties. Testing not done, will NOT write to R2 storage')
           else:
-            print('Testing not done but no new directories to keep track of on this commit')
+            print('NO need to update config file, no directories found this commit. Testing not done, will NOT write to R2 storage')
 
       #-------------Testing Complete:  take old directories changed and uniquely combine with new directories changed-----------
       #---------------prepare to write out to R2 buckets.  Overwrite config file for next coding/testing session----------------
@@ -201,8 +196,8 @@ jobs:
                 old_dir_list.append(i)
                 print(f'added new item {i}, will need to write file')
           #ok, old_dir_list now setup for later R2 bucket write.  Set up config file for next code/test cycle
-          config_file = '.github/config/r2upload_config.json'
-          with open(config_file, 'w') as f:
+          with open('${{ env.CONFIG_FILE_NAME }}', 'w') as f:
+            print('Write out clean config file for next code-test cycle')
             # no leftover directories, in testing
             f.write('{\n"TestingComplete":"false"\n}')
             # the file is now closed but only on the runner, need to push to my repo, first give runner the permission to do so
