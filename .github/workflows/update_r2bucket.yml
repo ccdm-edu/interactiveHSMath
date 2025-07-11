@@ -69,19 +69,33 @@ jobs:
           import os
           import json
           config = {}
-          testing_done = True
-          with open('${{ env.CONFIG_FILE_NAME }}', 'r') as f:
-            config = json.load(f)
-          if isinstance(config, dict):
-            testing_done = config['TestingComplete'].lower()
-            list_past_dirs = config['dir_array']
-          with open(os.environ['GITHUB_OUTPUT'], "a") as f:
-            #need new line to ensure variables are treated as separate in yaml, no space between var, =, \n and value.
-            f.write(f"testing_done={testing_done}\n")
-            print(f"testing_done={testing_done}\n ")
-            f.write(f"list_past_dirs={json.dumps(list_past_dirs)}\n")
-            print(f"list of past dirs = {json.dumps(list_past_dirs)}\n")
+          testing_done = False
+          list_past_dirs = []
+          config_file_name = os.environ.get('CONFIG_FILE_NAME')
 
+          if config_file_name:
+            try:
+              with open(config_file_name, 'r') as f:
+                config = json.load(f)
+            except FileNotFoundError:
+              print(f'::warning File "{config_file_name}" not found. Using default values. Please create file with { "TestingComplete":"False" } as minimum')
+            except json.JSONDecodeError:
+              print(f'::error file={config_file_name}: Invalid JSON in "{config_file_name}". Using default values.')
+          else:
+            print('::error title=Configuration Error::CONFIG_FILE_NAME environment variable not set. Using default values.')
+          
+          if isinstance(config, dict):
+            testing_done = config.get('TestingComplete','False').lower()
+            list_past_dirs = config.get('dir_array','[]')
+            with open(os.environ['GITHUB_OUTPUT'], "a") as f:
+              #need new line to ensure variables are treated as separate in yaml, no space between var, =, \n and value.
+              f.write(f"testing_done={testing_done}\n")
+              print(f"testing_done={testing_done}\n ")
+              f.write(f"list_past_dirs={json.dumps(list_past_dirs)}\n")
+              print(f"list of past dirs = {json.dumps(list_past_dirs)}\n")
+          else:
+            print(f'::warning file={config_file_name}, is not in dictionary format. Using default values. ')
+            
       - name: Debug testing_done output
         id: why_read_fail
         run: |
