@@ -72,7 +72,7 @@ jobs:
           #config_file = '.github/config/r2upload_config.json'
           config = {}
           testing_done = True
-          with open(${{ env.CONFIG_FILE_NAME }}, 'r') as f:
+          with open('${{ env.CONFIG_FILE_NAME }}', 'r') as f:
             config = json.load(f)
           if isinstance(config, dict):
             testing_done = config['TestingComplete'].lower()
