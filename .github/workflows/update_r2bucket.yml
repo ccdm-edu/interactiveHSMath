@@ -58,10 +58,42 @@ jobs:
               - '**/static/css/**'
               - '**/static/images/**'
               - '**/static/js/**'
-              - '**/static/js-lib/**'
-              
+              - '**/static/js-lib/**'           
+    
+      #-----------For each file of interest that changed in this commit, find the directory that changed--------------
+      # look in current check in to see what files were updated.  Will later add this to the saved old directories to 
+      # make a list for R2 bucket update when testing is complete in retrieve_these_dir
+      - name: parse the string
+        id: string_to_array
+        shell: python
+        # need a list of directories with a changed file since r2_upload_action only works at dir level
+        if:  steps.changes.outputs.static == 'true'
+        #nothing to do if no files in key directories changed...
+        run: |
+          import os
+          import pathlib
+          #what we get from paths-filter is list of files that changed from specified directories of 
+          #interest, we need to convert this to unique directories
+          str_ver = "${{ steps.changes.outputs.static_files }}"
+          # test only: str_ver = "dir1/file1.css,dir1/file2.css,dir3/file3.js"
+          array_of_files = str(str_ver).split(',')
+          array_of_dir_path = []
+          json_array_of_dir = '{"dir_array":['                  
+          for i in array_of_files:
+            currPath = pathlib.Path(i)
+            currDir = currPath.parent
+            if str(currDir) not in array_of_dir_path:
+              array_of_dir_path.append(str(currDir))
+          #array results need to be stored as json format to be read back in as array
+          
+          with open(os.environ['GITHUB_OUTPUT'], "a") as f:
+            f.write(f"dir_array={json.dumps(array_of_dir_path)}\n")
+            print(f"dir_array={json.dumps(array_of_dir_path)}\n")
+                 
       #--------------------Read config file and put "testingComplete" and past directories accessed in output---------------
-      # Read the config file to see if we are done testing and if any directories have been modified in the past
+      # Read the config file to see if we are done testing and if any directories have been modified in the past.
+      # Note, config file dir_array is a list of directories that have changed.  It is not yet in the format needed to 
+      # write to R2 buckets (needs source and dest dir), which happens only when testing_complete is true
       - name: check if testing done and collect any old directories modified during test
         id: read_config
         shell: python 
@@ -95,45 +127,7 @@ jobs:
               print(f"list of past dirs = {json.dumps(list_past_dirs)}\n")
           else:
             print(f'::warning file={config_file_name}, is not in dictionary format. Using default values. ')
-            
-      - name: Debug testing_done output
-        id: why_read_fail
-        run: |
-          #echo "List Past Dir is: ${{ steps.read_config.outputs.list_past_dirs }}"
 
-      #-----------For each file of interest that changed, create unique Key/val pair for writing to R2 buckets---------------
-      # look in current check in to see what files were updated.  Will later add this to the saved old directories to 
-      # make a list for R2 bucket update when testing is complete
-      - name: parse the string
-        id: string_to_array
-        shell: python
-        # need a list of directories with a changed file since r2_upload_action only works at dir level
-        if:  steps.changes.outputs.static == 'true'
-        #nothing to do if no files in key directories changed...
-        run: |
-          import os
-          import pathlib
-          #what we get from paths-filter is list of files that changed from specified directories of 
-          #interest, we need to convert this to unique directories
-          str_ver = "${{ steps.changes.outputs.static_files }}"
-          # test only: str_ver = "dir1/file1.css,dir1/file2.css,dir3/file3.js"
-          array_of_files = str(str_ver).split(',')
-          array_of_dir_path = []
-          json_array_of_dir = '{"dir_array":['                  
-          for i in array_of_files:
-            currPath = pathlib.Path(i)
-            currDir = currPath.parent
-            if str(currDir) not in array_of_dir_path:
-              array_of_dir_path.append(str(currDir))
-          #array results need to be stored as json format to be read back in as array
-          # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
-          for i in array_of_dir_path:
-            json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + i + '/" },'
-          #remove last extra , and close off json format
-          json_array_of_dir = json_array_of_dir[:-1] + ']}'
-          print(f'Directories of interest with file changes: (string_to_array json output) {json_array_of_dir} ')
-          with open(os.environ['GITHUB_OUTPUT'], "a") as f:
-            f.write(f'dir_array={json_array_of_dir}')
 
       #------------Testing in progress:  take new directories changed and uniquely add to old directories changed.-------------------
       #------------update config file, not R2 bucket---------------------------------------------------------------------------------
@@ -201,20 +195,30 @@ jobs:
           import json
           print('Testing complete, pull all directories touched into list to be written to R2 bucket')
           # read in old dir array list.  Go through new dir array items, if any, and add to list if they are unique
-          old_dir_list = ${{ steps.read_config.outputs.list_past_dirs }}
+          full_dir_list = ${{ steps.read_config.outputs.list_past_dirs }}
           print(f'old_dir_list is {old_dir_list}')
           if ${{ steps.changes.outputs.static == 'true' }}:
             new_dir_list = ${{ steps.string_to_array.outputs.dir_array }}["dir_array"]
             print(f'new_dir_list is {new_dir_list}')
             for i in new_dir_list:
-              if i not in old_dir_list:
-                old_dir_list.append(i)
+              if i not in full_dir_list:
+                full_dir_list.append(i)
                 print(f'added new item {i}, will need to write file')
-          #ok, old_dir_list now setup for later R2 bucket write.  Set up config file for next code/test cycle
-          with open('${{ env.CONFIG_FILE_NAME }}', 'w') as f:
-            print('Write out clean config file for next code-test cycle')
-            # no leftover directories, in testing
-            f.write('{\n"TestingComplete":"false"\n}')
+            # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
+            json_array_of_dir = []
+            for i in full_dir_list:
+              json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + i + '/" },'
+            #remove last extra , and close off json format
+            json_array_of_dir = json_array_of_dir[:-1] + ']}'
+            print(f'Directories of interest with file changes: (string_to_array json output) {json_array_of_dir} ')
+            with open(os.environ['GITHUB_OUTPUT'], "a") as f:
+              f.write(f'dir_array={json_array_of_dir}')
+
+            #ok, full_dir_list now setup for later R2 bucket write.  Set up config file for next code/test cycle when this is all done
+            with open('${{ env.CONFIG_FILE_NAME }}', 'w') as f:
+              print('Write out clean config file for next code-test cycle')
+              # no leftover directories, in testing
+              f.write('{\n"TestingComplete":"false"\n}')
             # the file is now closed but only on the runner, need to push to my repo, first give runner the permission to do so
             os.system('git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git')
             os.system('git config --local user.email "actions@github.com"')
