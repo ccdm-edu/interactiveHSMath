@@ -71,6 +71,7 @@ jobs:
         #nothing to do if no files in key directories changed...
         run: |
           import os
+          import json
           import pathlib
           #what we get from paths-filter is list of files that changed from specified directories of 
           #interest, we need to convert this to unique directories
@@ -85,10 +86,10 @@ jobs:
             if str(currDir) not in array_of_dir_path:
               array_of_dir_path.append(str(currDir))
           #array results need to be stored as json format to be read back in as array
-          
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f"dir_array={json.dumps(array_of_dir_path)}\n")
             print(f"dir_array={json.dumps(array_of_dir_path)}\n")
+            
                  
       #--------------------Read config file and put "testingComplete" and past directories accessed in output---------------
       # Read the config file to see if we are done testing and if any directories have been modified in the past.
@@ -180,6 +181,8 @@ jobs:
               print('NO need to update config file, no new directorties. Testing not done, will NOT write to R2 storage')
           else:
             print('NO need to update config file, no directories found this commit. Testing not done, will NOT write to R2 storage')
+
+
 
       #-------------Testing Complete:  take old directories changed and uniquely combine with new directories changed-----------
       #---------------prepare to write out to R2 buckets.  Overwrite config file for next coding/testing session----------------
