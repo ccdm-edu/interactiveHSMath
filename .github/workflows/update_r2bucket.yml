@@ -146,7 +146,7 @@ jobs:
             print(f'Testing NOT complete, save these directories in the config file for future')
             # read in old dir array list.  Go through new dir array items and add to list if they are unique
             old_dir_list = ${{ steps.read_config.outputs.list_past_dirs }}
-            new_dir_list = ${{ steps.string_to_array.outputs.dir_array }}["dir_array"]
+            new_dir_list = ${{ steps.string_to_array.outputs.dir_array }}
             print(f'old_dir_list is {old_dir_list}')
             print(f'new_dir_list is {new_dir_list}')
             new_stuff_added = False
