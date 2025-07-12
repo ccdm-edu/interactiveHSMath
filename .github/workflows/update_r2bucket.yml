@@ -63,7 +63,7 @@ jobs:
       #--------------------Read config file and put "testingComplete" and past directories accessed in output---------------
       # Read the config file to see if we are done testing and if any directories have been modified in the past
       - name: check if testing done and collect any old directories modified during test
-        id: test_check
+        id: read_config
         shell: python 
         run: |
           import os
@@ -99,7 +99,7 @@ jobs:
       - name: Debug testing_done output
         id: why_read_fail
         run: |
-          #echo "List Past Dir is: ${{ steps.test_check.outputs.list_past_dirs }}"
+          #echo "List Past Dir is: ${{ steps.read_config.outputs.list_past_dirs }}"
 
       #-----------For each file of interest that changed, create unique Key/val pair for writing to R2 buckets---------------
       # look in current check in to see what files were updated.  Will later add this to the saved old directories to 
@@ -142,7 +142,7 @@ jobs:
       - name: save these dir since not done testing
         id: save_these_dir
         shell: python 
-        if: ${{ steps.test_check.outputs.testing_done == 'false' }}
+        if: ${{ steps.read_config.outputs.testing_done == 'false' }}
         run: |
           import os
           import json
@@ -150,11 +150,12 @@ jobs:
           if ('${{ steps.changes.outputs.static }}'== 'true'):
             print(f'Testing NOT complete, save these directories in the config file for future')
             # read in old dir array list.  Go through new dir array items and add to list if they are unique
-            old_dir_list = ${{ steps.test_check.outputs.list_past_dirs }}
+            old_dir_list = ${{ steps.read_config.outputs.list_past_dirs }}
             new_dir_list = ${{ steps.string_to_array.outputs.dir_array }}["dir_array"]
             print(f'old_dir_list is {old_dir_list}')
             print(f'new_dir_list is {new_dir_list}')
             new_stuff_added = False
+            # guaranteed to have non empty new_dir_list from ...outputs.static = T test
             for i in new_dir_list:
               if i not in old_dir_list:
                 old_dir_list.append(i)
@@ -193,14 +194,14 @@ jobs:
       #ready for next code iteration.
       - name: testing done, retrieve all dir changed
         id: retrieve_these_dir
-        if: ${{ steps.test_check.outputs.testing_done == 'true' }}
+        if: ${{ steps.read_config.outputs.testing_done == 'true' }}
         shell: python
         run: |
           import os
           import json
           print('Testing complete, pull all directories touched into list to be written to R2 bucket')
           # read in old dir array list.  Go through new dir array items, if any, and add to list if they are unique
-          old_dir_list = ${{ steps.test_check.outputs.list_past_dirs }}
+          old_dir_list = ${{ steps.read_config.outputs.list_past_dirs }}
           print(f'old_dir_list is {old_dir_list}')
           if ${{ steps.changes.outputs.static == 'true' }}:
             new_dir_list = ${{ steps.string_to_array.outputs.dir_array }}["dir_array"]
