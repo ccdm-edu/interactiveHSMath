@@ -207,28 +207,28 @@ jobs:
               if i not in full_dir_list:
                 full_dir_list.append(i)
                 print(f'added new item {i}, will need to write file')
-            # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
-            json_array_of_dir = []
-            for i in full_dir_list:
-              json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + i + '/" },'
-            #remove last extra , and close off json format
-            json_array_of_dir = json_array_of_dir[:-1] + ']}'
-            print(f'Directories of interest with file changes: (retrieve_these_dir json output) {json_array_of_dir} ')
-            with open(os.environ['GITHUB_OUTPUT'], "a") as f:
-              f.write(f'dir_array={json_array_of_dir}')
+          # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
+          json_array_of_dir = []
+          for i in full_dir_list:
+            json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + i + '/" },'
+          #remove last extra , and close off json format
+          json_array_of_dir = json_array_of_dir[:-1] + ']}'
+          print(f'Directories of interest with file changes: (retrieve_these_dir json output) {json_array_of_dir} ')
+          with open(os.environ['GITHUB_OUTPUT'], "a") as f:
+            f.write(f'dir_array={json_array_of_dir}')
 
-            #ok, full_dir_list now setup for later R2 bucket write.  Set up config file for next code/test cycle when this is all done
-            with open('${{ env.CONFIG_FILE_NAME }}', 'w') as f:
-              print('Write out clean config file for next code-test cycle')
-              # no leftover directories, in testing
-              f.write('{\n"TestingComplete":"false"\n}')
-            # the file is now closed but only on the runner, need to push to my repo, first give runner the permission to do so
-            os.system('git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git')
-            os.system('git config --local user.email "actions@github.com"')
-            os.system('git config --local user.name "GitHub Actions"')
-            os.system('git add .github/config/r2upload_config.json')
-            os.system('git commit -m "Update config file from workflow"')
-            os.system('git push')  
+          #ok, full_dir_list now setup for later R2 bucket write.  Set up config file for next code/test cycle when this is all done
+          with open('${{ env.CONFIG_FILE_NAME }}', 'w') as f:
+            print('Write out clean config file for next code-test cycle')
+            # no leftover directories, in testing
+            f.write('{\n"TestingComplete":"false"\n}')
+          # the file is now closed but only on the runner, need to push to my repo, first give runner the permission to do so
+          os.system('git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git')
+          os.system('git config --local user.email "actions@github.com"')
+          os.system('git config --local user.name "GitHub Actions"')
+          os.system('git add .github/config/r2upload_config.json')
+          os.system('git commit -m "Update config file from workflow"')
+          os.system('git push')  
 
             
   #######################################################################################################################         
