@@ -208,7 +208,7 @@ jobs:
                 full_dir_list.append(i)
                 print(f'added new item {i}, will need to write file')
           # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
-          json_array_of_dir = []
+          json_array_of_dir = '['
           for i in full_dir_list:
             json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + i + '/" },'
           #remove last extra , and close off json format
