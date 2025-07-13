@@ -118,7 +118,7 @@ jobs:
           
           if isinstance(config, dict):
             testing_done = config.get('TestingComplete','False').lower()
-            list_past_dirs = config.get('dir_array','[]')
+            list_past_dirs = config.get('dir_array',[])
             with open(os.environ['GITHUB_OUTPUT'], "a") as f:
               #need new line to ensure variables are treated as separate in yaml, no space between var, =, \n and value.
               f.write(f"testing_done={testing_done}\n")
