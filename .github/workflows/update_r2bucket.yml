@@ -199,7 +199,7 @@ jobs:
           # read in old dir array list.  Go through new dir array items, if any, and add to list if they are unique
           full_dir_list = ${{ steps.read_config.outputs.list_past_dirs }}
           print(f'old_dir_list is {full_dir_list}')
-          if ${{ steps.changes.outputs.static == 'true' }}:
+          if ('${{ steps.changes.outputs.static }}'== 'true'):
             new_dir_list = ${{ steps.string_to_array.outputs.dir_array }}["dir_array"]
             print(f'new_dir_list is {new_dir_list}')
             for i in new_dir_list:
