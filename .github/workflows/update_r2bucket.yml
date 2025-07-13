@@ -38,7 +38,7 @@ jobs:
       contents: write
     timeout-minutes: 3
     outputs:
-      upload_dir: ${{ steps.retrieve_these_dir.outputs.old_dir_list }}
+      upload_dir: ${{ steps.retrieve_these_dir.outputs.dir_array }}
       run_the_upload: ${{ steps.changes.outputs.static }}
     steps:
       - run: echo "The update_r2bucket was automatically triggered by a ${{ github.event_name }} event."
@@ -198,7 +198,7 @@ jobs:
           print('Testing complete, pull all directories touched into list to be written to R2 bucket')
           # read in old dir array list.  Go through new dir array items, if any, and add to list if they are unique
           full_dir_list = ${{ steps.read_config.outputs.list_past_dirs }}
-          print(f'old_dir_list is {old_dir_list}')
+          print(f'old_dir_list is {full_dir_list}')
           if ${{ steps.changes.outputs.static == 'true' }}:
             new_dir_list = ${{ steps.string_to_array.outputs.dir_array }}["dir_array"]
             print(f'new_dir_list is {new_dir_list}')
@@ -212,7 +212,7 @@ jobs:
               json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + i + '/" },'
             #remove last extra , and close off json format
             json_array_of_dir = json_array_of_dir[:-1] + ']}'
-            print(f'Directories of interest with file changes: (string_to_array json output) {json_array_of_dir} ')
+            print(f'Directories of interest with file changes: (retrieve_these_dir json output) {json_array_of_dir} ')
             with open(os.environ['GITHUB_OUTPUT'], "a") as f:
               f.write(f'dir_array={json_array_of_dir}')
 
