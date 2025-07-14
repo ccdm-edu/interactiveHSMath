@@ -218,7 +218,7 @@ jobs:
             json_array_of_dir.append(pathname_src_dest)
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f'dir_array={json.dumps(json_array_of_dir)}')
-          print(f"dir_array={json.dumps(json_array_of_dir)}')
+          print(f'dir_array={json.dumps(json_array_of_dir)}')
 
           #ok, full_dir_list now setup for later R2 bucket write.  Set up config file for next code/test cycle when this is all done
           # with open('${{ env.CONFIG_FILE_NAME }}', 'w') as f:
