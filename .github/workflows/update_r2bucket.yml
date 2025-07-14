@@ -215,7 +215,9 @@ jobs:
             #for dest, we just want the last directory of the path, its how CF buckets are organized
             json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + get_path.parts[-1] + '/" },'
           #remove last extra , and close off json format
-          json_array_of_dir = json_array_of_dir[:-1] + ']}'
+          json_array_of_dir = json_array_of_dir[:-1] + ']'
+          #ensure all json text is double quoted, as required, it will look good in print but not in f.write
+          json_array_of_dir = json_array_of_dir.replace("'","\"")
           print(f'Directories of interest with file changes: (retrieve_these_dir json output) {json_array_of_dir} ')
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
             f.write(f'dir_array={json_array_of_dir}')
