@@ -196,6 +196,7 @@ jobs:
         run: |
           import os
           import json
+          import pathlib
           print('Testing complete, pull all directories touched into list to be written to R2 bucket')
           # read in old dir array list.  Go through new dir array items, if any, and add to list if they are unique
           full_dir_list = ${{ steps.read_config.outputs.list_past_dirs }}
@@ -210,7 +211,8 @@ jobs:
           # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
           json_array_of_dir = '['
           for i in full_dir_list:
-            json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + i + '/" },'
+            get_path = Path(i)
+            json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + get_path.parts[-1] + '/" },'
           #remove last extra , and close off json format
           json_array_of_dir = json_array_of_dir[:-1] + ']}'
           print(f'Directories of interest with file changes: (retrieve_these_dir json output) {json_array_of_dir} ')
@@ -247,17 +249,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683    #v4.2.2
         
-      - name: push dir to CF R2 bucket
-        id: push_GH_dir_2_R2
-        uses: ryand56/r2-upload-action@3bee737337fc7ecb450bedfff45cfa2ed953e576    #v1.4
-        with:
-          r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
-          r2-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
-          r2-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          r2-bucket: ${{ secrets.R2_BUCKET }}
-          source-dir: ${{ matrix.CONFIG_upload.src }}
-          destination-dir: ${{ matrix.CONFIG_upload.dest }}
-          keep-file-fresh: 'true'
+
 
       - name: check results
         id: check_CF_write
