@@ -196,7 +196,7 @@ jobs:
         run: |
           import os
           import json
-          import pathlib
+          from pathlib import Path
           print('Testing complete, pull all directories touched into list to be written to R2 bucket')
           # read in old dir array list.  Go through new dir array items, if any, and add to list if they are unique
           full_dir_list = ${{ steps.read_config.outputs.list_past_dirs }}
@@ -212,6 +212,7 @@ jobs:
           json_array_of_dir = '['
           for i in full_dir_list:
             get_path = Path(i)
+            #for dest, we just want the last directory of the path, its how CF buckets are organized
             json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + get_path.parts[-1] + '/" },'
           #remove last extra , and close off json format
           json_array_of_dir = json_array_of_dir[:-1] + ']}'
