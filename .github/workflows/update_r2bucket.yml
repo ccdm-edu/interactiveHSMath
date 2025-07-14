@@ -242,7 +242,7 @@ jobs:
       matrix:
         # CF R2 bucket directory structure is set up similar to static directories of interest
         # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
-        CONFIG_upload: ${{ fromJSON(needs.files-changed.outputs.upload_dir).dir_array }}  
+        CONFIG_upload: ${{ fromJSON(needs.files-changed.outputs.upload_dir) }}  
     runs-on: ubuntu-latest
     needs: [files-changed]
     steps:
