@@ -209,18 +209,16 @@ jobs:
                 full_dir_list.append(i)
                 print(f'added new item {i}, will need to write file')
           # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
-          json_array_of_dir = '['
+
+          json_array_of_dir = []
           for i in full_dir_list:
             get_path = Path(i)
             #for dest, we just want the last directory of the path, its how CF buckets are organized
-            json_array_of_dir = json_array_of_dir + '{"src":"' + i + '", "dest":"' + get_path.parts[-1] + '/" },'
-          #remove last extra , and close off json format
-          json_array_of_dir = json_array_of_dir[:-1] + ']'
-          #ensure all json text is double quoted, as required, it will look good in print but not in f.write
-          json_array_of_dir = json_array_of_dir.replace("'","\"")
-          print(f'Directories of interest with file changes: (retrieve_these_dir json output) {json_array_of_dir} ')
+            pathname_src_dest = dict(src = i, dest = get_path.parts[-1] + '/')
+            json_array_of_dir.append(pathname_src_dest)
           with open(os.environ['GITHUB_OUTPUT'], "a") as f:
-            f.write(f'dir_array={json_array_of_dir}')
+            f.write(f'dir_array={json.dumps(json_array_of_dir)}')
+          print(f"dir_array={json.dumps(json_array_of_dir)}')
 
           #ok, full_dir_list now setup for later R2 bucket write.  Set up config file for next code/test cycle when this is all done
           # with open('${{ env.CONFIG_FILE_NAME }}', 'w') as f:
