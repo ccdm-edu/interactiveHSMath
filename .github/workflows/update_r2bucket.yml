@@ -208,8 +208,7 @@ jobs:
               if i not in full_dir_list:
                 full_dir_list.append(i)
                 print(f'added new item {i}, will need to write file')
-          # an array of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
-
+          # need a list of key value pairs where src: myrepo/dir1/dir2/dir3 and dest: dir3 (config matches Cloudflare bucket)
           json_array_of_dir = []
           for i in full_dir_list:
             get_path = Path(i)
@@ -237,7 +236,7 @@ jobs:
   #######################################################################################################################         
   push_new_files_up:
     if: ${{ needs.files-changed.outputs.is_testing_complete == 'true' }} 
-    #if: false
+    #if: false   USED for testing to minimize excessive class A operations on R2 Buckets
     strategy: 
       matrix:
         # CF R2 bucket directory structure is set up similar to static directories of interest
