@@ -221,17 +221,17 @@ jobs:
           print(f'dir_array={json.dumps(json_array_of_dir)}')
 
           #ok, full_dir_list now setup for later R2 bucket write.  Set up config file for next code/test cycle when this is all done
-          # with open('${{ env.CONFIG_FILE_NAME }}', 'w') as f:
-            #print('Write out clean config file for next code-test cycle')
+          with open('${{ env.CONFIG_FILE_NAME }}', 'w') as f:
+            print('Write out clean config file for next code-test cycle')
             # no leftover directories, in testing
-            # f.write('{\n"TestingComplete":"false"\n}')
+            f.write('{\n"TestingComplete":"false"\n}')
           # the file is now closed but only on the runner, need to push to my repo, first give runner the permission to do so
-          # os.system('git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git')
-          # os.system('git config --local user.email "actions@github.com"')
-          # os.system('git config --local user.name "GitHub Actions"')
-          # os.system('git add .github/config/r2upload_config.json')
-          # os.system('git commit -m "Update config file from workflow"')
-          # os.system('git push')  
+          os.system('git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git')
+          os.system('git config --local user.email "actions@github.com"')
+          os.system('git config --local user.name "GitHub Actions"')
+          os.system('git add .github/config/r2upload_config.json')
+          os.system('git commit -m "Update config file from workflow"')
+          os.system('git push')  
 
             
   #######################################################################################################################         
