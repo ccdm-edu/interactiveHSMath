@@ -7,7 +7,6 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.html import escape
 from user_agents import parse
-from datetime import date, datetime
 import urllib.request
 import json, os
 from pytz import timezone
@@ -16,7 +15,12 @@ from django.utils.decorators import method_decorator
 # homegrown stuff
 from int_math.forms import contactForm
 from int_math.models import ContactAccesses
-# seems unused   from pickle import TRUE
+# to generate signed URLs
+import hashlib
+import time
+import uuid
+
+import datetime
 
 
 #**********************************************************
@@ -24,7 +28,72 @@ from int_math.models import ContactAccesses
 #**********************************************************  
 MAX_FREE_RECAPTCHA = 5000  #as of 3/2025, google allows 10k for free
 MAX_NUM_EMAIL_PER_MONTH = 100   # I don't want more than this in my inbox, dammit!
+
+def generateSignedURL4BinaryBucket(filename, expiration_seconds=3600):
+    """
+    Generates a custom Cloudflare Worker-compatible signed URL.
+    """
+    SIGN_URL_SECRET_BIN = os.environ.get('SIGN_URL_SECRET_BIN')
+    secret_key = SIGN_URL_SECRET_BIN
+    if not secret_key:
+        raise ValueError("SIGN_URL_SECRET secret key is not set.")
+
+    # Generate a unique ID, required by your worker's logic
+    unique_id = str(uuid.uuid4())
+    expires_at = int(time.time()) + expiration_seconds
+    
+    signature_data = f"{secret_key}:{filename}:{unique_id}:{expires_at}"
+    signature = hashlib.sha256(signature_data.encode()).hexdigest()
+
+    # Match the URL format your Worker expects
+    signed_url = f"https://staticbinary.interactablemath.org/{filename}?expires={expires_at}&sig={signature}&id={unique_id}"
+    print(f' binary url is {signed_url}')
+    return signed_url
+
+
+def generateSignedURL4CodeBucket(filename, expiration_seconds=3600):
+    """
+    Generates a custom Cloudflare Worker-compatible signed URL.
+    """
+    SIGN_URL_SECRET_CODE = os.environ.get('SIGN_URL_SECRET_CODE')
+    secret_key = SIGN_URL_SECRET_CODE
+    if not secret_key:
+        raise ValueError("SIGN_URL_SECRET secret key is not set.")
+
+    # Generate a unique ID, required by your worker's logic
+    unique_id = str(uuid.uuid4())
+    expires_at = int(time.time()) + expiration_seconds
+    
+    signature_data = f"{secret_key}:{filename}:{unique_id}:{expires_at}"
+    signature = hashlib.sha256(signature_data.encode()).hexdigest()
+
+    # Match the URL format your Worker expects
+    signed_url = f"https://staticcode.interactablemath.org/{filename}?expires={expires_at}&sig={signature}&id={unique_id}"
+    print(f' code url is {signed_url}')
+    return signed_url
+
   
+def getHtmlSrcURL(key):
+    urlStaticSrc=key   #default if source file is given and in debug (using local, not static bucket)
+    configMap = ConfigMapper()
+#    if (settings.USE_STATIC_BUCKET):
+        # Do we need url for static code or static binaries?
+#        if "." in key:
+            #if key contains a ".", it is a filename and we are accessing static code R2 bucket and need to add JWT token param
+            
+            #not sure what to do here
+            #add token to the URL
+           
+#        else:
+            # otherwise, its static binary R2 bucket, need to transfer config map URL to cloud and add a JWT token param
+            
+#    else:
+        # we are using local storage for static code/binaries for test/debug
+        # if key contains a ".", its a filehame and we are accessing static code R2 bucket so just pass it back, as is default
+        # otherwise, pass back the configMapper value for relative location of file locally
+#        urlStaticSrc=static(configMap.readConfigMapper("LandingPageLogo"))
+    return urlStaticSrc
+
 class ProcessContactPage(View):
     template_name = 'int_math/Contact_me.html'
     form_class = contactForm
@@ -232,7 +301,7 @@ class IndexView(View):
             dateTime_format = '%Y-%m-%d-%H %z'
             dateTimeUpgd = None
             try:
-                dateTimeUpgd = datetime.strptime(dateTimeUpgdStr, dateTime_format)
+                dateTimeUpgd = datetime.datetime.strptime(dateTimeUpgdStr, dateTime_format)
             except Exception as ex:
                 template = "An exception of type {0} occurred. Arguments:\n{1!r}"
                 emsg = template.format(type(ex).__name__, ex.args)
@@ -241,7 +310,7 @@ class IndexView(View):
             if (dateTimeUpgd is not None):               
                 # get time right now and convert to EST (from UTC).  
                 tz = timezone('EST')
-                dateNow = datetime.now(tz)                
+                dateNow = datetime.datetime.now(tz)                
                 daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
                 dayUpgdNum = dateTimeUpgd.weekday()
                 dayUpgd = daysOfWeek[dayUpgdNum]
@@ -260,6 +329,7 @@ class IndexView(View):
                 #print(f"Reading upgd schedule, date is {dateTimeUpgd.date()} , time is {dateTimeUpgd.time()} and right now is date {dateNow.date()} and time {dateNow.time()}")
             upgd.close()
         #send all this off to requesting user
+        
         context_dict = {'GoogleAnalID': g_analyticsID,
                         'CompanyName': companyName,
                         'page_tab_header': 'Home',
@@ -267,14 +337,18 @@ class IndexView(View):
                         'using_safari': usingSafari,
                         'is_mobile': isMobile,
                         'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
-                        'landingPageLogo': static(realFileLandLogo),
                         'upgradeNoticePresent': upgradeNoticePresent,
                         'upgradeDay': upgradeDay,
                         'upgradeDate': upgradeDate,
                         'upgradeTime': upgradeTime,
-                        'upgradeNow': upgradingNow
+                        'upgradeNow': upgradingNow,
+                        #This is signed URL to existing html files to go to Static buckets
+                        'LandPageCS': generateSignedURL4CodeBucket('css/LandingPage.css'),
+                        'landingPageLogo': generateSignedURL4BinaryBucket(realFileLandLogo),
+                        'LandPageJS': generateSignedURL4CodeBucket('js/LandingPage.js'),
+                        'AutoDemoJS': generateSignedURL4CodeBucket('js/autoDemo.js'),
                         }        
-        response = render(request, 'int_math/index.html', context=context_dict)
+        response = render(request, 'int_math/index.html', context=context_dict)       
         return response
 #****************************************************************************************
 #  Trig functions section
@@ -594,7 +668,7 @@ class ContactMe(View):
         #Expect in future to be charged if I exceed a number of smtp access of gmail account so set that limit as well.
         allowContact = False;  #assume all limits have been exceeded until proven otherwise
         tz = timezone('EST')
-        dateNow = datetime.now(tz)  
+        dateNow = datetime.datetime.now(tz)  
         try: 
             #careful, every time you populate DB, you add new entry and best may be last--regen DB every time
             #ideally there is only one entry for contact accesses

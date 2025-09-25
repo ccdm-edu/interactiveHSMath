@@ -23,6 +23,12 @@ DEBUG = False
 #
 if DEBUG_str.lower() == 'true':
     DEBUG = True
+    
+#get JWT secrets for accessing R2 bucket for staticcode and static binsaries
+JWT_SECRET = os.environ.get('JWT_SECRET')
+JWT_SECRET_CODE = os.environ.get('JWT_SECRET_CODE')
+#Can use cloud or local server (latter for test, former for test and deployment) for static code or static binary files
+USE_CLOUD_BUCKET = os.environ.get('USE_CLOUD_BUCKET')
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 STATIC_DIR = os.path.join(BASE_DIR,"static")
@@ -103,18 +109,19 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 #content security policy --using this till django upgrade https://django-csp.readthedocs.io/en/3.8/configuration.html
 # also see https://django-csp.readthedocs.io/en/3.8/nonce.html
 CSP_REPORT_ONLY = False  #True only in initial debug to get policy working with site, default is false
-CSP_STYLE_SRC = ["'self'", 'https://getbootstrap.com', 'https://code.jquery.com']
+CSP_STYLE_SRC = ["'self'", 'https://getbootstrap.com', 'https://code.jquery.com','https://staticcode.interactablemath.org']
 CSP_WORKER_SRC = ["'self'", 'blob:']
 CSP_SCRIPT_SRC_ELEM = ["'self'", 'https://www.googletagmanager.com', 'https://www.google.com', 
                       'https://getbootstrap.com', 'https://www.gstatic.com', 'https://ajax.googleapis.com', 
-                      'https://cdnjs.cloudflare.com','https://cdn.jsdelivr.net']
+                      'https://cdnjs.cloudflare.com','https://cdn.jsdelivr.net','https://staticcode.interactablemath.org']
 #data: is hamburger menu
-CSP_IMG_SRC = ["'self'", 'https://code.jquery.com', 'data:']  
+CSP_IMG_SRC = ["'self'", 'https://code.jquery.com', 'data:','https://staticbinary.interactablemath.org']  
 #not sure why google needs to embed self in iframe, could be gtagmanager, google analytics or gmail
 #need 'data:' for androids running chrome/edge to load pdf iframes
 CSP_FRAME_SRC = ["'self'", 'data:', 'https://www.google.com'] 
 CSP_FRAME_ANCESTORS = ["'self'", 'https://www.google.com'] 
-CSP_CONNECT_SRC = ["'self'", 'https://www.google.com']  #needed for recaptcha
+CSP_CONNECT_SRC = ["'self'", 'https://www.google.com','https://getbootstrap.com',
+                   'https://cdnjs.cloudflare.com']  #needed for recaptcha and to remove annoying .map errors
 CSP_FORM_ACTION = ["'self'"]
 
 CSP_INCLUDE_NONCE_IN = ['script-src', 'script-src-elem', 'style-src']  
