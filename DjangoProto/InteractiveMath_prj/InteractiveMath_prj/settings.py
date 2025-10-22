@@ -24,9 +24,6 @@ DEBUG = False
 if DEBUG_str.lower() == 'true':
     DEBUG = True
     
-#get JWT secrets for accessing R2 bucket for staticcode and static binsaries
-JWT_SECRET = os.environ.get('JWT_SECRET')
-JWT_SECRET_CODE = os.environ.get('JWT_SECRET_CODE')
 #Can use cloud or local server (latter for test, former for test and deployment) for static code or static binary files
 USE_CLOUD_BUCKET = os.environ.get('USE_CLOUD_BUCKET')
 
