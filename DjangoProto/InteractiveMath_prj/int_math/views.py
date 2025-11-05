@@ -36,7 +36,7 @@ def generateSignedURL4BinaryBucket(filename, expiration_seconds=3600):
     SIGN_URL_SECRET_BIN = os.environ.get('SIGN_URL_SECRET_BIN')
     secret_key = SIGN_URL_SECRET_BIN
     if not secret_key:
-        raise ValueError("SIGN_URL_SECRET secret key is not set.")
+        raise ValueError("SIGN_URL_SECRET_BIN secret key is not set.")
 
     # Generate a unique ID, required by your worker's logic
     unique_id = str(uuid.uuid4())
@@ -46,6 +46,7 @@ def generateSignedURL4BinaryBucket(filename, expiration_seconds=3600):
     signature = hashlib.sha256(signature_data.encode()).hexdigest()
 
     # Match the URL format your Worker expects
+    CLOUD_BINARY_BUCKET_URL = os.environ.get('CLOUD_URL_BINARY')
     signed_url = f"https://staticbinary.interactablemath.org/{filename}?expires={expires_at}&sig={signature}&id={unique_id}"
     print(f' binary url is {signed_url}')
     return signed_url
@@ -58,7 +59,7 @@ def generateSignedURL4CodeBucket(filename, expiration_seconds=3600):
     SIGN_URL_SECRET_CODE = os.environ.get('SIGN_URL_SECRET_CODE')
     secret_key = SIGN_URL_SECRET_CODE
     if not secret_key:
-        raise ValueError("SIGN_URL_SECRET secret key is not set.")
+        raise ValueError("SIGN_URL_SECRET_CODE env variable secret key is not set.")
 
     # Generate a unique ID, required by your worker's logic
     unique_id = str(uuid.uuid4())
@@ -68,30 +69,28 @@ def generateSignedURL4CodeBucket(filename, expiration_seconds=3600):
     signature = hashlib.sha256(signature_data.encode()).hexdigest()
 
     # Match the URL format your Worker expects
-    signed_url = f"https://staticcode.interactablemath.org/{filename}?expires={expires_at}&sig={signature}&id={unique_id}"
+    CLOUD_CODE_BUCKET_URL = str(os.environ.get('CLOUD_URL_CODE'))
+    signed_url = CLOUD_CODE_BUCKET_URL + f"/{filename}?expires={expires_at}&sig={signature}&id={unique_id}"
     print(f' code url is {signed_url}')
     return signed_url
 
   
-def getHtmlSrcURL(key):
-    urlStaticSrc=key   #default if source file is given and in debug (using local, not static bucket)
-    configMap = ConfigMapper()
-#    if (settings.USE_STATIC_BUCKET):
-        # Do we need url for static code or static binaries?
-#        if "." in key:
-            #if key contains a ".", it is a filename and we are accessing static code R2 bucket and need to add JWT token param
-            
-            #not sure what to do here
-            #add token to the URL
-           
-#        else:
-            # otherwise, its static binary R2 bucket, need to transfer config map URL to cloud and add a JWT token param
-            
-#    else:
-        # we are using local storage for static code/binaries for test/debug
-        # if key contains a ".", its a filehame and we are accessing static code R2 bucket so just pass it back, as is default
-        # otherwise, pass back the configMapper value for relative location of file locally
-#        urlStaticSrc=static(configMap.readConfigMapper("LandingPageLogo"))
+def getCodeURL(filename, request):
+    GET_FROM_CLOUD_str = os.environ.get('USE_CLOUD_BUCKET')
+    GET_FROM_CLOUD = False
+    if GET_FROM_CLOUD_str.lower() == 'true':
+        GET_FROM_CLOUD = True
+    urlStaticSrc = ""
+    localURL = str(request.build_absolute_uri())
+    print(f'the current url returned is ' + localURL)
+    if (GET_FROM_CLOUD == True):
+        #this cannot be tested from localhost due to security concerns with whitelisting localhost
+        urlStaticSrc = generateSignedURL4CodeBucket(filename)
+        print(f'REMOTE code:  url will be {urlStaticSrc}')            
+    else:
+        # use local copy of file.  This is expected to be used for initial testing only, not for deployment
+        urlStaticSrc = localURL + "static/" + filename
+        print(f'LOCAL code:  url will be {urlStaticSrc}')
     return urlStaticSrc
 
 class ProcessContactPage(View):
@@ -343,10 +342,10 @@ class IndexView(View):
                         'upgradeTime': upgradeTime,
                         'upgradeNow': upgradingNow,
                         #This is signed URL to existing html files to go to Static buckets
-                        'LandPageCS': generateSignedURL4CodeBucket('css/LandingPage.css'),
+                        'LandPageCS': getCodeURL('css/LandingPage.css', request),
                         'landingPageLogo': generateSignedURL4BinaryBucket(realFileLandLogo),
-                        'LandPageJS': generateSignedURL4CodeBucket('js/LandingPage.js'),
-                        'AutoDemoJS': generateSignedURL4CodeBucket('js/autoDemo.js'),
+                        'LandPageJS': getCodeURL('js/LandingPage.js', request),
+                        'AutoDemoJS': getCodeURL('js/autoDemo.js', request),
                         }        
         response = render(request, 'int_math/index.html', context=context_dict)       
         return response
