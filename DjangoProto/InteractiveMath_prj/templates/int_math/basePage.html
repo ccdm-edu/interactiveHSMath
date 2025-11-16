@@ -11,20 +11,20 @@
 	    <!-- yes the icon is hardcoded, easier than adding it to all the django variables for all pages.  Only hurts test proto -->
 	    <link rel="icon" href="{% static 'static_binaries/NonPublicImages/favicon.ico' %}">
 	    <title>
-	        {{ CompanyName }} - {% block title_block %}page-tab-header{% endblock %}
+	        {{ basePage.CompanyName }} - {% block title_block %}page-tab-header{% endblock %}
 	    </title>
 	    
 	    <!-- Bootstrap core CSS everything breaks with bootstrap 5  :( -->
 	    <link href="https://getbootstrap.com/docs/4.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 	         
 	    <!-- Global site tag (gtag.js) - Google Analytics -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id={{ GoogleAnalID }}"></script>
+		<script async src="https://www.googletagmanager.com/gtag/js?id={{ basePage.GoogleAnalID }}"></script>
 		<script nonce="{{ request.csp_nonce }}">
 		  window.dataLayer = window.dataLayer || [];
 		  function gtag(){dataLayer.push(arguments);}
 		  gtag('js', new Date());
 		
-		  gtag('config', '{{ GoogleAnalID }}');
+		  gtag('config', '{{ basePage.GoogleAnalID }}');
 		</script>
 	    
 	    <!-- Custom styles for this template -->
@@ -32,7 +32,7 @@
 	    <!--  not sure how to get jquery ui draggable popups, i think this does it -->
 	    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 	    <!-- want to override things here -->
-	    <link href="{%static 'css/intMath.css' %}" rel="stylesheet">
+	    <link href="{{ basePage.IntMathCSS }}" rel="stylesheet">
 	
 	    {% block head_block %}
 	    	<!--  separate out page specific css here -->
@@ -40,7 +40,7 @@
 	
 		<!--  style blocks dont like comments in the middle -->
 		<!--  THIS MAKES THE RECAPTCHA LOGO ON ALL PAGES -->
-		<script src='https://www.google.com/recaptcha/api.js?render={{ recaptchaPublicKey }}'></script>
+		<script src='https://www.google.com/recaptcha/api.js?render={{ basePage.recaptchaPublicKey }}'></script>
 
     </head>
     <body>
@@ -106,8 +106,8 @@
 		                	<div id="CookieChoice">
 		                		<br><button type="button" id='yesCookies'>Yes</button><button type="button" id='noCookies'>No</button>
 		                	</div>
-		                	<img class = "cookieIndicator" id="cookieIndicatorNo" src = {% static 'images/nocookie_50px.jpeg' %} alt="No Cookies" data-toggle="tooltip" data-placement="top" title="no cookies"">
-		                	<img class = "cookieIndicator" id="cookieIndicatorYes" src = {% static 'images/cookie_50px.jpeg' %} alt="Cookies allowed" data-toggle="tooltip" data-placement="top" title="cookies allowed"">
+		                	<img class = "cookieIndicator" id="cookieIndicatorNo" src = {{ basePage.NoCookieSVG }} alt="No Cookies" data-toggle="tooltip" data-placement="top" title="no cookies"">
+		                	<img class = "cookieIndicator" id="cookieIndicatorYes" src = {{ basePage.CookieSVG }} alt="Cookies allowed" data-toggle="tooltip" data-placement="top" title="cookies allowed"">
 		                </div>
                     </div>
                 </nav>
@@ -151,7 +151,7 @@
 					<!-- /.modal -->
 					
 					<div id="autoDemo">
-						<img id="startAutoDemo" src="{% static 'images/autoDemoButton.svg' %}" alt = "Demonstrate how to use page" data-toggle="tooltip" data-placement="right" title="Make sure your speaker is on">
+						<img id="startAutoDemo" src="{{ basePage.StartAutodemoSVG }}" alt = "Demonstrate how to use page" data-toggle="tooltip" data-placement="right" title="Make sure your speaker is on">
 						<!--  make a play/pause button set from bootstrap icons -->
 						<div id="autoDemoCtls">
 							<h1>Let's demo this page!</h1>
@@ -178,7 +178,7 @@
 									<td align='left'>
 										<div class="btn-group" id="autoDemoPlayPause">
 											<!--  image placed to draw attention to play button -->
-											<img id="clickHereCursor" src="{% static 'images/clickhere_cursor.svg' %}" alt = "Click here to start the demo segment">
+											<img id="clickHereCursor" src="{{ basePage.ClickHereSVG }}" alt = "Click here to start the demo segment">
 											<button type="button" class="btn btn-outline-secondary" id="playSegment" data-toggle="tooltip" data-placement="top" title="Play">
 												<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-play" viewBox="0 0 16 16">
 									  			<path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
@@ -210,17 +210,17 @@
 					<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 					<script nonce="{{ request.csp_nonce }}">
 							<!-- in case can't get from google, load from local -->
-							var localJQ = "{% static 'js-lib/jquery-371min.js' %}";
+							var localJQ = "{{ basePage.JQlocalJS }}";
 							window.jQuery || document.write('<script src="${localJQ}"><\/script>')
 					</script>
 					<!--  jquery ui needed for advanced topic draggable window -->
 					<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.3/jquery-ui.min.js"></script>
 					<!-- jquery ui touch.js (v1.1.0) punch needed so draggable works (on some level) on touch devices. https://www.jqueryscript.net/mobile/jQuery-Plugin-For-Touch-Drag-Events-touch-js.html. -->
-			  		<script src="{% static 'js-lib/jquery.touch.min.js' %}" crossorigin="anonymous" ></script>   
+			  		<script src="{{ basePage.JQtouchLibJS }}" crossorigin="anonymous" ></script>   
 					<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
 					<!-- custom JS for all pages of site, IntMathUtils used by all js -->
-					<script src="{% static 'js/IntMathUtils.js' %}" crossorigin="anonymous"></script>
-					<script src="{% static 'js/IntMath.js' %}" crossorigin="anonymous"></script>	
+					<script src="{{ basePage.IntMathUtilsJS }}" crossorigin="anonymous"></script>
+					<script src="{{ basePage.IntMathJS }}" crossorigin="anonymous"></script>	
                                      				
                     <!-- FOOTER -->
                     <div id="Site-footer">

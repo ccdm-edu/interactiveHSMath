@@ -7,7 +7,7 @@
 {% endblock %}
 
 {%block head_block %}
-	 <link href="{%static 'css/MusicSineSummary.css' %}" rel="stylesheet">
+	 <link href="{{ TrigSummaryCss }}" rel="stylesheet">
 {% endblock %}
 
 {% block artist_credit %}
@@ -36,6 +36,6 @@
 	<script nonce="{{ request.csp_nonce }}">feather.replace()</script>
 		
 	<!-- Custom JS for this page -->
-    <script src="{% static 'js/MusicSineSummary.js' %}" crossorigin="anonymous"></script>	
+    <script src="{{ TrigSummaryJS }}" crossorigin="anonymous"></script>	
 	
 {% endblock %}

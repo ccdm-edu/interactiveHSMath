@@ -7,7 +7,7 @@
 {% endblock %}
 
 {%block head_block %}
-    <link href="{%static 'css/DynamicTrig1.css' %}" rel="stylesheet">
+    <link href="{{ DynTrig1CSS }}" rel="stylesheet">
 {% endblock %}
 
 {% block body_block %}
@@ -153,8 +153,8 @@
 	<script nonce="{{ request.csp_nonce }}">feather.replace()</script>
 	
 	<!-- Custom JS for this page -->
-	<script src="{% static 'js/autoDemo.js' %}" crossorigin="anonymous"></script>	 
-	<script src="{% static 'js/DynamicTrig1.js' %}" crossorigin="anonymous"></script>	
+	<script src="{{ basePage.AutoDemoJS }}" crossorigin="anonymous"></script>	 
+	<script src="{{ DynTrig1JS }}" crossorigin="anonymous"></script>	
 {% endblock %}
 	<br><br>
 	

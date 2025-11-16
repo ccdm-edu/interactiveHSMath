@@ -26,7 +26,7 @@ import datetime
 #**********************************************************
 # These are actions that will require significant server time in recaptcha and smtp calls
 #**********************************************************  
-MAX_FREE_RECAPTCHA = 5000  #as of 3/2025, google allows 10k for free
+MAX_FREE_RECAPTCHA = 5000  #as of 3/2025, google allows 10k for free/month
 MAX_NUM_EMAIL_PER_MONTH = 100   # I don't want more than this in my inbox, dammit!
 
 def generateSignedURL4BinaryBucket(filename, expiration_seconds=3600):
@@ -75,23 +75,42 @@ def generateSignedURL4CodeBucket(filename, expiration_seconds=3600):
     return signed_url
 
   
-def getCodeURL(filename, request):
+def getCodePlusPubDomURL(filename, request):
     GET_FROM_CLOUD_str = os.environ.get('USE_CLOUD_BUCKET')
     GET_FROM_CLOUD = False
     if GET_FROM_CLOUD_str.lower() == 'true':
         GET_FROM_CLOUD = True
     urlStaticSrc = ""
-    localURL = str(request.build_absolute_uri())
-    print(f'the current url returned is ' + localURL)
+    localURLbase = str(request.build_absolute_uri('/'))
     if (GET_FROM_CLOUD == True):
         #this cannot be tested from localhost due to security concerns with whitelisting localhost
         urlStaticSrc = generateSignedURL4CodeBucket(filename)
         print(f'REMOTE code:  url will be {urlStaticSrc}')            
     else:
         # use local copy of file.  This is expected to be used for initial testing only, not for deployment
-        urlStaticSrc = localURL + "static/" + filename
+        urlStaticSrc = localURLbase + "static/" + filename
         print(f'LOCAL code:  url will be {urlStaticSrc}')
     return urlStaticSrc
+
+def getBaseContextEntry(request):
+    configMap = ConfigMapper()
+    companyName = configMap.readConfigMapper("CompanyName")
+    g_analyticsID = configMap.readConfigMapper('GoogleAnalID')
+    baseKVcontext = {'CompanyName': companyName, 
+                     'GoogleAnalID': g_analyticsID, 
+                     'recaptchaPublicKey':settings.RECAP_PUBLIC_KEY,
+                     'IntMathCSS': getCodePlusPubDomURL('css/intMath.css', request),
+                     'JQlocalJS': getCodePlusPubDomURL('js-lib/jquery-371min.js', request),
+                     'JQtouchLibJS': getCodePlusPubDomURL('js-lib/jquery.touch.min.js', request),
+                     'IntMathUtilsJS': getCodePlusPubDomURL('js/IntMathUtils.js', request),
+                     'IntMathJS':getCodePlusPubDomURL('js/IntMath.js', request),
+                     'AutoDemoJS': getCodePlusPubDomURL('js/autoDemo.js', request),
+                     'ClickHereSVG': getCodePlusPubDomURL('images/clickhere_cursor.svg',request),
+                     'StartAutodemoSVG': getCodePlusPubDomURL('images/autoDemoButton.svg',request),
+                     'NoCookieSVG': getCodePlusPubDomURL('images/nocookie_50px.jpeg',request),
+                     'CookieSVG': getCodePlusPubDomURL('images/cookie_50px.jpeg',request),}
+    
+    return baseKVcontext
 
 class ProcessContactPage(View):
     template_name = 'int_math/Contact_me.html'
@@ -281,8 +300,6 @@ class IndexView(View):
         isMobile = user_agent.is_mobile;
         configMap = ConfigMapper()
         realFileLandLogo = configMap.readConfigMapper("LandingPageLogo")
-        companyName = configMap.readConfigMapper("CompanyName")
-        g_analyticsID = configMap.readConfigMapper('GoogleAnalID')
 
         #check if there is an upcoming upgrade planned to site and notify users
         upgrdSchedFile = os.path.join(os.path.dirname(__file__), '..', 'InteractiveMath_prj', 'UpgradeSchedule.txt')
@@ -327,26 +344,23 @@ class IndexView(View):
                         upgradeDay = dayUpgd
                 #print(f"Reading upgd schedule, date is {dateTimeUpgd.date()} , time is {dateTimeUpgd.time()} and right now is date {dateNow.date()} and time {dateNow.time()}")
             upgd.close()
-        #send all this off to requesting user
-        
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+
+        context_dict = {
+                        'basePage': getBaseContextEntry(request),
                         'page_tab_header': 'Home',
                         'topic': None,
                         'using_safari': usingSafari,
                         'is_mobile': isMobile,
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         'upgradeNoticePresent': upgradeNoticePresent,
                         'upgradeDay': upgradeDay,
                         'upgradeDate': upgradeDate,
                         'upgradeTime': upgradeTime,
                         'upgradeNow': upgradingNow,
                         #This is signed URL to existing html files to go to Static buckets
-                        'LandPageCS': getCodeURL('css/LandingPage.css', request),
+                        'LandPageCSS': getCodePlusPubDomURL('css/LandingPage.css', request),
                         'landingPageLogo': generateSignedURL4BinaryBucket(realFileLandLogo),
-                        'LandPageJS': getCodeURL('js/LandingPage.js', request),
-                        'AutoDemoJS': getCodeURL('js/autoDemo.js', request),
-                        }        
+                        'LandPageJS': getCodePlusPubDomURL('js/LandingPage.js', request),
+                        }       
         response = render(request, 'int_math/index.html', context=context_dict)       
         return response
 #****************************************************************************************
@@ -361,19 +375,17 @@ class MusicTrigConceptIntroView(View):
         realFileCartoonGIF = trigMap.readConfigMapper("CartoonIntroGIF")
         realFileCartoonTrig = trigMap.readConfigMapper("CartoonIntroTrig")
         realFileIntroAudio = trigMap.readConfigMapper("TrigReviewIntroAudio")
-        companyName = trigMap.readConfigMapper("CompanyName")
-        g_analyticsID = trigMap.readConfigMapper('GoogleAnalID')
         artistCredit = trigMap.readConfigMapper('ArtistCredits')
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+        context_dict = {'basePage': getBaseContextEntry(request),
                         'page_tab_header': 'IntroConcepts',
                         'topic': Topic.objects.get(name="TrigFunct"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
                         'introToFreqVideo': static(realFileIntroVideo),
                         'cartoonIntroGIF': static(realFileCartoonGIF),
                         'cartoonIntroTrig': static(realFileCartoonTrig),
                         'trigReviewIntroAudio': static(realFileIntroAudio),
                         "artistCredit": artistCredit[0],
+                        'TrigIntroMusicCSS': getCodePlusPubDomURL('css/IntroTrigMusicConcepts.css', request),
+                        'TrigIntroMusicJS': getCodePlusPubDomURL('js/IntroTrigMusicConcepts.js', request),
                         }
         response = render(request, 'int_math/IntroTrigMusicConcepts.html', context=context_dict)
         return response
@@ -381,14 +393,15 @@ class MusicTrigConceptIntroView(View):
 class MusicTrigView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        textMap = ConfigMapper()
-        companyName = textMap.readConfigMapper("CompanyName")
-        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'MusicalTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
+                        'MusicSineIntroCSS': getCodePlusPubDomURL('css/Pg2MusicSineIntro.css',request),
+                        'MusicSineIntroJS': getCodePlusPubDomURL('js/Pg2MusicSineIntro.js',request),
+                        'ColorfulClefSVG': getCodePlusPubDomURL('images/Prismatic-Clef-Hearts-2.svg',request),
+                        'WholeNoteSVG': getCodePlusPubDomURL('images/WholeNote.svg', request),
+                        'VolumeSVG': getCodePlusPubDomURL('images/volume.svg', request),
                         }
         response = render(request, 'int_math/Pg2MusicSineIntro.html', context=context_dict)
         return response
@@ -396,14 +409,15 @@ class MusicTrigView(View):
 class StaticTrigView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        textMap = ConfigMapper()
-        companyName = textMap.readConfigMapper("CompanyName")
-        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'StaticTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
+                        'StaticTrigCSS': getCodePlusPubDomURL('css/StaticTrig.css',request),
+                        'StaticTrigJS': getCodePlusPubDomURL('js/StaticTrig.js',request),
+                        'ExplnQ2SVG': getCodePlusPubDomURL('images/StaticTrigQ2.svg',request),
+                        'ExplnQ3SVG': getCodePlusPubDomURL('images/StaticTrigQ3.svg',request),
+                        'ExplnQ4SVG': getCodePlusPubDomURL('images/StaticTrigQ4.svg',request),
                         }
         response = render(request, 'int_math/StaticTrig.html', context=context_dict)
         return response
@@ -411,14 +425,12 @@ class StaticTrigView(View):
 class DynamicTrig1View(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        textMap = ConfigMapper()
-        companyName = textMap.readConfigMapper("CompanyName")
-        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'DynamicTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
+                        'DynTrig1CSS': getCodePlusPubDomURL('css/DynamicTrig1.css', request),
+                        'DynTrig1JS': getCodePlusPubDomURL('js/DynamicTrig1.js', request),
                         }
         response = render(request, 'int_math/DynamicTrig1.html', context=context_dict)
         return response
@@ -428,15 +440,14 @@ class DynamicTrig2View(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
         textMap = ConfigMapper()
-        companyName = textMap.readConfigMapper("CompanyName")
-        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         artistCredit = textMap.readConfigMapper('ArtistCredits')
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'DynamicTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
                         'artistCredit': artistCredit[3],
+                        'DynTrig2CSS': getCodePlusPubDomURL('css/DynamicTrig2.css', request),
+                        'DynTrig2JS': getCodePlusPubDomURL('js/DynamicTrig2.js', request),
                         }
         response = render(request, 'int_math/DynamicTrig2.html', context=context_dict)
         return response
@@ -445,15 +456,15 @@ class ToneTrigView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
         textMap = ConfigMapper()
-        companyName = textMap.readConfigMapper("CompanyName")
-        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         artistCredit = textMap.readConfigMapper('ArtistCredits')
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'ToneTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
                         'artistCredit': artistCredit[3],
+                        'ToneTrigCSS': getCodePlusPubDomURL('css/ToneTrig.css',request),
+                        'ToneTrigJS': getCodePlusPubDomURL('js/ToneTrig.js',request),
+                        'VolumeOffSVG': getCodePlusPubDomURL('images/volume-off.svg',request)
                         }
         response = render(request, 'int_math/ToneTrig.html', context=context_dict)
         return response
@@ -463,15 +474,15 @@ class MusicNotesTrigView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
         textMap = ConfigMapper()
-        companyName = textMap.readConfigMapper("CompanyName")
-        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         artistCredit = textMap.readConfigMapper('ArtistCredits')
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'MusicNotes',
                         'topic': Topic.objects.get(name="TrigFunct"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
                         'artistCredit': artistCredit[2],
+                        'MusicNotesTrigCSS': getCodePlusPubDomURL('css/MusicNotesTrig.css', request),
+                        'MusicNotesTrigJS': getCodePlusPubDomURL('js/MusicNotesTrig.js', request),
+                        'VolumeOffSVG': getCodePlusPubDomURL('images/volume-off.svg',request),
                         }
         response = render(request, 'int_math/MusicNotesTrig.html', context=context_dict)
         return response
@@ -483,17 +494,16 @@ class TrigSummaryView(View):
         trigMap = ConfigMapper()
         actualFilename = trigMap.readConfigMapper("MusicSummaryVideo")
         realFileCartoonTrig = trigMap.readConfigMapper("CartoonIntroTrig")
-        companyName = trigMap.readConfigMapper("CompanyName")
-        g_analyticsID = trigMap.readConfigMapper('GoogleAnalID')
         artistCredit = trigMap.readConfigMapper('ArtistCredits')
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'Summary',
                         'topic': Topic.objects.get(name="TrigFunct"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
                         'musicSummaryVideo': static(actualFilename),
                         'cartoonIntroTrig': static(realFileCartoonTrig),
                         'artistCredit': artistCredit[1],
+                        'TrigSummaryCss': getCodePlusPubDomURL('css/MusicSineSummary.css',request),
+                        'TrigSummaryJS': getCodePlusPubDomURL('js/MusicSineSummary.js', request),
                         }
         response = render(request, 'int_math/MusicSineSummary.html', context=context_dict)
         return response
@@ -503,14 +513,10 @@ class TrigSummaryView(View):
 class ImagNumView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        textMap = ConfigMapper()
-        companyName = textMap.readConfigMapper("CompanyName")
-        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'Imag_num',
                         'topic': Topic.objects.get(name="Imag_num"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
                         }        
         response = render(request, 'int_math/imag_num.html', context=context_dict)
         return response
@@ -518,14 +524,10 @@ class ImagNumView(View):
 class TeacherStandardsView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        textMap = ConfigMapper()
-        companyName = textMap.readConfigMapper("CompanyName")
-        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'Teachers',
                         'topic': None,
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
                         }        
         response = render(request, 'int_math/TeacherStds.html', context=context_dict)
         return response
@@ -534,14 +536,10 @@ class PeopleView(View):
     # give user all the info I collect about them
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        textMap = ConfigMapper()
-        companyName = textMap.readConfigMapper("CompanyName")
-        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'People',
                         'topic': Topic.objects.get(name="Thanks"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
                         }
         return render(request, 'int_math/acknowledgements.html', context=context_dict)
 
@@ -562,20 +560,18 @@ class AckView(View):
         Img2 = "'/>"
         trigMap = ConfigMapper()
         ty_list = trigMap.readConfigMapper("Thankyou_list")
-        companyName = trigMap.readConfigMapper("CompanyName")
-        g_analyticsID = trigMap.readConfigMapper('GoogleAnalID')
         #go through the list of contributors and "write" the code out to page
         contributorString = ""
         for contributor in ty_list:
             contributorString += OPENER + A_Begin + contributor["url"] + A_End + Img1 + contributor["logo"] + Img2 + A_Close
             contributorString += A_Begin + contributor["url"] + A_End + H2_1 + contributor["line1"] + H2_2 + A_Close
             contributorString += A_Begin + contributor["url"] + A_End + H3_1 + contributor["line2"] + H3_2 + A_Close + CLOSER
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'Thank You!',
                         'topic': Topic.objects.get(name="Thanks"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
-                        'Contributors': contributorString
+                        'basePage': getBaseContextEntry(request),
+                        'Contributors': contributorString,
+                        'AckCSS':getCodePlusPubDomURL('css/Acknowledgements.css',request),
                         }
         response = render(request, 'int_math/acknowledgements.html', context=context_dict)
         return response        
@@ -583,14 +579,10 @@ class AckView(View):
 class TrigIDView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        textMap = ConfigMapper()
-        companyName = textMap.readConfigMapper("CompanyName")
-        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'Trig ID',
                         'topic': Topic.objects.get(name="TrigIdent"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
                         }
         response = render(request, 'int_math/TrigIdentity.html', context=context_dict)
         return response     
@@ -598,14 +590,10 @@ class TrigIDView(View):
 class TrigIDTuneView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        textMap = ConfigMapper()
-        companyName = textMap.readConfigMapper("CompanyName")
-        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
-        context_dict = {'GoogleAnalID': g_analyticsID,        
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'Inst Tune',
                         'topic': Topic.objects.get(name="TrigIdent"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
                         }
         response = render(request, 'int_math/TrigIdent_Tune.html', context=context_dict)
         return response 
@@ -616,13 +604,10 @@ class Legal_TermsOfUse(View):
     def get(self, request):
         configMap = ConfigMapper()
         actualFilename = configMap.readConfigMapper("Legal_TermsCond")
-        g_analyticsID = configMap.readConfigMapper('GoogleAnalID') 
-        companyName = configMap.readConfigMapper("CompanyName")
-        context_dict = {'GoogleAnalID': g_analyticsID,
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'Terms Of Use',
                         'topic': Topic.objects.get(name="Legal"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
                         'legalDocTerms': static(actualFilename) + "#toolbar=0",
                        }  
         response = render(request, 'int_math/TermsOfUse.html', context=context_dict)
@@ -633,13 +618,10 @@ class Legal_Privacy(View):
     def get(self, request):
         configMap = ConfigMapper()
         actualFilename = configMap.readConfigMapper("Legal_Privacy")
-        companyName = configMap.readConfigMapper("CompanyName")
-        g_analyticsID = configMap.readConfigMapper('GoogleAnalID')
-        context_dict = {'GoogleAnalID': g_analyticsID, 
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'Privacy Policy',
                         'topic': Topic.objects.get(name="Legal"),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
                         'legalDocPriv': static(actualFilename) + "#toolbar=0",
                        }  
         response = render(request, 'int_math/Privacy.html', context=context_dict)
@@ -649,9 +631,6 @@ class ContactMe(View):
     #when user fills out contact form, will trigger ProcessContactPage(View): action above
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        textMap = ConfigMapper()
-        companyName = textMap.readConfigMapper("CompanyName")
-        g_analyticsID = textMap.readConfigMapper('GoogleAnalID')
         
         #did we get here on a redirect? if so, update parameters
         botTestDone = False
@@ -730,13 +709,14 @@ class ContactMe(View):
                     print(f'ALLOCATION EXCEEDED: ABOVE ALLOTED Contact max, allow {MAX_FREE_RECAPTCHA} MAX recaptcha requests and {MAX_NUM_EMAIL_PER_MONTH} MAX email sends')
                     print(f'But we have {currAccesses.numTimesRecaptchaAccessedPerMonth} reCAPTCHA requests sent and {currAccesses.numTimesSmtpAccessedPerMonth} smtp mail messages were sent')
                 
-        context_dict = {'GoogleAnalID': g_analyticsID, 
-                        'CompanyName': companyName,
+        context_dict = {
                         'page_tab_header': 'Contact Us',
                         'topic': None,
                         'allowContactEmail': allowContact,
+                        'ContactCSS': getCodePlusPubDomURL('css/Contact_me.css',request),
+                        'ContactJS': getCodePlusPubDomURL('js/Contact_me.js', request),
                         'form': contactForm(),
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
                         'botTestDone': botTestDone,
                         'botTestPassed': botTestPassed
                        } 

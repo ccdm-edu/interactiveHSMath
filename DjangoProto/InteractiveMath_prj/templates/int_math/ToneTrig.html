@@ -6,7 +6,7 @@
 {% endblock %}
  
 {%block head_block %}
-    <link href="{%static 'css/ToneTrig.css' %}" rel="stylesheet">
+    <link href="{{ ToneTrigCSS }}" rel="stylesheet">
 {% endblock %}
 {% block artist_credit %}
 	{{ artistCredit }}
@@ -57,7 +57,7 @@
 						<tr>
 							<td colspan="4" align="center">
  	 							<!--  this button plays the tone and is visible all the time -->
- 	 							<img id="toneStartButton" src = {% static 'images/volume-off.svg' %} alt="Volume is currently off" data-toggle="tooltip" data-placement="top" title="turn on speaker and click to hear sine wave you created"">
+ 	 							<img id="toneStartButton" src = {{ VolumeOffSVG }} alt="Volume is currently off" data-toggle="tooltip" data-placement="top" title="turn on speaker and click to hear sine wave you created"">
 							</td>
 						</tr>
 						<tr>		
@@ -130,8 +130,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.umd.js" integrity="sha512-CMF3tQtjOoOJoOKlsS7/2loJlkyctwzSoDK/S40iAB+MqWSaf50uObGQSk5Ny/gfRhRCjNLvoxuCvdnERU4WGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	
 	<!-- Custom JS for this page -->
-	<script src="{% static 'js/autoDemo.js' %}" crossorigin="anonymous"></script>	    
-    <script src="{% static 'js/ToneTrig.js' %}" crossorigin="anonymous"></script>	
+	<script src="{{ basePage.AutoDemoJS }}" crossorigin="anonymous"></script>	    
+    <script src="{{ ToneTrigJS }}" crossorigin="anonymous"></script>	
 
 {% endblock %}
 

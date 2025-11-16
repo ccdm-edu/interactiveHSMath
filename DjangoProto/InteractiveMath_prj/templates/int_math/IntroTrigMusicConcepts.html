@@ -7,7 +7,7 @@
 {% endblock %}
 
 {%block head_block %}
-    <link href="{%static 'css/IntroTrigMusicConcepts.css' %}" rel="stylesheet">
+    <link href="{{ TrigIntroMusicCSS }}" rel="stylesheet">
 {% endblock %}
 
 {% block artist_credit %}
@@ -100,6 +100,6 @@
 	<script nonce="{{ request.csp_nonce }}">feather.replace()</script>
 	
 	<!-- Custom JS for this page -->
-	<script src="{% static 'js/IntroTrigMusicConcepts.js' %}" crossorigin="anonymous"></script>	
+	<script src="{{ TrigIntroMusicJS }}" crossorigin="anonymous"></script>	
 	
 {% endblock %}

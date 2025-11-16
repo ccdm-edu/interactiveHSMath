@@ -6,7 +6,7 @@
 {% endblock %}
  
 {%block head_block %}
-    <link href="{%static 'css/MusicNotesTrig.css' %}" rel="stylesheet">
+    <link href="{{ MusicNotesTrigCSS }}" rel="stylesheet">
 {% endblock %}
 
 {% block artist_credit %}
@@ -55,7 +55,7 @@
 					<tr>
 						<th colspan='2'>Musical Notes Parameters</th>
 					    <!--  this button plays the tone and is visible only when instrument chosen -->
- 	 					<img id="allowNotePlay" src = {% static 'images/volume-off.svg' %} alt="Volume is currently off" data-toggle="tooltip" data-placement="top" title="turn on speaker and click to hear musical note"">
+ 	 					<img id="allowNotePlay" src = {{ VolumeOffSVG }} alt="Volume is currently off" data-toggle="tooltip" data-placement="top" title="turn on speaker and click to hear musical note"">
 						
 					</tr>	
 					<tr>		
@@ -99,7 +99,7 @@
 					<tr>
 						<th colspan='2'>Sine Wave (tone) Parameters</th>
  	 					<!--  this button plays the tone and is visible all the time -->
- 	 					<img id="toneStartButton" src = {% static 'images/volume-off.svg' %} alt="Volume is currently off" data-toggle="tooltip" data-placement="top" title="turn on speaker and click to hear sine wave"">
+ 	 					<img id="toneStartButton" src = {{ VolumeOffSVG }} alt="Volume is currently off" data-toggle="tooltip" data-placement="top" title="turn on speaker and click to hear sine wave"">
 					</tr>	
 					<tr>		
 						<td>
@@ -160,8 +160,8 @@
 	<script nonce="{{ request.csp_nonce }}">feather.replace()</script>
 	
 	<!-- Custom JS for this page -->
-	<script src="{% static 'js/autoDemo.js' %}" crossorigin="anonymous"></script>	    
-    <script src="{% static 'js/MusicNotesTrig.js' %}" crossorigin="anonymous"></script>	 
+	<script src="{{ basePage.AutoDemoJS }}" crossorigin="anonymous"></script>	    
+    <script src="{{ MusicNotesTrigJS }}" crossorigin="anonymous"></script>	 
 
 {% endblock %}	
 

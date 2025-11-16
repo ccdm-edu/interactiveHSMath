@@ -7,7 +7,7 @@
 {% endblock %}
     
 {%block head_block %}
-    <link href="{%static 'css/StaticTrig.css' %}" rel="stylesheet">
+    <link href="{{ StaticTrigCSS }}" rel="stylesheet">
 {% endblock %}
     
 {% block body_block %}
@@ -81,7 +81,7 @@
 	<br>
 	<b>Quadrant II:</b>
 	<br>
-	<img src = {% static 'images/StaticTrigQ2.svg' %} alt="Theta angle in 2nd quadrant">
+	<img src = {{ ExplnQ2SVG }} alt="Theta angle in 2nd quadrant">
     This is mind bending.  How can can I think about opposite and adjacent when &#920 doesn't make a right triangle?
     <br>  We can think about its supplementary angle &#966 = (&#960 - &#920) or &#920 = (&#960 - &#966).
 	The new angle &#966 does form a right triangle twisted around the y axis so that the x axis cosine value will always be negative and 
@@ -97,7 +97,7 @@
 	<br>
 	<b>Quadrant III:</b>
 	<br>
-	<img src = {% static 'images/StaticTrigQ3.svg' %} alt="Theta angle in 3rd quadrant">
+	<img src = {{ ExplnQ3SVG }} alt="Theta angle in 3rd quadrant">
     Hmmm, &#920 is now wrapping past 180 degrees, how do I find sin(&#920) and cos(&#920)?  Lets use those trig identities we 
     looked at already and think about a new angle &#966 = (&#920 - &#960) or &#920 = (&#966 + &#960).  
 	From the trig identities above we have <b>sin(&#920)</b> = sin(&#966)cos(&#960) + cos(&#966)sin(&#960) = <b>-sin(&#966)</b>
@@ -108,7 +108,7 @@
 	<br>
 	<b>Quadrant IV:</b>
 	<br>
-	<img src = {% static 'images/StaticTrigQ4.svg' %} alt="Theta angle in 4th quadrant">
+	<img src = {{ ExplnQ4SVG }} alt="Theta angle in 4th quadrant">
     Yes, the strategies that worked in the other quadrants will also shed light on how to calculate sin and cos of &#920 
     in terms of an angle thats less than 90 degrees or &#960/2.
 	Lets think about an angle &#966 = (2*&#960 - &#920) or &#920 = (2*&#960 - &#966).  
@@ -148,8 +148,8 @@
 	</script>
 	
 	<!-- Custom JS for this page -->
-	<script src="{% static 'js/autoDemo.js' %}" crossorigin="anonymous"></script>	    
-	<script src="{% static 'js/StaticTrig.js' %}" crossorigin="anonymous"></script>	 
+	<script src="{{ basePage.AutoDemoJS }}" crossorigin="anonymous"></script>	    
+	<script src="{{ StaticTrigJS }}" crossorigin="anonymous"></script>	 
 
 	<br><br>
 

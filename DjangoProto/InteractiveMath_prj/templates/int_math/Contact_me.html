@@ -7,21 +7,21 @@
 {% endblock %}
 
 {%block head_block %}
-    <link href="{%static 'css/Contact_me.css' %}" rel="stylesheet">
+    <link href="{{ ContactCSS }}" rel="stylesheet">
 {% endblock %}
     
 {% block body_block %}
 	{% if allowContactEmail %}
 	 	<!--  for robot checking, need to send public key, will be hidden -->
 	 	<div id="sendGRPublic">{{ recaptchaPublicKey }}</div>
-		<h1>Contact {{ CompanyName }}</h1><br>
+		<h1>Contact {{ basePage.CompanyName }}</h1><br>
 		<!-- dont save results of robot test so whole site is no cookie -->
 		<div id="centered-form">
 	        <form id="ContactUsForm" action = "{% url 'int_math:ProcessContact_me' %}" method="POST">
 	            {% csrf_token %}
 				{{form.as_p}}
 					
-	            <p id="ContactCompliance"> There is no guarantee of a personal or timely response.  {{ CompanyName }} reserves the right to save all information you provide.
+	            <p id="ContactCompliance"> There is no guarantee of a personal or timely response.  {{ basePage.CompanyName }} reserves the right to save all information you provide.
 	            Contact submissions are protected by Google reCaptcha V3.  By contacting us, you acknowledge you are over 13 years old and agree to the <a href="{% url 'int_math:TermsOfUse' %}">Terms Of Use </a> 
 			    and <a href="{% url 'int_math:Privacy' %}">Privacy Policy</a> as well as Google terms/privacy. <b>Click box to accept and continue</b>.
 	            </p>
@@ -58,5 +58,5 @@
 			// Dont need advanced topic link popup
 			$('a[href="#AdvancedTopics"]').css('display', 'none');
 	</script>
-	<script src="{% static 'js/Contact_me.js' %}" crossorigin="anonymous"></script>	
+	<script src="{{ ContactJS }}" crossorigin="anonymous"></script>	
 {% endblock %}			   

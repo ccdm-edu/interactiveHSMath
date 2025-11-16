@@ -7,12 +7,12 @@
 {% endblock %}
 
 {%block head_block %}
-    <link href="{{ LandPageCS }}" rel="stylesheet">
+    <link href="{{ LandPageCSS }}" rel="stylesheet">
 {% endblock %}
 
 {% block body_block %}
 	<div id="LandingMainBody">
-		<h1><span id=homePageHeader>{{ CompanyName }} </span></h1> 
+		<h1><span id=homePageHeader>{{ basePage.CompanyName }} </span></h1> 
 		<h2>High School Algebra 2, PreCalculus and Physics</h2>
 				
 		<div id="selectNewbieOrExpert">
@@ -104,7 +104,7 @@
 	<!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
 	<script nonce="{{ request.csp_nonce }}">feather.replace()</script>
 
-	<script src="{{ AutoDemoJS }}" crossorigin="anonymous"></script>	
+	<script src="{{ basePage.AutoDemoJS }}" crossorigin="anonymous"></script>	
 	<script src="{{ LandPageJS }}" crossorigin="anonymous"></script>
 	<script nonce="{{ request.csp_nonce }}">
 		//need to not have every css load on every page, when that is fixed, can get rid of this
