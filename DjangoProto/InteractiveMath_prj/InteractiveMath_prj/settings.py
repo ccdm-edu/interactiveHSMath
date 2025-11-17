@@ -111,8 +111,8 @@ CSP_WORKER_SRC = ["'self'", 'blob:']
 CSP_SCRIPT_SRC_ELEM = ["'self'", 'https://www.googletagmanager.com', 'https://www.google.com', 
                       'https://getbootstrap.com', 'https://www.gstatic.com', 'https://ajax.googleapis.com', 
                       'https://cdnjs.cloudflare.com','https://cdn.jsdelivr.net','https://staticcode.interactablemath.org']
-#data: is hamburger menu
-CSP_IMG_SRC = ["'self'", 'https://code.jquery.com', 'data:','https://staticbinary.interactablemath.org']  
+#data: is hamburger menu.  Some public domain images are in the code bucket (ok, bucket is a bit misnamed)
+CSP_IMG_SRC = ["'self'", 'https://code.jquery.com', 'data:','https://staticbinary.interactablemath.org','https://staticcode.interactablemath.org']  
 #not sure why google needs to embed self in iframe, could be gtagmanager, google analytics or gmail
 #need 'data:' for androids running chrome/edge to load pdf iframes
 CSP_FRAME_SRC = ["'self'", 'data:', 'https://www.google.com'] 
