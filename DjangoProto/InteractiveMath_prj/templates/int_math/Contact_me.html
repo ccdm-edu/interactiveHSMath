@@ -13,7 +13,7 @@
 {% block body_block %}
 	{% if allowContactEmail %}
 	 	<!--  for robot checking, need to send public key, will be hidden -->
-	 	<div id="sendGRPublic">{{ recaptchaPublicKey }}</div>
+	 	<div id="sendGRPublic">{{ basePage.recaptchaPublicKey }}</div>
 		<h1>Contact {{ basePage.CompanyName }}</h1><br>
 		<!-- dont save results of robot test so whole site is no cookie -->
 		<div id="centered-form">

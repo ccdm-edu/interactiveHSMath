@@ -248,7 +248,7 @@ class ProcessContactPage(View):
                         'topic': None,
                         'allowContactEmail': True,
                         'form': returnForm,  
-                        'recaptchaPublicKey': settings.RECAP_PUBLIC_KEY,
+                        'basePage': getBaseContextEntry(request),
                         'botTestDone': False,
                         'botTestPassed': False
                         } 

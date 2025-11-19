@@ -35,7 +35,7 @@ $(function() {
 			grecaptcha.ready(function() {
 				// get public recaptcha key from html
 				G_RECAP_SITE_KEY = $('#sendGRPublic').text();
-				
+				console.log('G recap public key is ' + G_RECAP_SITE_KEY)
 				//This is where we send data to the django form and to the server.
 				grecaptcha.execute(G_RECAP_SITE_KEY, {action: 'ContactUsForm'}).then(function(token) {
 					//django will create this ID from the form
