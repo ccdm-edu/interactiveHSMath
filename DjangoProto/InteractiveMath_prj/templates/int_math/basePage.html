@@ -9,7 +9,7 @@
 	    <meta name="description" content="">
 	    <meta name="author" content="Cathy De Meyer">
 	    <!-- yes the icon is hardcoded, easier than adding it to all the django variables for all pages.  Only hurts test proto -->
-	    <link rel="icon" href="{% static 'static_binaries/NonPublicImages/favicon.ico' %}">
+	    <link rel="icon" href="{{ basePage.FavIco }}">
 	    <title>
 	        {{ basePage.CompanyName }} - {% block title_block %}page-tab-header{% endblock %}
 	    </title>

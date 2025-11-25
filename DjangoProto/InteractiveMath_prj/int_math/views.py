@@ -21,6 +21,7 @@ import time
 import uuid
 
 import datetime
+import requests
 
 
 #**********************************************************
@@ -29,53 +30,38 @@ import datetime
 MAX_FREE_RECAPTCHA = 5000  #as of 3/2025, google allows 10k for free/month
 MAX_NUM_EMAIL_PER_MONTH = 100   # I don't want more than this in my inbox, dammit!
 
-def generateSignedURL4BinaryBucket(filename, expiration_seconds=3600):
+
+def generateSignedURL4Bucket(filename, usePubDomainBucket, expiration_seconds=3600):
     """
     Generates a custom Cloudflare Worker-compatible signed URL.
     """
-    SIGN_URL_SECRET_BIN = os.environ.get('SIGN_URL_SECRET_BIN')
-    secret_key = SIGN_URL_SECRET_BIN
-    if not secret_key:
-        raise ValueError("SIGN_URL_SECRET_BIN secret key is not set.")
-
+    sign_url_secret_code = ""
+    cloud_bucket_url = ""
+    if usePubDomainBucket: 
+        sign_url_secret_code = os.environ.get('SIGN_URL_SECRET_CODE')
+        cloud_bucket_url = str(os.environ.get('CLOUD_URL_CODE'))
+        if not sign_url_secret_code:
+            raise ValueError("SIGN_URL_SECRET_CODE env variable secret key is not set.")
+    else:
+        sign_url_secret_code = os.environ.get('SIGN_URL_SECRET_CODE')
+        cloud_bucket_url = str(os.environ.get('CLOUD_URL_BINARY'))
+        if not sign_url_secret_code:
+            raise ValueError("SIGN_URL_SECRET_BIN secret key is not set.")
+            
     # Generate a unique ID, required by your worker's logic
     unique_id = str(uuid.uuid4())
     expires_at = int(time.time()) + expiration_seconds
     
-    signature_data = f"{secret_key}:{filename}:{unique_id}:{expires_at}"
+    signature_data = f"{sign_url_secret_code}:{filename}:{unique_id}:{expires_at}"
     signature = hashlib.sha256(signature_data.encode()).hexdigest()
 
     # Match the URL format your Worker expects
-    CLOUD_BINARY_BUCKET_URL = os.environ.get('CLOUD_URL_BINARY')
-    signed_url = f"https://staticbinary.interactablemath.org/{filename}?expires={expires_at}&sig={signature}&id={unique_id}"
-    print(f' binary url is {signed_url}')
-    return signed_url
-
-
-def generateSignedURL4CodeBucket(filename, expiration_seconds=3600):
-    """
-    Generates a custom Cloudflare Worker-compatible signed URL.
-    """
-    SIGN_URL_SECRET_CODE = os.environ.get('SIGN_URL_SECRET_CODE')
-    secret_key = SIGN_URL_SECRET_CODE
-    if not secret_key:
-        raise ValueError("SIGN_URL_SECRET_CODE env variable secret key is not set.")
-
-    # Generate a unique ID, required by your worker's logic
-    unique_id = str(uuid.uuid4())
-    expires_at = int(time.time()) + expiration_seconds
-    
-    signature_data = f"{secret_key}:{filename}:{unique_id}:{expires_at}"
-    signature = hashlib.sha256(signature_data.encode()).hexdigest()
-
-    # Match the URL format your Worker expects
-    CLOUD_CODE_BUCKET_URL = str(os.environ.get('CLOUD_URL_CODE'))
-    signed_url = CLOUD_CODE_BUCKET_URL + f"/{filename}?expires={expires_at}&sig={signature}&id={unique_id}"
-    print(f' code url is {signed_url}')
+    signed_url = cloud_bucket_url + f"/{filename}?expires={expires_at}&sig={signature}&id={unique_id}"
+    print(f' signed (either code/binary) url is {signed_url}')
     return signed_url
 
   
-def getCodePlusPubDomURL(filename, request):
+def getFullFileURL(filename, usePubDomainBucket, request):
     GET_FROM_CLOUD_str = os.environ.get('USE_CLOUD_BUCKET')
     GET_FROM_CLOUD = False
     if GET_FROM_CLOUD_str.lower() == 'true':
@@ -84,31 +70,38 @@ def getCodePlusPubDomURL(filename, request):
     localURLbase = str(request.build_absolute_uri('/'))
     if (GET_FROM_CLOUD == True):
         #this cannot be tested from localhost due to security concerns with whitelisting localhost
-        urlStaticSrc = generateSignedURL4CodeBucket(filename)
+        urlStaticSrc = generateSignedURL4Bucket(filename)
         print(f'REMOTE code:  url will be {urlStaticSrc}')            
     else:
         # use local copy of file.  This is expected to be used for initial testing only, not for deployment
-        urlStaticSrc = localURLbase + "static/" + filename
+        #only used in localhost and (maybe) dev pythonanywhere account
+        urlStaticSrc = ""
+        if usePubDomainBucket:
+            urlStaticSrc = localURLbase + "static/" + filename
+        else: 
+            urlStaticSrc = localURLbase + "static/static_binaries/" + filename
         print(f'LOCAL code:  url will be {urlStaticSrc}')
     return urlStaticSrc
 
 def getBaseContextEntry(request):
-    configMap = ConfigMapper()
+    #This sets up all the params for the base page used to template html docs
+    configMap = ConfigMapper(request)
     companyName = configMap.readConfigMapper("CompanyName")
     g_analyticsID = configMap.readConfigMapper('GoogleAnalID')
     baseKVcontext = {'CompanyName': companyName, 
                      'GoogleAnalID': g_analyticsID, 
                      'recaptchaPublicKey':settings.RECAP_PUBLIC_KEY,
-                     'IntMathCSS': getCodePlusPubDomURL('css/intMath.css', request),
-                     'JQlocalJS': getCodePlusPubDomURL('js-lib/jquery-371min.js', request),
-                     'JQtouchLibJS': getCodePlusPubDomURL('js-lib/jquery.touch.min.js', request),
-                     'IntMathUtilsJS': getCodePlusPubDomURL('js/IntMathUtils.js', request),
-                     'IntMathJS':getCodePlusPubDomURL('js/IntMath.js', request),
-                     'AutoDemoJS': getCodePlusPubDomURL('js/autoDemo.js', request),
-                     'ClickHereSVG': getCodePlusPubDomURL('images/clickhere_cursor.svg',request),
-                     'StartAutodemoSVG': getCodePlusPubDomURL('images/autoDemoButton.svg',request),
-                     'NoCookieSVG': getCodePlusPubDomURL('images/nocookie_50px.jpeg',request),
-                     'CookieSVG': getCodePlusPubDomURL('images/cookie_50px.jpeg',request),}
+                     'FavIco': getFullFileURL('NonPublicImages/favicon.ico', False, request),
+                     'IntMathCSS': getFullFileURL('css/intMath.css', True, request),
+                     'JQlocalJS': getFullFileURL('js-lib/jquery-371min.js', True, request),
+                     'JQtouchLibJS': getFullFileURL('js-lib/jquery.touch.min.js', True, request),
+                     'IntMathUtilsJS': getFullFileURL('js/IntMathUtils.js', True, request),
+                     'IntMathJS':getFullFileURL('js/IntMath.js', True, request),
+                     'AutoDemoJS': getFullFileURL('js/autoDemo.js', True, request),
+                     'ClickHereSVG': getFullFileURL('images/clickhere_cursor.svg', True, request),
+                     'StartAutodemoSVG': getFullFileURL('images/autoDemoButton.svg', True, request),
+                     'NoCookieSVG': getFullFileURL('images/nocookie_50px.jpeg', True, request),
+                     'CookieSVG': getFullFileURL('images/cookie_50px.jpeg', True, request),}
     
     return baseKVcontext
 
@@ -257,29 +250,70 @@ class ProcessContactPage(View):
         return response                      
 
 #**********************************************************
-# functions used by page views
+# functions used by page views. Will be a singleton that goes either locally or remotely
+# and gathers the configuration file (updates daily as need be).  The configuration file tells
+# where to find files needed to populate the website (both code, images, mp3, mp4 etc)
 #**********************************************************
 class ConfigMapper:
-    keyFileWithMappings = os.path.join(os.path.dirname(__file__), '..', 'static', 'static_binaries', 'Configuration', 'binaryfilenamesforsite-portion1-rev-a.json')
-    configMapDict = dict()
+    _instance = None
+    _last_updated = None
+    _configMapDict = dict()
+    _getFromCloud = False
+
+    # we only want one instance of ConfigMapper, we update the mapper only if "stale"
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            # Create the new instance if it doesn't exist
+            cls._instance = super().__new__(cls)
+            # this will not change once deployed
+            getFromCloud_str = os.environ.get('USE_CLOUD_BUCKET')
+            if getFromCloud_str.lower() == 'true':
+                self._getFromCloud = True
+        # Always return the stored instance
+        return cls._instance
     
-    def __init__(self):
-        if len(self.configMapDict) == 0:
+    def loadConfigMapper(self, request):
+        fileLoc = getFullFileURL('Configuration/binaryfilenamesforsite-portion1-rev-a.json', False, request)
+        if self._getFromCloud:
             try:
-                fileObj = open(self.keyFileWithMappings, 'rt')
-                self.configMapDict = json.load(fileObj)
+                response = requests.get(fileLoc)
+                # Check if the request was successful (status code 200)
+                if response.status_code == 200:
+                    file_content = response.text  
+                    self.configMapDict = json.load(file_content)
+                    print(f'file content test is {file_content}')
+                else:
+                    print(f"Failed to retrieve file. Status code: {response.status_code}")
+            except requests.exceptions.RequestException as e:
+                print(f"An error occurred: {e}")
+        else:
+            # we are on localhost or in dev environment under test mode.  Not for deployment
+            fileLoc = os.path.join(os.path.dirname(__file__), '..', 'static', 'static_binaries', 'Configuration', 'binaryfilenamesforsite-portion1-rev-a.json')
+            try:
+                fileObj = open(fileLoc, 'rt')
+                self._configMapDict = json.load(fileObj)
+                fileObj.close()
             except FileNotFoundError:
-                print(f'SW ERROR:  File {self.keyFileWithMappings} was not found')
+                print(f'SW ERROR:  File {fileLoc} was not found')
             except Exception as ex:
                 template = "An exception of type {0} occurred. Arguments:\n{1!r}"
                 emsg = template.format(type(ex).__name__, ex.args)
-                print(f'SW ERROR:  {emsg} in opening file {self.keyFileWithMappings}')
-            fileObj.close()
+                print(f'SW ERROR:  {emsg} in opening file {fileLoc}')
+            
+            
+    def __init__(self, request):
+        if len(self._configMapDict) == 0:
+            self.loadConfigMapper(request)
+        elif self._last_updated and (datetime.datetime.now() - self._last_updated) < datetime.timedelta(days=1):
+            #if data is obsolete, need to reload it, really shouldn't change but could
+            print('Config mapper is old, reading file anew')
+            self.loadConfigMapper(request)
+    
             
     def readConfigMapper(self, genericFileName):
         actualFile = "none"
-        if len(self.configMapDict) > 0:
-            actualFile = self.configMapDict.get(genericFileName)
+        if len(self._configMapDict) > 0:
+            actualFile = self._configMapDict.get(genericFileName)
             #print(f' we just mapped {genericFileName} to {actualFile}')
         else:
             print(f'SW ERROR:  file mapper not found or error opening')
@@ -298,7 +332,7 @@ class IndexView(View):
         if 'safari' in user_agent.browser.family.lower(): 
             usingSafari = True;
         isMobile = user_agent.is_mobile;
-        configMap = ConfigMapper()
+        configMap = ConfigMapper(request)
         realFileLandLogo = configMap.readConfigMapper("LandingPageLogo")
 
         #check if there is an upcoming upgrade planned to site and notify users
@@ -357,9 +391,9 @@ class IndexView(View):
                         'upgradeTime': upgradeTime,
                         'upgradeNow': upgradingNow,
                         #This is signed URL to existing html files to go to Static buckets
-                        'LandPageCSS': getCodePlusPubDomURL('css/LandingPage.css', request),
-                        'landingPageLogo': generateSignedURL4BinaryBucket(realFileLandLogo),
-                        'LandPageJS': getCodePlusPubDomURL('js/LandingPage.js', request),
+                        'LandPageCSS': getFullFileURL('css/LandingPage.css', True, request),
+                        'landingPageLogo': getFullFileURL(realFileLandLogo, False, request),
+                        'LandPageJS': getFullFileURL('js/LandingPage.js', True, request),
                         }       
         response = render(request, 'int_math/index.html', context=context_dict)       
         return response
@@ -370,22 +404,23 @@ class IndexView(View):
 class MusicTrigConceptIntroView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        trigMap = ConfigMapper()
+        trigMap = ConfigMapper(request)
         realFileIntroVideo = trigMap.readConfigMapper("IntroToFrequencyVideo_html")
         realFileCartoonGIF = trigMap.readConfigMapper("CartoonIntroGIF")
         realFileCartoonTrig = trigMap.readConfigMapper("CartoonIntroTrig")
+        print(f'file intro video {realFileIntroVideo} and URL is {getFullFileURL(realFileIntroVideo, False, request)}')
         realFileIntroAudio = trigMap.readConfigMapper("TrigReviewIntroAudio")
         artistCredit = trigMap.readConfigMapper('ArtistCredits')
         context_dict = {'basePage': getBaseContextEntry(request),
                         'page_tab_header': 'IntroConcepts',
                         'topic': Topic.objects.get(name="TrigFunct"),
-                        'introToFreqVideo': static(realFileIntroVideo),
-                        'cartoonIntroGIF': static(realFileCartoonGIF),
-                        'cartoonIntroTrig': static(realFileCartoonTrig),
-                        'trigReviewIntroAudio': static(realFileIntroAudio),
+                        'introToFreqVideo': getFullFileURL(realFileIntroVideo, False, request),
+                        'cartoonIntroGIF': getFullFileURL(realFileCartoonGIF, False, request),
+                        'cartoonIntroTrig': getFullFileURL(realFileCartoonTrig, False, request),
+                        'trigReviewIntroAudio': getFullFileURL(realFileIntroAudio, False, request),
                         "artistCredit": artistCredit[0],
-                        'TrigIntroMusicCSS': getCodePlusPubDomURL('css/IntroTrigMusicConcepts.css', request),
-                        'TrigIntroMusicJS': getCodePlusPubDomURL('js/IntroTrigMusicConcepts.js', request),
+                        'TrigIntroMusicCSS': getFullFileURL('css/IntroTrigMusicConcepts.css', True, request),
+                        'TrigIntroMusicJS': getFullFileURL('js/IntroTrigMusicConcepts.js', True, request),
                         }
         response = render(request, 'int_math/IntroTrigMusicConcepts.html', context=context_dict)
         return response
@@ -397,11 +432,11 @@ class MusicTrigView(View):
                         'page_tab_header': 'MusicalTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
-                        'MusicSineIntroCSS': getCodePlusPubDomURL('css/Pg2MusicSineIntro.css',request),
-                        'MusicSineIntroJS': getCodePlusPubDomURL('js/Pg2MusicSineIntro.js',request),
-                        'ColorfulClefSVG': getCodePlusPubDomURL('images/Prismatic-Clef-Hearts-2.svg',request),
-                        'WholeNoteSVG': getCodePlusPubDomURL('images/WholeNote.svg', request),
-                        'VolumeSVG': getCodePlusPubDomURL('images/volume.svg', request),
+                        'MusicSineIntroCSS': getFullFileURL('css/Pg2MusicSineIntro.css', True, request),
+                        'MusicSineIntroJS': getFullFileURL('js/Pg2MusicSineIntro.js', True, request),
+                        'ColorfulClefSVG': getFullFileURL('images/Prismatic-Clef-Hearts-2.svg', True, request),
+                        'WholeNoteSVG': getFullFileURL('images/WholeNote.svg', True, request),
+                        'VolumeSVG': getFullFileURL('images/volume.svg', True, request),
                         }
         response = render(request, 'int_math/Pg2MusicSineIntro.html', context=context_dict)
         return response
@@ -413,11 +448,11 @@ class StaticTrigView(View):
                         'page_tab_header': 'StaticTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
-                        'StaticTrigCSS': getCodePlusPubDomURL('css/StaticTrig.css',request),
-                        'StaticTrigJS': getCodePlusPubDomURL('js/StaticTrig.js',request),
-                        'ExplnQ2SVG': getCodePlusPubDomURL('images/StaticTrigQ2.svg',request),
-                        'ExplnQ3SVG': getCodePlusPubDomURL('images/StaticTrigQ3.svg',request),
-                        'ExplnQ4SVG': getCodePlusPubDomURL('images/StaticTrigQ4.svg',request),
+                        'StaticTrigCSS': getFullFileURL('css/StaticTrig.css', True, request),
+                        'StaticTrigJS': getFullFileURL('js/StaticTrig.js', True, request),
+                        'ExplnQ2SVG': getFullFileURL('images/StaticTrigQ2.svg', True, request),
+                        'ExplnQ3SVG': getFullFileURL('images/StaticTrigQ3.svg', True, request),
+                        'ExplnQ4SVG': getFullFileURL('images/StaticTrigQ4.svg', True, request),
                         }
         response = render(request, 'int_math/StaticTrig.html', context=context_dict)
         return response
@@ -429,8 +464,8 @@ class DynamicTrig1View(View):
                         'page_tab_header': 'DynamicTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
-                        'DynTrig1CSS': getCodePlusPubDomURL('css/DynamicTrig1.css', request),
-                        'DynTrig1JS': getCodePlusPubDomURL('js/DynamicTrig1.js', request),
+                        'DynTrig1CSS': getFullFileURL('css/DynamicTrig1.css', True, request),
+                        'DynTrig1JS': getFullFileURL('js/DynamicTrig1.js', True, request),
                         }
         response = render(request, 'int_math/DynamicTrig1.html', context=context_dict)
         return response
@@ -439,15 +474,15 @@ class DynamicTrig1View(View):
 class DynamicTrig2View(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        textMap = ConfigMapper()
+        textMap = ConfigMapper(request)
         artistCredit = textMap.readConfigMapper('ArtistCredits')
         context_dict = {
                         'page_tab_header': 'DynamicTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
                         'artistCredit': artistCredit[3],
-                        'DynTrig2CSS': getCodePlusPubDomURL('css/DynamicTrig2.css', request),
-                        'DynTrig2JS': getCodePlusPubDomURL('js/DynamicTrig2.js', request),
+                        'DynTrig2CSS': getFullFileURL('css/DynamicTrig2.css', True, request),
+                        'DynTrig2JS': getFullFileURL('js/DynamicTrig2.js', True, request),
                         }
         response = render(request, 'int_math/DynamicTrig2.html', context=context_dict)
         return response
@@ -455,16 +490,16 @@ class DynamicTrig2View(View):
 class ToneTrigView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        textMap = ConfigMapper()
+        textMap = ConfigMapper(request)
         artistCredit = textMap.readConfigMapper('ArtistCredits')
         context_dict = {
                         'page_tab_header': 'ToneTrig',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
                         'artistCredit': artistCredit[3],
-                        'ToneTrigCSS': getCodePlusPubDomURL('css/ToneTrig.css',request),
-                        'ToneTrigJS': getCodePlusPubDomURL('js/ToneTrig.js',request),
-                        'VolumeOffSVG': getCodePlusPubDomURL('images/volume-off.svg',request)
+                        'ToneTrigCSS': getFullFileURL('css/ToneTrig.css', True, request),
+                        'ToneTrigJS': getFullFileURL('js/ToneTrig.js', True, request),
+                        'VolumeOffSVG': getFullFileURL('images/volume-off.svg', True, request)
                         }
         response = render(request, 'int_math/ToneTrig.html', context=context_dict)
         return response
@@ -473,16 +508,16 @@ class ToneTrigView(View):
 class MusicNotesTrigView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        textMap = ConfigMapper()
+        textMap = ConfigMapper(request)
         artistCredit = textMap.readConfigMapper('ArtistCredits')
         context_dict = {
                         'page_tab_header': 'MusicNotes',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
                         'artistCredit': artistCredit[2],
-                        'MusicNotesTrigCSS': getCodePlusPubDomURL('css/MusicNotesTrig.css', request),
-                        'MusicNotesTrigJS': getCodePlusPubDomURL('js/MusicNotesTrig.js', request),
-                        'VolumeOffSVG': getCodePlusPubDomURL('images/volume-off.svg',request),
+                        'MusicNotesTrigCSS': getFullFileURL('css/MusicNotesTrig.css', True, request),
+                        'MusicNotesTrigJS': getFullFileURL('js/MusicNotesTrig.js', True, request),
+                        'VolumeOffSVG': getFullFileURL('images/volume-off.svg', True, request),
                         }
         response = render(request, 'int_math/MusicNotesTrig.html', context=context_dict)
         return response
@@ -491,7 +526,7 @@ class MusicNotesTrigView(View):
 class TrigSummaryView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        trigMap = ConfigMapper()
+        trigMap = ConfigMapper(request)
         actualFilename = trigMap.readConfigMapper("MusicSummaryVideo")
         realFileCartoonTrig = trigMap.readConfigMapper("CartoonIntroTrig")
         artistCredit = trigMap.readConfigMapper('ArtistCredits')
@@ -502,8 +537,8 @@ class TrigSummaryView(View):
                         'musicSummaryVideo': static(actualFilename),
                         'cartoonIntroTrig': static(realFileCartoonTrig),
                         'artistCredit': artistCredit[1],
-                        'TrigSummaryCss': getCodePlusPubDomURL('css/MusicSineSummary.css',request),
-                        'TrigSummaryJS': getCodePlusPubDomURL('js/MusicSineSummary.js', request),
+                        'TrigSummaryCss': getFullFileURL('css/MusicSineSummary.css', True, request),
+                        'TrigSummaryJS': getFullFileURL('js/MusicSineSummary.js', True, request),
                         }
         response = render(request, 'int_math/MusicSineSummary.html', context=context_dict)
         return response
@@ -558,20 +593,21 @@ class AckView(View):
         A_Close = "</a>"
         Img1 = "<img src='"
         Img2 = "'/>"
-        trigMap = ConfigMapper()
+        trigMap = ConfigMapper(request)
         ty_list = trigMap.readConfigMapper("Thankyou_list")
         #go through the list of contributors and "write" the code out to page
         contributorString = ""
         for contributor in ty_list:
-            contributorString += OPENER + A_Begin + contributor["url"] + A_End + Img1 + contributor["logo"] + Img2 + A_Close
+            contributorString += OPENER + A_Begin + contributor["url"] + A_End + Img1 + getFullFileURL(contributor["logo"], False, request) + Img2 + A_Close
             contributorString += A_Begin + contributor["url"] + A_End + H2_1 + contributor["line1"] + H2_2 + A_Close
             contributorString += A_Begin + contributor["url"] + A_End + H3_1 + contributor["line2"] + H3_2 + A_Close + CLOSER
+            print(f'base logo is {contributor["logo"]}')
         context_dict = {
                         'page_tab_header': 'Thank You!',
                         'topic': Topic.objects.get(name="Thanks"),
                         'basePage': getBaseContextEntry(request),
                         'Contributors': contributorString,
-                        'AckCSS':getCodePlusPubDomURL('css/Acknowledgements.css',request),
+                        'AckCSS':getFullFileURL('css/Acknowledgements.css', True, request),
                         }
         response = render(request, 'int_math/acknowledgements.html', context=context_dict)
         return response        
@@ -602,7 +638,7 @@ class TrigIDTuneView(View):
 class Legal_TermsOfUse(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        configMap = ConfigMapper()
+        configMap = ConfigMapper(request)
         actualFilename = configMap.readConfigMapper("Legal_TermsCond")
         context_dict = {
                         'page_tab_header': 'Terms Of Use',
@@ -616,7 +652,7 @@ class Legal_TermsOfUse(View):
 class Legal_Privacy(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        configMap = ConfigMapper()
+        configMap = ConfigMapper(request)
         actualFilename = configMap.readConfigMapper("Legal_Privacy")
         context_dict = {
                         'page_tab_header': 'Privacy Policy',
@@ -713,8 +749,8 @@ class ContactMe(View):
                         'page_tab_header': 'Contact Us',
                         'topic': None,
                         'allowContactEmail': allowContact,
-                        'ContactCSS': getCodePlusPubDomURL('css/Contact_me.css',request),
-                        'ContactJS': getCodePlusPubDomURL('js/Contact_me.js', request),
+                        'ContactCSS': getFullFileURL('css/Contact_me.css', True, request),
+                        'ContactJS': getFullFileURL('js/Contact_me.js', True, request),
                         'form': contactForm(),
                         'basePage': getBaseContextEntry(request),
                         'botTestDone': botTestDone,
