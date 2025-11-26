@@ -70,7 +70,7 @@ def getFullFileURL(filename, usePubDomainBucket, request):
     localURLbase = str(request.build_absolute_uri('/'))
     if (GET_FROM_CLOUD == True):
         #this cannot be tested from localhost due to security concerns with whitelisting localhost
-        urlStaticSrc = generateSignedURL4Bucket(filename)
+        urlStaticSrc = generateSignedURL4Bucket(filename, usePubDomainBucket)
         print(f'REMOTE code:  url will be {urlStaticSrc}')            
     else:
         # use local copy of file.  This is expected to be used for initial testing only, not for deployment
@@ -265,14 +265,14 @@ class ConfigMapper:
         if cls._instance is None:
             # Create the new instance if it doesn't exist
             cls._instance = super().__new__(cls)
-            # this will not change once deployed
-            getFromCloud_str = os.environ.get('USE_CLOUD_BUCKET')
-            if getFromCloud_str.lower() == 'true':
-                self._getFromCloud = True
         # Always return the stored instance
         return cls._instance
     
     def loadConfigMapper(self, request):
+        # this will not change once deployed
+        getFromCloud_str = os.environ.get('USE_CLOUD_BUCKET')
+        if getFromCloud_str.lower() == 'true':
+            self._getFromCloud = True
         fileLoc = getFullFileURL('Configuration/binaryfilenamesforsite-portion1-rev-a.json', False, request)
         if self._getFromCloud:
             try:
