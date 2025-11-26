@@ -276,7 +276,20 @@ class ConfigMapper:
         fileLoc = getFullFileURL('Configuration/binaryfilenamesforsite-portion1-rev-a.json', False, request)
         if self._getFromCloud:
             try:
-                response = requests.get(fileLoc)
+                # need to add all these headers to keep request from "looking like a bot" and getting stopped at WAF
+                # of cloud file bucket service
+                # Django provides a simple dictionary-like access to headers
+                headers_to_copy = {
+                    'User-Agent': request.headers.get('User-Agent'),
+                    'Accept': request.headers.get('Accept'),
+                    'Accept-Language': request.headers.get('Accept-Language'),
+                    'Referer': request.headers.get('Referer'),
+                    'Cookie': request.headers.get('Cookie'),
+                }
+                # Remove any None values if headers were missing
+                headers_to_copy = {k: v for k, v in headers_to_copy.items() if v is not None}
+                
+                response = requests.get(fileLoc,headers=headers_to_copy)
                 # Check if the request was successful (status code 200)
                 if response.status_code == 200:
                     file_content = response.text  
