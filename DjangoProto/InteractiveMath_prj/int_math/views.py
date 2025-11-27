@@ -288,7 +288,7 @@ class ConfigMapper:
                 }
                 # Remove any None values if headers were missing
                 headers_to_copy = {k: v for k, v in headers_to_copy.items() if v is not None}
-                
+                print(f'headers to copy is {headers_to_copy}')
                 response = requests.get(fileLoc,headers=headers_to_copy)
                 # Check if the request was successful (status code 200)
                 if response.status_code == 200:
@@ -298,7 +298,21 @@ class ConfigMapper:
                 else:
                     print(f"Failed to retrieve file. Status code: {response.status_code}")
             except requests.exceptions.RequestException as e:
-                print(f"An error occurred: {e}")
+                #it could be that your server is blocking outbound accesses (e.g. no cost pythonanywhere account)
+                #so must look for config file locally (hand copy the file to this location, ughh)
+                #should not happen in deployment
+                fileLoc = os.path.join(os.path.dirname(__file__), '..', 'static', 'server_block_cloud_access','Configuration', 'binaryfilenamesforsite-portion1-rev-a.json')
+                try:
+                    fileObj = open(fileLoc, 'rt')
+                    self._configMapDict = json.load(fileObj)
+                    fileObj.close()
+                except FileNotFoundError:
+                    print(f'SW ERROR:  File {fileLoc} was not found')
+                except Exception as ex:
+                    template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+                    emsg = template.format(type(ex).__name__, ex.args)
+                    print(f'SW ERROR:  {emsg} in opening file {fileLoc}')                   
+                
         else:
             # we are on localhost or in dev environment under test mode.  Not for deployment
             fileLoc = os.path.join(os.path.dirname(__file__), '..', 'static', 'static_binaries', 'Configuration', 'binaryfilenamesforsite-portion1-rev-a.json')
