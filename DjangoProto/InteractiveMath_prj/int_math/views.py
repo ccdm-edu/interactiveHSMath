@@ -43,7 +43,7 @@ def generateSignedURL4Bucket(filename, usePubDomainBucket, expiration_seconds=36
         if not sign_url_secret_code:
             raise ValueError("SIGN_URL_SECRET_CODE env variable secret key is not set.")
     else:
-        sign_url_secret_code = os.environ.get('SIGN_URL_SECRET_CODE')
+        sign_url_secret_code = os.environ.get('SIGN_URL_SECRET_BIN')
         cloud_bucket_url = str(os.environ.get('CLOUD_URL_BINARY'))
         if not sign_url_secret_code:
             raise ValueError("SIGN_URL_SECRET_BIN secret key is not set.")
@@ -301,6 +301,7 @@ class ConfigMapper:
                 #it could be that your server is blocking outbound accesses (e.g. no cost pythonanywhere account)
                 #so must look for config file locally (hand copy the file to this location, ughh)
                 #should not happen in deployment
+                print(f'Failed attempt to open config file from cloud, will attempt to find local copy, error from first attempt was {e}')
                 fileLoc = os.path.join(os.path.dirname(__file__), '..', 'static', 'server_block_cloud_access','Configuration', 'binaryfilenamesforsite-portion1-rev-a.json')
                 try:
                     fileObj = open(fileLoc, 'rt')
