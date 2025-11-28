@@ -116,6 +116,7 @@ CSP_IMG_SRC = ["'self'", 'https://code.jquery.com', 'data:','https://staticbinar
 #not sure why google needs to embed self in iframe, could be gtagmanager, google analytics or gmail
 #need 'data:' for androids running chrome/edge to load pdf iframes
 CSP_FRAME_SRC = ["'self'", 'data:', 'https://www.google.com'] 
+CSP_MEDIA_SRC = ("'self'", "https://staticbinary.interactablemath.org")
 CSP_FRAME_ANCESTORS = ["'self'", 'https://www.google.com'] 
 CSP_CONNECT_SRC = ["'self'", 'https://www.google.com','https://getbootstrap.com',
                    'https://cdnjs.cloudflare.com']  #needed for recaptcha and to remove annoying .map errors
