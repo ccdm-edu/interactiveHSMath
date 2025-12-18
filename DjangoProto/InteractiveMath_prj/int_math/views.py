@@ -61,14 +61,14 @@ def generateSignedURL4Bucket(filename, usePubDomainBucket, expiration_seconds=36
     return signed_url
 
   
-def getFullFileURL(filename, usePubDomainBucket, request):
+def getFullFileURL(filename, usePubDomainBucket, request, tempVideoOverride = False):
     GET_FROM_CLOUD_str = os.environ.get('USE_CLOUD_BUCKET')
     GET_FROM_CLOUD = False
     if GET_FROM_CLOUD_str.lower() == 'true':
         GET_FROM_CLOUD = True
     urlStaticSrc = ""
     localURLbase = str(request.build_absolute_uri('/'))
-    if (GET_FROM_CLOUD == True):
+    if ( (GET_FROM_CLOUD == True) and ( not tempVideoOverride) ):
         #this cannot be tested from localhost due to security concerns with whitelisting localhost
         urlStaticSrc = generateSignedURL4Bucket(filename, usePubDomainBucket)
         print(f'REMOTE code:  url will be {urlStaticSrc}')            
@@ -80,7 +80,10 @@ def getFullFileURL(filename, usePubDomainBucket, request):
             urlStaticSrc = localURLbase + "static/" + filename
         else: 
             urlStaticSrc = localURLbase + "static/static_binaries/" + filename
-        print(f'LOCAL code:  url will be {urlStaticSrc}')
+        if (tempVideoOverride):
+            print(f'VIDEO link (temporary) URL will be {urlStaticSrc}')
+        else:
+            print(f'LOCAL code:  url will be {urlStaticSrc}')
     return urlStaticSrc
 
 def getBaseContextEntry(request):
@@ -100,8 +103,10 @@ def getBaseContextEntry(request):
                      'AutoDemoJS': getFullFileURL('js/autoDemo.js', True, request),
                      'ClickHereSVG': getFullFileURL('images/clickhere_cursor.svg', True, request),
                      'StartAutodemoSVG': getFullFileURL('images/autoDemoButton.svg', True, request),
-                     'NoCookieSVG': getFullFileURL('images/nocookie_50px.jpeg', True, request),
-                     'CookieSVG': getFullFileURL('images/cookie_50px.jpeg', True, request),}
+                   #  'NoCookieSVG': getFullFileURL('images/nocookie_50px.jpeg', True, request),
+                    # 'CookieSVG': getFullFileURL('images/cookie_50px.jpeg', True, request),}
+                     'NoCookieSVG': getFullFileURL('images/nocookie.svg', True, request),
+                     'CookieSVG': getFullFileURL('images/cookie.svg', True, request),}
     
     return baseKVcontext
 
@@ -442,7 +447,7 @@ class MusicTrigConceptIntroView(View):
         context_dict = {'basePage': getBaseContextEntry(request),
                         'page_tab_header': 'IntroConcepts',
                         'topic': Topic.objects.get(name="TrigFunct"),
-                        'introToFreqVideo': getFullFileURL(realFileIntroVideo, False, request),
+                        'introToFreqVideo': getFullFileURL(realFileIntroVideo, False, request, True),
                         'cartoonIntroGIF': getFullFileURL(realFileCartoonGIF, False, request),
                         'cartoonIntroTrig': getFullFileURL(realFileCartoonTrig, False, request),
                         'trigReviewIntroAudio': getFullFileURL(realFileIntroAudio, False, request),
