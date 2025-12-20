@@ -58,14 +58,28 @@ div.home_expln {
 /*****************Auto demo controls on****************************/
 /* this image comes from basePage and is place before index.html so need absolute positioning */
 #startAutoDemo{
-	top: 150px;
+
+    /* Animation Logic */
+    display: block !important;
+    visibility: visible !important;
+    pointer-events: auto;
+    
+    /* Use the shorthand to prevent override issues */
+    animation: expln_fade_in 2s forwards !important;
+    animation-delay: 2s !important;
+    
+    
+	/* old stuff top: 150px;
 	visibility: visible;	
 	display: block;
 	opacity: 0.0;
-    animation-name: expln_fade_in;
+	pointer-events: auto;
+	animation: expln_fade_in 2s forwards;
+    animation-delay: 2s; */
+    /*animation-name: expln_fade_in;
 	animation-duration: 2s;
 	animation-delay: 2s;
-	animation-fill-mode: forwards;
+	animation-fill-mode: forwards; */
 }
 #autoDemoCtls{
 	top: 170px;

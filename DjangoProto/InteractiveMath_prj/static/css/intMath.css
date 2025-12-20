@@ -203,11 +203,15 @@ div#tooltip:hover .tooltiptext {
 #startAutoDemo{
 	position: absolute;
 	height: 100px;
-	left: 0px;
-	top: 10px;
-	display: none;
-	z-index: 50;  /* needs to be max value */
+	width: 100px;
+	left: 0px;  
+	top: 10px;   
+	/*display: none; */
+	opacity: 0;
+	z-index: 50;  /* needs to be max value. */
+	pointer-events: none; /* Can't click it while invisible */
 }
+
 /* in newbie mode, we draw attention to startAutoDemo */
 #startAutoDemo.newbieMode {
     margin-left: auto;

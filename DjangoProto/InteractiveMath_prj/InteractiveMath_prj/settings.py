@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
     'int_math',
+    'inline_static',
 ]
 
 MIDDLEWARE = [
@@ -106,12 +107,16 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 #content security policy --using this till django upgrade https://django-csp.readthedocs.io/en/3.8/configuration.html
 # also see https://django-csp.readthedocs.io/en/3.8/nonce.html
 CSP_REPORT_ONLY = False  #True only in initial debug to get policy working with site, default is false
-CSP_STYLE_SRC = ["'self'", 'https://getbootstrap.com', 'https://code.jquery.com','https://staticcode.interactablemath.org']
+#moved into spliting up CSP_STYLE_SRC so that a more lenient CSP_STYLE_SRC_ATTR allows inlining SVG which often contains inline style
+#slight comprimise on security
+CSP_STYLE_SRC_ELEM = ["'self'", 'https://getbootstrap.com', 'https://code.jquery.com','https://staticcode.interactablemath.org']
+CSP_STYLE_SRC_ATTR = ["'self'", "'unsafe-inline'"]
 CSP_WORKER_SRC = ["'self'", 'blob:']
 CSP_SCRIPT_SRC_ELEM = ["'self'", 'https://www.googletagmanager.com', 'https://www.google.com', 
                       'https://getbootstrap.com', 'https://www.gstatic.com', 'https://ajax.googleapis.com', 
                       'https://cdnjs.cloudflare.com','https://cdn.jsdelivr.net','https://staticcode.interactablemath.org']
-#data: is hamburger menu.  Some public domain images are in the code bucket (ok, bucket is a bit misnamed)
+#data: is hamburger menu--this is considered a bit dangerous from a security pt of view.  
+#Some public domain images are in the code bucket (ok, bucket is a bit misnamed)
 CSP_IMG_SRC = ["'self'", 'https://code.jquery.com', 'data:','https://staticbinary.interactablemath.org','https://staticcode.interactablemath.org']  
 #not sure why google needs to embed self in iframe, could be gtagmanager, google analytics or gmail
 #need 'data:' for androids running chrome/edge to load pdf iframes

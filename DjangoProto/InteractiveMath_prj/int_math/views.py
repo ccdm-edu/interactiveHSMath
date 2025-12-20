@@ -101,12 +101,12 @@ def getBaseContextEntry(request):
                      'IntMathUtilsJS': getFullFileURL('js/IntMathUtils.js', True, request),
                      'IntMathJS':getFullFileURL('js/IntMath.js', True, request),
                      'AutoDemoJS': getFullFileURL('js/autoDemo.js', True, request),
-                     'ClickHereSVG': getFullFileURL('images/clickhere_cursor.svg', True, request),
-                     'StartAutodemoSVG': getFullFileURL('images/autoDemoButton.svg', True, request),
+                     'ClickHereSVG': getFullFileURL('svg/clickhere_cursor.svg', True, request),
+                     'StartAutodemoSVG': getFullFileURL('svg/autoDemoButton.svg', True, request),
                    #  'NoCookieSVG': getFullFileURL('images/nocookie_50px.jpeg', True, request),
                     # 'CookieSVG': getFullFileURL('images/cookie_50px.jpeg', True, request),}
-                     'NoCookieSVG': getFullFileURL('images/nocookie.svg', True, request),
-                     'CookieSVG': getFullFileURL('images/cookie.svg', True, request),}
+                     'NoCookieSVG': getFullFileURL('svg/nocookie.svg', True, request),
+                     'CookieSVG': getFullFileURL('svg/cookie.svg', True, request),}
     
     return baseKVcontext
 
@@ -467,9 +467,9 @@ class MusicTrigView(View):
                         'basePage': getBaseContextEntry(request),
                         'MusicSineIntroCSS': getFullFileURL('css/Pg2MusicSineIntro.css', True, request),
                         'MusicSineIntroJS': getFullFileURL('js/Pg2MusicSineIntro.js', True, request),
-                        'ColorfulClefSVG': getFullFileURL('images/Prismatic-Clef-Hearts-2.svg', True, request),
-                        'WholeNoteSVG': getFullFileURL('images/WholeNote.svg', True, request),
-                        'VolumeSVG': getFullFileURL('images/volume.svg', True, request),
+                        'ColorfulClefSVG': getFullFileURL('svg/Prismatic-Clef-Hearts-2.svg', True, request),
+                        'WholeNoteSVG': getFullFileURL('svg/WholeNote.svg', True, request),
+                        'VolumeSVG': getFullFileURL('svg/volume.svg', True, request),
                         }
         response = render(request, 'int_math/Pg2MusicSineIntro.html', context=context_dict)
         return response
@@ -483,9 +483,9 @@ class StaticTrigView(View):
                         'basePage': getBaseContextEntry(request),
                         'StaticTrigCSS': getFullFileURL('css/StaticTrig.css', True, request),
                         'StaticTrigJS': getFullFileURL('js/StaticTrig.js', True, request),
-                        'ExplnQ2SVG': getFullFileURL('images/StaticTrigQ2.svg', True, request),
-                        'ExplnQ3SVG': getFullFileURL('images/StaticTrigQ3.svg', True, request),
-                        'ExplnQ4SVG': getFullFileURL('images/StaticTrigQ4.svg', True, request),
+                        'ExplnQ2SVG': getFullFileURL('svg/StaticTrigQ2.svg', True, request),
+                        'ExplnQ3SVG': getFullFileURL('svg/StaticTrigQ3.svg', True, request),
+                        'ExplnQ4SVG': getFullFileURL('svg/StaticTrigQ4.svg', True, request),
                         }
         response = render(request, 'int_math/StaticTrig.html', context=context_dict)
         return response
@@ -532,7 +532,7 @@ class ToneTrigView(View):
                         'artistCredit': artistCredit[3],
                         'ToneTrigCSS': getFullFileURL('css/ToneTrig.css', True, request),
                         'ToneTrigJS': getFullFileURL('js/ToneTrig.js', True, request),
-                        'VolumeOffSVG': getFullFileURL('images/volume-off.svg', True, request)
+                        'VolumeOffSVG': getFullFileURL('svg/volume-off.svg', True, request)
                         }
         response = render(request, 'int_math/ToneTrig.html', context=context_dict)
         return response
@@ -550,7 +550,7 @@ class MusicNotesTrigView(View):
                         'artistCredit': artistCredit[2],
                         'MusicNotesTrigCSS': getFullFileURL('css/MusicNotesTrig.css', True, request),
                         'MusicNotesTrigJS': getFullFileURL('js/MusicNotesTrig.js', True, request),
-                        'VolumeOffSVG': getFullFileURL('images/volume-off.svg', True, request),
+                        'VolumeOffSVG': getFullFileURL('svg/volume-off.svg', True, request),
                         }
         response = render(request, 'int_math/MusicNotesTrig.html', context=context_dict)
         return response

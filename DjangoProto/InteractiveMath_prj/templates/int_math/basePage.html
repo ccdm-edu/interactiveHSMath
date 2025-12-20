@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% load static %} <!--  another difference from django 2 to 3.1 -->
 {% load intHSmath_template_tags %} <!-- to get sidebar subtopics -->
+{% load inline_static_tags %} <!--  inline small css, js and svg files to reduce hits on server -->
 
 <html lang="en">
     <head>
@@ -106,8 +107,14 @@
 		                	<div id="CookieChoice">
 		                		<br><button type="button" id='yesCookies'>Yes</button><button type="button" id='noCookies'>No</button>
 		                	</div>
-		                	<img class = "cookieIndicator" id="cookieIndicatorNo" src = {{ basePage.NoCookieSVG }} alt="No Cookies" data-toggle="tooltip" data-placement="top" title="no cookies"">
-		                	<img class = "cookieIndicator" id="cookieIndicatorYes" src = {{ basePage.CookieSVG }} alt="Cookies allowed" data-toggle="tooltip" data-placement="top" title="cookies allowed"">
+		                	{% inline_staticfile 'svg/cookie.svg' as yes_cookie %}
+		                    {% inline_staticfile 'svg/nocookie.svg' as no_cookie %}
+		                	<div class = "cookieIndicator" id="cookieIndicatorNo" title="no cookies">
+		                	   {{ no_cookie|safe }}  <!-- safe keeps svg from being treated as text -->
+                            </div>
+		                	<div class = "cookieIndicator" id="cookieIndicatorYes" title="cookies allowed">
+		                	   {{ yes_cookie|safe }}
+							</div>
 		                </div>
                     </div>
                 </nav>
@@ -150,8 +157,11 @@
 					</div>
 					<!-- /.modal -->
 					
-					<div id="autoDemo">
-						<img id="startAutoDemo" src="{{ basePage.StartAutodemoSVG }}" alt = "Demonstrate how to use page" data-toggle="tooltip" data-placement="right" title="Make sure your speaker is on">
+					<div id="autoDemo" >
+		                {% inline_staticfile 'svg/autoDemoButton.svg' as startAutoDemoLogo %}
+		                <div id="startAutoDemo" alt = "Demonstrate how to use page" data-toggle="tooltip" data-placement="right" title="Make sure your speaker is on">
+		                	{{ startAutoDemoLogo|safe }}  <!-- safe keeps svg from being treated as text -->
+                        </div>
 						<!--  make a play/pause button set from bootstrap icons -->
 						<div id="autoDemoCtls">
 							<h1>Let's demo this page!</h1>
