@@ -170,8 +170,8 @@ We use negative value for top since we want some overlap*/
 }
 
 /*********************Tutorial demo type help******************/
-#startAutoDemo{
-	visibility: visible;
+#autoDemo{
+	top: 80px;
 }
 #funTutorial_ST{
 	 position: absolute;

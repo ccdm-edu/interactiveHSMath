@@ -1,10 +1,6 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
-
-	// put up autodemo image to introduce to students for future pages
-	$("#startAutoDemo").css('display', 'inline-block');
-	
 	//if Next  button hit (in base template), set it up to go to intro page
 	$("#GoToNextPage").wrap('<a href="../DynamicTrig1"></a>');
 	$("#GoToPreviousPage").wrap('<a href="../MusicSineIntro"></a>');
@@ -870,7 +866,7 @@ $(function() {
     //****************************************************************************   
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemoWithCanvas(SCRIPT_AUTO_DEMO, 'funTutorial_ST');  // give the demo the full script
-    $('#startAutoDemo').on('click', function(event) {
+    $('#startAutoDemo').on('click', function() {
   		// prep the control box for user to interact with auto demo
 		demo.prepDemoControls();
   		//Move elements to make way for autodemo control box

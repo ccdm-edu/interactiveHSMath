@@ -57,33 +57,12 @@ div.home_expln {
 }
 /*****************Auto demo controls on****************************/
 /* this image comes from basePage and is place before index.html so need absolute positioning */
-#startAutoDemo{
-
-    /* Animation Logic */
-    display: block !important;
-    visibility: visible !important;
-    pointer-events: auto;
-    
+#startAutoDemo{   
     /* Use the shorthand to prevent override issues */
-    animation: expln_fade_in 2s forwards !important;
-    animation-delay: 2s !important;
-    
-    
-	/* old stuff top: 150px;
-	visibility: visible;	
-	display: block;
-	opacity: 0.0;
-	pointer-events: auto;
-	animation: expln_fade_in 2s forwards;
-    animation-delay: 2s; */
-    /*animation-name: expln_fade_in;
-	animation-duration: 2s;
-	animation-delay: 2s;
-	animation-fill-mode: forwards; */
+    animation: expln_fade_in 2s forwards;
+    animation-delay: 2s;
 }
-#autoDemoCtls{
-	top: 170px;
-}
+
 
 /*******************expert/newbie selection ******************************/
 :root{

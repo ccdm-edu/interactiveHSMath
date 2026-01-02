@@ -197,19 +197,22 @@ div#tooltip:hover .tooltiptext {
 /*************all pages, auto demo controls and starting image **********************/
 /* its there, but if the page wants it, must turn it on */
 #autoDemo{
-	position: relative;
+	position: absolute;
+	min-height: 100px;
+	min-width: 100px;
+	top: 180px;  /* this has to be adjusted on some pages*/
+	z-index: 500;  /* needs to be max value to sit all this on top */
 }
 /* image that says Start Here */
 #startAutoDemo{
 	position: absolute;
+	display: inline-block;
 	height: 100px;
 	width: 100px;
 	left: 0px;  
-	top: 10px;   
-	/*display: none; */
+	top: 0px;   
 	opacity: 0;
-	z-index: 50;  /* needs to be max value. */
-	pointer-events: none; /* Can't click it while invisible */
+	z-index: 500;  /* needs to be max value, children don't inherit */
 }
 
 /* in newbie mode, we draw attention to startAutoDemo */
@@ -217,6 +220,7 @@ div#tooltip:hover .tooltiptext {
     margin-left: auto;
     margin-right: auto;
 	transform: scale(1.0);
+	opacity: 1;
 	animation-iteration-count: 3;
 	animation-name: autoDemo_newbieMode;
 	animation-duration: 2s;
@@ -252,7 +256,7 @@ img#clickHereCursor {
 	top: 25px;	
 	display: inline-block;
 	visibility: hidden;
-	z-index: 50;  /* needs to be max value */
+	z-index: 50;  /* needs to be max value just to be seen*/
 }
 /* animation to flash the click here cursor as needed when code adds this class to element */
 img#clickHereCursor.userHitPlay {

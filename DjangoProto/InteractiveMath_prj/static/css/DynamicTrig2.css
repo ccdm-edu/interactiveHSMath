@@ -155,6 +155,9 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 }
 
 /*************Dynamic Help **************/
+#autoDemo{
+	top: 80px;
+}
 #FirstHelp_DT2 {
 	position: relative;
 	width: 200px;

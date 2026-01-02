@@ -167,10 +167,9 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 }
 
 /*********************Tutorial demo type help******************/
-#startAutoDemo{
-	visibility: visible;
+#autoDemo{
+	top: 80px;
 }
-
 /* canvas, needs to sit exactly on ampSinCosCircle_DT1 */
 #funTutorial_DT1 {
 	 position: absolute;

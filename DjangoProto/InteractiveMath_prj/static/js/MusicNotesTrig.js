@@ -1,9 +1,6 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
-	// turn on help in upper left corner
-	$('#startAutoDemo').css('display', 'inline-block');
-	
 	//if Next, button hit (in base template), set it up to go to intro page
 	$("#GoToNextPage").wrap('<a href="../MusicSineSummary"></a>');
 	$("#GoToPreviousPage").wrap('<a href="../ToneTrig"></a>');

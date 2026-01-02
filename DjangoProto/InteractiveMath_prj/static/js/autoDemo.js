@@ -89,7 +89,7 @@ class AutoDemo {
     	
 		// get rid of controls box, go back to small image  
 		if (killTheAutoDemoCtlBox) {	
-			$('#startAutoDemo').css('display', 'inline-block');
+			$('#startAutoDemo').css('opacity', '1');
 			$('#autoDemoCtls').css('display', 'none');
 			// remove the class so the click here animation will work on next page, cant do this until animation completes
 	    	$('#clickHereCursor').removeClass('userHitPlay');
@@ -381,9 +381,10 @@ class AutoDemo {
 	    $('#clickHereCursor').addClass('userHitPlay'); 
 	    	
 		//first get rid of "lets do the demo" image and put up the demo controls
-		$('#startAutoDemo').css('display', 'none');
+		$('#startAutoDemo').css('opacity', '0');
+		$('#startAutoDemo').css('animation', 'none');  //turn off the overriding animation that forces visibility
 		$('#autoDemoCtls').css('display', 'inline-block');
-		$('#autoDemoCtls').css('visibility', 'visible');
+		
 		// fill in the controls properly
 		$('#totalSeg').text('/' + this.fullScript.length);
 		// add all the choices allowed for this set of segments of AutoDemo

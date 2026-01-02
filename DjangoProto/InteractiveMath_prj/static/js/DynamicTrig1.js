@@ -1,8 +1,6 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
-	// turn on help in upper left corner
-	$('#startAutoDemo').css('display', 'inline-block');
 	// turn off advice on frequency created
 	$('#ExplnFreqMark').css("visibility", "hidden");
 	

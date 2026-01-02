@@ -306,8 +306,8 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 /*******************************************************/
 
 /*****************Auto demo controls on****************************/
-#startAutoDemo{
-	visibility: visible;
+#autoDemo{
+	top: 60px;
 }
 /*********************Tutorial demo type help******************/
 /* canvas, needs to sit exactly on ClefWithNotes */
