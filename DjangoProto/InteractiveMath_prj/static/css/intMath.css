@@ -1,6 +1,10 @@
 /***********************
 This is the style sheet for the entire website and all common items
 ************************/
+/* create global var for this html */
+:root{
+
+}
 
 
 /****************All pages, subtopic section on left side***************************/
@@ -212,7 +216,6 @@ div#tooltip:hover .tooltiptext {
 	left: 0px;  
 	top: 0px;   
 	opacity: 0;
-	z-index: 500;  /* needs to be max value, children don't inherit */
 }
 
 /* in newbie mode, we draw attention to startAutoDemo */
@@ -239,9 +242,7 @@ div#tooltip:hover .tooltiptext {
 	border: 2px solid cyan;
 	border-radius: 10px;
 	display: none;
-	z-index: 500;  /* needs to be max value */
 }
-
 #autoDemoCtls h1{
 	text-align: center;
 	font-size: 18px;
@@ -249,17 +250,19 @@ div#tooltip:hover .tooltiptext {
 /*This portion is the animation that flashes a big red cursor that says "click here" */
 /* when the user starts the autodemo ctrls, the top/left will be set and animation started 
 position setting based on where it would have been placed near the play/pause */
-img#clickHereCursor {
+#clickHereCursor {
 	position: absolute;
 	height: 80px;
+	width: 80px;
 	left: -60px;
-	top: 25px;	
+	top: 100px;	
 	display: inline-block;
-	visibility: hidden;
-	z-index: 50;  /* needs to be max value just to be seen*/
+	visibility: hidden;  /*cant use opacity else cursor slips below the sidebar */
+	z-index: 10;  /*within container,its all relative to other contained items, need to sit on top of controls*/
 }
 /* animation to flash the click here cursor as needed when code adds this class to element */
-img#clickHereCursor.userHitPlay {
+#clickHereCursor.userHitPlay {
+	opacity: 1;
 	animation-delay: 1s;
 	animation-name: getUserAttentionToClick;
 	animation-duration: 3s;

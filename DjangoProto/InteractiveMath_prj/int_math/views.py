@@ -101,12 +101,7 @@ def getBaseContextEntry(request):
                      'IntMathUtilsJS': getFullFileURL('js/IntMathUtils.js', True, request),
                      'IntMathJS':getFullFileURL('js/IntMath.js', True, request),
                      'AutoDemoJS': getFullFileURL('js/autoDemo.js', True, request),
-                     'ClickHereSVG': getFullFileURL('svg/clickhere_cursor.svg', True, request),
-                     'StartAutodemoSVG': getFullFileURL('svg/autoDemoButton.svg', True, request),
-                   #  'NoCookieSVG': getFullFileURL('images/nocookie_50px.jpeg', True, request),
-                    # 'CookieSVG': getFullFileURL('images/cookie_50px.jpeg', True, request),}
-                     'NoCookieSVG': getFullFileURL('svg/nocookie.svg', True, request),
-                     'CookieSVG': getFullFileURL('svg/cookie.svg', True, request),}
+                     }
     
     return baseKVcontext
 

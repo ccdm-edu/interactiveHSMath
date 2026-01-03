@@ -582,7 +582,7 @@ class AutoDemoWithCanvas extends AutoDemo {
 		
 		// pull out the special demo cursor icon and place on proper location
 		let demoCursor = new Image();
-		demoCursor.src = '../../static/images/DemoCursor.svg';
+		demoCursor.src = '../../static/svg/DemoCursor.svg';
 		demoCursor.id = 'demoCursorID';
 		let xyPt = segmentParams.xyCoord;
 		demoCursor.onload = function() {

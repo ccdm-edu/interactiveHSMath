@@ -659,7 +659,7 @@ $(function() {
 					if (!prepOnly){
 						updatePlotsUserAides();
 						// we have new instrument mp3, allow play
-						$("#allowNotePlay").attr("src", '../../static/images/volume-off.svg');
+						$("#allowNotePlay").attr("src", '../../static/svg/volume-off.svg');
 						$("#allowNotePlay").attr("alt", 'Volume is currently off');
 						$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
 						$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
