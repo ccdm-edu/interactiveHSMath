@@ -92,6 +92,13 @@
             </nav>
         </header>
         
+        <!-- moving this outside the bootstrap classes so offset() can be calculated correctly for demo cursor -->
+        <!-- this is the stylized pointer used in automated demo (autodemo) to show activity -->
+		{% inline_staticfile 'svg/DemoCursor.svg' as demoCursorPointer %}
+		<div id="demoCursorID" alt = "Stylized pointer used to demonstrate" >
+		    {{ demoCursorPointer|safe }}  <!-- safe keeps svg from being treated as text -->
+        </div>
+        
         <div class="container-fluid">
             <div class="row">
                 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
@@ -156,7 +163,7 @@
 					    <!-- /.modal-dialog -->
 					</div>
 					<!-- /.modal -->
-					
+										
 					<div id="autoDemo" >
 		                {% inline_staticfile 'svg/autoDemoButton.svg' as startAutoDemoLogo %}
 		                <div id="startAutoDemo" alt = "Demonstrate how to use page" data-toggle="tooltip" data-placement="right" title="Make sure your speaker is on">

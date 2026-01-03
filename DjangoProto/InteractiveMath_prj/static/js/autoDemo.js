@@ -255,16 +255,19 @@ class AutoDemo {
 	// fake cursor to DOM element and allow focus on that element.
 	actOnElement(param) {
 		// pull out the special demo cursor icon and place on proper location
-		let $demoCursor = $('<img>',{id:'demoCursorElID',src:'../../static/images/DemoCursor.svg'});
-		$demoCursor.css('position', 'absolute');		
-		$demoCursor.css('zIndex', '2000');  // make sure cursor sits on top, bootstrap dropdown-menu show makes z index of 1000
-		$demoCursor.appendTo("body");
-		let locEl = $(param.element).offset();
-	    // location of item to be annotated is at locEl.top and locEl.left
-	    let leftPos = Math.round(locEl.left) - param.offset.x;
-	    let topPos = Math.round(locEl.top) + param.offset.y;
+		$('#demoCursorID').css("display", "block")
+		
+		
+		const locEl = $(param.element).offset();
+        
+		let leftPos = Math.round(locEl.left) - param.offset.x;
+		let topPos = Math.round(locEl.top) + param.offset.y;
+		//console.log("act on element: leftPos=" + leftPos + " top pos= " + topPos);
+		$('#demoCursorElID').css({ 'left': leftPos + 'px', 'top': topPos + 'px' });
+	    
+	    
 	    //console.log("act on element: leftPos=" + leftPos + " top pos= " + topPos);
-	    $('#demoCursorElID').css({ 'left': leftPos + 'px', 'top': topPos + 'px' });
+	    $('#demoCursorID').css({ 'left': leftPos + 'px', 'top': topPos + 'px' });
 	    let currID = param.element;
 		if ("focus" == param.action) {
 			// focus shows off what it looks like when user clicks on input element
@@ -274,6 +277,8 @@ class AutoDemo {
 			$(currID).click();
 		} // else its do nothing or unimplemented
 	}
+	
+	
 	// we can't create a click event on a link that will bring up a modal, need to show modal explicitely
 	showModal(param) {
 		let currID = '#' + param.element;
@@ -307,17 +312,14 @@ class AutoDemo {
 	changeValOnSliderElement(param=null) {
 		// The user is able to click on various points of slider and change value but have to fake it for demo
 		// pull out the special demo cursor icon and place on proper location
-		let $demoCursor = $('<img>',{id:'demoCursorElID',src:'../../static/images/DemoCursor.svg'});
-		$demoCursor.css('position', 'absolute');		
-		$demoCursor.css('zIndex', '2000');  // make sure cursor sits on top, bootstrap dropdown-menu show makes z index of 1000
-		$demoCursor.appendTo("body");
+	    $('#demoCursorID').css("display", "block")
 		let locEl = $('#' + param.element).offset();
 	    // location of item to be annotated is at locEl.top and locEl.left
-	    let leftPos = Math.round(locEl.left) - param.offset.x;
-	    let topPos = Math.round(locEl.top) + param.offset.y;
+	    let leftPos = Math.round(locEl.left);// - param.offset.x;
+	    let topPos = Math.round(locEl.top);// + param.offset.y;
 	    //console.log("act on element: leftPos=" + leftPos + " top pos= " + topPos);
 	    // set position of fake big red cursor that wanders through documants
-	    $('#demoCursorElID').css({ 'left': leftPos + 'px', 'top': topPos + 'px' });
+	    $('#demoCursorID').css({ 'left': leftPos + 'px', 'top': topPos + 'px' });
 		
 		// change the value on slider
 		let $elToUpdt = $('#' + param.element);
@@ -328,7 +330,7 @@ class AutoDemo {
 		// Dispatch it.
 		$elToUpdt.trigger('change');
 		
-	}
+	}	
 	
 	changeSubtopicsOnIntroPage(param=null) {
 		// idToGo is the text we want to replace temporarily for demo
@@ -575,29 +577,27 @@ class AutoDemoWithCanvas extends AutoDemo {
 		$(this.canvasID).css('z-index',-1);
 	}
 	// Move the cursor to new location on demo canvas
-	moveCursorImgOnCanvas(segmentParams){
+	moveCursorImgOnCanvas(segmentParams) {
+	    const demoCursor = document.getElementById('demoCursorID');
+	    const xyPt = segmentParams.xyCoord;
+	    const CURSOR_DIM = 40;
 	
-		// pull up the canvas that overlays all activity for the demo
-		let ctxDemoCanvas = this.getDemoCtx().ctx;
-		
-		// pull out the special demo cursor icon and place on proper location
-		let demoCursor = new Image();
-		demoCursor.src = '../../static/svg/DemoCursor.svg';
-		demoCursor.id = 'demoCursorID';
-		let xyPt = segmentParams.xyCoord;
-		demoCursor.onload = function() {
-			// here we rely on the fact that demo canvas sits exactly on top of the canvas whose points we want to hit
-			const CURSOR_DIM = 40;
-			ctxDemoCanvas.drawImage(demoCursor, xyPt.x - CURSOR_DIM, xyPt.y, CURSOR_DIM,CURSOR_DIM);
-		};
-		
-		// click on the event 
-		let rect = segmentParams.canvas.getBoundingClientRect();  // need to create mouse event on canvas that correxponds to dot on associated canvas
-		const clickCanvasPt = new CustomEvent('click', {detail: {xVal:xyPt.x, yVal: xyPt.y }});
-		//console.log('clicking on point (' + xyPt.x + ' , '+ xyPt.y + ')');
-		//execute event on element
-		segmentParams.canvas.dispatchEvent(clickCanvasPt);
+	    // 1. Show and Position the pointer
+	    //demoCursor.style.display = 'block';
+	    $('#demoCursorID').css("display", "block")
+	    // Position adjusted to match your original canvas logic (xyPt.x - CURSOR_DIM)
+	    demoCursor.style.transform = `translate(${xyPt.x - CURSOR_DIM}px, ${xyPt.y}px)`;
+	
+	    // 2. Dispatch the click event to the target canvas
+	    // Ensure the event carries the coordinates needed by your canvas listener
+	    const clickCanvasPt = new CustomEvent('click', {
+	        detail: { xVal: xyPt.x, yVal: xyPt.y },
+	        bubbles: true 
+	    });
+	    
+	    segmentParams.canvas.dispatchEvent(clickCanvasPt);
 	}
+
 
 	doTheSegmentAction(activity, nextItemBeginTime, annotateInd){
 		let temp;
