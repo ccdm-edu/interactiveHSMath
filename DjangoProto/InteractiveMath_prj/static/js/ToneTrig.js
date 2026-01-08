@@ -362,7 +362,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 value: "100",
-			 	 offset: {x: 45, y: 10},  // in the 100Hz location
+			 	 offset: {x: 23, y: 10},  // in the 100Hz location
 			 	 waitTimeMillisec: 3000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
@@ -379,7 +379,7 @@ $(function() {
 			 	{element:'#toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 45, y: 20},
+			 	 offset: {x: 25, y: 20},
 			 	 waitTimeMillisec: 3000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
@@ -395,7 +395,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 value: "80",
-			 	 offset: {x: -40, y: 10},  // turn volume up high
+			 	 offset: {x: -68, y: 10},  // turn volume up high
 			 	 waitTimeMillisec: 5000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on slider 
@@ -411,7 +411,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 value: "5",
-			 	 offset: {x: 35, y: 10},  // turn volume way down
+			 	 offset: {x: 16, y: 10},  // turn volume way down
 			 	 waitTimeMillisec: 2000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on slider 
@@ -428,7 +428,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 value: "233",
-			 	 offset: {x: 38, y: 10},  // in the 233Hz location
+			 	 offset: {x: 16, y: 10},  // in the 233Hz location
 			 	 waitTimeMillisec: 10000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
@@ -445,7 +445,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 value: "2000",
-			 	 offset: {x: -60, y: 10},  // in the 2kHz location, max position
+			 	 offset: {x: -92, y: 10},  // in the 2kHz location, max position
 			 	 waitTimeMillisec: 20000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
@@ -462,7 +462,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'freqMax',
 			 	 value: "10000",
-			 	 offset: {x: 10, y: 10},
+			 	 offset: {x: -12, y: 10},
 			 	 waitTimeMillisec: 2000}  // this is wait before you go on to next item
 			 },		
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
@@ -476,7 +476,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 value: "8000",
-			 	 offset: {x: -35, y: 10},  // in the 8kHz location
+			 	 offset: {x: -57, y: 10},  // in the 8kHz location
 			 	 waitTimeMillisec: 7000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
@@ -493,7 +493,7 @@ $(function() {
 			 	{element:'#toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 45, y: 20},
+			 	 offset: {x: 25, y: 20},
 			 	 waitTimeMillisec: 3000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
@@ -522,7 +522,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 value: "1000",
-			 	 offset: {x: 0, y: 10},  // in the 1kHz, midrange
+			 	 offset: {x: -32, y: 10},  // in the 1kHz, midrange
 			 	 waitTimeMillisec: 2000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
@@ -549,7 +549,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-freq',
 			 	 value: "1000",
-			 	  offset: {x: 0, y: 10},  // in the 1000Hz location
+			 	  offset: {x: -20, y: 10},  // in the 1000Hz location
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			 },	
 			 // remove cursor on freq slider 
@@ -566,7 +566,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 value: "5",
-			 	  offset: {x: 45, y: 10},  // in the 5 location
+			 	  offset: {x: 30, y: 10},  // in the 5 location
 			 	waitTimeMillisec: 3000}  // this is wait before you go on to next item
 			 },	
 			// remove cursor on amp slider 
@@ -583,7 +583,7 @@ $(function() {
 			 	{element:'#toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 45, y: 20},
+			 	 offset: {x: 25, y: 20},
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button
@@ -599,7 +599,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 value: "10",
-			 	  offset: {x: 30, y: 10},  // turn volume up high
+			 	  offset: {x: 20, y: 10},  // turn volume up high
 			 	waitTimeMillisec: 2000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on slider 
@@ -615,7 +615,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 value: "20",
-			 	  offset: {x: 25, y: 10},  // turn volume way down
+			 	  offset: {x: 12, y: 10},  // turn volume way down
 			 	waitTimeMillisec: 2000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on slider 
@@ -631,7 +631,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-amp',
 			 	 value: "5",
-			 	  offset: {x: 35, y: 10},  // turn volume up high
+			 	  offset: {x: 25, y: 10},  // turn volume up high
 			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on slider 
@@ -648,7 +648,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'in-range-phase',
 			 	 value: "90",
-			 	  offset: {x: 15, y: 10},  // in the 90 location
+			 	  offset: {x: 5, y: 10},  // in the 90 location
 			 	waitTimeMillisec: 5000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
@@ -665,7 +665,7 @@ $(function() {
 			 	{element:'#toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
-			 	 offset: {x: 45, y: 20},
+			 	 offset: {x: 25, y: 20},
 			 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
 			},
 			// remove cursor on go/stop button

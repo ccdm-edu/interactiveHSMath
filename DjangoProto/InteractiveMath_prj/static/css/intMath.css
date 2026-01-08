@@ -286,7 +286,7 @@ position setting based on where it would have been placed near the play/pause */
     pointer-events: none; /* Allows clicks to pass through to the canvas */
     z-index: 10000;
     display: none; /* Hidden until demo starts */
-    transition: transform 0.3s ease-out; /* Smooth movement between points */
+    transition: transform 0.3s ease-in-out; /* Smooth movement between points */
   }
   
 /* a spinner animation to show server is busy getting the file */

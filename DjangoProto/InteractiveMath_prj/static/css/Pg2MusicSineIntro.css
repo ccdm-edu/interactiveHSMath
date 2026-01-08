@@ -310,7 +310,7 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	top: 60px;
 }
 /*********************Tutorial demo type help******************/
-/* canvas, needs to sit exactly on ClefWithNotes */
+/* canvas, needs to sit exactly on ClefWithNotes, so demo can move cursor around it*/
 #funTutorial_MSIntro {
 	 position: absolute;
 	 top: 0px;

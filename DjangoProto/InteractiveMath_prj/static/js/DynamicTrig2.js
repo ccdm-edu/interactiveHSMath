@@ -571,7 +571,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'FreqSlider_DT2',
 			 	 value: "0.5",
-			 	  offset: {x: 25, y: 10},  
+			 	  offset: {x: 0, y: 10},  
 			 	waitTimeMillisec: 4000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 
@@ -588,7 +588,7 @@ $(function() {
 			 segmentParams:
 			 	{element:'FreqSlider_DT2',
 			 	 value: "1.5",
-			 	  offset: {x: -30, y: 10},  
+			 	  offset: {x: -55, y: 10},  
 			 	waitTimeMillisec: 4000}  // this is wait before you go on to next item
 			 },		
 			// remove cursor on freq slider 

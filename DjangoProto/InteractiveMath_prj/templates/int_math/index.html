@@ -107,7 +107,7 @@
 	<script src="{{ basePage.AutoDemoJS }}" crossorigin="anonymous"></script>	
 	<script src="{{ LandPageJS }}" crossorigin="anonymous"></script>
 	<script nonce="{{ request.csp_nonce }}">
-		//need to not have every css load on every page, when that is fixed, can get rid of this
+		//no advanced topics on intro page
 		$('a[href="#AdvancedTopics"]').css('visibility', 'hidden');
 	</script>
 

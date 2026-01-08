@@ -257,17 +257,14 @@ class AutoDemo {
 		// pull out the special demo cursor icon and place on proper location
 		$('#demoCursorID').css("display", "block")
 		
-		
-		const locEl = $(param.element).offset();
-        
-		let leftPos = Math.round(locEl.left) - param.offset.x;
-		let topPos = Math.round(locEl.top) + param.offset.y;
-		//console.log("act on element: leftPos=" + leftPos + " top pos= " + topPos);
-		$('#demoCursorElID').css({ 'left': leftPos + 'px', 'top': topPos + 'px' });
-	    
-	    
-	    //console.log("act on element: leftPos=" + leftPos + " top pos= " + topPos);
+		const locEl = $(param.element).offset();  
+		// using tranform, we don't need integer number of pixels     
+		let leftPos = locEl.left - param.offset.x;
+		let topPos = locEl.top + param.offset.y;
+		// since we turn on/off the cursor for now, no smooth transition for now...	    
 	    $('#demoCursorID').css({ 'left': leftPos + 'px', 'top': topPos + 'px' });
+	    // move smoothly to next place--need to work with this some more if want to use it
+	    //$('#demoCursorID').css('transform', `translate3d(${leftPos}px, ${topPos}px, 0)`);
 	    let currID = param.element;
 		if ("focus" == param.action) {
 			// focus shows off what it looks like when user clicks on input element
@@ -294,7 +291,7 @@ class AutoDemo {
 	// remove the big fake cursor
 	removeActOnElement(param = null) {
 		// get rid of demo cursor ID
-		$('#demoCursorElID').remove();
+		$('#demoCursorID').css("display", "none")
 			// remove focus on element, will do nothing if not in focus
 		if (null !== param) {
 			if ('undefined' !== param.action) {
@@ -315,8 +312,8 @@ class AutoDemo {
 	    $('#demoCursorID').css("display", "block")
 		let locEl = $('#' + param.element).offset();
 	    // location of item to be annotated is at locEl.top and locEl.left
-	    let leftPos = Math.round(locEl.left);// - param.offset.x;
-	    let topPos = Math.round(locEl.top);// + param.offset.y;
+	    let leftPos = locEl.left - param.offset.x;
+	    let topPos = locEl.top + param.offset.y;
 	    //console.log("act on element: leftPos=" + leftPos + " top pos= " + topPos);
 	    // set position of fake big red cursor that wanders through documants
 	    $('#demoCursorID').css({ 'left': leftPos + 'px', 'top': topPos + 'px' });
@@ -326,7 +323,7 @@ class AutoDemo {
 		$elToUpdt.prop("value", param.value);
 		//console.log('value of ' + param.element + 'is now ' + $elToUpdt.val());
 		// now fire off an event to be detected onchange
-		let event = new Event('change');
+		//let event = new Event('change');
 		// Dispatch it.
 		$elToUpdt.trigger('change');
 		
@@ -578,25 +575,37 @@ class AutoDemoWithCanvas extends AutoDemo {
 	}
 	// Move the cursor to new location on demo canvas
 	moveCursorImgOnCanvas(segmentParams) {
-	    const demoCursor = document.getElementById('demoCursorID');
-	    const xyPt = segmentParams.xyCoord;
-	    const CURSOR_DIM = 40;
+	  // 1. Show and Position the pointer
+	  $('#demoCursorID').css("display", "block")
+      // 2.  need to reference the pointer to the coordinate system of the canvas
+	  const canvas = document.querySelector('canvas');
+	  const rect = canvas.getBoundingClientRect();
+	  const CURSOR_DIM = 40;
+	  
+	  // Calculate scale in case the canvas is stretched via CSS (e.g. width: 100%)
+	  const scaleX = rect.width / canvas.width;
+	  const scaleY = rect.height / canvas.height;
 	
-	    // 1. Show and Position the pointer
-	    //demoCursor.style.display = 'block';
-	    $('#demoCursorID').css("display", "block")
-	    // Position adjusted to match your original canvas logic (xyPt.x - CURSOR_DIM)
-	    demoCursor.style.transform = `translate(${xyPt.x - CURSOR_DIM}px, ${xyPt.y}px)`;
+	  // Convert canvas internal (x, y) = xyPt to viewport (left, top)
+	  const xyPt = segmentParams.xyCoord;
+	  const screenX = rect.left + (xyPt.x * scaleX) - CURSOR_DIM;
+	  const screenY = rect.top + (xyPt.y * scaleY);
 	
-	    // 2. Dispatch the click event to the target canvas
-	    // Ensure the event carries the coordinates needed by your canvas listener
-	    const clickCanvasPt = new CustomEvent('click', {
-	        detail: { xVal: xyPt.x, yVal: xyPt.y },
-	        bubbles: true 
-	    });
-	    
-	    segmentParams.canvas.dispatchEvent(clickCanvasPt);
+	  // Move the pointer, easier to just make pointer appear and disappear than to smoothly move
+	  $('#demoCursorID').css({ 'left': screenX + 'px', 'top': screenY + 'px' });
+	  //$('#demoCursorID').css('transform', `translate(${screenX}px, ${screenY}px)`);
+		    
+      // 3. Dispatch the click event to the target canvas
+	  // Ensure the event carries the coordinates needed by your canvas listener
+	  const clickCanvasPt = new CustomEvent('click', {
+		 detail: { xVal: xyPt.x, yVal: xyPt.y },
+		 bubbles: true 
+      });
+		
+	  segmentParams.canvas.dispatchEvent(clickCanvasPt);
 	}
+	
+
 
 
 	doTheSegmentAction(activity, nextItemBeginTime, annotateInd){
