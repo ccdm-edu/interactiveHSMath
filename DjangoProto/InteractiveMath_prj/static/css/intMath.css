@@ -1,11 +1,6 @@
 /***********************
 This is the style sheet for the entire website and all common items
 ************************/
-/* create global var for this html */
-:root{
-
-}
-
 
 /****************All pages, subtopic section on left side***************************/
 /* change text/color/font for subtopics header off to the side */
@@ -204,7 +199,7 @@ div#tooltip:hover .tooltiptext {
 	position: absolute;
 	min-height: 100px;
 	min-width: 100px;
-	top: 180px;  /* this has to be adjusted on some pages*/
+	top: 70px;  /* this has to be adjusted on some pages*/
 	z-index: 500;  /* needs to be max value to sit all this on top */
 }
 /* image that says Start Here */

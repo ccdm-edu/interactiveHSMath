@@ -126,8 +126,8 @@ CSP_FRAME_ANCESTORS = ["'self'", 'https://www.google.com']
 CSP_CONNECT_SRC = ["'self'", 'https://www.google.com','https://getbootstrap.com',
                    'https://cdnjs.cloudflare.com']  #needed for recaptcha and to remove annoying .map errors
 CSP_FORM_ACTION = ["'self'"]
-
-CSP_INCLUDE_NONCE_IN = ['script-src', 'script-src-elem', 'style-src']  
+#style-src-elem needed for noncing inline css
+CSP_INCLUDE_NONCE_IN = ['script-src', 'script-src-elem', 'style-src', 'style-src-elem']  
 
 ROOT_URLCONF = 'InteractiveMath_prj.urls'
 TEMPLATE_PATH = os.path.join(BASE_DIR,'templates')

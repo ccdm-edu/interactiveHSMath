@@ -238,11 +238,14 @@
 					<!--  jquery ui needed for advanced topic draggable window -->
 					<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.3/jquery-ui.min.js"></script>
 					<!-- jquery ui touch.js (v1.1.0) punch needed so draggable works (on some level) on touch devices. https://www.jqueryscript.net/mobile/jQuery-Plugin-For-Touch-Drag-Events-touch-js.html. -->
-			  		<script src="{{ basePage.JQtouchLibJS }}" crossorigin="anonymous" ></script>   
+			  		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touch/1.1.0/jquery.touch.min.js" integrity="sha384-XJrpR1kjsdEnOjnpWkeVzhNk0OA+DSw4TLSIvndAhHkQPDZ7AezmkE4Z8EhTgnuh" crossorigin="anonymous"></script>
 					<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
-					<!-- custom JS for all pages of site, IntMathUtils used by all js -->
-					<script src="{{ basePage.IntMathUtilsJS }}" crossorigin="anonymous"></script>
-					<script src="{{ basePage.IntMathJS }}" crossorigin="anonymous"></script>	
+					<!-- custom JS for all pages of site, IntMathUtils used by all js.  To reduce server calls, the following are inlined-->
+					{% load inline_static_tags %} <!-- will see eclipse IDE "errors" on next three lines, ignore them -->
+					<script nonce="{{ request.csp_nonce }}">{% inline_javascript 'js/IntMath.js' %}</script>
+					<script nonce="{{ request.csp_nonce }}">{% inline_javascript 'js/IntMathUtils.js' %}</script>
+					<style nonce="{{ request.csp_nonce }}">{% inline_style 'css/IntMath.css' %}</style>
+
                                      				
                     <!-- FOOTER -->
                     <div id="Site-footer">
