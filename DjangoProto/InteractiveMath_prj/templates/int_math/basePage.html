@@ -32,8 +32,8 @@
 	    <link href="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css" rel="stylesheet">
 	    <!--  not sure how to get jquery ui draggable popups, i think this does it -->
 	    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-	    <!-- want to override things here -->
-	    <link href="{{ basePage.IntMathCSS }}" rel="stylesheet">
+	    <!-- want to override things here,  will see IDE error for using django package to inline css, ignore it-->
+	    <style nonce="{{ request.csp_nonce }}">{% inline_style 'css/IntMath.css' %}</style>
 	
 	    {% block head_block %}
 	    	<!--  separate out page specific css here -->
@@ -244,7 +244,7 @@
 					{% load inline_static_tags %} <!-- will see eclipse IDE "errors" on next three lines, ignore them -->
 					<script nonce="{{ request.csp_nonce }}">{% inline_javascript 'js/IntMath.js' %}</script>
 					<script nonce="{{ request.csp_nonce }}">{% inline_javascript 'js/IntMathUtils.js' %}</script>
-					<style nonce="{{ request.csp_nonce }}">{% inline_style 'css/IntMath.css' %}</style>
+
 
                                      				
                     <!-- FOOTER -->

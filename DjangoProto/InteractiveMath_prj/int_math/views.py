@@ -95,11 +95,7 @@ def getBaseContextEntry(request):
                      'GoogleAnalID': g_analyticsID, 
                      'recaptchaPublicKey':settings.RECAP_PUBLIC_KEY,
                      'FavIco': getFullFileURL('NonPublicImages/favicon.ico', False, request),
-                     'IntMathCSS': getFullFileURL('css/intMath.css', True, request),
                      'JQlocalJS': getFullFileURL('js-lib/jquery-371min.js', True, request),
-                     'JQtouchLibJS': getFullFileURL('js-lib/jquery.touch.min.js', True, request),
-                     'IntMathUtilsJS': getFullFileURL('js/IntMathUtils.js', True, request),
-                     'IntMathJS':getFullFileURL('js/IntMath.js', True, request),
                      'AutoDemoJS': getFullFileURL('js/autoDemo.js', True, request),
                      }
     
@@ -452,7 +448,8 @@ class MusicTrigConceptIntroView(View):
                         }
         response = render(request, 'int_math/IntroTrigMusicConcepts.html', context=context_dict)
         return response
-# page 2 Music Sine Intro of trig function section   
+    
+# page 2 Music Sine Intro of trig function section.  Pg2MusicSineIntro.html  
 class MusicTrigView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
@@ -468,6 +465,7 @@ class MusicTrigView(View):
                         }
         response = render(request, 'int_math/Pg2MusicSineIntro.html', context=context_dict)
         return response
+    
 # page 3 Where does sine/cosine come from? of trig function section       
 class StaticTrigView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
@@ -550,7 +548,7 @@ class MusicNotesTrigView(View):
         response = render(request, 'int_math/MusicNotesTrig.html', context=context_dict)
         return response
     
-# page 8 Lets summarize this all now of trig function section
+# page 8 Summary of Trig in music MusicSineSummary.html
 class TrigSummaryView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
@@ -562,8 +560,8 @@ class TrigSummaryView(View):
                         'page_tab_header': 'Summary',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
-                        'musicSummaryVideo': static(actualFilename),
-                        'cartoonIntroTrig': static(realFileCartoonTrig),
+                        'musicSummaryVideo': getFullFileURL(actualFilename, False, request, True),
+                        'cartoonIntroTrig': getFullFileURL(realFileCartoonTrig, False, request),
                         'artistCredit': artistCredit[1],
                         'TrigSummaryCss': getFullFileURL('css/MusicSineSummary.css', True, request),
                         'TrigSummaryJS': getFullFileURL('js/MusicSineSummary.js', True, request),
@@ -672,7 +670,7 @@ class Legal_TermsOfUse(View):
                         'page_tab_header': 'Terms Of Use',
                         'topic': Topic.objects.get(name="Legal"),
                         'basePage': getBaseContextEntry(request),
-                        'legalDocTerms': static(actualFilename) + "#toolbar=0",
+                        'legalDocTerms': getFullFileURL(actualFilename, False, request) + "#toolbar=0",
                        }  
         response = render(request, 'int_math/TermsOfUse.html', context=context_dict)
         return response
@@ -686,7 +684,7 @@ class Legal_Privacy(View):
                         'page_tab_header': 'Privacy Policy',
                         'topic': Topic.objects.get(name="Legal"),
                         'basePage': getBaseContextEntry(request),
-                        'legalDocPriv': static(actualFilename) + "#toolbar=0",
+                        'legalDocPriv': getFullFileURL(actualFilename, False, request) + "#toolbar=0",
                        }  
         response = render(request, 'int_math/Privacy.html', context=context_dict)
         return response
