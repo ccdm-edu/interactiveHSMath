@@ -47,7 +47,8 @@ else:
     STATIC_ROOT = os.path.join(STATIC_DIR,"static_binaries")
     # STATICFILES_DIR used by collectstatic to serve other directories under deployment
     # Build paths inside the project like this: BASE_DIR / 'subdir'.
-    STATICFILES_DIRS = [BINARIES_LOC_str]
+    #Adding STATIC_DIR so that we can inline using django-inline-static and the 'python manage.py findstatic myfile' works
+    STATICFILES_DIRS = [BINARIES_LOC_str, STATIC_DIR]
 
 RECAPTCHA_SECRET_KEY = os.environ.get('G_RECAPTCHA_V3_SECRET_KEY')
 RECAP_PUBLIC_KEY = os.environ.get('G_RECAPTCHA_V3_PUBLIC_KEY')
@@ -85,7 +86,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
     'int_math',
-    'inline_static',
 ]
 
 MIDDLEWARE = [

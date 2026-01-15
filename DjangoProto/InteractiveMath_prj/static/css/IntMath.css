@@ -199,7 +199,7 @@ div#tooltip:hover .tooltiptext {
 	position: absolute;
 	min-height: 100px;
 	min-width: 100px;
-	top: 70px;  /* this has to be adjusted on some pages*/
+	top: 170px;  /* this has to be adjusted on some pages*/
 	z-index: 500;  /* needs to be max value to sit all this on top */
 }
 /* image that says Start Here */

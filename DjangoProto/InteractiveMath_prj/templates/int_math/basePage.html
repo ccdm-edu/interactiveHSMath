@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 {% load static %} <!--  another difference from django 2 to 3.1 -->
 {% load intHSmath_template_tags %} <!-- to get sidebar subtopics -->
-{% load inline_static_tags %} <!--  inline small css, js and svg files to reduce hits on server -->
+{% load static_inline %} <!--  inline small css, js and svg files to reduce hits on server -->
 
 <html lang="en">
     <head>
@@ -33,7 +33,7 @@
 	    <!--  not sure how to get jquery ui draggable popups, i think this does it -->
 	    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 	    <!-- want to override things here,  will see IDE error for using django package to inline css, ignore it-->
-	    <style nonce="{{ request.csp_nonce }}">{% inline_style 'css/IntMath.css' %}</style>
+	    <style nonce="{{ request.csp_nonce }}">{% inline_asset 'css/IntMath.css' %}</style>
 	
 	    {% block head_block %}
 	    	<!--  separate out page specific css here -->
@@ -94,9 +94,8 @@
         
         <!-- moving this outside the bootstrap classes so offset() can be calculated correctly for demo cursor -->
         <!-- this is the stylized pointer used in automated demo (autodemo) to show activity -->
-		{% inline_staticfile 'svg/DemoCursor.svg' as demoCursorPointer %}
 		<div id="demoCursorID" alt = "Stylized pointer used to demonstrate" >
-		    {{ demoCursorPointer|safe }}  <!-- safe keeps svg from being treated as text -->
+		    {% inline_asset 'svg/DemoCursor.svg'%}  <!-- safe keeps svg from being treated as text -->
         </div>
         
         <div class="container-fluid">
@@ -114,13 +113,11 @@
 		                	<div id="CookieChoice">
 		                		<br><button type="button" id='yesCookies'>Yes</button><button type="button" id='noCookies'>No</button>
 		                	</div>
-		                	{% inline_staticfile 'svg/cookie.svg' as yes_cookie %}
-		                    {% inline_staticfile 'svg/nocookie.svg' as no_cookie %}
 		                	<div class = "cookieIndicator" id="cookieIndicatorNo" title="no cookies">
-		                	   {{ no_cookie|safe }}  <!-- safe keeps svg from being treated as text -->
+		                	   {% inline_asset 'svg/nocookie.svg'%}
                             </div>
 		                	<div class = "cookieIndicator" id="cookieIndicatorYes" title="cookies allowed">
-		                	   {{ yes_cookie|safe }}
+		                	   {% inline_asset 'svg/cookie.svg'%}
 							</div>
 		                </div>
                     </div>
@@ -165,15 +162,13 @@
 					<!-- /.modal -->
 										
 					<div id="autoDemo" >
-		                {% inline_staticfile 'svg/autoDemoButton.svg' as startAutoDemoLogo %}
 		                <div id="startAutoDemo" alt = "Demonstrate how to use page" data-toggle="tooltip" data-placement="right" title="Make sure your speaker is on">
-		                	{{ startAutoDemoLogo|safe }}  <!-- safe keeps svg from being treated as text -->
+		                	{% inline_asset 'svg/autoDemoButton.svg' %}  <!-- safe keeps svg from being treated as text -->
                         </div>
                         
                         <!--  image placed to draw attention to play button -->
-						{% inline_staticfile 'svg/clickhere_cursor.svg' as clickHereCursorIndicator %}
 		                <div id="clickHereCursor" alt = "Click here to start the demo segment" >
-		                	 {{ clickHereCursorIndicator|safe }}  <!-- safe keeps svg from being treated as text -->
+		                	 {% inline_asset 'svg/clickhere_cursor.svg' %}  <!-- safe keeps svg from being treated as text -->
                         </div>	
                                                               
 						<!--  make a play/pause button set from bootstrap icons -->
@@ -241,9 +236,8 @@
 			  		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touch/1.1.0/jquery.touch.min.js" integrity="sha384-XJrpR1kjsdEnOjnpWkeVzhNk0OA+DSw4TLSIvndAhHkQPDZ7AezmkE4Z8EhTgnuh" crossorigin="anonymous"></script>
 					<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
 					<!-- custom JS for all pages of site, IntMathUtils used by all js.  To reduce server calls, the following are inlined-->
-					{% load inline_static_tags %} <!-- will see eclipse IDE "errors" on next three lines, ignore them -->
-					<script nonce="{{ request.csp_nonce }}">{% inline_javascript 'js/IntMath.js' %}</script>
-					<script nonce="{{ request.csp_nonce }}">{% inline_javascript 'js/IntMathUtils.js' %}</script>
+					<script nonce="{{ request.csp_nonce }}">{% inline_asset 'js/IntMath.js' %}</script>
+					<script nonce="{{ request.csp_nonce }}">{% inline_asset 'js/IntMathUtils.js' %}</script>
 
 
                                      				
