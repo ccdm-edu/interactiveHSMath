@@ -57,7 +57,7 @@ jobs:
           filters: |
             static:
               - '**/static/css/**'
-              - '**/static/images/**'
+              - '**/static/svg/**'
               - '**/static/js/**'
               - '**/static/js-lib/**'           
     
