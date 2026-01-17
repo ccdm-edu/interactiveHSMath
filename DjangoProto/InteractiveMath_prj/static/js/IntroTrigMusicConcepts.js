@@ -16,6 +16,7 @@ $(function() {
 	$("#IntroMusicInteractive").css('display', 'none');
 	// array not a list of actual filenames, only pointers into config file in binaries repo to get actual mp4 filename
 	let VIDEO_EXPLN_FILENAMES = ["IntroToFrequencyVideo", "IntroToTrigVideo", "IntroToSoundVideo"]
+	//this will rewrite the above array with the actual directory/filenames of mp4s
 	getActualFilename(VIDEO_EXPLN_FILENAMES[0])
    		.done(resp1 => {
 			  	VIDEO_EXPLN_FILENAMES[0] = resp1;
@@ -46,7 +47,8 @@ $(function() {
 				$(this).text(currText + ACTIVE_TOPIC);
 				// swap out the video with new one
 				let tutorialVideo = $('#IntroConceptVideo')[0];
-				tutorialVideo.src = VIDEO_EXPLN_FILENAMES[index];
+				//temporary, till we move to video server like youtube
+				tutorialVideo.src = '/static/static_binaries/' + VIDEO_EXPLN_FILENAMES[index];
 				tutorialVideo.load();				
 			}
 		});
