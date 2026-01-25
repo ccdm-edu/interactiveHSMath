@@ -265,54 +265,43 @@ class ConfigMapper:
         return cls._instance
     
     def loadConfigMapper(self, request):
-        # this will not change once deployed
-        getFromCloud_str = os.environ.get('USE_CLOUD_BUCKET')
-        if getFromCloud_str.lower() == 'true':
-            self._getFromCloud = True
-        fileLoc = getFullFileURL('Configuration/binaryfilenamesforsite-portion1-rev-a.json', False, request)
+        # Do we use the binary files for deployment (use_cloud_bucket = T) or for test?  We always use local config file as server
+        # to server communication can be rejected as bot traffic
+        useDeployConfig_str = os.environ.get('USE_CLOUD_BUCKET')
+        if useDeployConfig_str.lower() == 'true':
+            self._useDeployConfigFiles = True
+        #problem is that in many cases (such as Pythonanywhere paid accounts) Cloudflare R2 bucket treats PA request as though
+        # its from a bot.  Bot protection is a moving target that get stricter over time.  Best to get all config files locally
+        # rather than take chance on rejection
+            
         if self._getFromCloud:
+            fileLoc = os.path.join(os.path.dirname(__file__), '..','ConfigFiles', 'DeployConfig', 'binaryfilenamesforsite-portion1-rev-a.json')
             try:
-                # need to add all these headers to keep request from "looking like a bot" and getting stopped at WAF
-                # of cloud file bucket service
-                # Django provides a simple dictionary-like access to headers
-                headers_to_copy = {
-                    'User-Agent': request.headers.get('User-Agent'),
-                    'Accept': request.headers.get('Accept'),
-                    'Accept-Language': request.headers.get('Accept-Language'),
-                    'Referer': request.headers.get('Referer'),
-                    'Cookie': request.headers.get('Cookie'),
-                }
-                # Remove any None values if headers were missing
-                headers_to_copy = {k: v for k, v in headers_to_copy.items() if v is not None}
-                print(f'headers to copy is {headers_to_copy}')
-                response = requests.get(fileLoc,headers=headers_to_copy)
-                # Check if the request was successful (status code 200)
-                if response.status_code == 200:
-                    file_content = response.text  
-                    self.configMapDict = json.load(file_content)
-                    print(f'file content test is {file_content}')
-                else:
-                    print(f"Failed to retrieve file. Status code: {response.status_code}")
-            except requests.exceptions.RequestException as e:
-                #it could be that your server is blocking outbound accesses (e.g. no cost pythonanywhere account)
-                #so must look for config file locally (hand copy the file to this location, ughh)
-                #should not happen in deployment
-                print(f'Failed attempt to open config file from cloud, will attempt to find local copy, error from first attempt was {e}')
-                fileLoc = os.path.join(os.path.dirname(__file__), '..', 'static', 'server_block_cloud_access','Configuration', 'binaryfilenamesforsite-portion1-rev-a.json')
-                try:
-                    fileObj = open(fileLoc, 'rt')
-                    self._configMapDict = json.load(fileObj)
-                    fileObj.close()
-                except FileNotFoundError:
+                fileObj = open(fileLoc, 'rt')
+                self._configMapDict = json.load(fileObj)
+                fileObj.close()
+            except FileNotFoundError:
                     print(f'SW ERROR:  File {fileLoc} was not found')
-                except Exception as ex:
+            except Exception as ex:
                     template = "An exception of type {0} occurred. Arguments:\n{1!r}"
                     emsg = template.format(type(ex).__name__, ex.args)
-                    print(f'SW ERROR:  {emsg} in opening file {fileLoc}')                   
-                
-        else:
-            # we are on localhost or in dev environment under test mode.  Not for deployment
-            fileLoc = os.path.join(os.path.dirname(__file__), '..', 'static', 'static_binaries', 'Configuration', 'binaryfilenamesforsite-portion1-rev-a.json')
+                    print(f'SW ERROR:  {emsg} in opening file {fileLoc}') 
+        else:   
+            # On many servers, you either can't get to cloud for config file because a) the server won't let you access a nonwhitelisted
+            # server or b) the cloud server thinks the web server is a bot and won't let it access files.  Your screwed, might as well
+            # get config file locally.  Two versions of config file, one points to tiny test files, other points to files that either aer
+            # or will be deployed to cloud.  Assumes 3 test environments:  localhost for testing new binaries/code, free pythonanywhere 
+            # server for use with either cloud binaries or local test files or finally the deployment server which only uses deployed 
+            # cloud binaries
+            if settings.DEBUG:
+                # on localhost, dont use cloud files but rather the local versions of those files which will be uploaded to cloud once
+                # tested
+                fileLoc = os.path.join(os.path.dirname(__file__), '..', 'ConfigFiles', 'DeployConfig', 'binaryfilenamesforsite-portion1-rev-a.json')
+            else:
+                # on test server, can use either local test files (which are not at all like real deployed binaries but are tiny) or cloud
+                # here use local test files
+                fileLoc = os.path.join(os.path.dirname(__file__), '..', 'ConfigFiles', 'TestConfig', 'binaryfilenamesforsite-portion1-rev-a.json')
+            
             try:
                 fileObj = open(fileLoc, 'rt')
                 self._configMapDict = json.load(fileObj)
@@ -322,7 +311,8 @@ class ConfigMapper:
             except Exception as ex:
                 template = "An exception of type {0} occurred. Arguments:\n{1!r}"
                 emsg = template.format(type(ex).__name__, ex.args)
-                print(f'SW ERROR:  {emsg} in opening file {fileLoc}')
+                print(f'SW ERROR:  {emsg} in opening file {fileLoc}')                   
+                
             
             
     def __init__(self, request):
