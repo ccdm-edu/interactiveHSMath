@@ -274,7 +274,7 @@ class ConfigMapper:
         # its from a bot.  Bot protection is a moving target that get stricter over time.  Best to get all config files locally
         # rather than take chance on rejection
             
-        if self._getFromCloud:
+        if self._useDeployConfigFiles:
             fileLoc = os.path.join(os.path.dirname(__file__), '..','ConfigFiles', 'DeployConfig', 'binaryfilenamesforsite-portion1-rev-a.json')
             try:
                 fileObj = open(fileLoc, 'rt')
