@@ -6,6 +6,7 @@ from django.templatetags.static import static
 from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.html import escape
+from django.http import JsonResponse
 from user_agents import parse
 import urllib.request
 import json, os
@@ -62,28 +63,28 @@ def generateSignedURL4Bucket(filename, usePubDomainBucket, expiration_seconds=36
 
   
 def getFullFileURL(filename, usePubDomainBucket, request, tempVideoOverride = False):
-    GET_FROM_CLOUD_str = os.environ.get('USE_CLOUD_BUCKET')
-    GET_FROM_CLOUD = False
-    if GET_FROM_CLOUD_str.lower() == 'true':
-        GET_FROM_CLOUD = True
+    if not filename: 
+        print(f'Failed filename mapping in getFullFileURL')
+        return None
+    
+    # all is good
+    useCloud = os.environ.get('USE_CLOUD_BUCKET', 'False').lower() == 'true'
     urlStaticSrc = ""
     localURLbase = str(request.build_absolute_uri('/'))
-    if ( (GET_FROM_CLOUD == True) and ( not tempVideoOverride) ):
+    if  useCloud and not tempVideoOverride:
         #this cannot be tested from localhost due to security concerns with whitelisting localhost
         urlStaticSrc = generateSignedURL4Bucket(filename, usePubDomainBucket)
-        print(f'REMOTE code:  url will be {urlStaticSrc}')            
-    else:
-        # use local copy of file.  This is expected to be used for initial testing only, not for deployment
-        #only used in localhost and (maybe) dev pythonanywhere account
-        urlStaticSrc = ""
-        if usePubDomainBucket:
-            urlStaticSrc = localURLbase + "static/" + filename
-        else: 
-            urlStaticSrc = localURLbase + "static/static_binaries/" + filename
-        if (tempVideoOverride):
-            print(f'VIDEO link (temporary) URL will be {urlStaticSrc}')
-        else:
-            print(f'LOCAL code:  url will be {urlStaticSrc}')
+        print(f'REMOTE code:  url will be {urlStaticSrc}')   
+        return urlStaticSrc         
+   
+    # use local copy of file.  This is expected to be used for initial testing only, not for deployment
+    #only used in localhost and (maybe) dev pythonanywhere account
+    sub_path = "static/" if usePubDomainBucket else "static/static_binaries/"
+    urlStaticSrc = f"{localURLbase}{sub_path}{filename}"
+
+    log_type = "VIDEO link (temporary)" if tempVideoOverride else "LOCAL code"
+    print(f"{log_type}: url will be {urlStaticSrc}")
+
     return urlStaticSrc
 
 def getBaseContextEntry(request):
@@ -246,7 +247,7 @@ class ProcessContactPage(View):
         return response                      
 
 #**********************************************************
-# functions used by page views. Will be a singleton that goes either locally or remotely
+# functions used by page views. Will be a singleton that goes locally
 # and gathers the configuration file (updates daily as need be).  The configuration file tells
 # where to find files needed to populate the website (both code, images, mp3, mp4 etc)
 #**********************************************************
@@ -267,6 +268,7 @@ class ConfigMapper:
     def loadConfigMapper(self, request):
         # Do we use the binary files for deployment (use_cloud_bucket = T) or for test?  We always use local config file as server
         # to server communication can be rejected as bot traffic
+        self._useDeployConfigFiles = False
         useDeployConfig_str = os.environ.get('USE_CLOUD_BUCKET')
         if useDeployConfig_str.lower() == 'true':
             self._useDeployConfigFiles = True
@@ -332,7 +334,21 @@ class ConfigMapper:
         else:
             print(f'SW ERROR:  file mapper not found or error opening')
         return actualFile
-            
+
+# Some files are needed on the fly, like autodemo voice MP3 explanations or musician notes.  Only server knows which
+# config file to use and if file needed is on cloud, will add approptiate signed URL authorizations
+class GetDynamicFilename(View):  
+    def get(self, request):
+        fileKey = request.GET.get('fileKey')
+        print(f'just received {fileKey} for audio file, ')
+        configMap = ConfigMapper(request)
+        realDynFilename = configMap.readConfigMapper(fileKey)
+        print(f'config mapper reads key {fileKey} as {realDynFilename}')
+        isVideo=False
+        getFromPublicRepo = False
+        dynamicURL = getFullFileURL(realDynFilename, getFromPublicRepo, request, isVideo) 
+        print(f'will return to client a full filename of {dynamicURL}')    
+        return JsonResponse({'url': dynamicURL})    
 #**********************************************************
 # these are all page views
 #**********************************************************

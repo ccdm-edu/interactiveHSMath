@@ -1081,17 +1081,7 @@ $(function() {
 	  ]
 	},
 	];
-	// read the config file and find the actual filenames and put in true values.  First call 'may' have to read
-	// from file, all succeeding calls will be faster since read from local memory
-	console.log('starting musicnotes trig ' + SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL)
-   	getActualFilename(SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL)
-   		.done(resp1 => {
-			  	SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL = resp1;
-			  	console.log('musicnotes trig ' + resp1)
-			  	// this one should be fast, in case previous one had to open file
-			  	getActualFilename(SCRIPT_AUTO_DEMO[1].segmentActivities[0].segmentParams.filenameURL)
-			  	.done(resp2 => SCRIPT_AUTO_DEMO[1].segmentActivities[0].segmentParams.filenameURL = resp2)
-			  	});
+
     //****************************************************************************
     // User initiates autoDemo activity
     //****************************************************************************   

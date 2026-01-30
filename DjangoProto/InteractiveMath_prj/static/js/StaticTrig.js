@@ -835,12 +835,7 @@ $(function() {
 			},
 	  ]
 	}];
-		// read the config file and find the actual filenames and put in true values.  First call 'may' have to read
-	// from file, all succeeding calls will be faster since read from local memory
-   	getActualFilename(SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL)
-   		.done(resp1 => {
-			  	SCRIPT_AUTO_DEMO[0].segmentActivities[0].segmentParams.filenameURL = resp1;
-			  	});
+
 			  	
 	// take the page back to beginning, before user changed things
 	function resetStaticTrig(){

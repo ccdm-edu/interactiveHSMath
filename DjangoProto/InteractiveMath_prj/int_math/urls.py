@@ -34,4 +34,6 @@ urlpatterns = [
     path('ProcessContact_me/', views.ProcessContactPage.as_view(), name='ProcessContact_me'), 
 # for teachers only
     path('TeacherStds/', views.TeacherStandardsView.as_view(), name='TeacherStds'),
+# get the actual filenames for mp3 (with signed URL as appropriate
+    path('getDynamicFilename/', views.GetDynamicFilename.as_view(), name='getDynamicFilename')
 ]

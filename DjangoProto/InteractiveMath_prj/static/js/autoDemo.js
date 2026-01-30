@@ -121,7 +121,7 @@ class AutoDemo {
 	//****************************************
 	
 	// play an audio clip
-	playAudio(segmentParams){
+	async playAudio(segmentParams){
 
 		let context;
 		// Safari has implemented AudioContext as webkitAudioContext so need next LOC
@@ -133,82 +133,94 @@ class AutoDemo {
 			alert('Web Audio API is not supported in this browser');
 		}
 	
-		let audioURL = segmentParams.filenameURL;
-		console.log('playing ' + audioURL);	
+		let audioURLKey = segmentParams.filenameURL;
 		let thisObj = this; // done and onended will think 'this' is the Window, need to tell it its the instantiation of AutoDemo
 		
-		// I don't think we need a csrf token for this ajax post.  1.  there is already a session ID required for this
-		// request 2.  Nothing is stored to database, request must be a code for filename we have or else get error back
-		// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
-		spinner.className = "show";  // turn on the spinner in middle of autodemo box
-	    $.ajax({url:  audioURL,
-	    		type: 'GET',
-	    	  	// if all is ok, return a blob, which we will convert to arrayBuffer, else return text cuz its an error
-	    	  	xhr: function () {
-	    			let xhr = new XMLHttpRequest();
-	    			xhr.onreadystatechange = function () {
-	            		if (xhr.readyState == 2) {
-	            			// send() was called and headers and status are returned
-	                		if (xhr.status == 200) {
-	                    		xhr.responseType = "blob";
-	                		} else {
-	                    		xhr.responseType = "text";
-	                		}
-	            		}
-	    			};
-	    			return xhr;
-				},
-			})
-			.done(function(data, statusText, jqXHR) {
-				// DO, rewrite this with promise syntax  https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/decodeAudioData
-				// By definition, to get here means request is done and successful, (status = 4 and 200)
-				let blobTune = new Blob([data], { 'type': 'audio/mpeg' });  // this must match what we send over
-				//console.log('file size is ' + blobTune.size + ' type is ' + blobTune.type);				
-				spinner.className = spinner.className.replace("show", "");  // turn off spinner, server part is done
-				blobTune.arrayBuffer().then(blob2array => 
-				{ // done converting blob to arrayBuffer, promise complete, convert blob2array to buffer
-					context.decodeAudioData(blob2array, function(buffer) {
-						// to get here means asynchronous mp3 decode is complete and successful
-						//console.log("finished decoding mp3");
-						try {
-							//console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate );
-							thisObj.helpAudio = context.createBufferSource();
-							thisObj.helpAudio.buffer = buffer;
-							thisObj.helpAudio.connect(context.destination);
-							// auto play the recording
-							thisObj.helpAudio.start(0);							
-							thisObj.helpAudio.onended = () => 
-							{
-								// no longer playing the audio intro, either by user stop or natural completion
-								console.log('audio clip is over now, executing return to normal screen');
-								thisObj.segmentOverCleanup();
-							};
-						} catch(e) {
-							// most likely not enough space to createBuffer
-							console.error(e);
-							alert("Failed audio help setup, error is " + e);
-						}
-																									
-						// decodeAudioData is async and doesn't support promises, can't use try/catch for errors
-						},function(err) { alert("err(decodeAudioData) on file" + audioURL + " error =" + err); } )
-					}, reason => {
-						console.error("conversion of blob to arraybuffer failed");
-				});
-	
-			})  // done with success (done) function
-			.fail(function(jqXHR, exception) {
-				spinner.className = spinner.className.replace("show", "");  // turn off spinner
-				if (jqXHR.status == 403) {
-					alert("Need to pass bot test to access server file.  No file for YOU!");  
-				} else if (jqXHR.status == 404) {
-					alert("File not found.  See Administrator");
-				} else {
-					alert("ERROR:  return status is " + jqXHR.status );
-					console.error(jqXHR)
-				}
-			});   // done with ajax
+		// First get the filename (and signed URL if cloud based) from server and if thats ok, then request from the appropriate
+		// location.  Localhost audio files are local.  Test server can be either cloud or local test file (short) versions. 
+		// Deployment server is all cloud based
+		const response = await fetch('/int_math/getDynamicFilename/?fileKey=' + audioURLKey);
+    	if (response.ok) {
+        	const data = await response.json();
+        	const audioURL = data.url; 
+        	console.log("Will fetch audio URL:", audioURL);
+    
+			// Now we have the resolved URL, go get from appropriate server.  csrf not needed for get.  
+			spinner.className = "show";  // turn on the spinner in middle of autodemo box
+		    $.ajax({url:  audioURL,
+		    		type: 'GET',
+		    	  	// if all is ok, return a blob, which we will convert to arrayBuffer, else return text cuz its an error
+		    	  	xhr: function () {
+		    			let xhr = new XMLHttpRequest();
+		    			xhr.onreadystatechange = function () {
+		            		if (xhr.readyState == 2) {
+		            			// send() was called and headers and status are returned
+		                		if (xhr.status == 200) {
+		                    		xhr.responseType = "blob";
+		                		} else {
+		                    		xhr.responseType = "text";
+		                		}
+		            		}
+		    			};
+		    			return xhr;
+					},
+				})
+				.done(function(data, statusText, jqXHR) {
+					// DO, rewrite this with promise syntax  https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/decodeAudioData
+					// By definition, to get here means request is done and successful, (status = 4 and 200)
+					let blobTune = new Blob([data], { 'type': 'audio/mpeg' });  // this must match what we send over
+					//console.log('file size is ' + blobTune.size + ' type is ' + blobTune.type);				
+					spinner.className = spinner.className.replace("show", "");  // turn off spinner, server part is done
+					blobTune.arrayBuffer().then(blob2array => 
+					{ // done converting blob to arrayBuffer, promise complete, convert blob2array to buffer
+						context.decodeAudioData(blob2array, function(buffer) {
+							// to get here means asynchronous mp3 decode is complete and successful
+							//console.log("finished decoding mp3");
+							try {
+								//console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate );
+								thisObj.helpAudio = context.createBufferSource();
+								thisObj.helpAudio.buffer = buffer;
+								thisObj.helpAudio.connect(context.destination);
+								// auto play the recording
+								thisObj.helpAudio.start(0);							
+								thisObj.helpAudio.onended = () => 
+								{
+									// no longer playing the audio intro, either by user stop or natural completion
+									console.log('audio clip is over now, executing return to normal screen');
+									thisObj.segmentOverCleanup();
+								};
+							} catch(e) {
+								// most likely not enough space to createBuffer
+								console.error(e);
+								alert("Failed audio help setup, error is " + e);
+							}
+																										
+							// decodeAudioData is async and doesn't support promises, can't use try/catch for errors
+							},function(err) { alert("err(decodeAudioData) on file" + audioURL + " error =" + err); } )
+						}, reason => {
+							console.error("conversion of blob to arraybuffer failed");
+					});
+		
+				})  // done with success (done) function
+				.fail(function(jqXHR, exception) {
+					spinner.className = spinner.className.replace("show", "");  // turn off spinner
+					if (jqXHR.status == 403) {
+						alert("Need to pass bot test to access server file.  No file for YOU!");  
+					} else if (jqXHR.status == 404) {
+						alert("File not found.  See Administrator");
+					} else {
+						alert("ERROR:  return status is " + jqXHR.status );
+						console.error(jqXHR)
+					}
+				});   // done with ajax
+				
+		} else {
+			console.error('Failed attempt to get filename/signed URL from PA server, file key requested was ' + audioURLKey);
+			console.error(`Audio file fetch failed with status: ${response.status} (${response.statusText})`);
 
-		// leave things as they were when user first started, all is in beginning state
+		}
+
+
 	}
 	
 	// make annotation on an element of the page.  Cant just change border or add border, that changes the element itself and
