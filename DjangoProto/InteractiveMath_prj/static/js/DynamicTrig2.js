@@ -45,7 +45,7 @@ $(function() {
 	if ( $("#AmpSinCosCircle_DT2").length ) {
     	ctxUnitCircle = $("#AmpSinCosCircle_DT2").get(0).getContext('2d');
 	} else {
-    	console.log('Cannot obtain Sin/Cos unit circle context');
+    	console.error('Cannot obtain Sin/Cos unit circle context ctxUnitCircle from DynamicTrig2.js');
 	}
 	let sineAxisBkgd;
 
@@ -116,7 +116,7 @@ $(function() {
 	if ( $("#FreqChange_DT2").length ) {
     	ctxFreqPlot = $("#FreqChange_DT2").get(0).getContext('2d');
 	} else {
-    	console.log('Cannot obtain Sin/Cos unit circle context');
+    	console.error('Cannot obtain Sin/Cos unit circle context, ctxFreqPlot from DynamicTrig2.js');
 	}	
 
 	// draw sin axis off to right and a little above

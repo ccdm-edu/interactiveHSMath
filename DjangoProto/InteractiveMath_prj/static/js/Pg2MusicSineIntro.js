@@ -33,13 +33,13 @@ $(function() {
 	if ( $("#ClefWithNotes").length ) {
     	ctxMusicCanvas = $("#ClefWithNotes").get(0).getContext('2d');
 	} else {
-    	console.log('Cannot obtain C major notes context');
+    	console.error('Cannot obtain C major notes context, ctxMusicCanvas on Pg2MusicSinIntro.js');
 	}
 	let ctxBkgdMusicCanvas;
 	if ( $("#NotesFilledIn").length ) {
     	ctxBkgdMusicCanvas = $("#NotesFilledIn").get(0).getContext('2d');
 	} else {
-    	console.log('Cannot obtain C major background notes context');
+    	console.error('Cannot obtain C major background notes context, ctxBkgdMusicCanvas on Pg2MusicSinIntro.js');
 	}
 	
 	// put up the horizontal lines for notes
@@ -209,7 +209,7 @@ $(function() {
 	if ( $("#PitchGraph").length ) {
     	ctxPitchGraphCanvas = $("#PitchGraph").get(0).getContext('2d');
 	} else {
-    	console.log('Cannot obtain tone graph context');
+    	console.error('Cannot obtain tone graph context, ctxPitchGraphCanvas in Pg2MusicSineIntro.js');
 	}
 	//if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
 	const CHART_OPTIONS = {
@@ -300,7 +300,7 @@ $(function() {
 			  x: e.clientX - rect.left,
 			  y: e.clientY - rect.top
 			};			
-		} else { console.log('ERROR:  unexpected event: ' + e);}
+		} else { console.error('ERROR:  unexpected event: ' + e);}
 		Object.freeze(pos);
 		let cntr = 0;
 		

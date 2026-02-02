@@ -29,7 +29,7 @@ $(function() {
 	if ( $("#AmpSinCosCircle_DT1").length ) {
     	ctxUnitCircle = $("#AmpSinCosCircle_DT1").get(0).getContext('2d');
 	} else {
-    	console.log('Cannot obtain Sin/Cos unit circle context');
+    	console.error('Cannot obtain Sin/Cos unit circle context, DynamicTrig1.js ctxUnitCircle');
 	}
 	let sineAxisBkgd;
 	
@@ -177,7 +177,7 @@ $(function() {
 	if ( $("#FreqChange_DT1").length ) {
     	ctxFreqPlot = $("#FreqChange_DT1").get(0).getContext('2d');
 	} else {
-    	console.log('Cannot obtain Sin/Cos unit circle context');
+    	console.error('Cannot obtain Sin/Cos unit circle context, ctxFreqPlot in DynamicTrig1.js');
 	}	
 	const PIX_PER_MINOR_TICK = 13;
 	const MAX_AMP_AXIS = CIRC_RAD + 10;
@@ -497,7 +497,7 @@ $(function() {
 			  x: e.clientX - rect.left,
 			  y: e.clientY - rect.top
 			};			
-		} else { console.log('ERROR:  unexpected event: ' + e);}
+		} else { console.error('ERROR:  unexpected event: ' + e);}
 		Object.freeze(pos);
 		let ind = 0;
 		littleDotCenter.forEach(dot => {

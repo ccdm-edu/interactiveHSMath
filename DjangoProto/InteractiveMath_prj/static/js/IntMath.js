@@ -39,8 +39,6 @@ $(function () {
 		// get rid of the old "active" page, there may not be anything stored under sessionStorage yet so just search and remove
 		// buttonSelPage may not be in the same URL form as the anchor for li.nav-item--find its equivalent
 		console.log("current URL is " + $(location).attr("href"));
-		let nextURL = $(location).attr("href") + buttonSelPage; 
-		console.log("desired url is " + nextURL );
 		let equivURL = "";
 		$('ul.nav.flex-column > li.nav-item > a').each(function() {
 			// make all members of list inactive

@@ -61,7 +61,7 @@ class AutoDemo {
 				$('#segNum').val((this.currSeg+ 1).toString());
 			} 
 		} else {
-			console.log(" CODING ERROR, setCurrSeg assumes input param is an integer but it is not");
+			console.error(" CODING ERROR, setCurrSeg assumes input param is an integer but it is not");
 		}
 		let newLabel = this.fullScript[this.currSeg].segmentName;
 		$('#segName').html('<b>' + newLabel + '</b>');
@@ -143,7 +143,7 @@ class AutoDemo {
     	if (response.ok) {
         	const data = await response.json();
         	const audioURL = data.url; 
-        	console.log("Will fetch audio URL:", audioURL);
+        	console.log("Will fetch autodemo explanation mp3 URL:", audioURL);
     
 			// Now we have the resolved URL, go get from appropriate server.  csrf not needed for get.  
 			spinner.className = "show";  // turn on the spinner in middle of autodemo box
@@ -175,7 +175,6 @@ class AutoDemo {
 					{ // done converting blob to arrayBuffer, promise complete, convert blob2array to buffer
 						context.decodeAudioData(blob2array, function(buffer) {
 							// to get here means asynchronous mp3 decode is complete and successful
-							//console.log("finished decoding mp3");
 							try {
 								//console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate );
 								thisObj.helpAudio = context.createBufferSource();
@@ -186,7 +185,7 @@ class AutoDemo {
 								thisObj.helpAudio.onended = () => 
 								{
 									// no longer playing the audio intro, either by user stop or natural completion
-									console.log('audio clip is over now, executing return to normal screen');
+									//console.log('audio clip is over now, executing return to normal screen');
 									thisObj.segmentOverCleanup();
 								};
 							} catch(e) {
@@ -232,7 +231,7 @@ class AutoDemo {
     	// this is the only way to set the logical size of the canvas.  The physical size of canvas is set in css	
     	let currentID = 'annotateElement' + ind; // so multiple annotations get unique ID
 		let $newCanvas = $('<canvas/>',{'id': currentID, 'width':'70px', 'height':'40px'}).prop({width:70,height:40});
-		console.log('annotate canvas id is ' + currentID);
+		//console.log('annotate canvas id is ' + currentID);
 		// debug only, if you want to see canvas
 		//$newCanvas.attr('style',"border:1px solid #000000;");		
 		
@@ -428,13 +427,13 @@ class AutoDemo {
 				break;
 			case ("ACT_ON_ELEMENT"):
 				// ACT_ON_ELEMENT
-				console.log('about to act on element with time ' + nextItemStartTime + 'for activity ' + activity.segmentParams.element);
+				//console.log('about to act on element with time ' + nextItemStartTime + 'for activity ' + activity.segmentParams.element);
 				temp = setTimeout(function(){
 					// setTimeout thinks 'this' is Window and not the instantiation of AutoDemo, must tell it explicitely
 					thisObj.actOnElement(activity.segmentParams);
 				}, nextItemStartTime);	
 				nextItemStartTime = nextItemStartTime + activity.segmentParams.waitTimeMillisec;
-				console.log('next item starttime updated to ' + nextItemStartTime);
+				//console.log('next item starttime updated to ' + nextItemStartTime);
 				this.eventLoopPtrs.push(temp);				
 				break;
 			case ("ANNOTATE_ELEMENT"):
@@ -504,7 +503,7 @@ class AutoDemo {
 				break;
 			
 			default:
-				console.log('SW error in autoDemo switch stmt, switch select value was ' + activity.segmentActivity);
+				console.error('SW error in autoDemo switch stmt, switch select value was ' + activity.segmentActivity);
 				break;
 		} // end of switch stmt
 		return [nextItemStartTime, anIndex]; 
@@ -529,11 +528,11 @@ class AutoDemo {
 				// this will almost certainly not pause the demo as all the activities will be launched off  immediately
 				// and execute when setTimeout expires...  but just in case user pauses immediately...
 				if (!this.userStopRequest) {
-					console.log('inside base class startDemo, nextItemBeginTime = '  + nextItemBeginTime);
+					//console.log('inside base class startDemo, nextItemBeginTime = '  + nextItemBeginTime);
 					[nextItemBeginTime, annotateInd] = this.doTheSegmentAction(activity, nextItemBeginTime, annotateInd);
 				} // end of if not pause demo
 			});  // end of forEach activity
-		} else {console.log('Coding Error, incorrect segment number called out in startDemo of ' + currSeg)};
+		} else {console.error('Coding Error, incorrect segment number called out in startDemo of ' + currSeg)};
 	}
 };
 class AutoDemoWithCanvas extends AutoDemo {
@@ -559,7 +558,7 @@ class AutoDemoWithCanvas extends AutoDemo {
 		if ( $(this.canvasID).length ) {
 	    	ctxDemoCanvas = $(this.canvasID).get(0).getContext('2d');
 		} else {
-	    	console.log('Cannot obtain demo canvas context');
+	    	console.error('Cannot obtain demo canvas context in getDemoCtx under autoDemo.js');
 		}
 		return {ctx: ctxDemoCanvas, width: demoCanvas.width, height: demoCanvas.height};
 	}
@@ -585,6 +584,7 @@ class AutoDemoWithCanvas extends AutoDemo {
 		// when done, ensure demo canvas is back to background so user can interact with dots again
 		$(this.canvasID).css('z-index',-1);
 	}
+	
 	// Move the cursor to new location on demo canvas
 	moveCursorImgOnCanvas(segmentParams) {
 	  // 1. Show and Position the pointer
@@ -598,14 +598,14 @@ class AutoDemoWithCanvas extends AutoDemo {
 	  const scaleX = rect.width / canvas.width;
 	  const scaleY = rect.height / canvas.height;
 	
-	  // Convert canvas internal (x, y) = xyPt to viewport (left, top)
+	  // Convert canvas internal (x, y) = xyPt to viewport (left, top).  Need to account for any scrolling the user has 
+	  // done to calc location
 	  const xyPt = segmentParams.xyCoord;
-	  const screenX = rect.left + (xyPt.x * scaleX) - CURSOR_DIM;
-	  const screenY = rect.top + (xyPt.y * scaleY);
+	  const screenX = rect.left + window.scrollX + (xyPt.x * scaleX) - CURSOR_DIM;
+	  const screenY = rect.top + window.scrollY + (xyPt.y * scaleY);
 	
 	  // Move the pointer, easier to just make pointer appear and disappear than to smoothly move
 	  $('#demoCursorID').css({ 'left': screenX + 'px', 'top': screenY + 'px' });
-	  //$('#demoCursorID').css('transform', `translate(${screenX}px, ${screenY}px)`);
 		    
       // 3. Dispatch the click event to the target canvas
 	  // Ensure the event carries the coordinates needed by your canvas listener
@@ -616,9 +616,6 @@ class AutoDemoWithCanvas extends AutoDemo {
 		
 	  segmentParams.canvas.dispatchEvent(clickCanvasPt);
 	}
-	
-
-
 
 	doTheSegmentAction(activity, nextItemBeginTime, annotateInd){
 		let temp;

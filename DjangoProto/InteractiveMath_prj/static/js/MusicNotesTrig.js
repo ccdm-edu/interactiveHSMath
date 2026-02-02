@@ -55,8 +55,8 @@ $(function() {
 	const NOTE_MAPPING = new Map([ ["C5", C5_NOTE],["C4", C4_NOTE],["B4flat", BFLAT4_NOTE] ]);
 
 	//everything is relative to the html page this code operates on, server needs to work from /static directory (without django intervention)
-	const STATIC_FILE_LOC = "../../static/static_binaries/";
-	const urlInitValJson = STATIC_FILE_LOC + "Configuration/filelistofmusicalinstrumentsplayingtuningnote.json";
+	//const STATIC_FILE_LOC = "../../static/static_binaries/";
+	//const urlInitValJson = STATIC_FILE_LOC + "Configuration/filelistofmusicalinstrumentsplayingtuningnote.json";
 	
 	const DEFAULT_TITLE = "Musical Notes and Underlying Trig";
 	$("#musicalActivity").html(DEFAULT_TITLE);  //load up default
@@ -251,7 +251,7 @@ $(function() {
 			new AxisArrow(ctxPeriod, [SECOND_R_466_X, LEFT_EDGE_Y], 'L',"blue").draw();
 			new AxisArrow(ctxPeriod, [THIRD_L_466_X, LEFT_EDGE_Y], 'R',"blue").draw();
 						
-		} else console.log(' Coding error, unexpected input freq to showPeriodicity as ' + freqSelect);	
+		} else console.error(' Coding error, unexpected input freq to showPeriodicity as ' + freqSelect);	
 	}	
 
 	//***********************************
@@ -403,7 +403,6 @@ $(function() {
 			// late so when we get better precision on zero crossing, we will further perfect the starting point
 			let plotFirstPt = bestInterval.justB4CrossPt;
 			let riseFallState = (bestInterval.rising)?"rising":"falling";
-			console.log("For this musical note, interval chosen is " + riseFallState);
 			if (!bestInterval.rising) {
 				plotFirstPt = bestInterval.justB4CrossPt + Math.trunc(this.POINTS_IN_NOTE_PERIOD/2); 
 			}
@@ -572,105 +571,96 @@ $(function() {
 	// prepOnly means we are just initializing sourceNote for AutoDemo since iOS will not allow init of any webAudio element from a CustomEvent 
 	// (which all autodemo events are, since they are simulated real events).  prepOnly=false is normal behavior
 	//***********************************
-	function prepToPlayNote(chosenInstrument, prepOnly = false) {
+	async function prepToPlayNote(chosenInstrument, prepOnly = false) {
 		let currInstrument = chosenInstrument;
 		//find the index of the selected instrument that was read in from JSON file
 		currTuneState = UNSELECTED;
-		$.each(tuneInstrument, function(index) {
-			if (currInstrument == tuneInstrument[index]) {
-				// no software error, html matches JSON
-				currTuneState = index;
-			}
-		});
-		return new Promise((resolve,reject) => {
 
-	    	if (currTuneState === UNSELECTED) {
-				// should never happen
-				console.log('SW Bug, html does not match JSON config file')
-				updatePlotsUserAides();
-				$("#musicalActivity").html(DEFAULT_TITLE);
-				$("#allowNotePlay").css("visibility", "hidden"); 
-				$("#currMusicNoteLabel").html("");
-				reject("SW bug, html does match JSON config file");
-			} else {	
-				console.log('currTuneState is ' + currTuneState)
-				// update advanced modal window
-				$(todo_tab_element).html(tuneToDo[currTuneState]);
-				$(expln_tab_element).html(tuneExpln[currTuneState]);
-				if (!prepOnly){
-					$("#musicalActivity").html(tuneTitle[currTuneState]);
-					$("#currMusicNoteLabel").html(NOTE_MAPPING.get(tuneMusicalNote[currTuneState]) );	
-				}		
-	
-				if (tuneBuffer == null || tuneBuffer[currTuneState] == null) {
-					// get musical note for first time, filename in config must be mp3
-					// I don't think we need a csrf token for this ajax post. Nothing is stored to database, request must be a filename we have or else get error back
-					// DO:  look into putting a loading spinner icon to show progress in bringing over file (see bootstrap lib)
-					fetch(tuneFilenameURL[currTuneState])
-					.then(response => {
-						if (!response.ok) {
-        					throw new Error("Fetch error, status = " + response.status);
-						} else {
-							return response.arrayBuffer()
-						}		
-					})
-					.then(arrayBuffer => context.decodeAudioData(arrayBuffer),
-					                     function(err) { 
-											 alert("err(decodeAudioData) on file for: " + tuneInstrument[currTuneState] + " error =" + err); 
-											 } )
-					.then(buffer => {
-						// to get here means asynchronous mp3 decode is complete and successful
-						console.log("finished decoding mp3");
-						// copy AudioBuffer into array for this instrument/note so don't have to bug the server with requests
-						try {
-							console.log(" buffer length is " + buffer.length + " buffer sample rate is " + buffer.sampleRate + " currTuneState = " + currTuneState);
-							tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length , buffer.sampleRate);
-							buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
-						} catch(e) {
-							// most likely not enough space to createBuffer
-							console.error(e);
-					 		alert("Failed note file setup, error is " + e);
-						}
-			
-						console.log("the length of copied tune Buffer is " + tuneBuffer[currTuneState].length)						
-						// setup the class from which we will get points to graph the note
-						noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState, tuneFundamentalFreq[currTuneState]);
-						tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray();
+		tuneInstrument.forEach((inst, index) => {
+        	if (currInstrument === inst) currTuneState = index;
+    	});
+
+    	if (currTuneState === UNSELECTED) {
+			// should never happen
+			console.error('SW Bug, html does not match JSON config file')
+			updatePlotsUserAides();
+			$("#musicalActivity").html(DEFAULT_TITLE);
+			$("#allowNotePlay").css("visibility", "hidden"); 
+			$("#currMusicNoteLabel").html("");
+			throw new Error("SW bug, html does not match JSON config file"); // This "rejects" the async function
+
+		} 
 						
-						// clean up the signal params and graphs and user aides for new instrument
-						if (!prepOnly){
-							updatePlotsUserAides();
-							
-							// we have new instrument mp3, allow play
-							$("#allowNotePlay").attr("src", VOL_OFF_ICON);
-							$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
-							$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
-							$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
-							$("#allowNotePlay").css("visibility", "visible");  
-						}
-						// indicate that we did need to load this up for first time
-						resolve("Music file was successfully retrieved and decoded");
-					},function(err) { alert("error creating buffer: " + tuneInstrument[currTuneState] + " error =" + err); } )
-					.catch(error => console.log("Error in " + tuneInstrument[currTuneState] + ".  " + error))
-					
-	        	} else {
-					// we already have this instrument cached
-					// clean up the signal params and graphs and user aides for new instrument
-					if (!prepOnly){
-						updatePlotsUserAides();
-						// we have new instrument mp3, allow play
-						$("#allowNotePlay").attr("src", '../../static/svg/volume-off.svg');
-						$("#allowNotePlay").attr("alt", 'Volume is currently off');
-						$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
-						$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
-		     			$("#allowNotePlay").css("visibility", "visible"); 
-					}
-					// indicate we already had this mp3 file loaded up so all good
-					resolve("Music file was already in local cache") 
-				}
-			}
-		})	
+		// update advanced modal window
+		$(todo_tab_element).html(tuneToDo[currTuneState]);
+		$(expln_tab_element).html(tuneExpln[currTuneState]);
+		if (!prepOnly){
+			$("#musicalActivity").html(tuneTitle[currTuneState]);
+			$("#currMusicNoteLabel").html(NOTE_MAPPING.get(tuneMusicalNote[currTuneState]) );	
+		}		
+
+
+		// Check Cache
+	    if (tuneBuffer[currTuneState] != null) {
+			// it was found in cache, no need to obtain or load mp3
+	        if (!prepOnly) updateUIAfterLoad();
+	        return "Music file was already in local cache"; // This "resolves" the async function
+	    }
+
+	    try {
+	        // 1. Get the URL (Signed or Local)
+	        const response = await fetch('/int_math/getDynamicFilename/?fileName=MusicNotes/' + tuneFilenameURL[currTuneState]);
+	        if (!response.ok) throw new Error(`Config fetch failed: ${response.status}`);
+	        //Url response embedded in json response
+	        const data = await response.json();
+	        const musicianNoteMp3URL = data.url;
+	
+	        // 2. Fetch the actual MP3 binary
+	        const mp3Response = await fetch(musicianNoteMp3URL);
+	        if (!mp3Response.ok) throw new Error(`MP3 fetch failed: ${mp3Response.status}`);
+	        
+	        const arrayBuffer = await mp3Response.arrayBuffer();
+	
+	        // 3. Decode Audio
+	        const buffer = await context.decodeAudioData(arrayBuffer);
+	
+	        // 4. Process and Cache
+	        tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length, buffer.sampleRate);
+	        buffer.copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
+	
+	        noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState, tuneFundamentalFreq[currTuneState]);
+	        tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray();
+	
+	        if (!prepOnly) {
+	            updateUIAfterLoad(); // Helper to set visibility/colors
+	        }
+	
+	        return "Music file was successfully retrieved and decoded";
+	        
+	    } catch (err) {
+	        alert("Error processing note: " + err.message);
+	        console.error(err);
+	        throw err; // Re-throw so the caller knows it failed
+	    }
 	}
+
+	
+	// Helper to prepToPlayNote
+	function updateUIAfterLoad() {
+	    updatePlotsUserAides();
+	    
+	    $("#allowNotePlay")
+	        .attr({
+	            "src": VOL_OFF_ICON,
+	            "alt": 'Volume is currently off',
+	            "data-original-title": 'turn on speaker and click to hear musical note'
+	        })
+	        .css({
+	            "background-color": GO_COLOR, 
+	            "visibility": "visible"
+	        });
+	}
+
 	
 	// user selects an instrument from dropdown menu
 	$('#InstrumentSel .dropdown-menu button').click(function () {  
@@ -804,7 +794,8 @@ $(function() {
 	//***********************************
 	//initialize data fields for tone and musical notes
 	//***********************************	
-	$.getJSON(urlInitValJson)
+	//const response = await fetch('/int_math/getDynamicFilename/?fileKey=' + audioURLKey);
+	$.getJSON('/int_math/GetMarchingBandTuningNoteAudioConfig/')
 		.done(function(data,status,xhr) {
 			//xhr has good stuff like status, responseJSON, statusText, progress
 			if (status === 'success') {				
@@ -1105,7 +1096,6 @@ $(function() {
 		if (undefined === sourceNote) {
 			// this means user hasn't played with music notes so far and autodemo will not play music notes until we initialize 
 			// sourceNote before the CustomEvent happens in AutoDemo
-			console.log("We need to initialize SourceNote since extra MP3 will be played during autoDemo");	
 			// prep the SourceNote as required by iOS for Autodemo mp3 play]
 			prepToPlayNote("Trumpet", true).then( (onResolved) => {
 					console.log(onResolved);  // did we need to read from scratch or did we already have it?
@@ -1118,7 +1108,7 @@ $(function() {
 					sourceNote.stop(0);   // turn off fast, no one should notice									
 				}, 
 				(onRejected) => {
-					console.log("Failure instantiating sourceNote WebAudio element. " + onRejected)
+					console.error("Failure instantiating sourceNote WebAudio element. " + onRejected)
 				}
 			);
 		}

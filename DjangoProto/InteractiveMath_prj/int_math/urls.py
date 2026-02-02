@@ -35,5 +35,6 @@ urlpatterns = [
 # for teachers only
     path('TeacherStds/', views.TeacherStandardsView.as_view(), name='TeacherStds'),
 # get the actual filenames for mp3 (with signed URL as appropriate
-    path('getDynamicFilename/', views.GetDynamicFilename.as_view(), name='getDynamicFilename')
+    path('getDynamicFilename/', views.GetDynamicFilename.as_view(), name='getDynamicFilename'),
+    path('GetMarchingBandTuningNoteAudioConfig/', views.GetMarchingBandTuningNoteAudioConfig.as_view(), name='GetMarchingBandTuningNoteAudioConfig'),
 ]

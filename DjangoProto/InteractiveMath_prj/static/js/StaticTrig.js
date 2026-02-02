@@ -27,7 +27,7 @@ $(function() {
 	if ( $("#AmpSinCosCircle").length ) {
     	ctxExpandableUnitCircle = $("#AmpSinCosCircle").get(0).getContext('2d');
 	} else {
-    	console.log('Cannot obtain Sin/Cos unit circle context');
+    	console.error('Cannot obtain Sin/Cos unit circle context');
 	}
 	
 	// When user changes a parameter or a animation is running, need to be able to go back to an intermediate canvas picture to 
@@ -628,7 +628,7 @@ $(function() {
 			  x: e.clientX - rect.left,
 			  y: e.clientY - rect.top
 			};			
-		} else { console.log('ERROR:  unexpected event: ' + e);}
+		} else { console.error('ERROR:  unexpected event: ' + e);}
 		Object.freeze(pos);
 		let cntr = 0;
 		schoolAngles.forEach(dot => {

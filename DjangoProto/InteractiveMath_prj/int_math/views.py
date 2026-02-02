@@ -6,13 +6,14 @@ from django.templatetags.static import static
 from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.html import escape
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse, Http404
 from user_agents import parse
 import urllib.request
 import json, os
 from pytz import timezone
 from django.views.decorators.cache import cache_control
 from django.utils.decorators import method_decorator
+from pathlib import Path
 # homegrown stuff
 from int_math.forms import contactForm
 from int_math.models import ContactAccesses
@@ -338,17 +339,49 @@ class ConfigMapper:
 # Some files are needed on the fly, like autodemo voice MP3 explanations or musician notes.  Only server knows which
 # config file to use and if file needed is on cloud, will add approptiate signed URL authorizations
 class GetDynamicFilename(View):  
+    def hasExtension(self, filename):
+        return bool(Path(filename).suffix)
+
     def get(self, request):
-        fileKey = request.GET.get('fileKey')
-        print(f'just received {fileKey} for audio file, ')
-        configMap = ConfigMapper(request)
-        realDynFilename = configMap.readConfigMapper(fileKey)
-        print(f'config mapper reads key {fileKey} as {realDynFilename}')
+        realDynFilename = request.GET.get('fileKey') or request.GET.get('fileName')
+        if not self.hasExtension(realDynFilename):
+            # we have a key only, use config file to look up the filename
+            configMap = ConfigMapper(request)
+            realDynFilename = configMap.readConfigMapper(realDynFilename)
+        # now, either way, we have full filename, run with it
         isVideo=False
         getFromPublicRepo = False
         dynamicURL = getFullFileURL(realDynFilename, getFromPublicRepo, request, isVideo) 
         print(f'will return to client a full filename of {dynamicURL}')    
-        return JsonResponse({'url': dynamicURL})    
+        return JsonResponse({'url': dynamicURL})   
+    
+# client needs the configuration of the musical notes (filenames, notes, instruments etc).  Best to let Django serve it
+# since could be test file set or "real" set
+class GetMarchingBandTuningNoteAudioConfig(View):
+    def get(self,request):
+        #if env var not found, use '', just dont crash
+        useDeployConfig = os.environ.get('USE_CLOUD_BUCKET', '').lower() == 'true'
+        configDir = 'DeployConfig' if (useDeployConfig or settings.DEBUG) else 'TestConfig'
+
+        # on localhost, dont use cloud files but rather the local versions of those files which will be uploaded to cloud once
+        # tested
+        # on test server, can use either local test files (which are not at all like real deployed binaries but are tiny) or cloud
+        # here use local test files
+
+        fileLoc = os.path.join(
+            os.path.dirname(__file__), 
+            '..', 'ConfigFiles', configDir, 
+            'filelistofmusicalinstrumentsplayingtuningnote.json'
+        )
+
+        # Defensive check to prevent 500 errors
+        if not os.path.exists(fileLoc):
+            raise Http404(f"Configuration file not found at {fileLoc}")
+
+        # Open and return. Django's FileResponse will handle closing the file.
+        fileHandle = open(fileLoc, 'rb')
+        return FileResponse(fileHandle, content_type='application/json')
+
 #**********************************************************
 # these are all page views
 #**********************************************************
