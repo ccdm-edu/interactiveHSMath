@@ -68,10 +68,18 @@ def getFullFileURL(filename, usePubDomainBucket, request, tempVideoOverride = Fa
         print(f'Failed filename mapping in getFullFileURL')
         return None
     
-    # all is good
-    useCloud = os.environ.get('USE_CLOUD_BUCKET', 'False').lower() == 'true'
     urlStaticSrc = ""
     localURLbase = str(request.build_absolute_uri('/'))
+    
+    #Check for intermediate test mode where code is local (html is always local) but binaries are either local or cloud
+    use_local = os.environ.get('USE_LOCAL_CODE', 'True').lower() == 'true'
+    if use_local and filename.endswith((".css", ".js")):
+        print("All JS and CSS will be served locally for intermediate testing")
+        return f"{localURLbase}static/{filename}"
+
+    log_type = "VIDEO link (temporary)" if tempVideoOverride else "LOCAL code"
+    print(f"{log_type}: url will be {urlStaticSrc}")
+    useCloud = os.environ.get('USE_CLOUD_BUCKET', 'False').lower() == 'true'
     if  useCloud and not tempVideoOverride:
         #this cannot be tested from localhost due to security concerns with whitelisting localhost
         urlStaticSrc = generateSignedURL4Bucket(filename, usePubDomainBucket)
