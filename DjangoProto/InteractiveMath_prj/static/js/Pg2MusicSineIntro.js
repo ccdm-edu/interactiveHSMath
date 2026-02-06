@@ -304,6 +304,11 @@ $(function() {
 		Object.freeze(pos);
 		let cntr = 0;
 		
+		// if user clicks a note, the sound must come on and icons must match
+		$(".VolOnOff .VolOff").addClass('hidden');
+		$(".VolOnOff .VolOn").removeClass('hidden');
+		volumeOn = true;
+		
 		CmajorNotes.forEach(note => {
 			// not sure yet which dot the user clicked on, must search all
 			if (isInside(pos, note, NOTE_RADIUS)) {
@@ -331,7 +336,7 @@ $(function() {
 					}	
 				},100);
 				selectedNote = note;
-				$("#VolOnOff").prop("title", "");  // note is selected, no need to pester the user
+				$(".VolOnOff").prop("title", "");  // note is selected, no need to pester the user
 				drawTone();
 			}
 		});
@@ -362,41 +367,30 @@ $(function() {
 	//***********************************
 	// user turns on and off sound
 	//***********************************
-	let volumeOn = true;
-
-	$("#VolOnOff").attr("src", VOL_ON_ICON);
-	$("#VolOnOff").attr("alt", VOL_ON_ALT);
-	$("#VolOnOff").attr("data-original-title", 'click to turn off note');
-	$('#VolOnOff').css('background-color', STOP_COLOR);
+	let volumeOn = (!$('.VolOnOff .VolOn').hasClass('hidden'))  ? true: false;
 
 	// Handle user button interaction
-	$('#VolOnOff').on('click', function(event){
+	$('.VolOnOff').on('click', function(event){
 		// if sound is on, button will say TURN_SOUND_OFF and vice versa
-		volumeOn = (VOL_ON_ICON == $('#VolOnOff').attr("src")) ? true: false;
+		volumeOn = (!$('.VolOnOff .VolOn').hasClass('hidden'))  ? true: false;
 		if (null != selectedNote) {
 			// user has selected note, let volume be on/off
 			if (volumeOn) {
 				// sound is on, we turn it off, leave sliders alone
 				osc.toDestination().stop();
 				// here we change color/text on button
-				$("#VolOnOff").attr("src", VOL_OFF_ICON);
-				$("#VolOnOff").attr("alt", VOL_OFF_ALT);
-				$("#VolOnOff").attr("data-original-title", 'turn on speaker and click to hear note');
-				$('#VolOnOff').css('background-color', GO_COLOR);
+				$('.VolOnOff .VolOn, .VolOnOff .VolOff').toggleClass('hidden');
 				volumeOn = false;
 			} else {
 				// turn on tone				
 				osc.toDestination().start();
 				// here we change color/text on button
-				$("#VolOnOff").attr("src", VOL_ON_ICON);
-				$("#VolOnOff").attr("alt", VOL_ON_ALT);
-				$("#VolOnOff").attr("data-original-title", 'click to turn off note');
-				$('#VolOnOff').css('background-color', STOP_COLOR);
+				$('.VolOnOff .VolOn, .VolOnOff .VolOff').toggleClass('hidden');
 				volumeOn = true;
 			}
 		} else {
 			//user has not selected a note yet, since cursor over volume button, tell them to select a note
-			$("#VolOnOff").prop("title", "Select note from above scales first");
+			$(".VolOnOff").prop("title", "Select note from above scales first");
 		}	
 	});
 
@@ -418,10 +412,10 @@ $(function() {
 		selectedNote = null; // dont want to play any notes since notes deselected
 		// set up volume icon as it is when first enter page, volume on but no sound since no note selected
 		volumeOn = true;
-		$("#VolOnOff").attr("src", VOL_ON_ICON);
-		$("#VolOnOff").attr("alt", VOL_ON_ALT);
-		$("#VolOnOff").attr("data-original-title", 'click to turn off note');
-		$('#VolOnOff').css('background-color', STOP_COLOR);
+		// go back to original html defaults
+		$(".VolOnOff .VolOn").addClass('hidden');
+		$(".VolOnOff .VolOff").removeClass('hidden');
+
 		// set the volume value to the default we start on the page (so its not too loud in case user has played with it before autodemo)
 		$("#noteVol").prop("value", DEFAULT_VOL);
 		setVolume();

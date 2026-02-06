@@ -57,8 +57,11 @@
 						<tr>
 							<td colspan="4" align="center">
  	 							<!--  this button plays the tone and is visible all the time -->
- 	 							<img id="toneStartButton" src = {{ VolumeOffSVG }} alt="Volume is currently off" data-toggle="tooltip" data-placement="top" title="turn on speaker and click to hear sine wave you created"">
-							</td>
+								<div class="toneStartButton" >
+					    			<img class="VolOff" src={{ VolumeOffSVG }} alt="Volume is currently off" data-toggle="tooltip" data-placement="top" title="turn on speaker and hear sine waves you created">
+					    			<img class="VolOn hidden" src={{ VolumeOnSVG }} alt="Volume is currently on" data-toggle="tooltip" data-placement="top" title="turn on speaker and hear sine waves you created">
+								</div>						
+ 							</td>
 						</tr>
 						<tr>		
 							<td align="left">

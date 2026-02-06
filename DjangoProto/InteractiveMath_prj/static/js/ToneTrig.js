@@ -194,9 +194,8 @@ $(function() {
 		updatePhase();
 	});
 	
-	$('#toneStartButton').css('background-color', GO_COLOR);  // initial value
 	// handle user clicking on/off the tone on/off button
-	$('#toneStartButton').on('click', function(){
+	$('.toneStartButton').on('click', function(){
 		if (typeof ToneIsOnNow == "undefined")  {
 			// First time in, 
 			ToneIsOnNow = false;
@@ -214,17 +213,11 @@ $(function() {
 					phase: $currPhase.val(),
 					type:"sine"});
 			osc.toDestination().start();	
-			$("#toneStartButton").attr("src", VOL_ON_ICON);
-			$("#toneStartButton").attr("alt", VOL_ON_ALT);
-			$("#toneStartButton").attr("data-original-title", 'click to turn off your sine wave');
-			$('#toneStartButton').css('background-color', STOP_COLOR);
+			$('.toneStartButton .VolOn, .toneStartButton .VolOff').toggleClass('hidden');
 			ToneIsOnNow = true;
 		} else {
 			osc.toDestination().stop();
-			$("#toneStartButton").attr("src", VOL_OFF_ICON);
-			$("#toneStartButton").attr("alt", VOL_OFF_ALT);
-			$("#toneStartButton").attr("data-original-title", 'turn on speaker and click to hear sine wave you created');
-			$('#toneStartButton').css('background-color', GO_COLOR);
+			$('.toneStartButton .VolOn, .toneStartButton .VolOff').toggleClass('hidden');
 			ToneIsOnNow = false;
 		}
 	});
@@ -329,10 +322,9 @@ $(function() {
 		//turn off tone initially
 		ToneIsOnNow = false;
 		osc.toDestination().stop();
-		$("#toneStartButton").attr("src", VOL_OFF_ICON);
-		$("#toneStartButton").attr("alt", VOL_OFF_ALT);
-		$("#toneStartButton").attr("data-original-title", 'turn on speaker and click to hear sine wave you created');
-		$('#toneStartButton').css('background-color', GO_COLOR);
+		// go back to original html defaults
+		$(".toneStartButton .VolOn").addClass('hidden');
+		$(".toneStartButton .VolOff").removeClass('hidden');
 		// on power up, draw the expansion lines between graphs
 		DrawExpansionLinesBtwnGraphs();
 		// draw current selected freq
@@ -376,7 +368,7 @@ $(function() {
 			// click on start tone  button to play tone
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 25, y: 20},
@@ -385,7 +377,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "nothing",
 			 	 waitTimeMillisec: 3000} 
 			},
@@ -490,7 +482,7 @@ $(function() {
 			// click on start tone  button to stop tones
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 25, y: 20},
@@ -499,7 +491,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "nothing",
 			   	 waitTimeMillisec: 19000} 
 			},	
@@ -580,7 +572,7 @@ $(function() {
 			// click on start tone  button to play default tone
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 25, y: 20},
@@ -589,7 +581,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 4000} 
 			},
@@ -662,7 +654,7 @@ $(function() {
 			// click on start tone  button to stop tones
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 25, y: 20},
@@ -671,7 +663,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 3000} 
 			},	

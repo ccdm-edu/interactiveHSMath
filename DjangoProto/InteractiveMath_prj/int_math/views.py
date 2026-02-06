@@ -500,7 +500,8 @@ class MusicTrigView(View):
                         'MusicSineIntroJS': getFullFileURL('js/Pg2MusicSineIntro.js', True, request),
                         'ColorfulClefSVG': getFullFileURL('svg/Prismatic-Clef-Hearts-2.svg', True, request),
                         'WholeNoteSVG': getFullFileURL('svg/WholeNote.svg', True, request),
-                        'VolumeSVG': getFullFileURL('svg/volume.svg', True, request),
+                        'VolumeOffSVG': getFullFileURL('svg/volume-off.svg', True, request),
+                        'VolumeOnSVG': getFullFileURL('svg/volume.svg', True, request),
                         }
         response = render(request, 'int_math/Pg2MusicSineIntro.html', context=context_dict)
         return response
@@ -564,7 +565,8 @@ class ToneTrigView(View):
                         'artistCredit': artistCredit[3],
                         'ToneTrigCSS': getFullFileURL('css/ToneTrig.css', True, request),
                         'ToneTrigJS': getFullFileURL('js/ToneTrig.js', True, request),
-                        'VolumeOffSVG': getFullFileURL('svg/volume-off.svg', True, request)
+                        'VolumeOffSVG': getFullFileURL('svg/volume-off.svg', True, request),
+                        'VolumeOnSVG': getFullFileURL('svg/volume.svg', True, request),
                         }
         response = render(request, 'int_math/ToneTrig.html', context=context_dict)
         return response
@@ -583,6 +585,7 @@ class MusicNotesTrigView(View):
                         'MusicNotesTrigCSS': getFullFileURL('css/MusicNotesTrig.css', True, request),
                         'MusicNotesTrigJS': getFullFileURL('js/MusicNotesTrig.js', True, request),
                         'VolumeOffSVG': getFullFileURL('svg/volume-off.svg', True, request),
+                        'VolumeOnSVG': getFullFileURL('svg/volume.svg', True, request),
                         }
         response = render(request, 'int_math/MusicNotesTrig.html', context=context_dict)
         return response

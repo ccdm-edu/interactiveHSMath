@@ -41,12 +41,29 @@ This is the style sheet for ToneTrig.html
 	display: inline-block; 
 	border: 1px solid black;
 }
-/* turn on/off tone */
-#toneStartButton {
+/* turn on/off note*/
+.toneStartButton{
+	position: relative;
 	height: 30px;
 	width: 30px;
+	margin: 0 auto;  /* center it up */
 }
-
+.VolOff, .VolOn{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.VolOff{
+	background-color: lightgreen;
+}
+.VolOn{
+	background-color: lightpink;
+}
+.hidden {
+  display: none; /* or opacity: 0; */
+}
 /*****************************************************************/
 /* arrange location of upper plot */
 #wrap_sin_plotsLong {

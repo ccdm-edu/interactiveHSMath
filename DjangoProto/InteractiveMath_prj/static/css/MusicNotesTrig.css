@@ -142,9 +142,28 @@ input[type="range"] {
 }
 /*****************************************************************/
 /* turn on/off tone or musical instrument*/
-#toneStartButton, #allowNotePlay{
+.toneStartButton, .allowNotePlay{
+	position: relative;
 	height: 30px;
 	width: 30px;
+	margin-left: auto;  /* center it up */
+	margin-right: auto;
+}
+.VolOff, .VolOn{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.VolOff{
+	background-color: lightgreen;
+}
+.VolOn{
+	background-color: lightpink;
+}
+.hidden {
+  display: none; /* or opacity: 0; */
 }
 /**********************define space for footer to float at bottom***************/
 #SineCosBlock {

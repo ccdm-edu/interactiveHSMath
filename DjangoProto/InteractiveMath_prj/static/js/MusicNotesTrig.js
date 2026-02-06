@@ -53,16 +53,11 @@ $(function() {
 	const BFLAT4_NOTE = "B<sup><span>&#9837;</span></sup><sub>4</sub>";
 	// map JSON texts to html
 	const NOTE_MAPPING = new Map([ ["C5", C5_NOTE],["C4", C4_NOTE],["B4flat", BFLAT4_NOTE] ]);
-
-	//everything is relative to the html page this code operates on, server needs to work from /static directory (without django intervention)
-	//const STATIC_FILE_LOC = "../../static/static_binaries/";
-	//const urlInitValJson = STATIC_FILE_LOC + "Configuration/filelistofmusicalinstrumentsplayingtuningnote.json";
 	
 	const DEFAULT_TITLE = "Musical Notes and Underlying Trig";
 	$("#musicalActivity").html(DEFAULT_TITLE);  //load up default
-	$("#allowNotePlay").css("visibility", "hidden");   // load up default, until user selects instrument
-	$('#toneStartButton').css('background-color', GO_COLOR);  // initial value, this is never hidden
-	
+
+
 	// used for plotting
 	let timeMsLong = [];
 	let ampLong = [];
@@ -530,7 +525,7 @@ $(function() {
 	//***********************************
 	//  User instigated callback events   User STARTS or STOPS TONE
 	//***********************************
-	$('#toneStartButton').on('click', function(){
+	$('.toneStartButton').on('click', function(){
 		if (typeof ToneIsOnNow == "undefined")  {
 			// First time in, 
 			ToneIsOnNow = false;
@@ -546,18 +541,14 @@ $(function() {
 					frequency: currFreq, 
 					volume: tonejs_dB,
 					type:"sine"});
-			osc.toDestination().start();	
-			$("#toneStartButton").attr("src", VOL_ON_ICON);
-			$("#toneStartButton").attr("alt", VOL_ON_ALT);
-			$("#toneStartButton").attr("data-original-title", 'click to turn off your sine wave');
-			$('#toneStartButton').css('background-color', STOP_COLOR);
+			osc.toDestination().start();
+			//turn off the volume on button and turn on the volume off button
+			$('.toneStartButton .VolOn, .toneStartButton .VolOff').toggleClass('hidden');	
 			ToneIsOnNow = true;
 		} else {
 			osc.toDestination().stop();
-			$("#toneStartButton").attr("src", VOL_OFF_ICON);
-			$("#toneStartButton").attr("alt", VOL_OFF_ALT);
-			$("#toneStartButton").attr("data-original-title", 'turn on speaker and click to hear sine wave');
-			$('#toneStartButton').css('background-color', GO_COLOR);
+			//turn off the volume off button and turn on the volume on button
+			$('.toneStartButton .VolOff, .toneStartButton .VolOn').toggleClass('hidden');	
 			ToneIsOnNow = false;
 		}
 	});
@@ -585,7 +576,9 @@ $(function() {
 			console.error('SW Bug, html does not match JSON config file')
 			updatePlotsUserAides();
 			$("#musicalActivity").html(DEFAULT_TITLE);
-			$("#allowNotePlay").css("visibility", "hidden"); 
+			//ensure both volume buttons not available if no instrument selected
+			$(".allowNotePlay .VolOn").addClass("hidden"); 
+			$(".allowNotePlay .VolOff").addClass("hidden");
 			$("#currMusicNoteLabel").html("");
 			throw new Error("SW bug, html does not match JSON config file"); // This "rejects" the async function
 
@@ -647,20 +640,9 @@ $(function() {
 	
 	// Helper to prepToPlayNote
 	function updateUIAfterLoad() {
-	    updatePlotsUserAides();
-	    
-	    $("#allowNotePlay")
-	        .attr({
-	            "src": VOL_OFF_ICON,
-	            "alt": 'Volume is currently off',
-	            "data-original-title": 'turn on speaker and click to hear musical note'
-	        })
-	        .css({
-	            "background-color": GO_COLOR, 
-	            "visibility": "visible"
-	        });
+	    updatePlotsUserAides();	    
+	    $(".allowNotePlay .VolOff").removeClass('hidden');  //show that vol is off but can be turned on
 	}
-
 	
 	// user selects an instrument from dropdown menu
 	$('#InstrumentSel .dropdown-menu button').click(function () {  
@@ -670,7 +652,7 @@ $(function() {
 	//***********************************
 	//  User instigated callback events   User selects PLAY INSTRUMENT they have selected
 	//***********************************
-	$('#allowNotePlay').on('click', function(){
+	$('.allowNotePlay').on('click', function(){
 		if (typeof noteIsOnNow == "undefined")  {
 			// First time in, 
 			noteIsOnNow = false;
@@ -693,26 +675,17 @@ $(function() {
 				// auto play
 				sourceNote.start(0);			
 				noteIsOnNow = true;
-				$("#allowNotePlay").attr("src", VOL_ON_ICON);
-				$("#allowNotePlay").attr("alt", VOL_ON_ALT);
-				$("#allowNotePlay").attr("data-original-title", 'click to turn off musical note');
-				$("#allowNotePlay").css("background-color", STOP_COLOR);
+				$(".allowNotePlay .VolOn, .allowNotePlay .VolOff").toggleClass('hidden');
 			} else {
 	        	// someone is tired of listening to our lovely tuning note
 	        	sourceNote.stop(0); 
 				noteIsOnNow = false;
-				$("#allowNotePlay").attr("src", VOL_OFF_ICON);
-				$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
-				$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
-				$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
+				//this will next hit sourceNote.onended and toggle the icons
 			}
 			sourceNote.onended = () => {
 				// no longer playing the note, either by user stop or natural completion
 				noteIsOnNow = false;
-				$("#allowNotePlay").attr("src", VOL_OFF_ICON);
-				$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
-				$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
-				$("#allowNotePlay").css("background-color", GO_COLOR);
+				$(".allowNotePlay .VolOn, .allowNotePlay .VolOff").toggleClass('hidden');
 			}
         }
     });	
@@ -792,9 +765,9 @@ $(function() {
 	$("#currFreqLabel").text(currFreq);
 
 	//***********************************
-	//initialize data fields for tone and musical notes
+	//initialize data fields for tone and musical notes, we must have config to know how instruments are configured
+	// server will respond with the proper file (django, not nginx)
 	//***********************************	
-	//const response = await fetch('/int_math/getDynamicFilename/?fileKey=' + audioURLKey);
 	$.getJSON('/int_math/GetMarchingBandTuningNoteAudioConfig/')
 		.done(function(data,status,xhr) {
 			//xhr has good stuff like status, responseJSON, statusText, progress
@@ -910,7 +883,7 @@ $(function() {
 			// TURN ON sine wave tone
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x:25, y: 20},
@@ -919,14 +892,14 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 1000} 
 			},
 			// wait a bit and TURN ON trumpet
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#allowNotePlay',
+			 	{element:'.allowNotePlay',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x:25, y: 20},
@@ -935,14 +908,14 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#allowNotePlay',
+			 	{element:'.allowNotePlay',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 5000} 
 			},			
 			// TURN OFF sine wave, Trumpet will play itself out
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x:25, y: 20},
@@ -951,7 +924,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 1000} 
 			},
@@ -1023,7 +996,7 @@ $(function() {
 			// TURN ON sine wave tone
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x:25, y: 20},
@@ -1032,14 +1005,14 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 1000} 
 			},
 			// wait a bit and TURN ON flute
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#allowNotePlay',
+			 	{element:'.allowNotePlay',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x:25, y: 20},
@@ -1048,14 +1021,14 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#allowNotePlay',
+			 	{element:'.allowNotePlay',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 5000} 
 			},			
 			// TURN OFF sine wave, instrument will play itself out
 			{segmentActivity: "ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "click",
 			 	 // positive values for offset x and y move the cursor "southwest"
 			 	 offset: {x: 25, y: 20},
@@ -1064,7 +1037,7 @@ $(function() {
 			// remove cursor on go/stop button
 			{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
 			 segmentParams:
-			 	{element:'#toneStartButton',
+			 	{element:'.toneStartButton',
 			 	 action: "nothing",
 			 	waitTimeMillisec: 1000} 
 			},
@@ -1150,16 +1123,14 @@ $(function() {
 	    	sourceNote.stop(0);
 	    } 
 		noteIsOnNow = false;
-		$("#allowNotePlay").attr("src", VOL_OFF_ICON);
-		$("#allowNotePlay").attr("alt", VOL_OFF_ALT);
-		$("#allowNotePlay").attr("data-original-title", 'turn on speaker and click to hear musical note');
-		$("#allowNotePlay").css("background-color", GO_COLOR); // initial value
+		// default is no instrument selected, then no volume on/off button
+		$(".allowNotePlay .VolOn").addClass('hidden');
+		$(".allowNotePlay .VolOff").addClass('hidden');
 		//    turn off tone
 		osc.toDestination().stop();
-		$("#toneStartButton").attr("src", VOL_OFF_ICON);
-		$("#toneStartButton").attr("alt", VOL_OFF_ALT);
-		$("#toneStartButton").attr("data-original-title", 'turn on speaker and click to hear sine wave');
-		$('#toneStartButton').css('background-color', GO_COLOR);
+		// go back to original html defaults
+		$(".toneStartButton .VolOn").addClass('hidden');
+		$(".toneStartButton .VolOff").removeClass('hidden');
 		ToneIsOnNow = false;
 	}
 	// User has selected play

@@ -231,13 +231,31 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	top: 0px;
 	font-size: 15px;	
 }
-#VolOnOff{
+
+/* turn on/off note*/
+.VolOnOff{
 	position: absolute;
 	height: 30px;
 	width: 30px;
 	top: 60px;
 	left: calc(var(--VOLUME_LEFT_MARGIN) + 80px);
 	z-index: 101;  /* this must be greater than tutorial canvas so user can always stop sound */
+}
+.VolOff, .VolOn{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.VolOff{
+	background-color: lightgreen;
+}
+.VolOn{
+	background-color: lightpink;
+}
+.hidden {
+  display: none; /* or opacity: 0; */
 }
 #ResetPage{
 	position: absolute;
