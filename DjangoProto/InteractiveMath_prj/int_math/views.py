@@ -72,7 +72,7 @@ def getFullFileURL(filename, usePubDomainBucket, request, tempVideoOverride = Fa
     localURLbase = str(request.build_absolute_uri('/'))
     
     #Check for intermediate test mode where code is local (html is always local) but binaries are either local or cloud
-    use_local = os.environ.get('USE_LOCAL_CODE', 'True').lower() == 'true'
+    use_local = os.environ.get('USE_LOCAL_CODE', 'False').lower() == 'true'
     if use_local and filename.endswith((".css", ".js")):
         print("All JS and CSS will be served locally for intermediate testing")
         return f"{localURLbase}static/{filename}"
