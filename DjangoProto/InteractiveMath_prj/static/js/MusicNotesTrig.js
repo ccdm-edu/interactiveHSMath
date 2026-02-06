@@ -560,7 +560,8 @@ $(function() {
 	//***********************************
 	//  User instigated callback events   User SELECTS NEW instrument
 	// prepOnly means we are just initializing sourceNote for AutoDemo since iOS will not allow init of any webAudio element from a CustomEvent 
-	// (which all autodemo events are, since they are simulated real events).  prepOnly=false is normal behavior
+	// (which all autodemo events are, since they are simulated real events).  prepOnly=false is normal behavior.
+	// All files obtained are cached at browser even as user moves between pages of same site.
 	//***********************************
 	async function prepToPlayNote(chosenInstrument, prepOnly = false) {
 		let currInstrument = chosenInstrument;
@@ -591,7 +592,6 @@ $(function() {
 			$("#musicalActivity").html(tuneTitle[currTuneState]);
 			$("#currMusicNoteLabel").html(NOTE_MAPPING.get(tuneMusicalNote[currTuneState]) );	
 		}		
-
 
 		// Check Cache
 	    if (tuneBuffer[currTuneState] != null) {
@@ -767,6 +767,7 @@ $(function() {
 	//***********************************
 	//initialize data fields for tone and musical notes, we must have config to know how instruments are configured
 	// server will respond with the proper file (django, not nginx)
+	// This file should be cached at the browser as long as user keeps site up--no need for local storage
 	//***********************************	
 	$.getJSON('/int_math/GetMarchingBandTuningNoteAudioConfig/')
 		.done(function(data,status,xhr) {
