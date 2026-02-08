@@ -124,7 +124,7 @@ CSP_FRAME_SRC = ["'self'", 'data:', 'https://www.google.com', "https://staticbin
 CSP_MEDIA_SRC = ("'self'", "https://staticbinary.interactablemath.org")
 CSP_FRAME_ANCESTORS = ["'self'", 'https://www.google.com'] 
 CSP_CONNECT_SRC = ["'self'", 'https://www.google.com','https://getbootstrap.com',
-                   'https://cdnjs.cloudflare.com']  #needed for recaptcha and to remove annoying .map errors
+                   'https://cdnjs.cloudflare.com', 'https://staticbinary.interactablemath.org']  #needed for recaptcha and to remove annoying .map errors
 CSP_FORM_ACTION = ["'self'"]
 #style-src-elem needed for noncing inline css
 CSP_INCLUDE_NONCE_IN = ['script-src', 'script-src-elem', 'style-src', 'style-src-elem']  
