@@ -204,7 +204,7 @@ class AutoDemo {
 				.fail(function(jqXHR, exception) {
 					spinner.className = spinner.className.replace("show", "");  // turn off spinner
 					if (jqXHR.status == 403) {
-						alert("Need to pass bot test to access server file.  No file for YOU!");  
+						alert("Access expired or invalid signature on signed URL access, see network tab in console");  
 					} else if (jqXHR.status == 404) {
 						alert("File not found.  See Administrator");
 					} else {
