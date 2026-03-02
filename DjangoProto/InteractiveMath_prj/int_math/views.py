@@ -59,13 +59,13 @@ def generateSignedURL4Bucket(filename, usePubDomainBucket, expiration_seconds=36
 
     # Match the URL format your Worker expects
     signed_url = cloud_bucket_url + f"/{filename}?expires={expires_at}&sig={signature}&id={unique_id}"
-    print(f' signed (either code/binary) url is {signed_url}')
+    #print(f' signed (either code/binary) url is {signed_url}')
     return signed_url
 
   
 def getFullFileURL(filename, usePubDomainBucket, request, tempVideoOverride = False):
     if not filename: 
-        print(f'Failed filename mapping in getFullFileURL')
+        print(f'SW ERROR: Failed filename mapping in getFullFileURL')
         return None
     
     urlStaticSrc = ""
@@ -78,12 +78,12 @@ def getFullFileURL(filename, usePubDomainBucket, request, tempVideoOverride = Fa
         return f"{localURLbase}static/{filename}"
 
     log_type = "VIDEO link (temporary)" if tempVideoOverride else "LOCAL code"
-    print(f"{log_type}: url will be {urlStaticSrc}")
+    #print(f"{log_type}: url will be {urlStaticSrc}")
     useCloud = os.environ.get('USE_CLOUD_BUCKET', 'False').lower() == 'true'
     if  useCloud and not tempVideoOverride:
         #this cannot be tested from localhost due to security concerns with whitelisting localhost
         urlStaticSrc = generateSignedURL4Bucket(filename, usePubDomainBucket)
-        print(f'REMOTE code:  url will be {urlStaticSrc}')   
+        #print(f'REMOTE code:  url will be {urlStaticSrc}')   
         return urlStaticSrc         
    
     # use local copy of file.  This is expected to be used for initial testing only, not for deployment
@@ -92,7 +92,7 @@ def getFullFileURL(filename, usePubDomainBucket, request, tempVideoOverride = Fa
     urlStaticSrc = f"{localURLbase}{sub_path}{filename}"
 
     log_type = "VIDEO link (temporary)" if tempVideoOverride else "LOCAL code"
-    print(f"{log_type}: url will be {urlStaticSrc}")
+    #print(f"{log_type}: url will be {urlStaticSrc}")
 
     return urlStaticSrc
 
@@ -360,7 +360,7 @@ class GetDynamicFilename(View):
         isVideo=False
         getFromPublicRepo = False
         dynamicURL = getFullFileURL(realDynFilename, getFromPublicRepo, request, isVideo) 
-        print(f'will return to client a full filename of {dynamicURL}')    
+        #print(f'will return to client a full filename of {dynamicURL}')    
         return JsonResponse({'url': dynamicURL})   
     
 # client needs the configuration of the musical notes (filenames, notes, instruments etc).  Best to let Django serve it
@@ -479,7 +479,7 @@ class MusicTrigConceptIntroView(View):
         realFileIntroVideo = trigMap.readConfigMapper("IntroToFrequencyVideo_html")
         realFileCartoonGIF = trigMap.readConfigMapper("CartoonIntroGIF")
         realFileCartoonTrig = trigMap.readConfigMapper("CartoonIntroTrig")
-        print(f'file intro video {realFileIntroVideo} and URL is {getFullFileURL(realFileIntroVideo, False, request)}')
+        #print(f'file intro video {realFileIntroVideo} and URL is {getFullFileURL(realFileIntroVideo, False, request)}')
         realFileIntroAudio = trigMap.readConfigMapper("TrigReviewIntroAudio")
         artistCredit = trigMap.readConfigMapper('ArtistCredits')
         context_dict = {'basePage': getBaseContextEntry(request),
@@ -677,7 +677,6 @@ class AckView(View):
             contributorString += OPENER + A_Begin + contributor["url"] + A_End + Img1 + getFullFileURL(contributor["logo"], False, request) + Img2 + A_Close
             contributorString += A_Begin + contributor["url"] + A_End + H2_1 + contributor["line1"] + H2_2 + A_Close
             contributorString += A_Begin + contributor["url"] + A_End + H3_1 + contributor["line2"] + H3_2 + A_Close + CLOSER
-            print(f'base logo is {contributor["logo"]}')
         context_dict = {
                         'page_tab_header': 'Thank You!',
                         'topic': Topic.objects.get(name="Thanks"),
