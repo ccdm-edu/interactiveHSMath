@@ -396,8 +396,8 @@ class GetMarchingBandTuningNoteAudioConfig(View):
 class IndexView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
-        # add help to user based on device/browser
-        ua_string = request.META['HTTP_USER_AGENT'];
+        # add help to user based on device/browser, unknown is for bots/scrapers
+        ua_string = request.META.get('HTTP_USER_AGENT',"unknown");
         user_agent = parse(ua_string)
         usingSafari = False;
         if 'safari' in user_agent.browser.family.lower(): 
