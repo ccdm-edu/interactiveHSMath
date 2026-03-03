@@ -115,15 +115,15 @@ CSP_WORKER_SRC = ["'self'", 'blob:']
 CSP_SCRIPT_SRC_ELEM = ["'self'", 'https://www.googletagmanager.com', 'https://www.google.com', 
                       'https://getbootstrap.com', 'https://www.gstatic.com', 'https://ajax.googleapis.com', 
                       'https://cdnjs.cloudflare.com','https://cdn.jsdelivr.net','https://staticcode.interactablemath.org']
-#data: is hamburger menu--this is considered a bit dangerous from a security pt of view.  
+#data: is hamburger menu--considered standard practice for androids and dangerous only if script_src  
 #Some public domain images are in the code bucket (ok, bucket is a bit misnamed)
 CSP_IMG_SRC = ["'self'", 'https://code.jquery.com', 'data:','https://staticbinary.interactablemath.org','https://staticcode.interactablemath.org']  
 #not sure why google needs to embed self in iframe, could be gtagmanager, google analytics or gmail
 #need 'data:' for androids running chrome/edge to load pdf iframes
-CSP_FRAME_SRC = ["'self'", 'data:', 'https://www.google.com', "https://staticbinary.interactablemath.org"] 
+CSP_FRAME_SRC = ["'self'", 'data:', 'https://www.google.com','https://www.gstatic.com', "https://staticbinary.interactablemath.org"] 
 CSP_MEDIA_SRC = ("'self'", "https://staticbinary.interactablemath.org")
 CSP_FRAME_ANCESTORS = ["'self'", 'https://www.google.com'] 
-CSP_CONNECT_SRC = ["'self'", 'https://www.google.com','https://getbootstrap.com',
+CSP_CONNECT_SRC = ["'self'", 'https://www.google.com','https://getbootstrap.com','https://www.gstatic.com',
                    'https://cdnjs.cloudflare.com', 'https://staticbinary.interactablemath.org']  #needed for recaptcha and to remove annoying .map errors
 CSP_FORM_ACTION = ["'self'"]
 #style-src-elem needed for noncing inline css
