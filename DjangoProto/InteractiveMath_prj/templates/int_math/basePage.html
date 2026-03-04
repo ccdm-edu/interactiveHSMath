@@ -236,6 +236,7 @@
 			  		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touch/1.1.0/jquery.touch.min.js" integrity="sha384-XJrpR1kjsdEnOjnpWkeVzhNk0OA+DSw4TLSIvndAhHkQPDZ7AezmkE4Z8EhTgnuh" crossorigin="anonymous"></script>
 					<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
 					<!-- custom JS for all pages of site, IntMathUtils used by all js.  To reduce server calls, the following are inlined-->
+					<!-- Note, the two inlined js files will 'appear' to be an error in eclipse.  They are fine -->
 					<script nonce="{{ request.csp_nonce }}">{% inline_asset 'js/IntMath.js' %}</script>
 					<script nonce="{{ request.csp_nonce }}">{% inline_asset 'js/IntMathUtils.js' %}</script>
 
