@@ -116,11 +116,13 @@ CSP_SCRIPT_SRC_ELEM = ["'self'", 'https://www.googletagmanager.com', 'https://ww
                       'https://getbootstrap.com', 'https://www.gstatic.com', 'https://ajax.googleapis.com', 
                       'https://cdnjs.cloudflare.com','https://cdn.jsdelivr.net','https://staticcode.interactablemath.org']
 #data: is hamburger menu--considered standard practice for androids and dangerous only if script_src  
-#Some public domain images are in the code bucket (ok, bucket is a bit misnamed)
-CSP_IMG_SRC = ["'self'", 'https://code.jquery.com', 'data:','https://staticbinary.interactablemath.org','https://staticcode.interactablemath.org']  
+#Some public domain images are in the code bucket (ok, bucket is a bit misnamed), have to add ytimg and google for youtube hosting of videos
+CSP_IMG_SRC = ["'self'", 'https://code.jquery.com', 'https://*.ytimg.com', 'https://*.google.com', 'data:','https://staticbinary.interactablemath.org','https://staticcode.interactablemath.org']  
 #not sure why google needs to embed self in iframe, could be gtagmanager, google analytics or gmail
 #need 'data:' for androids running chrome/edge to load pdf iframes
-CSP_FRAME_SRC = ["'self'", 'data:', 'https://www.google.com','https://www.gstatic.com', "https://staticbinary.interactablemath.org"] 
+CSP_FRAME_SRC = ["'self'", 'data:', 'https://www.google.com','https://www.gstatic.com', 
+                 "https://staticbinary.interactablemath.org", 
+                 "https://www.youtube-nocookie.com"] 
 CSP_MEDIA_SRC = ("'self'", "https://staticbinary.interactablemath.org")
 CSP_FRAME_ANCESTORS = ["'self'", 'https://www.google.com'] 
 CSP_CONNECT_SRC = ["'self'", 'https://www.google.com','https://getbootstrap.com','https://www.gstatic.com',

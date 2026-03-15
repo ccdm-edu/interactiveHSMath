@@ -4,7 +4,7 @@ This is the style sheet for IntroTrigMusicConcepts.html
 /* create global var for this html */
 :root{
 	--WIDTH_GIF: 520px;
-	--SPACE_TO_SQUEEZE_OUT: -50px;
+	--SPACE_TO_SQUEEZE_OUT: 0px;
 
 }
 /*************************Triggy explaining*********************************/
@@ -61,14 +61,51 @@ h1 {
 	margin-right: auto;
 }
 /*******************Triggy done explaining, go to intro videos on key concepts ************************/
+#video-resizable-container {
+    /* 1. Set original size as the starting point */
+    width: 560px;
+    height: 315px;
+    
+    /* 2. Enable resizing and ensure it's visible */
+    resize: both;
+    overflow: hidden; /* Required for resize handle */
+    border: 2px solid #444;
+    background-color: #f0f0f0;
+    
+    /* 3. Add a "Grab Zone" at the bottom-right */
+    /* This ensures you have a 20px area to grab that the iframe won't cover */
+    padding-bottom: 20px; 
+    
+    /* 4. Keep your original positioning */
+    margin: 0 auto;
+    position: relative;
+    top: var(--SPACE_TO_SQUEEZE_OUT);
+    
+    /* 5. Set limits so it doesn't get too small or too big */
+    min-width: 320px;
+    min-height: 200px;
+    max-width: 100%; /* Responsive on smaller screens */
+}
+/* Make the handle area look like a 'grabber' */
+#video-resizable-container::after {
+    content: "◢";
+    position: absolute;
+    bottom: 0;
+    right: 5px;
+    font-size: 12px;
+    color: #888;
+    pointer-events: none;
+}
 #IntroConceptVideo{
-	/* center up the video*/
-	margin-left: auto;
-	margin-right: auto;
-	/* we need height of 480 to make it readable but this puts too much white space at the top of video.  
-	Allow the header to invade this unused white space */
-	position: relative;
-	top: var(--SPACE_TO_SQUEEZE_OUT);
+    /* Make the iframe fill the container */
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+    border: none;
+    
+    /* Crucial: Prevent iframe from eating the mouse clicks 
+       near the edges while you're trying to resize */
+    pointer-events: auto; 
 }
 #UserSelectionVideo{
 	position: relative;

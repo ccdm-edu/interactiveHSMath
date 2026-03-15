@@ -15,17 +15,10 @@ $(function() {
 	$("#IntroConceptVideo").css('display', 'none');
 	$("#IntroMusicInteractive").css('display', 'none');
 	// array not a list of actual filenames, only pointers into config file in binaries repo to get actual mp4 filename
-	let VIDEO_EXPLN_FILENAMES = ["IntroToFrequencyVideo", "IntroToTrigVideo", "IntroToSoundVideo"]
-	//this will rewrite the above array with the actual directory/filenames of mp4s
-	getActualFilename(VIDEO_EXPLN_FILENAMES[0])
-   		.done(resp1 => {
-			  	VIDEO_EXPLN_FILENAMES[0] = resp1;
-			  	// these should be fast, in case previous one had to open file all this is now cached
-			  	getActualFilename(VIDEO_EXPLN_FILENAMES[1])
-			  	.done(resp2 => VIDEO_EXPLN_FILENAMES[1] = resp2)
-			  	getActualFilename(VIDEO_EXPLN_FILENAMES[2])
-			  	.done(resp2 => VIDEO_EXPLN_FILENAMES[2] = resp2)
-			  	});
+	let VIDEO_EXPLN_FILENAMES = [window.APP_CONFIG.FreqPeriodIntroLink,
+								 window.APP_CONFIG.SinCosIntroLink, 
+								 window.APP_CONFIG.SoundwavePitchIntroLink];
+	
 	const ACTIVE_TOPIC = "     <-- Current Topic";
 	function makeVideoActive(currVideoIndex){
 		activeVideoIndex = currVideoIndex;
@@ -48,8 +41,7 @@ $(function() {
 				// swap out the video with new one
 				let tutorialVideo = $('#IntroConceptVideo')[0];
 				//temporary, till we move to video server like youtube
-				tutorialVideo.src = '/static/static_binaries/' + VIDEO_EXPLN_FILENAMES[index];
-				tutorialVideo.load();				
+				tutorialVideo.src = VIDEO_EXPLN_FILENAMES[index];			
 			}
 		});
 	}

@@ -476,18 +476,19 @@ class MusicTrigConceptIntroView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
         trigMap = ConfigMapper(request)
-        realFileIntroVideo = trigMap.readConfigMapper("IntroToFrequencyVideo_html")
+        realURLFreqVideo = trigMap.readConfigMapper("IntroToFrequencyVideo")
+        realURLTrigVideo = trigMap.readConfigMapper("IntroToTrigVideo")
+        realURLSoundVideo = trigMap.readConfigMapper("IntroToSoundVideo")
         realFileCartoonGIF = trigMap.readConfigMapper("CartoonIntroGIF")
-        realFileCartoonTrig = trigMap.readConfigMapper("CartoonIntroTrig")
-        #print(f'file intro video {realFileIntroVideo} and URL is {getFullFileURL(realFileIntroVideo, False, request)}')
         realFileIntroAudio = trigMap.readConfigMapper("TrigReviewIntroAudio")
         artistCredit = trigMap.readConfigMapper('ArtistCredits')
         context_dict = {'basePage': getBaseContextEntry(request),
                         'page_tab_header': 'IntroConcepts',
                         'topic': Topic.objects.get(name="TrigFunct"),
-                        'introToFreqVideo': getFullFileURL(realFileIntroVideo, False, request, True),
+                        'introToFreqVideo': realURLFreqVideo,
+                        'introToTrigVideo': realURLTrigVideo,
+                        'introToSoundVideo': realURLSoundVideo,
                         'cartoonIntroGIF': getFullFileURL(realFileCartoonGIF, False, request),
-                        'cartoonIntroTrig': getFullFileURL(realFileCartoonTrig, False, request),
                         'trigReviewIntroAudio': getFullFileURL(realFileIntroAudio, False, request),
                         "artistCredit": artistCredit[0],
                         'TrigIntroMusicCSS': getFullFileURL('css/IntroTrigMusicConcepts.css', True, request),
