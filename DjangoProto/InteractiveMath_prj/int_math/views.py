@@ -121,6 +121,9 @@ class ProcessContactPage(View):
         num_recapcha_sent = 0
         # increment accesses for next contact me user
         currAccesses = ContactAccesses.objects.first()
+        if not currAccesses:
+            # CrashPrevent: Create one if it doesn't exist
+            currAccesses = ContactAccesses.objects.create() 
         if form.is_valid():
             # this only checks the format of the email, all other inputs are valid, we escape all text
             #however, email is optional so a blank is ok
@@ -143,37 +146,46 @@ class ProcessContactPage(View):
                     payload = {
                         'response': recaptcha_str,
                         'secret': secret_key}
-                    data = urllib.parse.urlencode(payload).encode()
-                    req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
-                    response = urllib.request.urlopen(req)
-                    result = json.loads(response.read().decode())
-                    #sending the second encrypted verify request to recaptcha counts toward max monthly total, log this
-                    num_recapcha_sent = 1
-                    #take action on robot test results.  we can get success but if score is low, we get action=verify
-                    #asking us to use another way to verify the user.  We don't do that at this time, we just reject low scores
-                    if (result['success']):
-                        botTestDone = True
-                        if (result['action'] == 'ContactUsForm'):
-                            if (result['score'] < 0.25):
-                                quartile = '1Q'
-                            elif (result['score'] < 0.5): 
-                                quartile = '2Q'
-                            elif (result['score'] < 0.75):
-                                quartile = '3Q'
+                    try:
+                        data = urllib.parse.urlencode(payload).encode()
+                        req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
+                        # Add a timeout (e.g., 5 seconds) so your app doesn't hang forever
+                        with urllib.request.urlopen(req, timeout=5) as response:
+                            result = json.loads(response.read().decode())
+    
+                        #sending the second encrypted verify request to recaptcha counts toward max monthly total, log this
+                        num_recapcha_sent = 1
+                        #take action on robot test results.  we can get success but if score is low, we get action=verify
+                        #asking us to use another way to verify the user.  We don't do that at this time, we just reject low scores
+                        if (result['success']):
+                            botTestDone = True
+                            if (result['action'] == 'ContactUsForm'):
+                                if (result['score'] < 0.25):
+                                    quartile = '1Q'
+                                elif (result['score'] < 0.5): 
+                                    quartile = '2Q'
+                                elif (result['score'] < 0.75):
+                                    quartile = '3Q'
+                                else:
+                                    quartile = '4Q'
+                            
+                            elif (result['action'] == 'verify'):
+                                #this means bot was smart enough not to hit honeypot but we had to send recaptcha to find out its a bot
+                                print(f"ROBOT ALERT:  reCAPTCHA is asking for further verification of low score")
+                                #which we choose to reject at this time
                             else:
-                                quartile = '4Q'
-                        
-                        elif (result['action'] == 'verify'):
-                            #this means bot was smart enough not to hit honeypot but we had to send recaptcha to find out its a bot
-                            print(f"ROBOT ALERT:  reCAPTCHA is asking for further verification of low score")
-                            #which we choose to reject at this time
+                                # perhaps an old token was sent or bot wrote junk into recaptcha values??  reject client
+                                print(f"ERROR:  bad recaptcha token returned, raw result was {result.get('error-codes')}")
                         else:
-                            # perhaps an old token was sent or bot wrote junk into recaptcha values??  reject client
-                            print(f"ERROR:  bad recaptcha token returned, raw result was {result}")
-                    else:
-                        print(f"ERROR:  failed recaptcha token, raw result was {result}")
-                    
-                    print('FYI: gRecaptcha sent, results on quartile is ' + quartile)
+                            print(f"ERROR: reCAPTCHA returned failure: {result.get('error-codes')}")
+                        
+                        print('FYI: gRecaptcha sent, results on quartile is ' + quartile)
+                    except (urllib.error.URLError, TimeoutError, Exception) as e:
+                        # If Google is down, we fallback to a "Neutral" score 
+                        # OR let them pass since they already passed the Honeypot test.
+                        print(f"WARNING: reCAPTCHA server unreachable ({e}). Falling back to manual trust.")
+                        botTestDone = True
+                        quartile = '4Q' # "Fail-Open" strategy
                 else:
                     #we didnt get initial response on recaptcha
                     print(f"SW ERROR: did not get a string on initial recaptcha response ")
@@ -197,23 +209,45 @@ class ProcessContactPage(View):
                 messageEscaped += " --From website user: " + nameOfContact + ".  At email addr: " + returnAddrEscaped
                 sendToEmailAddr = settings.EMAIL_HOST_USER
 
-                try:
-                    #the minute you use your sendTo address to log into smtp server, that becomes the "from" addr anyway
-                    #as of Apr2025, you can send 500 emails per day for free using smtp service
-                    num_email_sent = send_mail(
-                                    subjectOfContact,
-                                    messageEscaped,
-                                    sendToEmailAddr,
-                                    [sendToEmailAddr],
-                                    fail_silently=False,
-                                    )
-                except Exception as ex:
-                    #will fail on num email sent as 0.  Could get BadHeaderError if user input <LF>, 
-                    #could get auth error if Gmail rejects.  User should never ever get a 500 server error. Baaaaaad
-                    template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-                    emsg = template.format(type(ex).__name__, ex.args)
-                    print(f'ERROR: Contact page email Exception is {emsg}')
-                    
+                # Configuration for retries
+                MAX_RETRIES = 3
+                RETRY_DELAY = 2  # Seconds to wait between attempts
+                
+                # Initialize to 0 so the variable exists even if the loop fails immediately
+                num_email_sent = 0
+                for attempt in range(MAX_RETRIES):
+                    try:
+                        #the minute you use your sendTo address to log into smtp server, that becomes the "from" addr anyway
+                        #as of Apr2025, you can send 500 emails per day for free using smtp service
+                        # Note: fail_silently=False allows us to catch the exception in our try block
+                        num_email_sent = send_mail(
+                            subjectOfContact,
+                            messageEscaped,
+                            sendToEmailAddr,
+                            [sendToEmailAddr],
+                            fail_silently=False,
+                        ) 
+                        # If we reach here, it succeeded
+                        break 
+                
+                    except OSError as ex:
+                        # Specifically catch the network unreachable error to retry
+                        if (101 in ex.args or 'Network is unreachable' in str(ex)) and attempt < MAX_RETRIES - 1:
+                            print(f"DEBUG: Network unreachable. Retrying ({attempt + 1}/{MAX_RETRIES})...")
+                            time.sleep(RETRY_DELAY)
+                            continue
+                        
+                        # Log and handle terminal network failure
+                        print(f"ERROR: Final network failure after {MAX_RETRIES} attempts: {ex}")
+                        break
+                
+                    except Exception as ex:
+                        # For other errors (Auth, BadHeader, etc.), don't retry, just log it.
+                        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+                        emsg = template.format(type(ex).__name__, ex.args)
+                        print(f'ERROR: Contact page email Exception is {emsg}')
+                        break
+                      
                 if num_email_sent == 0:
                     #user has injected newlines and message rejected, could be bot?, or gmail rejects us.  Check log.  Inform user of failure
                     testHasPassed = False 
