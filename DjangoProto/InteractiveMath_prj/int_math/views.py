@@ -63,7 +63,7 @@ def generateSignedURL4Bucket(filename, usePubDomainBucket, expiration_seconds=36
     return signed_url
 
   
-def getFullFileURL(filename, usePubDomainBucket, request, tempVideoOverride = False):
+def getFullFileURL(filename, usePubDomainBucket, request):
     if not filename: 
         print(f'SW ERROR: Failed filename mapping in getFullFileURL')
         return None
@@ -77,10 +77,8 @@ def getFullFileURL(filename, usePubDomainBucket, request, tempVideoOverride = Fa
         print("All JS and CSS will be served locally for intermediate testing")
         return f"{localURLbase}static/{filename}"
 
-    log_type = "VIDEO link (temporary)" if tempVideoOverride else "LOCAL code"
-    #print(f"{log_type}: url will be {urlStaticSrc}")
     useCloud = os.environ.get('USE_CLOUD_BUCKET', 'False').lower() == 'true'
-    if  useCloud and not tempVideoOverride:
+    if  useCloud:
         #this cannot be tested from localhost due to security concerns with whitelisting localhost
         urlStaticSrc = generateSignedURL4Bucket(filename, usePubDomainBucket)
         #print(f'REMOTE code:  url will be {urlStaticSrc}')   
@@ -90,9 +88,6 @@ def getFullFileURL(filename, usePubDomainBucket, request, tempVideoOverride = Fa
     #only used in localhost and (maybe) dev pythonanywhere account
     sub_path = "static/" if usePubDomainBucket else "static/static_binaries/"
     urlStaticSrc = f"{localURLbase}{sub_path}{filename}"
-
-    log_type = "VIDEO link (temporary)" if tempVideoOverride else "LOCAL code"
-    #print(f"{log_type}: url will be {urlStaticSrc}")
 
     return urlStaticSrc
 
@@ -345,7 +340,7 @@ class ConfigMapper:
         return actualFile
 
 # Some files are needed on the fly, like autodemo voice MP3 explanations or musician notes.  Only server knows which
-# config file to use and if file needed is on cloud, will add approptiate signed URL authorizations
+# config file to use and if file needed is on cloud, will add appropriate signed URL authorizations
 class GetDynamicFilename(View):  
     def hasExtension(self, filename):
         return bool(Path(filename).suffix)
@@ -357,9 +352,8 @@ class GetDynamicFilename(View):
             configMap = ConfigMapper(request)
             realDynFilename = configMap.readConfigMapper(realDynFilename)
         # now, either way, we have full filename, run with it
-        isVideo=False
         getFromPublicRepo = False
-        dynamicURL = getFullFileURL(realDynFilename, getFromPublicRepo, request, isVideo) 
+        dynamicURL = getFullFileURL(realDynFilename, getFromPublicRepo, request) 
         #print(f'will return to client a full filename of {dynamicURL}')    
         return JsonResponse({'url': dynamicURL})   
     
@@ -605,14 +599,12 @@ class TrigSummaryView(View):
     def get(self, request):
         trigMap = ConfigMapper(request)
         actualFilename = trigMap.readConfigMapper("MusicSummaryVideo")
-        realFileCartoonTrig = trigMap.readConfigMapper("CartoonIntroTrig")
         artistCredit = trigMap.readConfigMapper('ArtistCredits')
         context_dict = {
                         'page_tab_header': 'Summary',
                         'topic': Topic.objects.get(name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
-                        'musicSummaryVideo': getFullFileURL(actualFilename, False, request, True),
-                        'cartoonIntroTrig': getFullFileURL(realFileCartoonTrig, False, request),
+                        'musicSummaryVideo': actualFilename,
                         'artistCredit': artistCredit[1],
                         'TrigSummaryCss': getFullFileURL('css/MusicSineSummary.css', True, request),
                         'TrigSummaryJS': getFullFileURL('js/MusicSineSummary.js', True, request),

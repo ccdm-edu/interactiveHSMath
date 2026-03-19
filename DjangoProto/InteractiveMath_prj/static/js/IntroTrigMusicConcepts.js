@@ -12,6 +12,7 @@ $(function() {
 
 	// on power up, hide all the review topics, they will assume proper location when the Triggy intro stuff goes away
 	$("#UserSelectionVideo").css('display', 'none');
+	$("#video-resizable-container").css('display', 'none');
 	$("#IntroConceptVideo").css('display', 'none');
 	$("#IntroMusicInteractive").css('display', 'none');
 	// array not a list of actual filenames, only pointers into config file in binaries repo to get actual mp4 filename
@@ -57,6 +58,7 @@ $(function() {
 		$("#ReviewConcepts").css('display', 'none');
 		// bring up all the new elements for review
 		$("#UserSelectionVideo").css('display', 'block');
+		$("#video-resizable-container").css('display', 'block');
 		$("#IntroConceptVideo").css('display', 'block');
 		$("#IntroMusicInteractive").css('display', 'flex');
 		makeVideoActive(0);	

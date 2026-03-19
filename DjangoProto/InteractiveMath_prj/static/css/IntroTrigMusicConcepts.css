@@ -61,41 +61,7 @@ h1 {
 	margin-right: auto;
 }
 /*******************Triggy done explaining, go to intro videos on key concepts ************************/
-#video-resizable-container {
-    /* 1. Set original size as the starting point */
-    width: 560px;
-    height: 315px;
-    
-    /* 2. Enable resizing and ensure it's visible */
-    resize: both;
-    overflow: hidden; /* Required for resize handle */
-    border: 2px solid #444;
-    background-color: #f0f0f0;
-    
-    /* 3. Add a "Grab Zone" at the bottom-right */
-    /* This ensures you have a 20px area to grab that the iframe won't cover */
-    padding-bottom: 20px; 
-    
-    /* 4. Keep your original positioning */
-    margin: 0 auto;
-    position: relative;
-    top: var(--SPACE_TO_SQUEEZE_OUT);
-    
-    /* 5. Set limits so it doesn't get too small or too big */
-    min-width: 320px;
-    min-height: 200px;
-    max-width: 100%; /* Responsive on smaller screens */
-}
-/* Make the handle area look like a 'grabber' */
-#video-resizable-container::after {
-    content: "◢";
-    position: absolute;
-    bottom: 0;
-    right: 5px;
-    font-size: 12px;
-    color: #888;
-    pointer-events: none;
-}
+
 #IntroConceptVideo{
     /* Make the iframe fill the container */
     width: 100% !important;

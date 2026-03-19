@@ -12,6 +12,21 @@ want to start up on page load if robot test not passed yet */
 #autoDemoCtls {
 	display: none;
 }
+#MusicToneSummary {
+	width: 100%;             /* Fills the container width */
+    height: 100%;            /* Fills the container height */
+    border: none;            /* Removes default iframe border */
+    display: block;          /* Prevents bottom alignment gaps */
+}
+#MusicVideoSummaryBlock {
+    text-align: center; /* Centers the text headers */
+    width: 100%;
+}
+
+#MusicVideoSummaryBlock h1, 
+#MusicVideoSummaryBlock h2 {
+    margin-bottom: 10px; /* Adds a little breathing room */
+}
 #MusicVideoSummaryBlock{
 	height: 480px;
 }

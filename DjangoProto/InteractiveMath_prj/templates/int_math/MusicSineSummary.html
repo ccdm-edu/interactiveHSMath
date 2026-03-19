@@ -18,13 +18,14 @@
 	<div id="MusicVideoSummaryBlock">
 		<h1>Sine and Cosine Make Music</h1>
 		<h2>Summary</h2>
-	
-		<video height='480' width='640' controls poster="{{ CartoonIntroTrig }}">
-			<source src="{{ musicSummaryVideo }}" type="video/mp4">
-			Your browser does not support the Video tag of html5, time for a browser upgrade!		
-		</video>
+
+		<div id="video-resizable-container">
+		    <iframe id="MusicToneSummary" src="{{ musicSummaryVideo }}" title="YouTube video player" 
+		        frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+		        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+		    </iframe>
+		</div>	
 		
-	
 		<br>
 		<br>	
 	</div>
