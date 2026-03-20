@@ -13,11 +13,16 @@ h1 {
 	height: 600px;
 }
 /* want the error messages back in flaming red */
+ul.errorlist {
+    padding: 0;
+    list-style: none;
+}
 ul.errorlist li {
-	color: red;
+	color: red !important;
+	font-weight: bold;
 }
 /* this will resize height based on errors/no errors, internal objects positioned/sized as needed*/
-#centered-form > form{
+#centered-form  form{
 	margin-left: auto;
 	margin-right: auto;
 	display: block;  /*needed to get the centering statments above to work */
@@ -33,7 +38,7 @@ ul.errorlist li {
 
 /* place below verbiage and radio box in form */
 input[type=submit]{
-  background-color: cyan;
+  background-color: cyan !important;
   border: 2px solid black;
   text-align: center;
   font-size: 15px;

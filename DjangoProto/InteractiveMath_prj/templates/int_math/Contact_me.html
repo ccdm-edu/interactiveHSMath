@@ -13,17 +13,29 @@
 {% block body_block %}
 	{% if allowContactEmail %}
 	 	<!--  for robot checking, need to send public key, will be hidden -->
-	 	<div id="sendGRPublic">{{ basePage.recaptchaPublicKey }}</div>
+	 	<div id="sendGRPublic" style="display: none !important;">{{ basePage.recaptchaPublicKey }}</div>
 		<h1>Contact {{ basePage.CompanyName }}</h1><br>
 		<!-- dont save results of robot test so whole site is no cookie -->
 		<div id="centered-form">
 	        <form id="ContactUsForm" action = "{% url 'int_math:ProcessContact_me' %}" method="POST">
 	            {% csrf_token %}
-				{{form.as_p}}
-					
+				
+			    <!-- Render only the fields you want the user to see -->
+			    <p>{{ form.name.label_tag }} {{ form.name }} {{ form.name.errors }}</p>
+			    <p>{{ form.email.label_tag }} {{ form.email }} {{ form.email.errors }}</p>
+			    <p>{{ form.subject.label_tag }} {{ form.subject }} {{ form.subject.errors }}</p>
+			    <p>{{ form.message.label_tag }} {{ form.message }} {{ form.message.errors }}</p>
+			    <p>{{ form.clickwrap_accept }} {{ form.clickwrap_accept.label_tag }} {{ form.clickwrap_accept.errors }}</p>
+	
+			    <!-- Use a hidden div for fields the user should NEVER see -->
+			    <div style="display: none !important; visibility: hidden;">
+			        {{ form.pooh_food_test }}
+			        <input type="hidden" name="g_recaptcha_response" id="g_recaptcha_response">
+			    </div>
+    
 	            <p id="ContactCompliance"> There is no guarantee of a personal or timely response.  {{ basePage.CompanyName }} reserves the right to save all information you provide.
 	            Contact submissions are protected by Google reCaptcha V3.  By contacting us, you acknowledge you are over 13 years old and agree to the <a href="{% url 'int_math:TermsOfUse' %}">Terms Of Use </a> 
-			    and <a href="{% url 'int_math:Privacy' %}">Privacy Policy</a> as well as Google terms/privacy. <b>Click box to accept and continue</b>.
+			    and <a href="{% url 'int_math:Privacy' %}">Privacy Policy</a> as well as any Google terms/privacy. <b>Click box to accept and continue</b>.
 	            </p>
 	          	<br>
 	          	

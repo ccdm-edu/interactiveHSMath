@@ -112,13 +112,13 @@ class ProcessContactPage(View):
       
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def post(self, request):  
-        returnForm = contactForm()  #assume user got their form correct, for now
         # check the form validity for basic stuff first
         form = self.form_class(request.POST) 
         botTestDone = False
         testHasPassed = False
         num_email_sent = 0
         num_recapcha_sent = 0
+        quartile = '1Q'
         # increment accesses for next contact me user
         currAccesses = ContactAccesses.objects.first()
         if not currAccesses:
@@ -127,7 +127,6 @@ class ProcessContactPage(View):
         if form.is_valid():
             # this only checks the format of the email, all other inputs are valid, we escape all text
             #however, email is optional so a blank is ok
-            quartile = '1Q'
             
             #did a bot see the token empty box and try to fill it in? (honeypot test)
             honey_pot_fail = self.request.POST.get('pooh_food_test')
@@ -271,11 +270,12 @@ class ProcessContactPage(View):
             
         else: 
             #the only thing this form checks is email address errors if the user chooses to give one and makes user user puts something in msg
-            returnForm=form    #return users form complete with their inputs and computed errors
             context_dict = {'page_tab_header': 'Contact Us',
                         'topic': None,
                         'allowContactEmail': True,
-                        'form': returnForm,  
+                        'ContactCSS': getFullFileURL('css/Contact_me.css', True, request),
+                        'ContactJS': getFullFileURL('js/Contact_me.js', True, request),
+                        'form': form,  
                         'basePage': getBaseContextEntry(request),
                         'botTestDone': False,
                         'botTestPassed': False

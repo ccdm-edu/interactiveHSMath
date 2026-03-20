@@ -24,5 +24,6 @@ class contactForm(forms.Form):
     g_recaptcha_response = forms.CharField(required = False, label='')
     pooh_food_test = forms.BooleanField(required=False,
                                         initial=False,
+                                        widget=forms.HiddenInput(), # This tells Django "never render this as a visible checkbox"
                                         label='')
     
