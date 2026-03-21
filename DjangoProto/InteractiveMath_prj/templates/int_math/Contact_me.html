@@ -30,7 +30,7 @@
 			    <!-- Use a hidden div for fields the user should NEVER see -->
 			    <div style="display: none !important; visibility: hidden;">
 			        {{ form.pooh_food_test }}
-			        <input type="hidden" name="g_recaptcha_response" id="g_recaptcha_response">
+			        {{ form.g_recaptcha_response }}
 			    </div>
     
 	            <p id="ContactCompliance"> There is no guarantee of a personal or timely response.  {{ basePage.CompanyName }} reserves the right to save all information you provide.
