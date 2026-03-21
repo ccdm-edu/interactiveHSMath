@@ -128,8 +128,8 @@ class ProcessContactPage(View):
             # this only checks the format of the email, all other inputs are valid, we escape all text
             #however, email is optional so a blank is ok
             
-            #did a bot see the token empty box and try to fill it in? (honeypot test)
-            honey_pot_fail = self.request.POST.get('pooh_food_test')
+            #did a bot see the token empty box and try to fill it in? (honeypot test), value will be string
+            honey_pot_fail = self.request.POST.get('pooh_food_test', '').lower() == 'true'
                 
             if not honey_pot_fail:
 
