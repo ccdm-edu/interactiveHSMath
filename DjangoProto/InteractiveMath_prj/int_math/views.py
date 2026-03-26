@@ -806,7 +806,7 @@ class ContactMe(View):
             logger.error(f'DATABASE ERROR in contact page, entry not found keeping track of recaptcha/smtp. Clients cannot contact us')
         if (currAccesses):
             logger.info(f' FYI: NumRecaptcha this month is {currAccesses.numTimesRecaptchaAccessedPerMonth}, numSMTP this month is {currAccesses.numTimesSmtpAccessedPerMonth}')
-            loggger.info(f' FYI: Month of update is  {currAccesses.monthLastUpdated}.  Num clients denied is {currAccesses.numClientsDeniedPerMonth}')
+            logger.info(f' FYI: Month of update is  {currAccesses.monthLastUpdated}.  Num clients denied is {currAccesses.numClientsDeniedPerMonth}')
             logger.info(f' FYI: current date is {dateNow}, current month is {dateNow.month}')   
             if (dateNow.month != currAccesses.monthLastUpdated):
                 #were any clients denied access?  if so, send server error and email me
