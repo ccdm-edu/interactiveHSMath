@@ -22,8 +22,11 @@ import hashlib
 import time
 import uuid
 
+import logging
+
 import datetime
 import requests
+
 
 
 #**********************************************************
@@ -31,7 +34,7 @@ import requests
 #**********************************************************  
 MAX_FREE_RECAPTCHA = 5000  #as of 3/2025, google allows 10k for free/month
 MAX_NUM_EMAIL_PER_MONTH = 100   # I don't want more than this in my inbox, dammit!
-
+logger = logging.getLogger(__name__)
 
 def generateSignedURL4Bucket(filename, usePubDomainBucket, expiration_seconds=3600):
     """
@@ -65,7 +68,7 @@ def generateSignedURL4Bucket(filename, usePubDomainBucket, expiration_seconds=36
   
 def getFullFileURL(filename, usePubDomainBucket, request):
     if not filename: 
-        print(f'SW ERROR: Failed filename mapping in getFullFileURL')
+        logger.error(f'SW ERROR: Failed filename mapping in getFullFileURL')
         return None
     
     urlStaticSrc = ""
@@ -74,7 +77,7 @@ def getFullFileURL(filename, usePubDomainBucket, request):
     #Check for intermediate test mode where code is local (html is always local) but binaries are either local or cloud
     use_local = os.environ.get('USE_LOCAL_CODE', 'False').lower() == 'true'
     if use_local and filename.endswith((".css", ".js")):
-        print("All JS and CSS will be served locally for intermediate testing")
+        logger.info("All JS and CSS will be served locally for intermediate testing")
         return f"{localURLbase}static/{filename}"
 
     useCloud = os.environ.get('USE_CLOUD_BUCKET', 'False').lower() == 'true'
@@ -129,22 +132,30 @@ class ProcessContactPage(View):
             #however, email is optional so a blank is ok
             
             #did a bot see the token empty box and try to fill it in? (honeypot test), value will be string
-            honey_pot_fail = self.request.POST.get('pooh_food_test', '').lower() == 'true'
+            honey_pot_fail = request.POST.get('pooh_food_test', '').lower() == 'true'
                 
-            if not honey_pot_fail:
+            if honey_pot_fail:
+                #no need for recaptcha, honeypot test failed.
+                botTestDone = True
+                logger.info("Bot Blocked: Failed honeypot ('pooh_food_test' was filled).")
+            else:
 
                 #to get here means user has passed recaptcha/smtp limits.  yes, they could be exceeded by the time we 
                 # get here but its more important to know that their message went through and we allow a little "overage"
                 #it would be cruel to give client a form to fill out and then reject them for slight overage on limits
 
                 #Send off token to google recaptcha
-                recaptcha_str = self.request.POST.get('g_recaptcha_response')
-                if recaptcha_str is not None:
+                recaptcha_str = request.POST.get('g_recaptcha_response')
+                if not recaptcha_str:
+                    # MISSING TOKEN: Likely a bot script skipping JS.
+                    logger.info("Bot Blocked: No reCAPTCHA token provided in request.")
+                else:
                     #cant do this on the client since server is the only onw with secret key
                     secret_key = settings.RECAPTCHA_SECRET_KEY
                     payload = {
                         'response': recaptcha_str,
-                        'secret': secret_key}
+                        'secret': secret_key,
+                        'remoteip': request.META.get('REMOTE_ADDR')} # send IP to help recaptcha identify bots
                     try:
                         data = urllib.parse.urlencode(payload).encode()
                         req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
@@ -158,53 +169,56 @@ class ProcessContactPage(View):
                         #asking us to use another way to verify the user.  We don't do that at this time, we just reject low scores
                         if (result['success']):
                             botTestDone = True
-                            if (result['action'] == 'ContactUsForm'):
-                                if (result['score'] < 0.25):
+                            score = result.get('score',0)
+                            action = result.get('action','')
+                            logger.info(f"Processing Recaptcha: User returns score of  ({score}) for action '{action}'.")
+                            if (action == 'ContactUsForm'):
+                                if (score < 0.25):
                                     quartile = '1Q'
-                                elif (result['score'] < 0.5): 
+                                elif (score < 0.5): 
                                     quartile = '2Q'
-                                elif (result['score'] < 0.75):
+                                elif (score < 0.75):
                                     quartile = '3Q'
                                 else:
                                     quartile = '4Q'
                             
-                            elif (result['action'] == 'verify'):
+                            elif (action == 'verify'):
                                 #this means bot was smart enough not to hit honeypot but we had to send recaptcha to find out its a bot
-                                print(f"ROBOT ALERT:  reCAPTCHA is asking for further verification of low score")
+                                logger.info(f"ROBOT ALERT:  reCAPTCHA is asking for further verification of low score")
                                 #which we choose to reject at this time
+                                quartile = '1Q' # Explicitly keep it at 1Q to reject
                             else:
                                 # perhaps an old token was sent or bot wrote junk into recaptcha values??  reject client
-                                print(f"ERROR:  bad recaptcha token returned, raw result was {result.get('error-codes')}")
+                                logger.info(f"ERROR:  bad recaptcha token returned, raw result was {result.get('error-codes')}")
                         else:
-                            print(f"ERROR: reCAPTCHA returned failure: {result.get('error-codes')}")
+                            # INVALID TOKEN: Clumsy bot or expired token.
+                            # LEVEL: WARNING (Could be a slow human with an expired session)
+                            errors = result.get('error-codes', [])
+                            logger.warning(f"reCAPTCHA Rejected: {errors}. Likely clumsy bot or expired session.")
                         
-                        print('FYI: gRecaptcha sent, results on quartile is ' + quartile)
-                    except (urllib.error.URLError, TimeoutError, Exception) as e:
-                        # If Google is down, we fallback to a "Neutral" score 
-                        # OR let them pass since they already passed the Honeypot test.
-                        print(f"WARNING: reCAPTCHA server unreachable ({e}). Falling back to manual trust.")
+                        logger.info('FYI: gRecaptcha sent, results on quartile is ' + quartile)
+                    except (urllib.error.URLError, TimeoutError) as e:
+                        # SYSTEM ERROR: Google is down or your code broke.
+                        # LEVEL: ERROR (You need to know if your API integration is failing)
+                        logger.error(f"reCAPTCHA System Error: Could not verify token due to {type(e).__name__}: {e}")
                         botTestDone = True
+                        # OR let possible human pass since they already passed the Honeypot test.
                         quartile = '4Q' # "Fail-Open" strategy
-                else:
-                    #we didnt get initial response on recaptcha
-                    print(f"SW ERROR: did not get a string on initial recaptcha response ")
-
-            else:
-                #no need for recaptcha, honeypot test failed.
-                botTestDone = True
-                print(f"ROBOT ALERT: You failed the Pooh bear test, you checked an invisible honey pot")
+                    except Exception as e:
+                        logger.error(f"reCAPTCHA System Error: Fix SW error {type(e).__name__}: {e}")
             
             if ('4Q' == quartile):
+                logger.info(f"Human Verified: 4Q score. Proceeding to email.")
                 testHasPassed = True
                 #get the email, name and message and ensure no html injection
-                nameOfContact = escape(self.request.POST.get('name'))
+                nameOfContact = escape(request.POST.get('name'))
                 if nameOfContact == "":
                     nameOfContact = "anonymous"
-                subjectOfContact = escape(self.request.POST.get('subject'))
-                returnAddrEscaped = escape(self.request.POST.get('email'))
+                subjectOfContact = escape(request.POST.get('subject'))
+                returnAddrEscaped = escape(request.POST.get('email'))
                 if returnAddrEscaped == "":
                     returnAddrEscaped = "noemailaddr@nomail.com"
-                messageEscaped = escape(self.request.POST.get('message')) 
+                messageEscaped = escape(request.POST.get('message')) 
                 messageEscaped += " --From website user: " + nameOfContact + ".  At email addr: " + returnAddrEscaped
                 sendToEmailAddr = settings.EMAIL_HOST_USER
 
@@ -232,29 +246,27 @@ class ProcessContactPage(View):
                     except OSError as ex:
                         # Specifically catch the network unreachable error to retry
                         if (101 in ex.args or 'Network is unreachable' in str(ex)) and attempt < MAX_RETRIES - 1:
-                            print(f"DEBUG: Network unreachable. Retrying ({attempt + 1}/{MAX_RETRIES})...")
+                            logger.warning(f"Network unreachable. Retrying ({attempt + 1}/{MAX_RETRIES})...")
                             time.sleep(RETRY_DELAY)
                             continue
-                        
-                        # Log and handle terminal network failure
-                        print(f"ERROR: Final network failure after {MAX_RETRIES} attempts: {ex}")
+                        logger.error(f"Final network failure after {MAX_RETRIES} attempts: {ex}")
                         break
                 
                     except Exception as ex:
                         # For other errors (Auth, BadHeader, etc.), don't retry, just log it.
-                        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-                        emsg = template.format(type(ex).__name__, ex.args)
-                        print(f'ERROR: Contact page email Exception is {emsg}')
+                        # Catches HeaderInjection, Auth failures, etc.
+                        logger.error(f"Email failure: {type(ex).__name__} - {ex}")
                         break
                       
                 if num_email_sent == 0:
                     #user has injected newlines and message rejected, could be bot?, or gmail rejects us.  Check log.  Inform user of failure
                     testHasPassed = False 
-                    print(f'ERROR: No email was sent from {nameOfContact}') 
+                    logger.error(f"Outcome: No email sent for {nameOfContact}. Check SMTP/Auth settings.") 
 
             else:
                 #Count these up in the server log and just above this, will have reason
-                print('ROBOT DETECTED: Bot test FAILED, see above robot alert for details')
+                logger.info(f"Bot Blocked: Low reCAPTCHA score {quartile}.  Process terminating")
+
                 
             # increment accesses for next contact me user
             numEmail= currAccesses.numTimesSmtpAccessedPerMonth
@@ -321,11 +333,11 @@ class ConfigMapper:
                 self._configMapDict = json.load(fileObj)
                 fileObj.close()
             except FileNotFoundError:
-                    print(f'SW ERROR:  File {fileLoc} was not found')
+                    logger.error(f'SW ERROR:  File {fileLoc} was not found')
             except Exception as ex:
                     template = "An exception of type {0} occurred. Arguments:\n{1!r}"
                     emsg = template.format(type(ex).__name__, ex.args)
-                    print(f'SW ERROR:  {emsg} in opening file {fileLoc}') 
+                    logger.error(f'SW ERROR:  {emsg} in opening file {fileLoc}') 
         else:   
             # On many servers, you either can't get to cloud for config file because a) the server won't let you access a nonwhitelisted
             # server or b) the cloud server thinks the web server is a bot and won't let it access files.  Your screwed, might as well
@@ -347,11 +359,11 @@ class ConfigMapper:
                 self._configMapDict = json.load(fileObj)
                 fileObj.close()
             except FileNotFoundError:
-                print(f'SW ERROR:  File {fileLoc} was not found')
+                logger.error(f'SW ERROR:  File {fileLoc} was not found')
             except Exception as ex:
                 template = "An exception of type {0} occurred. Arguments:\n{1!r}"
                 emsg = template.format(type(ex).__name__, ex.args)
-                print(f'SW ERROR:  {emsg} in opening file {fileLoc}')                   
+                logger.error(f'SW ERROR:  {emsg} in opening file {fileLoc}')                   
                 
             
             
@@ -360,7 +372,7 @@ class ConfigMapper:
             self.loadConfigMapper(request)
         elif self._last_updated and (datetime.datetime.now() - self._last_updated) < datetime.timedelta(days=1):
             #if data is obsolete, need to reload it, really shouldn't change but could
-            print('Config mapper is old, reading file anew')
+            logger.info('Config mapper is old, reading file anew')
             self.loadConfigMapper(request)
     
             
@@ -370,7 +382,7 @@ class ConfigMapper:
             actualFile = self._configMapDict.get(genericFileName)
             #print(f' we just mapped {genericFileName} to {actualFile}')
         else:
-            print(f'SW ERROR:  file mapper not found or error opening')
+            logger.error(f'SW ERROR:  file mapper not found or error opening')
         return actualFile
 
 # Some files are needed on the fly, like autodemo voice MP3 explanations or musician notes.  Only server knows which
@@ -454,8 +466,8 @@ class IndexView(View):
             except Exception as ex:
                 template = "An exception of type {0} occurred. Arguments:\n{1!r}"
                 emsg = template.format(type(ex).__name__, ex.args)
-                print(f'SW ERROR: in obtaining date Exception is {emsg}')
-                print(f'SW ERROR: Failure on parsing time in UpgradeSchedule.txt, cannot parse {repr(dateTimeUpgdStr)}')
+                logger.error(f'SW ERROR: in obtaining date Exception is {emsg}')
+                logger.error(f'SW ERROR: Failure on parsing time in UpgradeSchedule.txt, cannot parse {repr(dateTimeUpgdStr)}')
             if (dateTimeUpgd is not None):               
                 # get time right now and convert to EST (from UTC).  
                 tz = timezone('EST')
@@ -791,16 +803,16 @@ class ContactMe(View):
             currAccesses = ContactAccesses.objects.first()
         except:
             #will put up the dont contact us page.  Should never happen.  coding error
-            print(f'DATABASE ERROR in contact page, entry not found keeping track of recaptcha/smtp. Clients cannot contact us')
+            logger.error(f'DATABASE ERROR in contact page, entry not found keeping track of recaptcha/smtp. Clients cannot contact us')
         if (currAccesses):
-            print(f' FYI: NumRecaptcha this month is {currAccesses.numTimesRecaptchaAccessedPerMonth}, numSMTP this month is {currAccesses.numTimesSmtpAccessedPerMonth}')
-            print(f' FYI: Month of update is  {currAccesses.monthLastUpdated}.  Num clients denied is {currAccesses.numClientsDeniedPerMonth}')
-            print(f' FYI: current date is {dateNow}, current month is {dateNow.month}')   
+            logger.info(f' FYI: NumRecaptcha this month is {currAccesses.numTimesRecaptchaAccessedPerMonth}, numSMTP this month is {currAccesses.numTimesSmtpAccessedPerMonth}')
+            loggger.info(f' FYI: Month of update is  {currAccesses.monthLastUpdated}.  Num clients denied is {currAccesses.numClientsDeniedPerMonth}')
+            logger.info(f' FYI: current date is {dateNow}, current month is {dateNow.month}')   
             if (dateNow.month != currAccesses.monthLastUpdated):
                 #were any clients denied access?  if so, send server error and email me
                 if (currAccesses.numClientsDeniedPerMonth > 0):
-                    print(f'ACCESS ERROR, {currAccesses.numClientsDeniedPerMonth} clients were denied last month')
-                    print(f'{currAccesses.numTimesRecaptchaAccessedPerMonth} reCAPTCHA requests were sent and {currAccesses.numTimesSmtpAccessedPerMonth} smtp mail messages were sent')
+                    logger.error(f'ACCESS ERROR, {currAccesses.numClientsDeniedPerMonth} clients were denied last month')
+                    logger.info(f'{currAccesses.numTimesRecaptchaAccessedPerMonth} reCAPTCHA requests were sent and {currAccesses.numTimesSmtpAccessedPerMonth} smtp mail messages were sent')
                     # Now send email to website designer to fix.  This should never happen. we only send email max of 1/month
                     subjectOfContact = "SERVER ERROR: USERS denied contact access"
                     messageEscaped = str(currAccesses.numClientsDeniedPerMonth) + \
@@ -823,10 +835,10 @@ class ContactMe(View):
                         #could get auth error if Gmail rejects.  User should never ever get a 500 server error. Baaaaaad
                         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
                         emsg = template.format(type(ex).__name__, ex.args)
-                        print(f'SW ERROR: Sending Server Error email Exception is {emsg}')
+                        logger.error(f'SW ERROR: Sending Server Error email Exception is {emsg}')
                         
                     if num_email_sent == 0:
-                        print(f'SW ERROR: Failed attempt to notify website designer via email of user contact page denials') 
+                        logger.error(f'SW ERROR: Failed attempt to notify website designer via email of user contact page denials') 
                           
                 #time to reset all the stats for new month, cant do update unless we filter() instead of get()
                 currAccesses.monthLastUpdated = dateNow.month
@@ -844,8 +856,8 @@ class ContactMe(View):
                 #keep track of clients denied, ideally, this should be zero
                     currAccesses.numClientsDeniedPerMonth = currAccesses.numClientsDeniedPerMonth + 1
                     currAccesses.save()
-                    print(f'ALLOCATION EXCEEDED: ABOVE ALLOTED Contact max, allow {MAX_FREE_RECAPTCHA} MAX recaptcha requests and {MAX_NUM_EMAIL_PER_MONTH} MAX email sends')
-                    print(f'But we have {currAccesses.numTimesRecaptchaAccessedPerMonth} reCAPTCHA requests sent and {currAccesses.numTimesSmtpAccessedPerMonth} smtp mail messages were sent')
+                    logger.error(f'ALLOCATION EXCEEDED: ABOVE ALLOTED Contact max, allow {MAX_FREE_RECAPTCHA} MAX recaptcha requests and {MAX_NUM_EMAIL_PER_MONTH} MAX email sends')
+                    logger.error(f'But we have {currAccesses.numTimesRecaptchaAccessedPerMonth} reCAPTCHA requests sent and {currAccesses.numTimesSmtpAccessedPerMonth} smtp mail messages were sent')
                 
         context_dict = {
                         'page_tab_header': 'Contact Us',
