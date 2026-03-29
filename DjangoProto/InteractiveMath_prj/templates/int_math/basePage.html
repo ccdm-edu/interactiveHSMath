@@ -160,63 +160,80 @@
 					    <!-- /.modal-dialog -->
 					</div>
 					<!-- /.modal -->
-										
-					<div id="autoDemo" >
-		                <div id="startAutoDemo" alt = "Demonstrate how to use page" data-toggle="tooltip" data-placement="right" title="Make sure your speaker is on">
-		                	{% inline_asset 'svg/autoDemoButton.svg' %}  <!-- safe keeps svg from being treated as text -->
-                        </div>
-                        
-                        <!--  image placed to draw attention to play button -->
-		                <div id="clickHereCursor" alt = "Click here to start the demo segment" >
-		                	 {% inline_asset 'svg/clickhere_cursor.svg' %}  <!-- safe keeps svg from being treated as text -->
-                        </div>	
-                                                              
-						<!--  make a play/pause button set from bootstrap icons -->
-						<div id="autoDemoCtls">
-							<h1>Let's demo this page!</h1>
-						    <table>
-								<tr align="center">
-									<td align="left" colspan="2">
-										Segment Name: <span id="segName"></span>
-									</td>
-								</tr>
-								<tr>
-									<td align="left">
-										<!--  max value of input will have to be set after JS runs to see how big the script is -->
-										Segment Number/Total Segments:
-									</td>
-									<td align="left">
-										<select id="segNum">
-										<!-- JS for each page will add the correct number of options, cannot change blue color of hover items in dropdown-->
-										    <option value="1">1</option>
-										</select>
-										<span id="totalSeg">/0</span>
-									</td>
-								</tr>
-								<tr align="center">
-									<td align='left'>
-										<div class="btn-group" id="autoDemoPlayPause">
-											<button type="button" class="btn btn-outline-secondary" id="playSegment" data-toggle="tooltip" data-placement="top" title="Play">
-												<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-play" viewBox="0 0 16 16">
-									  			<path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
-												</svg>
-									        </button>
-									        <button type="button" class="btn btn-outline-secondary" id="stopSegment" data-toggle="tooltip" data-placement="top" title="Stop">
-									        	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-stop" viewBox="0 0 16 16">
-												<path d="M3.5 5A1.5 1.5 0 0 1 5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5zM5 4.5a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5V5a.5.5 0 0 0-.5-.5H5z"/>
-												</svg>					        	
-											</button>
-								        </div>
-								        <div id="spinner"></div>
-							        </td>
-							        <td align='right'>
-							        	<!-- btn-info is a dark cyan that contrasts to the dropdown seg num items -->
-							        	<button type="button" class="btn btn-info" id='dismissAutoDemo'>I'm done</button>
-							        </td>
-						        </tr>
-							</table>
-						</div> <!--  autodemo controls -->
-					</div> <!--  autodemo controls plus start image -->
+					
+					<!-- this allows placement of autodemo below title on home page but to left of title on all other pages -->
+					<div id="TrigPageTop" class="vertical-layout">	
+					  	<!-- this will be populated only for home page, header text above all autodemo/question boxes -->				
+						<div class="top-content">
+					        {% block mainHeaderText %}
+					        {% endblock %}
+  						</div>
+  							
+						<div id="TrigPageSideBySide" class="horizontal-layout">				
+							<div id="autoDemo" >
+				                <div id="startAutoDemo" alt = "Demonstrate how to use page" data-toggle="tooltip" data-placement="right" title="Make sure your speaker is on">
+				                	{% inline_asset 'svg/autoDemoButton.svg' %}  <!-- safe keeps svg from being treated as text -->
+		                        </div>
+		                        
+		                        <!--  image placed to draw attention to play button -->
+				                <div id="clickHereCursor" alt = "Click here to start the demo segment" >
+				                	 {% inline_asset 'svg/clickhere_cursor.svg' %}  <!-- safe keeps svg from being treated as text -->
+		                        </div>	
+		                                                              
+								<!--  make a play/pause button set from bootstrap icons -->
+								<div id="autoDemoCtls">
+									<h1>Let's demo this page!</h1>
+								    <table>
+										<tr align="center">
+											<td align="left" colspan="2">
+												Segment Name: <span id="segName"></span>
+											</td>
+										</tr>
+										<tr>
+											<td align="left">
+												<!--  max value of input will have to be set after JS runs to see how big the script is -->
+												Segment Number/Total Segments:
+											</td>
+											<td align="left">
+												<select id="segNum">
+												<!-- JS for each page will add the correct number of options, cannot change blue color of hover items in dropdown-->
+												    <option value="1">1</option>
+												</select>
+												<span id="totalSeg">/0</span>
+											</td>
+										</tr>
+										<tr align="center">
+											<td align='left'>
+												<div class="btn-group" id="autoDemoPlayPause">
+													<button type="button" class="btn btn-outline-secondary" id="playSegment" data-toggle="tooltip" data-placement="top" title="Play">
+														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-play" viewBox="0 0 16 16">
+											  			<path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
+														</svg>
+											        </button>
+											        <button type="button" class="btn btn-outline-secondary" id="stopSegment" data-toggle="tooltip" data-placement="top" title="Stop">
+											        	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-stop" viewBox="0 0 16 16">
+														<path d="M3.5 5A1.5 1.5 0 0 1 5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5zM5 4.5a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5V5a.5.5 0 0 0-.5-.5H5z"/>
+														</svg>					        	
+													</button>
+										        </div>
+										        <div id="spinner"></div>
+									        </td>
+									        <td align='right'>
+									        	<!-- btn-info is a dark cyan that contrasts to the dropdown seg num items -->
+									        	<button type="button" class="btn btn-info" id='dismissAutoDemo'>I'm done</button>
+									        </td>
+								        </tr>
+									</table>
+								</div> <!--  autodemo controls -->
+							</div> <!--  autodemo controls plus start image -->
+							
+							<div id="side-content">
+						        {% block supportMaterial %}
+						        {% endblock %}
+	  						</div>
+  						</div> <!-- doing the side by side layout -->
+  						
+					</div> <!-- autodemo plus header from pages -->
                     					
 					{% block body_block %}
                     {% endblock %}	

@@ -10,22 +10,39 @@
     <link href="{{ LandPageCSS }}" rel="stylesheet">
 {% endblock %}
 
-{% block body_block %}
-	<div id="LandingMainBody">
-		<h1><span id=homePageHeader>{{ basePage.CompanyName }} </span></h1> 
-		<h2>High School Algebra 2, PreCalculus and Physics</h2>
-				
-		<div id="selectNewbieOrExpert">
+<!-- front and center text -->
+{% block mainHeaderText %}
+	<h1><span id=homePageHeader>{{ basePage.CompanyName }} </span></h1> 
+	<h2>High School Algebra 2, PreCalculus and Physics</h2>
+{% endblock %}
+
+ <!-- to side of autodemo -->					
+{% block supportMaterial %}
+	<div id="selectNewbieOrExpert">
 		<form>
 			<fieldset>
-			  	<legend><div>I am</div><div class="line"></div></legend>
-				<label for="newbieMode">New to this site</label>
-				<input type="radio" name="helpLevel" id="newbieMode" value="newbieMode">
-				<label for="expertMode">Familiar with this site</label>
-				<input type="radio" name="helpLevel" id="expertMode" value="expertMode">
+			  	<legend>
+    				<div class="legend-flex-container">
+	        			<div>I am</div>
+	        			<div class="line"></div>
+    				</div>
+				</legend>		  	
+				<div class="form-row">
+				    <label for="newbieMode">New to this site</label>
+				    <input type="radio" name="helpLevel" id="newbieMode" value="newbieMode">
+				</div>
+				<div class="form-row">
+				    <label for="expertMode">Familiar with this site</label>
+				    <input type="radio" name="helpLevel" id="expertMode" value="expertMode">
+				</div>
 		  	</fieldset>
 		</form>
-		</div>
+	</div>
+{% endblock %}
+  				
+
+{% block body_block %}
+	<div id="LandingMainBody">
 
 	  	<img id="logo-home-page" src="{{ landingPageLogo }}" alt = "Landing Page Logo">
 		<div class="home_expln">
@@ -58,22 +75,20 @@
 					<br>
 				</noscript>
 				<p>
+					{%if upgradeNoticePresent %}
 					<span id="upgradeSchedule">
-						{%if upgradeNoticePresent %}
 						<br>
 							This site is scheduled to be upgraded at {{ upgradeTime }} EST until midnight on {{ upgradeDay }}, {{ upgradeDate }}. 
-							If you have any questions, comments or bug reports, please use the contact page to let me know.
-							
-						{% endif %}
+							If you have any questions, comments or bug reports, please use the contact page to let me know.		
 					</span>
+					{% endif %}
+					{%if upgradeNow %}
 					<span id="upgradingSiteNow">
-						{%if upgradeNow %}
 						<br>
 							This site is currently being upgraded until midnight tonight.  During this time, certain items may not be available, 
-							pages may be distorted or not operate correctly.  This will all be resolved by tomorrow.
-							
-						{% endif %}
+							pages may be distorted or not operate correctly.  This will all be resolved by tomorrow.		
 					</span>
+					{% endif %}
 						<br>
 						This math website is designed to connect the theories and equations in Algebra 2 and PreCalculus to the real world in a way that is <span id="blinkingColor">fun </span>and interactive.  
 						You will see how trig functions play into music and (eventually) imaginary numbers help your cell phone send your text messages. 

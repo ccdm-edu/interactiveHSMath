@@ -16,15 +16,18 @@ span#blinkingColor {
 }
 /*  center the logo on landing page, have it explode out and fade away */
 #logo-home-page {
-	display: block;
+    /* Centering without 'transform' to avoid animation conflicts */
+    left: 0;
+    right: 0;
     margin-left: auto;
     margin-right: auto;
-	transform: scale(0.5);
-	position: absolute;
-	animation-name: logo-fade-away;
-	animation-duration: 2s;
-	animation-fill-mode: forwards;
-	z-index: -1;
+	position: absolute; 
+	top: 0;
+	/* Use width instead of scale to avoid invisible gaps */
+    width: 500px; 
+    height: auto;
+	animation: logo-fade-away 2s forwards;
+	z-index: 1;
 }
 @keyframes logo-fade-away{
 	 0%   {opacity: 1.0; transform: scale(0.8)}
@@ -40,16 +43,20 @@ span#blinkingColor {
 	color: red;
 }
 div.home_expln {
-	margin: 10%;
+    position: absolute;
+    top: 0;           /* Snaps the text to the same top edge as the logo */
+    left: 10%;        /* Side margins only */
+    right: 10%;
+    margin: 0;        /* REMOVED: 10% top margin that caused the gap */
+    
+    z-index: 10;      /* Higher than the logo */
+    text-align: left;
     font-weight: bold;
     color: #000000;
-    position: absolute;
     font-size: 18px;
+    
     opacity: 0.0;
-    animation-name: expln_fade_in;
-	animation-duration: 2s;
-	animation-delay: 2s;
-	animation-fill-mode: forwards;
+    animation: expln_fade_in 2s forwards 2s;
 }
 @keyframes expln_fade_in{
 	 0%  {opacity: 0.0;}
@@ -65,55 +72,77 @@ div.home_expln {
 
 
 /*******************expert/newbie selection ******************************/
-:root{
-}
 #selectNewbieOrExpert{
-	position: absolute;
-	left: 250px;
-	opacity: 0.0;
-    animation-name: expln_fade_in;
-	animation-duration: 2s;
-	animation-delay: 2s;
-	animation-fill-mode: forwards;
+    display: block;      /* Ensure it's not inline */
+    width: 100%;         /* Fill the #side-content width */
+    opacity: 0;
+    animation: expln_fade_in 2s forwards 2s;
 }
-fieldset {
-    border: 1px solid black;
-    align-items: center;
-    justify-content: center;
+/* Restore the Box: Fieldsets can't be flex containers themselves without losing their border logic */
+#selectNewbieOrExpert fieldset {
+    display: block;             /* MUST be block to show the native border */
+    border: 1px solid black;    /* This creates the box around your buttons */
+    padding-top: 0px;      /* compensate for "dead zone" in fieldset spacing as per AI */
+    padding-bottom: 15px; 
+    padding-left: 20px;
+    padding-right: 20px;
+    margin: 0;
+    width: max-content;
+    box-sizing: border-box;
 }
-legend {
-    display:flex;
-    justify-content:space-between;
-    width: 100%; 
-    position: relative;
+/* The Legend: Keep it aligned and ensure it spans the top correctly */
+#selectNewbieOrExpert legend {
+    width: auto;                /* Let it shrink-wrap its content */
+    padding: 0 5px;            /* Padding here creates the 'gap' in the box for text */
     color: blue;
 }
-legend div {
-    background-color: white;
-    margin-left:0.5em;
-    margin-right:0.5em;
+/* The Connector Line: This fills the gap between "I am" and the right side of the box */
+.legend-flex-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%
 }
-legend div.line {
-    flex: 1 1 auto;
-    background-color: transparent;
+.legend-flex-container .line {
+    flex-grow: 1;               /* This pushes the line to fill the rest of the legend space */
+    height: 1px;
+    background-color: black;    /* This line now physically connects to the fieldset border */
 }
-legend div.line:before {
-    position: absolute;
-    z-index: -1;  /*Needed to put the line behind the words*/
-    content: '';
-    left: 0px;
-    right: 0px;
-    top: 50%;
-    border-top: 1px solid black;
+#selectNewbieOrExpert input,
+#selectNewbieOrExpert label {
+    display: inline-block;  /* puts radio and label on same line*/
+    margin: 0px;
+    vertical-align: middle;
 }
-#newbieMode #expertMode {
-	z-index: 10;  /* ensure user can input to radio buttons */
+
+/* Remove your old absolute pseudo-element which was over-extending */
+#selectNewbieOrExpert legend div.line:before {
+    display: none;
 }
+.form-row {
+    display: flex;
+    justify-content: flex-start; /* Radios now "hug" the text */
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px; /* Minimum gap between text and button */
+}
+.form-row:last-child {
+    margin-bottom: 0; /* Removes extra space at the very bottom of the box */
+}
+
 /***************layout of whole page *******************************************/
 #LandingMainBody{
 	/* define space for rest of page makes footer float to bottom */
-	height: 575px;
+	position: relative;
+	display: flex;
+    flex-direction: column;   /* Stacks them on top of each other */
+    justify-content: flex-start; /* Pushes both items to the very top */
+    align-items: center;      /* or flex-start if you want them left-aligned */
+    height: 400px;            /* Your fixed height */
+    width: 100%;
+    padding-top: 0;           /* Ensure no padding is pushing them down */
 }	
+
 
 
 

@@ -193,23 +193,68 @@ div#tooltip:hover .tooltiptext {
 #sendServerLoc{
 	display: none;
 }
+/********** all pages, arrange the header, the auto demo so they never collide but fit into each other *********/
+/* Home Page: Vertical Stack */
+/* Ensures mainHeaderText stays ABOVE the side-by-side row */
+#TrigPageTop.vertical-layout {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; /* Centers your header text */
+    text-align: center;
+    width: 100%;
+}
+
+/* Home Page: The row with AutoDemo and Question Box */
+#TrigPageSideBySide.horizontal-layout {   
+    display: flex !important;  /* Force flex mode */
+    flex-direction: row;       /* Force horizontal alignment */
+    flex-wrap: nowrap;         /* PREVENTS the form from jumping underneath */
+    justify-content: center;   /* Centers the pair on the screen */
+    align-items: flex-start;   /* Aligns their tops */
+    width: 100%;
+    gap: 40px;                 /* Space between them */
+}
+
+/* Ensure the AutoDemo doesn't shrink when text is long and left justify it under text*/
+#autoDemo {
+    flex: 0 0 auto;
+    width: 150px; /* Adjust based on your SVG/Table size */
+    display: block;   /* Standard block behavior */
+    text-align: left; /* Forces inline/inline-block content to the left */
+}
+/* Target the SVG specifically to remove any centering */
+#autoDemo svg {
+    display: block;   /* or inline-block if you prefer */
+    margin-left: 0;   /* Overrides margin: auto if it was being used to center */
+    margin-right: auto; /* Pushes any remaining space to the right */
+}
+/* Style for your Support Material (Question Box) */
+#side-content {
+    flex: 0 0 300px;    /* Force a width immediately */
+    width: 300px;
+    min-height: 120px;  /* Ensure it has a footprint */
+    display: block;
+    overflow: visible;
+}
+
+
 /*************all pages, auto demo controls and starting image **********************/
 /* its there, but if the page wants it, must turn it on */
 #autoDemo{
-	position: absolute;
-	min-height: 100px;
+/*	position: absolute; */
+	min-height: 100px;   /* size needs to be calculable for flexbox */
 	min-width: 100px;
-	top: 170px;  /* this has to be adjusted on some pages*/
+/*	top: 170px; */ /* this has to be adjusted on some pages*/            
 	z-index: 500;  /* needs to be max value to sit all this on top */
 }
 /* image that says Start Here */
 #startAutoDemo{
-	position: absolute;
+/*	position: absolute;
 	display: inline-block;
 	height: 100px;
 	width: 100px;
 	left: 0px;  
-	top: 0px;   
+	top: 0px;   */
 	opacity: 0;
 }
 
@@ -324,7 +369,7 @@ td {
 	/* keep dynamicTrig2 table from collapsing if screen too small, user should expand screen--there is lots of good stuff to see */
 	white-space: nowrap; 
 }
-/*****************container for videos, both summary and review pages *************/
+/*****************container for expandable youtube videos, both summary and review pages *************/
 #video-resizable-container {
     /* 1. Set original size as the starting point */
     width: 560px;
