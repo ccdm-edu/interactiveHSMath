@@ -369,13 +369,15 @@ $(function() {
     //****************************************************************************   
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
-    $('#startAutoDemo').on('click', function() {  
+    $('#startAutoDemo').on('click', function() {
+		// take image out of page layout for now, controls box will take the space  
+		$("#startAutoDemo").css('display','none'); 
 		demo.prepDemoControls();
-		demo.moveToRightForAutoDemo($('#selectNewbieOrExpert'))
+		//demo.moveToRightForAutoDemo($('#selectNewbieOrExpert'))
 		// need to move down legal stuff to make more room for demo list of subtopics
 		$('#LegalNotice_Consent').css('top', '400px');
 		//mobile devices need the words to move down when autodemo controls active
-		demo.moveDownForAutoDemo($('.home_expln'));
+		//demo.moveDownForAutoDemo($('.home_expln'));
     });
     	
     //****************************************************************************
@@ -409,8 +411,10 @@ $(function() {
 		
 		// get rid of adv topics link, was for demo only
     	$('a[href="#AdvancedTopics"]').css('display', 'none');
-		demo.moveBackUpForAutoDemo($('.home_expln'));
-    	demo.moveToLeftForAutoDemo($('#selectNewbieOrExpert'))
+    	// bring back the Start Here autodemo icon
+    	$("#startAutoDemo").css('display','block'); 
+	////	demo.moveBackUpForAutoDemo($('.home_expln'));
+    //	demo.moveToLeftForAutoDemo($('#selectNewbieOrExpert'))
     	$('#LegalNotice_Consent').css('top', '');   //let it float back up where it belongs
     });
 

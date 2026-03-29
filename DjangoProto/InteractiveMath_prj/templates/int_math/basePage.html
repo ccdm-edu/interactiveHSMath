@@ -164,14 +164,16 @@
 					<!-- this allows placement of autodemo below title on home page but to left of title on all other pages -->
 					<div id="TrigPageTop" class="vertical-layout">	
 					  	<!-- this will be populated only for home page, header text above all autodemo/question boxes -->				
-						<div class="top-content">
-					        {% block mainHeaderText %}
-					        {% endblock %}
-  						</div>
+						{% if homePage|default:False %}
+							<div class="top-content">
+						        {% block mainHeaderText %}
+						        {% endblock %}
+	  						</div>
+  						{% endif %}
   							
 						<div id="TrigPageSideBySide" class="horizontal-layout">				
 							<div id="autoDemo" >
-				                <div id="startAutoDemo" alt = "Demonstrate how to use page" data-toggle="tooltip" data-placement="right" title="Make sure your speaker is on">
+				                <div id="startAutoDemo" alt = "Demonstrate how to use page" data-toggle="tooltip" data-placement="left" title="Make sure your speaker is on">
 				                	{% inline_asset 'svg/autoDemoButton.svg' %}  <!-- safe keeps svg from being treated as text -->
 		                        </div>
 		                        

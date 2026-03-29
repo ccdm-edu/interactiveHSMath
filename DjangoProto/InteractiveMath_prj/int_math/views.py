@@ -501,6 +501,7 @@ class IndexView(View):
                         'upgradeDate': upgradeDate,
                         'upgradeTime': upgradeTime,
                         'upgradeNow': upgradingNow,
+                        'homePage': True,
                         #This is signed URL to existing html files to go to Static buckets
                         'LandPageCSS': getFullFileURL('css/LandingPage.css', True, request),
                         'landingPageLogo': getFullFileURL(realFileLandLogo, False, request),
