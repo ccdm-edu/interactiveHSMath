@@ -47,6 +47,35 @@ class AutoDemo {
 		let newTopVal = currentTopVal - this.MOVE_DOWN_AUTODEMO_ACTIVE;
 		$elementToMove.css('top', newTopVal + 'px')
 	}
+	// prepare the Auto Demo controls for user to interact with
+	prepDemoControls(){
+		// take image out of page layout for now, controls box will take the space  
+		$("#startAutoDemo").css('display','none'); 
+		// flash a "click here" image to get them to hit play
+	    $('#clickHereCursor').addClass('userHitPlay'); 
+	    	
+		//first get rid of "lets do the demo" image and put up the demo controls
+		$('#startAutoDemo').css('animation', 'none');  //turn off the overriding animation that forces visibility
+		$('#autoDemoCtls').css('display', 'inline-block');
+		
+		// fill in the controls properly
+		$('#totalSeg').text('/' + this.fullScript.length);
+		// add all the choices allowed for this set of segments of AutoDemo
+		if (this.fullScript.length > 1)
+		{
+			for (var i = 1; i < this.fullScript.length; i++) {
+	    		let newVal = (i+1).toString();
+	    		let newOption = $("<option>", {
+    				value: newVal,
+    				text: newVal
+  				});
+    			$('#segNum').append(newOption);			
+			}
+		}
+	
+		this.setCurrSeg(1);  // default start at begin
+		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
+	}
 	//***********End of prep for autodemo */
 	
 	setCurrSeg(newCurrSeg) {
@@ -75,6 +104,7 @@ class AutoDemo {
 	// when replay from begin of segment.  Since AutoDemo class can be created without control box, 
 	// when we stop a segment, we don't always want to kill a control box
 	stopThisSegment(killTheAutoDemoCtlBox = true) {
+
 		this.userStopRequest = true;  // dont add any new activity segments to pile
 		// clear EventLoop of all time queued demo events, if all events are already done, no biggie
 		this.eventLoopPtrs.forEach(timedEvent => {
@@ -88,8 +118,10 @@ class AutoDemo {
     	$('#playSegment').prop('disabled', false);  // reactivate play
     	
 		// get rid of controls box, go back to small image  
-		if (killTheAutoDemoCtlBox) {	
-			$('#startAutoDemo').css('opacity', '1');
+		if (killTheAutoDemoCtlBox) {
+			// bring back the Start Here autodemo icon
+    		$("#startAutoDemo").css('display','block'); 	
+			$('#startAutoDemo').css('opacity', '1');  // to override the initial state before animation, no animation here
 			$('#autoDemoCtls').css('display', 'none');
 			// remove the class so the click here animation will work on next page, cant do this until animation completes
 	    	$('#clickHereCursor').removeClass('userHitPlay');
@@ -385,34 +417,7 @@ class AutoDemo {
 	//****************************************
 	// play specified segment of the script
 	//****************************************
-	// prepare the Auto Demo controls for user to interact with
-	prepDemoControls(){
-		// flash a "click here" image to get them to hit play
-	    $('#clickHereCursor').addClass('userHitPlay'); 
-	    	
-		//first get rid of "lets do the demo" image and put up the demo controls
-		$('#startAutoDemo').css('opacity', '0');
-		$('#startAutoDemo').css('animation', 'none');  //turn off the overriding animation that forces visibility
-		$('#autoDemoCtls').css('display', 'inline-block');
-		
-		// fill in the controls properly
-		$('#totalSeg').text('/' + this.fullScript.length);
-		// add all the choices allowed for this set of segments of AutoDemo
-		if (this.fullScript.length > 1)
-		{
-			for (var i = 1; i < this.fullScript.length; i++) {
-	    		let newVal = (i+1).toString();
-	    		let newOption = $("<option>", {
-    				value: newVal,
-    				text: newVal
-  				});
-    			$('#segNum').append(newOption);			
-			}
-		}
-	
-		this.setCurrSeg(1);  // default start at begin
-		$('#stopSegment').prop('disabled', true);  // when first start up, can only hit play
-	}
+
 	// So audio generally starts first and is longer than the cursor demo.  So we start audio, then wait segment.headStartForAudioMillisec
 	// and start the timed cursor demo	
 	doTheSegmentAction(activity, nextItemBeginTime, annotateInd){

@@ -18,12 +18,16 @@
 	<a href = "https://openclipart.org/detail/140893/whole-note">Whole Note image </a>by Chandler Isaac Klebs
 {% endblock %}	
 
+ <!-- to side of autodemo -->					
+{% block supportMaterial %}
+	<div id="MusicIntroHeaders">
+		<h1 id="bigIntro">C Major scale</h1>
+		<h2 id="bigIntroSub">Trig functions acting like musical instruments</h2>
+	</div>
+{% endblock %}	
+
 {% block body_block %}	
 	<div id="MusicIntroBlock">
-		<div id="MusicIntroHeaders">
-			<h1 id="bigIntro">C Major scale</h1>
-			<h2 id="bigIntroSub">Trig functions acting like musical instruments</h2>
-		</div>
 		<div id="CMajorScale">
 			<!-- Two canvases that sit on top of each other, one is to measure clicks and other is to fill in notes with color when selected -->	
 			<!-- use the following to put a debug border around canvas: style="border:1px solid #000000;"  -->

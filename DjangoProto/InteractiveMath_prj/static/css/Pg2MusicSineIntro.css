@@ -3,35 +3,25 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 *********************************/
 /* create global var for this css which will be pulled in by associated js */
 :root{
-	--HIGHEST_Y: 105px;
+	--HIGHEST_Y: 115px;
 	--LOWEST_X: 200px;
 	--DELTA_Y: 10px;  /* half a note */
 	--DELTA_X: 80px;
 	--OFF_TO_SIDE_X: 40px;
 	--OFF_TO_SIDE_Y: 10px;
-	--HEADER_LOC: 130px;
+	--HEADER_LOC: 0 px; 
 	--VOLUME_LEFT_MARGIN: 500px;
 }
-#MusicIntroHeaders {
-	margin: 0;
-	position: relative;
-	top: 20px;
-	left: calc(var(--HEADER_LOC));
-}
-#bigIntro{
-	position: absolute;
-	top: 0px; 
-}
+
 #bigIntroSub{
-	position: absolute;
-	top: 50px;
 	font-size: 20px;
 }
 #CMajorScale{
 	position: relative;
-	top: calc(var(--HEADER_LOC) + 30px);  
-	left: -40px;
+	top: 0px; 
+	left: 0px;
 	width: auto;
+	height: 180px;
 }
 /* Initial instructions for user with animation */
 #initialInstrMusicTrigIntro.newbieMode{
@@ -70,18 +60,20 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 
 #colorfulClef{
 	position: absolute;
-	top: -15px; 
+	top: -5px; 
 	left: 0px;
 	height: 155px;  
 	width: 200px;
 	z-index: 20;  /*want this in front*/
 }
+/***************************Canvases used to create background, user interaction and automated demo***********/
 /* z index set so user clicking on whole notes sees the ClefWithNotes canvas xy axis of location */
+/* all canvases must be exactly aligned with each other */
 #ClefWithNotes{
 	position: absolute;
 	top: 0 px;  
 	left: 10px;
-	z-index: 10;
+	z-index: 10;  /* this is the one the user interacts with */
 }
 /* this canvas only serves to fill in the notes with color and sits in the background behind notes */
 #NotesFilledIn{
@@ -90,6 +82,14 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 	left: 10px;
 	z-index: -1;	
 }
+/* canvas, needs to sit exactly on ClefWithNotes, so demo can move cursor around it*/
+#funTutorial_MSIntro {
+	 position: absolute;
+	 top: 0px;
+	 left: 10px;
+	 z-index: -1;  /* normal operation, this should be noninterfering */
+}
+/*************************************objects on the canvas******************************/
 .wholeNote{
 	position: absolute;
 	height: 30px;
@@ -176,13 +176,13 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 ************************************************************/
 #SinusoidGraph{
 	position: relative;
-	top:  calc(200px + var(--HEADER_LOC)); 
+	height: 400px;
 	width: 650px;
 }
 #PitchGraph{
 	position: absolute;
 	left: 0px;
-	top: 70px; 
+	top: 90px; 
 }
 #noteSelect{
 	position: absolute;
@@ -325,15 +325,7 @@ Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
 
 /*****************Auto demo controls on****************************/
 #autoDemo{
-	top: 60px;
-}
-/*********************Tutorial demo type help******************/
-/* canvas, needs to sit exactly on ClefWithNotes, so demo can move cursor around it*/
-#funTutorial_MSIntro {
-	 position: absolute;
-	 top: 0px;
-	 left: 10px;
-	 z-index: -1;  /* normal operation, this should be noninterfering */
+/*	top: 60px;  */
 }
 	
 #MusicIntroBlock {

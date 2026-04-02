@@ -66,8 +66,8 @@ div.home_expln {
 /* this image comes from basePage and is place before index.html so need absolute positioning */
 #startAutoDemo{   
     /* Use the shorthand to prevent override issues */
-    animation: expln_fade_in 2s forwards;
-    animation-delay: 2s;
+    opacity: 0;  /*initial state */
+    animation: expln_fade_in 2s forwards 2s;
 }
 
 

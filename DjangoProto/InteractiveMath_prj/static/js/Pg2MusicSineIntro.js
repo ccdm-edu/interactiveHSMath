@@ -45,7 +45,7 @@ $(function() {
 	// put up the horizontal lines for notes
 	const LEFT_X = 20;
 	const RIGHT_X = 1000; 
-	const START_Y = 20;
+	const START_Y = 30;
 	const DELTA_Y = 20; 
 	for (let ind = 0; ind<5; ind++) {
 		ctxMusicCanvas.beginPath();
@@ -274,7 +274,6 @@ $(function() {
 	const NOTE_RADIUS = 30;  
 	const COLOR_RADIUS = 8; 
 	let selectedNote = null;
-//    musicCanvas.addEventListener('click', (e) => {
     musicCanvas.addEventListener('click', (e) => {
 		// need to convert canvas coord into bitmap coord
 		let rect = musicCanvas.getBoundingClientRect();
@@ -665,7 +664,7 @@ $(function() {
 		demo.prepDemoControls();
 		// here is where we get to push the titles up to the far right and squish them 
 		// in to give more graph room
-		demo.moveToRightForAutoDemo($('#MusicIntroHeaders'));
+//		demo.moveToRightForAutoDemo($('#MusicIntroHeaders'));
 	
     });
     	

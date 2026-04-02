@@ -370,8 +370,6 @@ $(function() {
 	//*** user clicks the start demo image, iniitalize everything
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
     $('#startAutoDemo').on('click', function() {
-		// take image out of page layout for now, controls box will take the space  
-		$("#startAutoDemo").css('display','none'); 
 		demo.prepDemoControls();
 		//demo.moveToRightForAutoDemo($('#selectNewbieOrExpert'))
 		// need to move down legal stuff to make more room for demo list of subtopics
@@ -407,12 +405,11 @@ $(function() {
     $('#dismissAutoDemo').on('click', function(){	
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed   	
-		$('#startAutoDemo').css('opacity', '1.0');  // make the start image visible
+	//	$('#startAutoDemo').css('opacity', '1.0');  // make the start image visible
 		
 		// get rid of adv topics link, was for demo only
     	$('a[href="#AdvancedTopics"]').css('display', 'none');
-    	// bring back the Start Here autodemo icon
-    	$("#startAutoDemo").css('display','block'); 
+
 	////	demo.moveBackUpForAutoDemo($('.home_expln'));
     //	demo.moveToLeftForAutoDemo($('#selectNewbieOrExpert'))
     	$('#LegalNotice_Consent').css('top', '');   //let it float back up where it belongs

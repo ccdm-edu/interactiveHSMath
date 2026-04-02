@@ -170,8 +170,8 @@
 						        {% endblock %}
 	  						</div>
   						{% endif %}
-  							
-						<div id="TrigPageSideBySide" class="horizontal-layout">				
+  						<!--  want different layout on homepage vs rest of pages -->
+						<div id="TrigPageSideBySide" class="horizontal-layout" class="{% if homePage|default:False %}home-page{% else %}inner-page{% endif %}">				
 							<div id="autoDemo" >
 				                <div id="startAutoDemo" alt = "Demonstrate how to use page" data-toggle="tooltip" data-placement="left" title="Make sure your speaker is on">
 				                	{% inline_asset 'svg/autoDemoButton.svg' %}  <!-- safe keeps svg from being treated as text -->
