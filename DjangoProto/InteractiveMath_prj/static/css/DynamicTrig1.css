@@ -3,22 +3,19 @@ This is the style sheet for the DynamicTrig1.html page
 ************************/
 /* create global var for this html */
 :root{
-	--CANVAS_TOP: 50px;
+	--CANVAS_TOP: 0px;
 	--GRAPH_LABEL_TOP: 30px;
 }
 /***************************/
 /* put a label up and an expln/to do selector input box */
 #headerAndCtl_DT1{
 	position: relative;
-	top: 0px;
-	left: 150px;
 	width: auto;
 	font-weight: bold;
 	font-size: 32px;
 	resize: none
 }
         
-
 /************Params that describe and control activity***************/
 
 /* this is the parent for a series of controls/labels */
@@ -167,9 +164,6 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 }
 
 /*********************Tutorial demo type help******************/
-#autoDemo{
-	top: 80px;
-}
 /* canvas, needs to sit exactly on ampSinCosCircle_DT1 */
 #funTutorial_DT1 {
 	 position: absolute;

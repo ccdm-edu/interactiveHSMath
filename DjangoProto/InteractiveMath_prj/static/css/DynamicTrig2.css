@@ -4,18 +4,17 @@ This is the style sheet for the DynamicTrig2.html page
 
 /***************************/
 /* put a label up and an expln/to do selector input box */
-#headerAndCtl_DT2 {
-	position: relative;
-	top: 0px;
-	width: auto;
-}
 /* text header of page activity*/
 #HeaderTrig_DT2 {
-	position: absolute;
-	left: 350px;
+	position: relative;
+	width: auto;
 	font-weight: bold;
 	font-size: 32px;
-	resize: none;
+	resize: none
+}
+#headerAndCtl_DT2 {
+	position: relative;
+	width: auto;
 }
 .EqtnTable_DT2{
 	position: absolute;
@@ -155,9 +154,6 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 }
 
 /*************Dynamic Help **************/
-#autoDemo{
-	top: 80px;
-}
 #FirstHelp_DT2 {
 	position: relative;
 	width: 200px;

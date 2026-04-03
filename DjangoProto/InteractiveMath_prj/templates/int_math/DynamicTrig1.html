@@ -10,12 +10,15 @@
     <link href="{{ DynTrig1CSS }}" rel="stylesheet">
 {% endblock %}
 
+ <!-- to side of autodemo -->					
+{% block supportMaterial %}
+		<div id ="headerAndCtl_DT1">
+			<h1>Sine meets time and <br>we get frequency</h1>
+		</div>
+{% endblock %}
+
 {% block body_block %}
 	<div id="DynamicTrig1Block">
-		<div id ="headerAndCtl_DT1">
-			<h1>Sine meets time and we get frequency</h1>
-		</div>
-		
 		<div id="CircleValues_DT1">	
 			<input type="button" id="ClearOldFreq_DT1" value="Clear" data-toggle="tooltip" data-placement="top" title="Stop clock.  Clear plots">
 			<label id = "time_DT1">Time (sec)</label>

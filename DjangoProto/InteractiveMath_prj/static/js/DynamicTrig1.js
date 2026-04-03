@@ -649,7 +649,7 @@ $(function() {
 	
 	//********************************************************
     //*** user clicks the Clear button
-    $('#ClearOldFreq_DT1').on('click', function(event) {
+    $('#ClearOldFreq_DT1').on('click', function() {
 		clearPage();
     });
 
@@ -927,10 +927,10 @@ $(function() {
 		// prep the controls for user to interact with auto demo 
 		demo.prepDemoControls();
   		// mover header out of controls area
-  		demo.moveToRightForAutoDemo($('#headerAndCtl_DT1')); 
-  		demo.moveDownForAutoDemo($('#CircleValues_DT1'));
-  		demo.moveDownForAutoDemo($('#UnitCircleAndGraphCanvas'));
-  		demo.moveDownForAutoDemo($('#FirstHelp_DT1'));
+  		//demo.moveToRightForAutoDemo($('#headerAndCtl_DT1')); 
+  		//demo.moveDownForAutoDemo($('#CircleValues_DT1'));
+  		//demo.moveDownForAutoDemo($('#UnitCircleAndGraphCanvas'));
+  		//demo.moveDownForAutoDemo($('#FirstHelp_DT1'));
     });
    
     //****************************************************************************
@@ -960,10 +960,10 @@ $(function() {
     	// stop the timer request
     	stopTimerNow = true;		
   		// move header and canvas back where it was
-  		demo.moveToLeftForAutoDemo($('#headerAndCtl_DT1'));
-  		demo.moveBackUpForAutoDemo($('#CircleValues_DT1'));
-  		demo.moveBackUpForAutoDemo($('#UnitCircleAndGraphCanvas'));
-  		demo.moveBackUpForAutoDemo($('#FirstHelp_DT1'));
+  		//demo.moveToLeftForAutoDemo($('#headerAndCtl_DT1'));
+  		//demo.moveBackUpForAutoDemo($('#CircleValues_DT1'));
+  		//demo.moveBackUpForAutoDemo($('#UnitCircleAndGraphCanvas'));
+  		//demo.moveBackUpForAutoDemo($('#FirstHelp_DT1'));
 
     });
     
