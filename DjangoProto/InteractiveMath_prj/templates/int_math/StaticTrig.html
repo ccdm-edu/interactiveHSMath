@@ -9,16 +9,17 @@
 {%block head_block %}
     <link href="{{ StaticTrigCSS }}" rel="stylesheet">
 {% endblock %}
+ <!-- to side of autodemo -->					
+{% block supportMaterial %}
+		<div id ="headerAndCtl_ST">
+			<h1 >Where do sine waves<br> come from?</h1>
+		</div>
+{% endblock %}	
     
 {% block body_block %}
 
 	<div id="StaticTrigBlock">
-		<div id ="headerAndCtl_ST">
-			<h1 >Where do sine waves come from?</h1>
-		</div>
-	
 		<div id="CircleValues">	
-
 	    	<label id="ampCircLabel"><b>Amplitude (r)</b></label>
 	    	<div id="ampCircLocation">
 		    	<select name="ampCirc" id="ampCirc">

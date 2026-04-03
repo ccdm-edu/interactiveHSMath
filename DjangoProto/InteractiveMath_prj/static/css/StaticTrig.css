@@ -3,11 +3,11 @@ This is the style sheet for the StaticTrig.html page
 ************************/
 /* create global var for this html */
 :root{
-	--LABEL_Y_VAL: 30px;
-	--VALUE_Y_1: 60px;
-	--VALUE_Y_2: 90px;
-	--VALUE_Y_3: 120px;
-	--VALUE_Y_4: 160px;
+	--LABEL_Y_VAL: 0px; 
+	--VALUE_Y_1: 30px; 
+	--VALUE_Y_2: 60px; 
+	--VALUE_Y_3: 90px; 
+	--VALUE_Y_4: 130px; 
 	--LABEL_X_VAL1: 50px;
 	--LABEL_X_VAL2: 170px;
 	--LABEL_X_VAL3: 350px;
@@ -18,8 +18,6 @@ This is the style sheet for the StaticTrig.html page
 /* put a label up and an expln/to do selector input box */
 #headerAndCtl_ST {
 	position: relative;
-	top: 0px;
-	left: 150px;
 	font-weight: bold;
 	font-size: 32px;
 } 
@@ -28,8 +26,6 @@ This is the style sheet for the StaticTrig.html page
 /* arrange all the parms that feed into or get info out of circle */
 #CircleValues {
 	position: relative;
-	top: 40px;
-	left: 0px;
 }
 #ampCircLabel {
 	position: absolute;
@@ -47,7 +43,7 @@ This is the style sheet for the StaticTrig.html page
 #unitCircNotify{
 	position: absolute;
 	left: var(--LABEL_X_VAL1);
-	top: 85px;
+	top: 65px;
 }
 #xyValueLabel {
 	position: absolute;
@@ -104,8 +100,6 @@ This is the style sheet for the StaticTrig.html page
 We use negative value for top since we want some overlap*/
 #Canvas_STrig{
 	 position:relative; 
-	 top: 0px;  /*want to invade some space for header and advanced topics link */
-	 left: 0px;
 }
 #AmpSinCosCircle{
 	 position:absolute; 
@@ -118,7 +112,7 @@ We use negative value for top since we want some overlap*/
 	font-size: 30px;
 	font-weight: bold;
 	color: green;
-	top: 220px; 
+	top: 180px; 
 }
 #quad1_ID{
 	position: absolute;
@@ -131,12 +125,12 @@ We use negative value for top since we want some overlap*/
 #quad3_ID{
 	position: absolute;
 	left: 50px;
-	top: 300px;
+	top: 260px;
 }
 #quad4_ID{
 	position: absolute;
 	left: 350px;
-	top: 300px;
+	top: 260px;
 }
 /*************Dynamic Help**************/
 #FirstHelp_ST.newbieMode {
@@ -170,9 +164,6 @@ We use negative value for top since we want some overlap*/
 }
 
 /*********************Tutorial demo type help******************/
-#autoDemo{
-	top: 80px;
-}
 #funTutorial_ST{
 	 position: absolute;
 	 top: 0px;   /* match AmpSinCosCircle canvas */

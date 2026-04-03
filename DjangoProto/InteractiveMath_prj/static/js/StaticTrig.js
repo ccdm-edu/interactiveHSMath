@@ -46,10 +46,9 @@ $(function() {
 	let amp = 1.0;  // size of "unit circle", which can grow
 	let ampStr = "";  // amp value converted to string, null if amp=1.0
 	const MAX_AMP = 1.1;   // this is set to keep circle and sin/cos graphs from getting too big
-	const MIN_AMP = 0.8;  //this is set so that the graphics are still readable
 	const HALF_AXIS = (MAX_AMP * CIRC_RAD) + AXIS_OVERLAP;
 	const CIRC_X0 = 210;
-	const CIRC_Y0 = 410;
+	const CIRC_Y0 = 370;
 	drawTrigCircle(ctxExpandableUnitCircle, CIRC_X0, CIRC_Y0, HALF_AXIS);
 
 	//****
@@ -57,10 +56,10 @@ $(function() {
 	// which will change as user changes amplitude
 	//****
 
-	const COS_Y_ORIGIN = 200;
+	const COS_Y_ORIGIN = 160; 
 	const TRIG_X_ORIGIN = 550;
-	const SIN_Y_ORIGIN = 505;
-	const TRIG_AXIS = 420; 
+	const SIN_Y_ORIGIN = 465;  
+	const TRIG_AXIS = 420; //length
 	const MAX_AMP_AXIS = MAX_AMP * CIRC_RAD + 10;  // needs to be at least MAX_AMP*CIRC_RAD to match the circle values
 	// full theta pix is the number of pixels between 0 and 2pi for both graphs
 	const FULL_THETA_PIX = TRIG_AXIS - 50;
@@ -445,18 +444,18 @@ $(function() {
 		ctxExpandableUnitCircle.font = '20px Arial';
 	  	if (1.0 == amp) {
 			// user is still using unit circle, get rid of the "r" so they won't get confused
-			ctxExpandableUnitCircle.fillText("x=f("+THETA+")=cos("+THETA+")", TRIG_X_ORIGIN - 110, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);
+			ctxExpandableUnitCircle.fillText("x=f("+THETA+")=cos("+THETA+")", TRIG_X_ORIGIN - 110, COS_Y_ORIGIN - MAX_AMP_AXIS);
 			ctxExpandableUnitCircle.stroke(); 
 			ctxExpandableUnitCircle.fillStyle = SINE_COLOR;
-			ctxExpandableUnitCircle.fillText("y=f("+THETA+")=sin("+THETA+")", TRIG_X_ORIGIN - 110, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);	
+			ctxExpandableUnitCircle.fillText("y=f("+THETA+")=sin("+THETA+")", TRIG_X_ORIGIN - 110, SIN_Y_ORIGIN - MAX_AMP_AXIS);	
 			ctxExpandableUnitCircle.stroke(); 
 	  	} else {
 			// user has selected an "advanced" circle, show r values here
-			ctxExpandableUnitCircle.fillText("x=f("+THETA+")=r"+MULT_DOT+"cos("+THETA+")", TRIG_X_ORIGIN - 130, COS_Y_ORIGIN - MAX_AMP_AXIS + 10);
+			ctxExpandableUnitCircle.fillText("x=f("+THETA+")=r"+MULT_DOT+"cos("+THETA+")", TRIG_X_ORIGIN - 130, COS_Y_ORIGIN - MAX_AMP_AXIS);
 			ctxExpandableUnitCircle.stroke(); 
 			ctxExpandableUnitCircle.fillStyle = SINE_COLOR;
 			ctxExpandableUnitCircle.stroke(); 
-			ctxExpandableUnitCircle.fillText("y=f("+THETA+")=r"+MULT_DOT+"sin("+THETA+")", TRIG_X_ORIGIN - 130, SIN_Y_ORIGIN - MAX_AMP_AXIS + 10);	
+			ctxExpandableUnitCircle.fillText("y=f("+THETA+")=r"+MULT_DOT+"sin("+THETA+")", TRIG_X_ORIGIN - 130, SIN_Y_ORIGIN - MAX_AMP_AXIS);	
 		}					
 	  	
 		ctxExpandableUnitCircle.stroke(); 
@@ -507,7 +506,7 @@ $(function() {
 	// is used every specified time interval to draw the sin/cos lines from the circle to the appropriate graph
 	// after animation is complete, this array is destroyed till needed again
 	//***********************************
-	const NUM_ANIMATION_SIN_COS = 5;
+	const NUM_ANIMATION_SIN_COS = 5;  // we show 5 steps from unit circle to graph
 	const NORMAL_LINE_WIDTH = 3;
 	const ZERO_PT_WIDTH = 8;
 	let sinLineMovement = [];
@@ -864,8 +863,6 @@ $(function() {
     $('#startAutoDemo').on('click', function() {
   		// prep the control box for user to interact with auto demo
 		demo.prepDemoControls();
-  		//Move elements to make way for autodemo control box
-  		demo.moveToRightForAutoDemo($('#headerAndCtl_ST'));
     });
     	
     //****************************************************************************
@@ -885,9 +882,6 @@ $(function() {
     $('#dismissAutoDemo').on('click', function(){	
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
-
-		//move elements for autodemo controls box  		
-		demo.moveToLeftForAutoDemo($('#headerAndCtl_ST'));
 
     });
     
