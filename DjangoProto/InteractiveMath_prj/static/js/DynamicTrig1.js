@@ -122,7 +122,7 @@ $(function() {
 	{	tip1: [101, 47],
 		tip2: [115, 47],
 		point: [110,39],
-		end: [101,95]
+		end: [101,88]
 	};
 	let numFreqGenSoFar = 0;
 	const ANGLE_PER_PT_RAD = Math.PI/6;
@@ -694,10 +694,10 @@ $(function() {
 			 segmentParams: 
 			 	{filenameURL: 'DynamicTrig1Seg0'}
 			},
-			// this of course relys on fact that demo canvas exactly overlays the canvas we plan to annotate
+			// this of course relys on fact that demo canvas, funTutorial_DT1, exactly overlays the canvas, AmpSinCosCircle_DT1, we plan to annotate
 			{segmentActivity: "ANNOTATION",
 			 segmentParams: 
-			 	{circleCenter: {x: TIMER_LOC_X, y: TIMER_LOC_Y, radius: 22}, 
+			 	{circleCenter: {x: TIMER_LOC_X, y: TIMER_LOC_Y, radius: 20}, 
 			 	 color: "red",
 			 	 waitTimeMillisec: 20000}
 			},
@@ -926,11 +926,6 @@ $(function() {
 		prepHelpForUser();
 		// prep the controls for user to interact with auto demo 
 		demo.prepDemoControls();
-  		// mover header out of controls area
-  		//demo.moveToRightForAutoDemo($('#headerAndCtl_DT1')); 
-  		//demo.moveDownForAutoDemo($('#CircleValues_DT1'));
-  		//demo.moveDownForAutoDemo($('#UnitCircleAndGraphCanvas'));
-  		//demo.moveDownForAutoDemo($('#FirstHelp_DT1'));
     });
    
     //****************************************************************************
@@ -942,7 +937,6 @@ $(function() {
     	// user may have chosen a segment out of order
     	prepHelpForUser(demo.getCurrSeg()); 
     	demo.startDemo();
-
     });
     
     $('#stopSegment').on('click', function(){	
@@ -950,8 +944,7 @@ $(function() {
     	// stop the timer request
     	stopTimerNow = true;
     	// need to get the help set up for correct segment we think we are on
-    	prepHelpForUser(demo.getCurrSeg()); 
-    	
+    	prepHelpForUser(demo.getCurrSeg());   	
     });
     
     $('#dismissAutoDemo').on('click', function(){	
@@ -959,18 +952,11 @@ $(function() {
     	demo.stopThisSegment();  // may or may not be needed
     	// stop the timer request
     	stopTimerNow = true;		
-  		// move header and canvas back where it was
-  		//demo.moveToLeftForAutoDemo($('#headerAndCtl_DT1'));
-  		//demo.moveBackUpForAutoDemo($('#CircleValues_DT1'));
-  		//demo.moveBackUpForAutoDemo($('#UnitCircleAndGraphCanvas'));
-  		//demo.moveBackUpForAutoDemo($('#FirstHelp_DT1'));
-
     });
     
  	$("#segNum").change(function(){
 		let currSeg = parseInt($('#segNum').val());
 		demo.setCurrSeg(currSeg);
-		
 		// remove the class so the animation will work on next page, cant do this until animation completes
     	$('#clickHereCursor').removeClass('userHitPlay');
 	});

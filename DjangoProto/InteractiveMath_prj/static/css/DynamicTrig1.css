@@ -4,7 +4,7 @@ This is the style sheet for the DynamicTrig1.html page
 /* create global var for this html */
 :root{
 	--CANVAS_TOP: 0px;
-	--GRAPH_LABEL_TOP: 30px;
+	--GRAPH_LABEL_TOP: 15px;
 }
 /***************************/
 /* put a label up and an expln/to do selector input box */
@@ -29,13 +29,13 @@ This is the style sheet for the DynamicTrig1.html page
 #ClearOldFreq_DT1{
 	position: absolute;
 	left: 0px;
-	top: 60px;
+	top: calc(var(--CANVAS_TOP) + 30px);
 	z-index: 20;
 }
 #StartOver_DT1{
 	position: absolute;
 	left: 0px;
-	top: 90px;
+	top: calc(var(--CANVAS_TOP) + 70px);
 	z-index: 20;
 	background-color: pink;
 	visibility: hidden;
@@ -43,46 +43,46 @@ This is the style sheet for the DynamicTrig1.html page
 #time_DT1{
 	position: absolute;
 	left: 100px;
-	top: 40px;
+	top: var(--CANVAS_TOP);
 }
 #timeVal_DT1{
 	position: absolute;
 	left: 100px;
-	top: 60px;	
+	top: calc(var(--CANVAS_TOP) + 30px);	
 }
 #thetaLabel_DT1 {
 	position: absolute;
 	left: 200px;
-	top: 40px;
+	top: var(--CANVAS_TOP);
 }
 #theta_DT1 {
 	position: absolute;
 	left: 200px;
-	top: 60px;
+	top: calc(var(--CANVAS_TOP) + 30px);
 }
 #LastFrequenciesLabel_DT1{
 	position: absolute;
 	left: 300px;
-	top: 40px;
+	top: var(--CANVAS_TOP);
 	white-space: nowrap; /*prevent small screen rearrangement*/
 }
 #LastFrequencies_DT1{
 	position: absolute;
 	left: 300px;
-	top: 60px;
+	top: calc(var(--CANVAS_TOP) + 30px);
 	white-space: nowrap; /*prevent small screen rearrangement*/
 }
 #UserNotices_DT1{
 	position: absolute;
 	left: 0px;
-	top: 120px;
+	top: calc(var(--CANVAS_TOP) + 100px);
 	white-space: nowrap; /*prevent small screen rearrangement*/
 }
 #ExplnFreqMark{
 	position: absolute;
 	color: lime;
 	left: 0px;
-	top: 140px;
+	top: calc(var(--CANVAS_TOP) + 120px);
 }
 
 /***************************/
@@ -95,7 +95,7 @@ We use negative value for top since we want some overlap*/
 }
 #AmpSinCosCircle_DT1{
 	 position: absolute;
-	 top: 50px;  
+	 top: 20px;  
 	 left: 0px;  
 	 margin-left: 0 px;
 	 padding-left: 0 px;
@@ -107,7 +107,7 @@ clear and redraw at different times than the other canvas  We did position as ab
 it won't shove this to below the unit circle-- off to side prods user to expand screen */
 #FreqChange_DT1{
 	 position: absolute;
-	 top: 20px;
+	 top: 0px;
 	 left: 450px;
 	 margin-left: 0 px;
 	 padding-left: 0 px;
@@ -167,7 +167,7 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 /* canvas, needs to sit exactly on ampSinCosCircle_DT1 */
 #funTutorial_DT1 {
 	 position: absolute;
-	 top: 50px; 
+	 top: 20px; 
 	 left: 0px;
 	 margin-left: 0 px;
 	 padding-left: 0 px;
