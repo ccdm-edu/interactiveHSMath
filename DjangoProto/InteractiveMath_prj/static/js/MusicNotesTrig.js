@@ -54,7 +54,7 @@ $(function() {
 	// map JSON texts to html
 	const NOTE_MAPPING = new Map([ ["C5", C5_NOTE],["C4", C4_NOTE],["B4flat", BFLAT4_NOTE] ]);
 	
-	const DEFAULT_TITLE = "Musical Notes and Underlying Trig";
+	const DEFAULT_TITLE = "Musical Notes <br>and Underlying Trig";
 	$("#musicalActivity").html(DEFAULT_TITLE);  //load up default
 
 
@@ -1054,11 +1054,7 @@ $(function() {
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
 
 	$('#startAutoDemo').click(function() {
-  		demo.prepDemoControls();
-  		//move header and tone/music controls to right when autodemo is active
-    	demo.moveToRightForAutoDemo($('#headerAndCtl_TT'));
-    	demo.moveToRightForAutoDemo($('#MusicNotesToneControl'));
-    	
+  		demo.prepDemoControls();    	
 		// Only in autodemos that use MP3 (like MusicNotesTrig that plays musician notes), we need to send the original webAudio context
 		// since iOS will not allow initial use of AudioContext unless initialized by user click (not CustomEvent as is done in AutoDemo).  To solve
 		// this, on user click of start here button, we create the WebAudio that will be used in the demo (using trumpet).  We will create the tone
@@ -1162,9 +1158,6 @@ $(function() {
     $('#dismissAutoDemo').on('click', function(){	
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
-  		//move header and tone/music controls to right when autodemo is active
-    	demo.moveToLeftForAutoDemo($('#headerAndCtl_TT'));
-    	demo.moveToLeftForAutoDemo($('#MusicNotesToneControl'));
   		resetToDefaults();  // turn off any sound, clean up
     });
     

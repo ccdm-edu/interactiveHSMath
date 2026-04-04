@@ -20,28 +20,13 @@ input[type="range"] {
   width:80px;
 }
 /*****************************************************************/
-#headerAndCtl_TT {
-	position: relative;
-	margin: 10px;
-	height: var(--HEIGHT_HEADER);
-	left: -30px;
-}
-/* this is a header of current activity and goes within headerAndCtl_TT */
+/* this is a header of current activity*/
 #musicalActivity {
-	position: absolute;
-	text-align: left;
-	top: 0px;
-	left: 150px;
-	border: 0px;
 	resize: none;
 	font-weight: bold;
 	font-size: 32px;
 	}
-/*****************************************************************/
-/* explanation of page */
-#autoDemo{
-	top: 80px;
-}
+
 /*****************************************************************/
 /* do NOT put a space between number and word "px" */
 /* This is parent of the two control boxes */
