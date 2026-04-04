@@ -1,7 +1,11 @@
 /***********************
 This is the style sheet for the DynamicTrig2.html page
 ************************/
-
+:root{
+	--GRAPH_CANVAS_TOP: -350px;  /* so it overlays on the right*/
+	--GRAPH_LABEL_TOP: 20px;
+	--GRAPH_LABEL_BOTTOM: 340px;
+}
 /***************************/
 /* put a label up and an expln/to do selector input box */
 /* text header of page activity*/
@@ -12,13 +16,13 @@ This is the style sheet for the DynamicTrig2.html page
 	font-size: 32px;
 	resize: none
 }
-#headerAndCtl_DT2 {
+#Control_DT2 {
 	position: relative;
 	width: auto;
+	height: 220px;
 }
 .EqtnTable_DT2{
 	position: absolute;
-	top: 100px;
 }
 .Eqtn_DT2{
 	font-size: 25px;
@@ -48,7 +52,8 @@ This is the style sheet for the DynamicTrig2.html page
 #CircleValues_DT2 {
 	position: relative;
 	left: 0px;
-	top: 300px;
+	top: 0px;
+	height: 70px;
 }
 /* arrange the freq input labels, slider, curr val*/
 #FreqLabel_DT2{
@@ -93,7 +98,7 @@ This is the style sheet for the DynamicTrig2.html page
 
 #UserNotices_DT2{
 	position: absolute;
-	left: 350px;
+	left: 300px;
 	top: 50px;
 	color: DarkOrchid;
 	white-space: nowrap;
@@ -104,35 +109,24 @@ This is the style sheet for the DynamicTrig2.html page
 We use negative value for top since we want some overlap*/
 #UnitCircleAndGraphCanvas_DT2{
 	position: relative;
-	left: 0px;
-	top: 100px;
+	height: 350px;
 }
 #AmpSinCosCircle_DT2{
 	 position: absolute;
-	 top: 50px;
-	 left: 0px;  
-	 margin-left: 0 px;
-	 padding-left: 0 px;
-	 margin-right: 0 px;
-	 padding-right: 0 px;
 }
 /* this is the graph off to the right that needs to be on separate canvas since animations need to 
 clear and redraw at different times than the other canvas  We did position as absolute so if window too small
 it won't shove this to below the unit circle-- off to side prods user to expand screen */
 #FreqChange_DT2{
-	 position: absolute;
-	 top: -50px;
+	 position: absolute;  
+	 top: var(--GRAPH_CANVAS_TOP);  /* overlay on other set*/
 	 left: 600px;
-	 margin-left: 0 px;
-	 padding-left: 0 px;
-	 margin-right: 0 px;
-	 padding-right: 0 px;
 }
 /* arrange label for two graphs*/
 /* arrange equation for chosen sine wave to be right over the graph */
 #sinEqtnLabelHI_DT2{
 	position: absolute;
-	top: -30px;
+	top: calc(var(--GRAPH_CANVAS_TOP) + var(--GRAPH_LABEL_TOP));
 	left: 550px;
 	font-size: 20px;
 	font-weight: bold;
@@ -147,7 +141,7 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 }
 #sinEqtnLabelLO_DT2{
 	position: absolute;
-	top: 290px;
+	top: calc(var(--GRAPH_CANVAS_TOP) + var(--GRAPH_LABEL_BOTTOM));
 	left: 550px;
 	font-size: 20px;
 	font-weight: bold;

@@ -70,7 +70,7 @@ $(function() {
 	// *** Start drawing the "unit circle" 
 	const HALF_AXIS = CIRC_RAD + AXIS_OVERLAP;
 	const CIRC_X0 = 210;
-	const CIRC_Y0 = 330;   // use this to raise and lower the whole circle, remember y increases going down the page
+	const CIRC_Y0 = 180;   // use this to raise and lower the whole circle, remember y increases going down the page
 	drawTrigCircle(ctxUnitCircle, CIRC_X0, CIRC_Y0, HALF_AXIS);
 	
 	//*** Draw the big unit circle
@@ -609,10 +609,7 @@ $(function() {
 	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
     $('#startAutoDemo').on('click', function() {
 		demo.prepDemoControls();
-		// move down the table/canvas/controls to make room for autodemo
-		demo.moveDownForAutoDemo($('.EqtnTable_DT2'));
-  		demo.moveDownForAutoDemo($('#CircleValues_DT2'));
-  		demo.moveDownForAutoDemo($('#UnitCircleAndGraphCanvas_DT2'));		
+		// move down the table/canvas/controls to make room for autodemo	
     });
    
     //****************************************************************************
@@ -639,9 +636,6 @@ $(function() {
 		resetToDefaults();
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
-    	demo.moveBackUpForAutoDemo($('.EqtnTable_DT2'));
-  		demo.moveBackUpForAutoDemo($('#CircleValues_DT2'));
-  		demo.moveBackUpForAutoDemo($('#UnitCircleAndGraphCanvas_DT2'));
     });
     
     $("#segNum").change(function(){
