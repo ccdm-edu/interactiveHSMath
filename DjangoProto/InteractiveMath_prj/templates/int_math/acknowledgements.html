@@ -26,6 +26,8 @@
 	<script nonce="{{ request.csp_nonce }}">
 			// Dont need advanced topic link popup
 			$('a[href="#AdvancedTopics"]').css('display', 'none');
+			// Dont need autodemo icon
+			$('#TrigPageTop').css('display', 'none');
 			// no buttons needed
 			$("#GoToNextPage").css('display', 'none');
     		$("#GoToPreviousPage").css('display', 'none');

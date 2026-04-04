@@ -70,7 +70,7 @@ $(function() {
 	// *** Start drawing the "unit circle" 
 	const HALF_AXIS = CIRC_RAD + AXIS_OVERLAP;
 	const CIRC_X0 = 210;
-	const CIRC_Y0 = 180;   // use this to raise and lower the whole circle, remember y increases going down the page
+	const CIRC_Y0 = 170;   // use this to raise and lower the whole circle, remember y increases going down the page
 	drawTrigCircle(ctxUnitCircle, CIRC_X0, CIRC_Y0, HALF_AXIS);
 	
 	//*** Draw the big unit circle

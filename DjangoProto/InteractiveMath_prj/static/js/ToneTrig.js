@@ -681,9 +681,6 @@ $(function() {
     $('#startAutoDemo').on('click', function(event) {
   		// prep the control box for user to interact with auto demo
 		demo.prepDemoControls();
-  	  	//move header and tone/music controls to right when autodemo is active
-    	demo.moveToRightForAutoDemo($('#musicalActivity'));
-    	demo.moveToRightForAutoDemo($('#toneChanges'));	
     });
    
     //****************************************************************************
@@ -715,11 +712,7 @@ $(function() {
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
   		// turn off sound and put page back the way it was
-    	initializePage();
-  		//Autodemo over, move elements back where they were
-  		demo.moveToLeftForAutoDemo($('#musicalActivity'));
-    	demo.moveToLeftForAutoDemo($('#toneChanges'));	
-    	
+    	initializePage(); 	
     });
     
     $("#segNum").change(function(){
@@ -730,6 +723,4 @@ $(function() {
     	$('#clickHereCursor').removeClass('userHitPlay');
 	});
 	
-	
-
 })
