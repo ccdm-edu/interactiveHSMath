@@ -661,11 +661,7 @@ $(function() {
 	let demo = new AutoDemoWithCanvas(SCRIPT_AUTO_DEMO, 'funTutorial_MSIntro');  // give the demo the full script
     $('#startAutoDemo').on('click', function(event) {			
 		// prep the control box for user to interact with auto demo
-		demo.prepDemoControls();
-		// here is where we get to push the titles up to the far right and squish them 
-		// in to give more graph room
-//		demo.moveToRightForAutoDemo($('#MusicIntroHeaders'));
-	
+		demo.prepDemoControls();	
     });
     	
     //****************************************************************************
@@ -693,8 +689,6 @@ $(function() {
     $('#dismissAutoDemo').on('click', function(){	
     	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
     	demo.stopThisSegment();  // may or may not be needed
-		
-		demo.moveToLeftForAutoDemo($('#MusicIntroHeaders'));
     });
  
  	$("#segNum").change(function(){

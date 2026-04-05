@@ -19,34 +19,7 @@ class AutoDemo {
 		this.MOVE_RIGHT_AUTODEMO_ACTIVE = 200;
 		this.MOVE_DOWN_AUTODEMO_ACTIVE = 65;
 	}
-	//***********This is more prep for Autodemo than actually doing it yet */
-	// Move the the html element id specified to the right to accomodate AUTODEMO being active
-	moveToRightForAutoDemo($elementToMove){
-		// read current value of "left" attribute, pull off the px part of string
-		let currentLeftVal = parseInt($elementToMove.css('left').slice(0,-2));
-		let newLeftVal = currentLeftVal + this.MOVE_RIGHT_AUTODEMO_ACTIVE;
-		$elementToMove.css('left', newLeftVal + 'px')
-	}
-	// Move the html element id specified back to the left now that AUTODEMO is over.
-	moveToLeftForAutoDemo($elementToMove){
-		let currentLeftVal = parseInt($elementToMove.css('left').slice(0,-2));
-		let newLeftVal = currentLeftVal - this.MOVE_RIGHT_AUTODEMO_ACTIVE;
-		$elementToMove.css('left', newLeftVal + 'px')
-	}
-	// move element down for autodemo controls box
-	moveDownForAutoDemo($elementToMove){
-		// read current value of "left" attribute, pull off the px part of string
-		let currentTopVal = parseInt($elementToMove.css('top').slice(0,-2));
-		let newTopVal = currentTopVal + this.MOVE_DOWN_AUTODEMO_ACTIVE;
-		$elementToMove.css('top', newTopVal + 'px')
-	}
-	// Move the html element id specified back to the left now that AUTODEMO is over.
-	moveBackUpForAutoDemo($elementToMove){
-		// read current value of "left" attribute, pull off the px part of string
-		let currentTopVal = parseInt($elementToMove.css('top').slice(0,-2));
-		let newTopVal = currentTopVal - this.MOVE_DOWN_AUTODEMO_ACTIVE;
-		$elementToMove.css('top', newTopVal + 'px')
-	}
+
 	// prepare the Auto Demo controls for user to interact with
 	prepDemoControls(){
 		// take image out of page layout for now, controls box will take the space  
