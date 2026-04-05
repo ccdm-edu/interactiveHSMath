@@ -1,9 +1,6 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
-	//since this is on template and dont need it here...
-	$('a[href="#AdvancedTopics"]').css('display', 'none');
-	
 	// only execute if all is loaded
 	//if Next  button hit (in base template), set it up to go to intro page
 	//Changing this button will also trigger in the IntMath.js which will change which page on index to left is active

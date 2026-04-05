@@ -3,6 +3,14 @@
 span#homePageHeader {
 	color: red;
 }
+.top-content {
+   padding: 10px; /* Buffer so text doesn't touch screen edges */
+}
+.top-content h2 {
+   white-space: normal;
+   overflow-wrap: break-word;
+   max-width: 100%;
+}
 /* blinking color changing word "fun" on landing page */
 span#blinkingColor {
     animation:blinkingColorText 1.2s infinite;
