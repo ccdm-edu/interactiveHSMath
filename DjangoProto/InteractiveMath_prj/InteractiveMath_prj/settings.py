@@ -185,7 +185,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
+#required for upgrade to django3.2.25, as per gemini AI
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -211,11 +212,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# upgrade to django 4.2 and py 3.10
+USE_TZ = True
+TIME_ZONE = 'UTC'  # Best practice: keep DB in UTC, convert in views/templates
 
 USE_I18N = True
 
-USE_L10N = True
 
 USE_TZ = True
 

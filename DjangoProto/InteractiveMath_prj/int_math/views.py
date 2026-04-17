@@ -10,7 +10,7 @@ from django.http import JsonResponse, FileResponse, Http404
 from user_agents import parse
 import urllib.request
 import json, os
-from pytz import timezone
+from zoneinfo import ZoneInfo
 from django.views.decorators.cache import cache_control
 from django.utils.decorators import method_decorator
 from pathlib import Path
@@ -437,7 +437,7 @@ class IndexView(View):
     @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
     def get(self, request):
         # add help to user based on device/browser, unknown is for bots/scrapers
-        ua_string = request.META.get('HTTP_USER_AGENT',"unknown");
+        ua_string = request.headers.get('user-agent',"unknown");
         user_agent = parse(ua_string)
         usingSafari = False;
         if 'safari' in user_agent.browser.family.lower(): 
@@ -469,8 +469,8 @@ class IndexView(View):
                 logger.error(f'SW ERROR: in obtaining date Exception is {emsg}')
                 logger.error(f'SW ERROR: Failure on parsing time in UpgradeSchedule.txt, cannot parse {repr(dateTimeUpgdStr)}')
             if (dateTimeUpgd is not None):               
-                # get time right now and convert to EST (from UTC).  
-                tz = timezone('EST')
+                # get time right now and convert to EST (from UTC).  Django 4.2 get away from pytz
+                tz = ZoneInfo("America/New_York") # Use IANA names for reliability
                 dateNow = datetime.datetime.now(tz)                
                 daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
                 dayUpgdNum = dateTimeUpgd.weekday()
@@ -796,7 +796,7 @@ class ContactMe(View):
         #dont want to bombard reCaptcha with requests (else we get charged over 10k), limit number of accesses to reasonable amount.
         #Expect in future to be charged if I exceed a number of smtp access of gmail account so set that limit as well.
         allowContact = False;  #assume all limits have been exceeded until proven otherwise
-        tz = timezone('EST')
+        tz = ZoneInfo("America/New_York") # Use IANA names for reliability.  Django4.2 gets away from pytz
         dateNow = datetime.datetime.now(tz)  
         try: 
             #careful, every time you populate DB, you add new entry and best may be last--regen DB every time

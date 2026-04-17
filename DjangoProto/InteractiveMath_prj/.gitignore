@@ -75,6 +75,10 @@ coverage.xml
 # pyenv 
 .python-version 
 
+# virtual environ
+venv_django32_py310/
+venv_django42_py310/
+
 # celery 
 celerybeat-schedule.* 
 
