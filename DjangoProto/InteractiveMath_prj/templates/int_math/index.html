@@ -53,7 +53,7 @@
 				<br>
 				<span id="upgradeSchedule">
 				{%if upgradeNoticePresent %}
-					Site will be upgraded at {{ upgradeTime }} EST until midnight on {{ upgradeDay }}, {{ upgradeDate }}. 		
+					Site will be upgraded at {{ upgradeTime|time:"g:i A" }} EST until midnight on {{ upgradeDate|date:"l, F jS" }}.
 				{% endif %}
 				</span>
 				<span id="upgradingSiteNow">
@@ -79,7 +79,7 @@
 					{%if upgradeNoticePresent %}
 					<span id="upgradeSchedule">
 						<br>
-							This site is scheduled to be upgraded at {{ upgradeTime }} EST until midnight on {{ upgradeDay }}, {{ upgradeDate }}. 
+						    This site will be upgraded at {{ upgradeTime|time:"g:i A" }} EST until midnight on {{ upgradeDate|date:"l, F jS" }}.					
 							If you have any questions, comments or bug reports, please use the contact page to let me know.		
 					</span>
 					{% endif %}
@@ -116,13 +116,13 @@
 
 {% block unique_js_block %}	
 	<!-- custom JS for this page -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js" integrity="sha512-wDf6/iK+iu9N1zNvdOsL5/66HyMla4UHOkPkRYacvv9mSAD1S86XfrAvDFTX9S1FUzbwe9YOI11yOGALE8jQow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script nonce="{{ CSP_NONCE }}" src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js" integrity="sha512-wDf6/iK+iu9N1zNvdOsL5/66HyMla4UHOkPkRYacvv9mSAD1S86XfrAvDFTX9S1FUzbwe9YOI11yOGALE8jQow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
-	<script nonce="{{ request.csp_nonce }}">feather.replace()</script>
+	<script nonce="{{ CSP_NONCE }}">feather.replace()</script>
 
 	<script src="{{ basePage.AutoDemoJS }}" crossorigin="anonymous"></script>	
 	<script src="{{ LandPageJS }}" crossorigin="anonymous"></script>
-	<script nonce="{{ request.csp_nonce }}">
+	<script nonce="{{ CSP_NONCE }}">
 		//no advanced topics on intro page
 		$('a[href="#AdvancedTopics"]').css('visibility', 'hidden');
 	</script>

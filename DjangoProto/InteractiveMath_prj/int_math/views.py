@@ -1,19 +1,23 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse
+from django.apps import apps
+from django.db.models import F
+from django.db import transaction
+from django.utils import timezone # Better than datetime.now
 from int_math.models import Topic
-from django.templatetags.static import static
+from django.utils.http import urlencode
+from pathlib import Path
 from django.conf import settings
 from django.core.mail import send_mail
-from django.utils.html import escape
 from django.http import JsonResponse, FileResponse, Http404
+from django.shortcuts import get_object_or_404
 from user_agents import parse
 import urllib.request
-import json, os
+import json
 from zoneinfo import ZoneInfo
-from django.views.decorators.cache import cache_control
+from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
-from pathlib import Path
 # homegrown stuff
 from int_math.forms import contactForm
 from int_math.models import ContactAccesses
@@ -21,11 +25,10 @@ from int_math.models import ContactAccesses
 import hashlib
 import time
 import uuid
-
 import logging
-
 import datetime
-import requests
+from pickle import NONE, FALSE
+
 
 
 
@@ -43,13 +46,13 @@ def generateSignedURL4Bucket(filename, usePubDomainBucket, expiration_seconds=36
     sign_url_secret_code = ""
     cloud_bucket_url = ""
     if usePubDomainBucket: 
-        sign_url_secret_code = os.environ.get('SIGN_URL_SECRET_CODE')
-        cloud_bucket_url = str(os.environ.get('CLOUD_URL_CODE'))
+        sign_url_secret_code = settings.SIGN_URL_SECRET_CODE 
+        cloud_bucket_url = str(settings.CLOUD_URL_CODE)
         if not sign_url_secret_code:
             raise ValueError("SIGN_URL_SECRET_CODE env variable secret key is not set.")
     else:
-        sign_url_secret_code = os.environ.get('SIGN_URL_SECRET_BIN')
-        cloud_bucket_url = str(os.environ.get('CLOUD_URL_BINARY'))
+        sign_url_secret_code = settings.SIGN_URL_SECRET_BIN 
+        cloud_bucket_url = str(settings.CLOUD_URL_BINARY)  
         if not sign_url_secret_code:
             raise ValueError("SIGN_URL_SECRET_BIN secret key is not set.")
             
@@ -75,12 +78,12 @@ def getFullFileURL(filename, usePubDomainBucket, request):
     localURLbase = str(request.build_absolute_uri('/'))
     
     #Check for intermediate test mode where code is local (html is always local) but binaries are either local or cloud
-    use_local = os.environ.get('USE_LOCAL_CODE', 'False').lower() == 'true'
+    use_local = settings.USE_LOCAL_CODE.lower() == 'true'
     if use_local and filename.endswith((".css", ".js")):
         logger.info("All JS and CSS will be served locally for intermediate testing")
         return f"{localURLbase}static/{filename}"
 
-    useCloud = os.environ.get('USE_CLOUD_BUCKET', 'False').lower() == 'true'
+    useCloud = settings.USE_CLOUD_BUCKET.lower() == 'true'
     if  useCloud:
         #this cannot be tested from localhost due to security concerns with whitelisting localhost
         urlStaticSrc = generateSignedURL4Bucket(filename, usePubDomainBucket)
@@ -96,7 +99,7 @@ def getFullFileURL(filename, usePubDomainBucket, request):
 
 def getBaseContextEntry(request):
     #This sets up all the params for the base page used to template html docs
-    configMap = ConfigMapper(request)
+    configMap = ConfigMapper()
     companyName = configMap.readConfigMapper("CompanyName")
     g_analyticsID = configMap.readConfigMapper('GoogleAnalID')
     baseKVcontext = {'CompanyName': companyName, 
@@ -112,8 +115,7 @@ def getBaseContextEntry(request):
 class ProcessContactPage(View):
     template_name = 'int_math/Contact_me.html'
     form_class = contactForm
-      
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def post(self, request):  
         # check the form validity for basic stuff first
         form = self.form_class(request.POST) 
@@ -158,6 +160,7 @@ class ProcessContactPage(View):
                         'remoteip': request.META.get('REMOTE_ADDR')} # send IP to help recaptcha identify bots
                     try:
                         data = urllib.parse.urlencode(payload).encode()
+                        #urllib.request is fine for sync views, ensure timeout=5 remains to prevent slow recaptcha from hanging wsgi worker
                         req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
                         # Add a timeout (e.g., 5 seconds) so your app doesn't hang forever
                         with urllib.request.urlopen(req, timeout=5) as response:
@@ -210,15 +213,15 @@ class ProcessContactPage(View):
             if ('4Q' == quartile):
                 logger.info(f"Human Verified: 4Q score. Proceeding to email.")
                 testHasPassed = True
-                #get the email, name and message and ensure no html injection
-                nameOfContact = escape(request.POST.get('name'))
+                #get the email, name and message and ensure no html injection.  cleaned_data does that instead of escape()
+                nameOfContact = form.cleaned_data.get('name')
                 if nameOfContact == "":
                     nameOfContact = "anonymous"
-                subjectOfContact = escape(request.POST.get('subject'))
-                returnAddrEscaped = escape(request.POST.get('email'))
+                subjectOfContact = form.cleaned_data.get('subject')
+                returnAddrEscaped = form.cleaned_data.get('email')
                 if returnAddrEscaped == "":
                     returnAddrEscaped = "noemailaddr@nomail.com"
-                messageEscaped = escape(request.POST.get('message')) 
+                messageEscaped = form.cleaned_data.get('message') 
                 messageEscaped += " --From website user: " + nameOfContact + ".  At email addr: " + returnAddrEscaped
                 sendToEmailAddr = settings.EMAIL_HOST_USER
 
@@ -268,18 +271,22 @@ class ProcessContactPage(View):
                 logger.info(f"Bot Blocked: Low reCAPTCHA score {quartile}.  Process terminating")
 
                 
-            # increment accesses for next contact me user
-            numEmail= currAccesses.numTimesSmtpAccessedPerMonth
-            currAccesses.numTimesSmtpAccessedPerMonth = numEmail + num_email_sent
-            numRecap = currAccesses.numTimesRecaptchaAccessedPerMonth
-            currAccesses.numTimesRecaptchaAccessedPerMonth = numRecap + num_recapcha_sent
-            currAccesses.save()
+            # increment accesses for next contact me user, do so atomically, better than fetch-modify-save
+            ContactAccesses.objects.filter(pk=currAccesses.pk).update(
+                numTimesSmtpAccessedPerMonth=F('numTimesSmtpAccessedPerMonth') + num_email_sent,
+                numTimesRecaptchaAccessedPerMonth=F('numTimesRecaptchaAccessedPerMonth') + num_recapcha_sent
+            )
+            from django.db.models import F
+
+            #if need to see currAccesses again, do a currAccesses.refresh_from_db(
                 
             #must use redirect to avoid a POST that will happen automatically when user refreshes
-            #could not get keywords to be sent in a redirect, this is safe since if bot fakes this URL, 
+            #could not get keywords to be sent in a redirect, this is safe since if bot changes this URL param, 
             #they just get a false message and no submit button
-            response = redirect(reverse('int_math:Contact_me') + f'?botTestPassed={testHasPassed}' )
-            
+            base_url = reverse('int_math:Contact_me')
+            query_string = urlencode({'botTestPassed': testHasPassed})
+            return redirect(f'{base_url}?{query_string}')
+
         else: 
             #the only thing this form checks is email address errors if the user chooses to give one and makes user user puts something in msg
             context_dict = {'page_tab_header': 'Contact Us',
@@ -298,92 +305,20 @@ class ProcessContactPage(View):
 
 #**********************************************************
 # functions used by page views. Will be a singleton that goes locally
-# and gathers the configuration file (updates daily as need be).  The configuration file tells
+# and gathers the configuration file (loaded up once per wsgi launch).  The configuration file tells
 # where to find files needed to populate the website (both code, images, mp3, mp4 etc)
 #**********************************************************
 class ConfigMapper:
-    _instance = None
-    _last_updated = None
-    _configMapDict = dict()
-    _getFromCloud = False
+    def __init__(self):
+        # Simply point to the dictionary already loaded in apps.py
+        self._configMapDict = apps.get_app_config('int_math').config_map
 
-    # we only want one instance of ConfigMapper, we update the mapper only if "stale"
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            # Create the new instance if it doesn't exist
-            cls._instance = super().__new__(cls)
-        # Always return the stored instance
-        return cls._instance
-    
-    def loadConfigMapper(self, request):
-        # Do we use the binary files for deployment (use_cloud_bucket = T) or for test?  We always use local config file as server
-        # to server communication can be rejected as bot traffic
-        self._useDeployConfigFiles = False
-        useDeployConfig_str = os.environ.get('USE_CLOUD_BUCKET')
-        if useDeployConfig_str.lower() == 'true':
-            self._useDeployConfigFiles = True
-        #problem is that in many cases (such as Pythonanywhere paid accounts) Cloudflare R2 bucket treats PA request as though
-        # its from a bot.  Bot protection is a moving target that get stricter over time.  Best to get all config files locally
-        # rather than take chance on rejection
-            
-        if self._useDeployConfigFiles:
-            fileLoc = os.path.join(os.path.dirname(__file__), '..','ConfigFiles', 'DeployConfig', 'binaryfilenamesforsite-portion1-rev-a.json')
-            try:
-                fileObj = open(fileLoc, 'rt')
-                self._configMapDict = json.load(fileObj)
-                fileObj.close()
-            except FileNotFoundError:
-                    logger.error(f'SW ERROR:  File {fileLoc} was not found')
-            except Exception as ex:
-                    template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-                    emsg = template.format(type(ex).__name__, ex.args)
-                    logger.error(f'SW ERROR:  {emsg} in opening file {fileLoc}') 
-        else:   
-            # On many servers, you either can't get to cloud for config file because a) the server won't let you access a nonwhitelisted
-            # server or b) the cloud server thinks the web server is a bot and won't let it access files.  Your screwed, might as well
-            # get config file locally.  Two versions of config file, one points to tiny test files, other points to files that either aer
-            # or will be deployed to cloud.  Assumes 3 test environments:  localhost for testing new binaries/code, free pythonanywhere 
-            # server for use with either cloud binaries or local test files or finally the deployment server which only uses deployed 
-            # cloud binaries
-            if settings.DEBUG:
-                # on localhost, dont use cloud files but rather the local versions of those files which will be uploaded to cloud once
-                # tested
-                fileLoc = os.path.join(os.path.dirname(__file__), '..', 'ConfigFiles', 'DeployConfig', 'binaryfilenamesforsite-portion1-rev-a.json')
-            else:
-                # on test server, can use either local test files (which are not at all like real deployed binaries but are tiny) or cloud
-                # here use local test files
-                fileLoc = os.path.join(os.path.dirname(__file__), '..', 'ConfigFiles', 'TestConfig', 'binaryfilenamesforsite-portion1-rev-a.json')
-            
-            try:
-                fileObj = open(fileLoc, 'rt')
-                self._configMapDict = json.load(fileObj)
-                fileObj.close()
-            except FileNotFoundError:
-                logger.error(f'SW ERROR:  File {fileLoc} was not found')
-            except Exception as ex:
-                template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-                emsg = template.format(type(ex).__name__, ex.args)
-                logger.error(f'SW ERROR:  {emsg} in opening file {fileLoc}')                   
-                
-            
-            
-    def __init__(self, request):
-        if len(self._configMapDict) == 0:
-            self.loadConfigMapper(request)
-        elif self._last_updated and (datetime.datetime.now() - self._last_updated) < datetime.timedelta(days=1):
-            #if data is obsolete, need to reload it, really shouldn't change but could
-            logger.info('Config mapper is old, reading file anew')
-            self.loadConfigMapper(request)
-    
-            
     def readConfigMapper(self, genericFileName):
-        actualFile = "none"
-        if len(self._configMapDict) > 0:
-            actualFile = self._configMapDict.get(genericFileName)
-            #print(f' we just mapped {genericFileName} to {actualFile}')
-        else:
-            logger.error(f'SW ERROR:  file mapper not found or error opening')
-        return actualFile
+        if not self._configMapDict:
+            logger.error("SW ERROR: Config mapper dictionary is empty")
+            return "none"
+        return self._configMapDict.get(genericFileName, "none")
+
 
 # Some files are needed on the fly, like autodemo voice MP3 explanations or musician notes.  Only server knows which
 # config file to use and if file needed is on cloud, will add appropriate signed URL authorizations
@@ -395,46 +330,41 @@ class GetDynamicFilename(View):
         realDynFilename = request.GET.get('fileKey') or request.GET.get('fileName')
         if not self.hasExtension(realDynFilename):
             # we have a key only, use config file to look up the filename
-            configMap = ConfigMapper(request)
+            configMap = ConfigMapper()
             realDynFilename = configMap.readConfigMapper(realDynFilename)
         # now, either way, we have full filename, run with it
         getFromPublicRepo = False
         dynamicURL = getFullFileURL(realDynFilename, getFromPublicRepo, request) 
+        if dynamicURL is None:
+            return JsonResponse({'error': 'File not found'}, status=404)
         #print(f'will return to client a full filename of {dynamicURL}')    
         return JsonResponse({'url': dynamicURL})   
     
 # client needs the configuration of the musical notes (filenames, notes, instruments etc).  Best to let Django serve it
 # since could be test file set or "real" set
 class GetMarchingBandTuningNoteAudioConfig(View):
-    def get(self,request):
-        #if env var not found, use '', just dont crash
-        useDeployConfig = os.environ.get('USE_CLOUD_BUCKET', '').lower() == 'true'
-        configDir = 'DeployConfig' if (useDeployConfig or settings.DEBUG) else 'TestConfig'
-
+    def get(self, request):
+        use_deploy = getattr(settings, 'USE_CLOUD_BUCKET', 'False').lower() == 'true'
+        config_dir = 'DeployConfig' if (use_deploy or not settings.DEBUG) else 'TestConfig'
+        
         # on localhost, dont use cloud files but rather the local versions of those files which will be uploaded to cloud once
         # tested
         # on test server, can use either local test files (which are not at all like real deployed binaries but are tiny) or cloud
         # here use local test files
+        file_path = settings.BASE_DIR / 'ConfigFiles' / config_dir / 'filelistofmusicalinstrumentsplayingtuningnote.json'
 
-        fileLoc = os.path.join(
-            os.path.dirname(__file__), 
-            '..', 'ConfigFiles', configDir, 
-            'filelistofmusicalinstrumentsplayingtuningnote.json'
-        )
+        if not file_path.exists():
+            raise Http404(f"Configuration file not found at {file_path}")
 
-        # Defensive check to prevent 500 errors
-        if not os.path.exists(fileLoc):
-            raise Http404(f"Configuration file not found at {fileLoc}")
-
-        # Open and return. Django's FileResponse will handle closing the file.
-        fileHandle = open(fileLoc, 'rb')
-        return FileResponse(fileHandle, content_type='application/json')
+        # Open and return. Django 5.2 FileResponse handles this cleanly with file closing.
+        file_handle = file_path.open('rb')
+        return FileResponse(file_handle, content_type='application/json')
 
 #**********************************************************
 # these are all page views
 #**********************************************************
 class IndexView(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
         # add help to user based on device/browser, unknown is for bots/scrapers
         ua_string = request.headers.get('user-agent',"unknown");
@@ -443,52 +373,42 @@ class IndexView(View):
         if 'safari' in user_agent.browser.family.lower(): 
             usingSafari = True;
         isMobile = user_agent.is_mobile;
-        configMap = ConfigMapper(request)
+        configMap = ConfigMapper()
         realFileLandLogo = configMap.readConfigMapper("LandingPageLogo")
 
         #check if there is an upcoming upgrade planned to site and notify users
-        upgrdSchedFile = os.path.join(os.path.dirname(__file__), '..', 'InteractiveMath_prj', 'UpgradeSchedule.txt')
+        upgrdSchedFile = settings.BASE_DIR / 'InteractiveMath_prj' / 'UpgradeSchedule.txt'
         upgradeNoticePresent = False
-        upgradeDate = ""
-        upgradeDay = ""
-        upgradeTime = ''
         upgradingNow = False
-        if os.path.isfile(upgrdSchedFile):
-            upgd = open(upgrdSchedFile, 'r')
-            #ignore first line of file, its comment to user
-            comment = upgd.readline()  
-            dateTimeUpgdStr = upgd.readline().rstrip('\n')
-            #we want exact date and time for user message but only need date, not time, to decide if it should be displayed
-            dateTime_format = '%Y-%m-%d-%H %z'
-            dateTimeUpgd = None
+        upgradeDate = None
+        upgradeTime = None
+
+        if upgrdSchedFile.exists():
             try:
+                with upgrdSchedFile.open('r') as upgd:
+                    _ = upgd.readline()  # Skip comment
+                    dateTimeUpgdStr = upgd.readline().rstrip('\n')
+                    
+                dateTime_format = '%Y-%m-%d-%H %z'
                 dateTimeUpgd = datetime.datetime.strptime(dateTimeUpgdStr, dateTime_format)
-            except Exception as ex:
-                template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-                emsg = template.format(type(ex).__name__, ex.args)
-                logger.error(f'SW ERROR: in obtaining date Exception is {emsg}')
-                logger.error(f'SW ERROR: Failure on parsing time in UpgradeSchedule.txt, cannot parse {repr(dateTimeUpgdStr)}')
-            if (dateTimeUpgd is not None):               
-                # get time right now and convert to EST (from UTC).  Django 4.2 get away from pytz
-                tz = ZoneInfo("America/New_York") # Use IANA names for reliability
-                dateNow = datetime.datetime.now(tz)                
-                daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-                dayUpgdNum = dateTimeUpgd.weekday()
-                dayUpgd = daysOfWeek[dayUpgdNum]
-                #if update time has passed but day is today, show the message.
-                #WHEN US is on daylight savings time, the upgradeNow will be an hour late.
-                if (dateTimeUpgd.date() >= dateNow.date()):  #else, if its more than a day old, wipe it, want message for full day of upgrade, even after upgrade begins
-                    if ( (dateTimeUpgd.date() == dateNow.date()) and (dateTimeUpgd.time() < dateNow.time()) ):
-                        #happening now, give user notice
+            except Exception:
+                logger.exception("SW ERROR: Failure obtaining or parsing upgrade date")
+                dateTimeUpgd = None
+            if dateTimeUpgd is not None:
+                tz = ZoneInfo("America/New_York")
+                dateNow = datetime.datetime.now(tz)
+                
+                # Ensure dateTimeUpgd is in the same timezone for comparison
+                dateTimeUpgd = dateTimeUpgd.astimezone(tz)
+            
+                if dateTimeUpgd.date() >= dateNow.date():
+                    if dateTimeUpgd.date() == dateNow.date() and dateTimeUpgd.time() < dateNow.time():
                         upgradingNow = True
                     else:
-                        #happening in future, let them know when
                         upgradeNoticePresent = True
-                        upgradeDate = dateTimeUpgd.date
-                        upgradeTime = dateTimeUpgd.time
-                        upgradeDay = dayUpgd
-                #print(f"Reading upgd schedule, date is {dateTimeUpgd.date()} , time is {dateTimeUpgd.time()} and right now is date {dateNow.date()} and time {dateNow.time()}")
-            upgd.close()
+                        # Add parentheses here to store the result, not the method
+                        upgradeDate = dateTimeUpgd.date() 
+                        upgradeTime = dateTimeUpgd.time()
 
         context_dict = {
                         'basePage': getBaseContextEntry(request),
@@ -497,7 +417,6 @@ class IndexView(View):
                         'using_safari': usingSafari,
                         'is_mobile': isMobile,
                         'upgradeNoticePresent': upgradeNoticePresent,
-                        'upgradeDay': upgradeDay,
                         'upgradeDate': upgradeDate,
                         'upgradeTime': upgradeTime,
                         'upgradeNow': upgradingNow,
@@ -512,26 +431,32 @@ class IndexView(View):
 #****************************************************************************************
 #  Trig functions section
 #****************************************************************************************
+#safe way to handle lists like artist credits in config file
+def get_array_item(configArray, index):
+    if isinstance(configArray, list) and len(configArray) > index:
+        return configArray[index]
+    return ""
 # page 1 General Concepts Intro of trig function section
 class MusicTrigConceptIntroView(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
-        trigMap = ConfigMapper(request)
+        trigMap = ConfigMapper()
         realURLFreqVideo = trigMap.readConfigMapper("IntroToFrequencyVideo")
         realURLTrigVideo = trigMap.readConfigMapper("IntroToTrigVideo")
         realURLSoundVideo = trigMap.readConfigMapper("IntroToSoundVideo")
         realFileCartoonGIF = trigMap.readConfigMapper("CartoonIntroGIF")
         realFileIntroAudio = trigMap.readConfigMapper("TrigReviewIntroAudio")
         artistCredit = trigMap.readConfigMapper('ArtistCredits')
+
         context_dict = {'basePage': getBaseContextEntry(request),
                         'page_tab_header': 'IntroConcepts',
-                        'topic': Topic.objects.get(name="TrigFunct"),
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
                         'introToFreqVideo': realURLFreqVideo,
                         'introToTrigVideo': realURLTrigVideo,
                         'introToSoundVideo': realURLSoundVideo,
                         'cartoonIntroGIF': getFullFileURL(realFileCartoonGIF, False, request),
                         'trigReviewIntroAudio': getFullFileURL(realFileIntroAudio, False, request),
-                        "artistCredit": artistCredit[0],
+                        "artistCredit": get_array_item(artistCredit,0),
                         'TrigIntroMusicCSS': getFullFileURL('css/IntroTrigMusicConcepts.css', True, request),
                         'TrigIntroMusicJS': getFullFileURL('js/IntroTrigMusicConcepts.js', True, request),
                         }
@@ -540,11 +465,11 @@ class MusicTrigConceptIntroView(View):
     
 # page 2 Music Sine Intro of trig function section.  Pg2MusicSineIntro.html  
 class MusicTrigView(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
         context_dict = {
                         'page_tab_header': 'MusicalTrig',
-                        'topic': Topic.objects.get(name="TrigFunct"),
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
                         'MusicSineIntroCSS': getFullFileURL('css/Pg2MusicSineIntro.css', True, request),
                         'MusicSineIntroJS': getFullFileURL('js/Pg2MusicSineIntro.js', True, request),
@@ -558,11 +483,11 @@ class MusicTrigView(View):
     
 # page 3 Where does sine/cosine come from? of trig function section       
 class StaticTrigView(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
         context_dict = {
                         'page_tab_header': 'StaticTrig',
-                        'topic': Topic.objects.get(name="TrigFunct"),
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
                         'StaticTrigCSS': getFullFileURL('css/StaticTrig.css', True, request),
                         'StaticTrigJS': getFullFileURL('js/StaticTrig.js', True, request),
@@ -574,11 +499,11 @@ class StaticTrigView(View):
         return response
 # page 4 Lets add time and make frequency of trig function section     
 class DynamicTrig1View(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
         context_dict = {
                         'page_tab_header': 'DynamicTrig',
-                        'topic': Topic.objects.get(name="TrigFunct"),
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
                         'DynTrig1CSS': getFullFileURL('css/DynamicTrig1.css', True, request),
                         'DynTrig1JS': getFullFileURL('js/DynamicTrig1.js', True, request),
@@ -588,15 +513,15 @@ class DynamicTrig1View(View):
     
 # page 5 Lets go faster in time of trig function section
 class DynamicTrig2View(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
-        textMap = ConfigMapper(request)
+        textMap = ConfigMapper()
         artistCredit = textMap.readConfigMapper('ArtistCredits')
         context_dict = {
                         'page_tab_header': 'DynamicTrig',
-                        'topic': Topic.objects.get(name="TrigFunct"),
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
-                        'artistCredit': artistCredit[3],
+                        "artistCredit": get_array_item(artistCredit,3),
                         'DynTrig2CSS': getFullFileURL('css/DynamicTrig2.css', True, request),
                         'DynTrig2JS': getFullFileURL('js/DynamicTrig2.js', True, request),
                         }
@@ -604,15 +529,15 @@ class DynamicTrig2View(View):
         return response
 # page 6 Lets get into audible sin/cosine tones of trig function section
 class ToneTrigView(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
-        textMap = ConfigMapper(request)
+        textMap = ConfigMapper()
         artistCredit = textMap.readConfigMapper('ArtistCredits')
         context_dict = {
                         'page_tab_header': 'ToneTrig',
-                        'topic': Topic.objects.get(name="TrigFunct"),
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
-                        'artistCredit': artistCredit[3],
+                        "artistCredit": get_array_item(artistCredit,3),
                         'ToneTrigCSS': getFullFileURL('css/ToneTrig.css', True, request),
                         'ToneTrigJS': getFullFileURL('js/ToneTrig.js', True, request),
                         'VolumeOffSVG': getFullFileURL('svg/volume-off.svg', True, request),
@@ -623,15 +548,15 @@ class ToneTrigView(View):
 
 # page 7 Lets compare musical instruments to sine/cosine of same pitch of trig function section   
 class MusicNotesTrigView(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
-        textMap = ConfigMapper(request)
+        textMap = ConfigMapper()
         artistCredit = textMap.readConfigMapper('ArtistCredits')
         context_dict = {
                         'page_tab_header': 'MusicNotes',
-                        'topic': Topic.objects.get(name="TrigFunct"),
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
-                        'artistCredit': artistCredit[2],
+                        "artistCredit": get_array_item(artistCredit,2),
                         'MusicNotesTrigCSS': getFullFileURL('css/MusicNotesTrig.css', True, request),
                         'MusicNotesTrigJS': getFullFileURL('js/MusicNotesTrig.js', True, request),
                         'VolumeOffSVG': getFullFileURL('svg/volume-off.svg', True, request),
@@ -642,17 +567,17 @@ class MusicNotesTrigView(View):
     
 # page 8 Summary of Trig in music MusicSineSummary.html
 class TrigSummaryView(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
-        trigMap = ConfigMapper(request)
+        trigMap = ConfigMapper()
         actualFilename = trigMap.readConfigMapper("MusicSummaryVideo")
         artistCredit = trigMap.readConfigMapper('ArtistCredits')
         context_dict = {
                         'page_tab_header': 'Summary',
-                        'topic': Topic.objects.get(name="TrigFunct"),
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
                         'basePage': getBaseContextEntry(request),
                         'musicSummaryVideo': actualFilename,
-                        'artistCredit': artistCredit[1],
+                        "artistCredit": get_array_item(artistCredit,1),
                         'TrigSummaryCss': getFullFileURL('css/MusicSineSummary.css', True, request),
                         'TrigSummaryJS': getFullFileURL('js/MusicSineSummary.js', True, request),
                         }
@@ -662,18 +587,18 @@ class TrigSummaryView(View):
 #  END OF Trig functions section
 #****************************************************************************************    
 class ImagNumView(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
         context_dict = {
                         'page_tab_header': 'Imag_num',
-                        'topic': Topic.objects.get(name="Imag_num"),
+                        'topic': get_object_or_404(Topic, name="Imag_num"),
                         'basePage': getBaseContextEntry(request),
                         }        
         response = render(request, 'int_math/imag_num.html', context=context_dict)
         return response
 
 class TeacherStandardsView(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
         context_dict = {
                         'page_tab_header': 'Teachers',
@@ -684,66 +609,52 @@ class TeacherStandardsView(View):
         return response
          
 class PeopleView(View):
-    # give user all the info I collect about them
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
         context_dict = {
                         'page_tab_header': 'People',
-                        'topic': Topic.objects.get(name="Thanks"),
+                        'topic': get_object_or_404(Topic, name="Thanks"),
                         'basePage': getBaseContextEntry(request),
                         }
         return render(request, 'int_math/acknowledgements.html', context=context_dict)
 
 class AckView(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
-        #constants for writing the HTML for each contributer
-        OPENER = "<section class='contributor_contact'>"
-        H2_1 = "<h2>"
-        H2_2 = "</h2>"
-        H3_1 = "<h3>"
-        H3_2 = "</h3>"
-        CLOSER = "</section>"
-        A_Begin = "<a href='"
-        A_End = "'>"
-        A_Close = "</a>"
-        Img1 = "<img src='"
-        Img2 = "'/>"
-        trigMap = ConfigMapper(request)
+        trigMap = ConfigMapper()
         ty_list = trigMap.readConfigMapper("Thankyou_list")
-        #go through the list of contributors and "write" the code out to page
-        contributorString = ""
+
+        # Prepare the data in Python, but leave the HTML to the template
         for contributor in ty_list:
-            contributorString += OPENER + A_Begin + contributor["url"] + A_End + Img1 + getFullFileURL(contributor["logo"], False, request) + Img2 + A_Close
-            contributorString += A_Begin + contributor["url"] + A_End + H2_1 + contributor["line1"] + H2_2 + A_Close
-            contributorString += A_Begin + contributor["url"] + A_End + H3_1 + contributor["line2"] + H3_2 + A_Close + CLOSER
+            # Add the full URL to each dictionary in the list
+            contributor['full_logo_url'] = getFullFileURL(contributor["logo"], False, request)
+
         context_dict = {
-                        'page_tab_header': 'Thank You!',
-                        'topic': Topic.objects.get(name="Thanks"),
-                        'basePage': getBaseContextEntry(request),
-                        'Contributors': contributorString,
-                        'AckCSS':getFullFileURL('css/Acknowledgements.css', True, request),
-                        }
-        response = render(request, 'int_math/acknowledgements.html', context=context_dict)
-        return response        
- 
+            'page_tab_header': 'Thank You!',
+            'topic': get_object_or_404(Topic, name="Thanks"),
+            'basePage': getBaseContextEntry(request),
+            'ty_list': ty_list,  
+            'AckCSS': getFullFileURL('css/Acknowledgements.css', True, request),
+        }
+        return render(request, 'int_math/acknowledgements.html', context=context_dict)
+
 class TrigIDView(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
         context_dict = {
                         'page_tab_header': 'Trig ID',
-                        'topic': Topic.objects.get(name="TrigIdent"),
+                        'topic': get_object_or_404(Topic, name="TrigIdent"),
                         'basePage': getBaseContextEntry(request),
                         }
         response = render(request, 'int_math/TrigIdentity.html', context=context_dict)
         return response     
    
 class TrigIDTuneView(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
         context_dict = {
                         'page_tab_header': 'Inst Tune',
-                        'topic': Topic.objects.get(name="TrigIdent"),
+                        'topic': get_object_or_404(Topic, name="TrigIdent"),
                         'basePage': getBaseContextEntry(request),
                         }
         response = render(request, 'int_math/TrigIdent_Tune.html', context=context_dict)
@@ -751,13 +662,13 @@ class TrigIDTuneView(View):
 
      
 class Legal_TermsOfUse(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
-        configMap = ConfigMapper(request)
+        configMap = ConfigMapper()
         actualFilename = configMap.readConfigMapper("Legal_TermsCond")
         context_dict = {
                         'page_tab_header': 'Terms Of Use',
-                        'topic': Topic.objects.get(name="Legal"),
+                        'topic': get_object_or_404(Topic, name="Legal"),
                         'basePage': getBaseContextEntry(request),
                         'legalDocTerms': getFullFileURL(actualFilename, False, request) + "#toolbar=0",
                        }  
@@ -765,13 +676,13 @@ class Legal_TermsOfUse(View):
         return response
 
 class Legal_Privacy(View):
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
-        configMap = ConfigMapper(request)
+        configMap = ConfigMapper()
         actualFilename = configMap.readConfigMapper("Legal_Privacy")
         context_dict = {
                         'page_tab_header': 'Privacy Policy',
-                        'topic': Topic.objects.get(name="Legal"),
+                        'topic': get_object_or_404(Topic, name="Legal"),
                         'basePage': getBaseContextEntry(request),
                         'legalDocPriv': getFullFileURL(actualFilename, False, request) + "#toolbar=0",
                        }  
@@ -779,97 +690,70 @@ class Legal_Privacy(View):
         return response
 
 class ContactMe(View):
-    #when user fills out contact form, will trigger ProcessContactPage(View): action above
-    @method_decorator(cache_control(no_cache=True, no_store=True, must_revalidate=True, max_age=0))   #cache nothing--max server access   
+    @method_decorator(never_cache)
     def get(self, request):
+        # 1. Cleaner Boolean parsing
+        bot_passed = request.GET.get('botTestPassed') == "True"
+        bot_done = request.GET.get('botTestPassed') is not None
         
-        #did we get here on a redirect? if so, update parameters
-        botTestDone = False
-        botTestPassed = False
-        param1 = request.GET.get('botTestPassed')
-        if param1:
-            if (param1 == "True"):
-                botTestPassed = True;
-            botTestDone = True;  #whether test passed or not, we are here by redirect and bot test was done
-        
-        ####################
-        #dont want to bombard reCaptcha with requests (else we get charged over 10k), limit number of accesses to reasonable amount.
-        #Expect in future to be charged if I exceed a number of smtp access of gmail account so set that limit as well.
-        allowContact = False;  #assume all limits have been exceeded until proven otherwise
-        tz = ZoneInfo("America/New_York") # Use IANA names for reliability.  Django4.2 gets away from pytz
-        dateNow = datetime.datetime.now(tz)  
-        try: 
-            #careful, every time you populate DB, you add new entry and best may be last--regen DB every time
-            #ideally there is only one entry for contact accesses
-            currAccesses = ContactAccesses.objects.first()
-        except:
-            #will put up the dont contact us page.  Should never happen.  coding error
-            logger.error(f'DATABASE ERROR in contact page, entry not found keeping track of recaptcha/smtp. Clients cannot contact us')
-        if (currAccesses):
-            logger.info(f' FYI: NumRecaptcha this month is {currAccesses.numTimesRecaptchaAccessedPerMonth}, numSMTP this month is {currAccesses.numTimesSmtpAccessedPerMonth}')
-            logger.info(f' FYI: Month of update is  {currAccesses.monthLastUpdated}.  Num clients denied is {currAccesses.numClientsDeniedPerMonth}')
-            logger.info(f' FYI: current date is {dateNow}, current month is {dateNow.month}')   
-            if (dateNow.month != currAccesses.monthLastUpdated):
-                #were any clients denied access?  if so, send server error and email me
-                if (currAccesses.numClientsDeniedPerMonth > 0):
-                    logger.error(f'ACCESS ERROR, {currAccesses.numClientsDeniedPerMonth} clients were denied last month')
-                    logger.info(f'{currAccesses.numTimesRecaptchaAccessedPerMonth} reCAPTCHA requests were sent and {currAccesses.numTimesSmtpAccessedPerMonth} smtp mail messages were sent')
-                    # Now send email to website designer to fix.  This should never happen. we only send email max of 1/month
-                    subjectOfContact = "SERVER ERROR: USERS denied contact access"
-                    messageEscaped = str(currAccesses.numClientsDeniedPerMonth) + \
-                        " users have been denied access to contact page for the month of " + str(currAccesses.monthLastUpdated) + \
-                        ".  There were " + str(currAccesses.numTimesRecaptchaAccessedPerMonth) + " reCaptcha accesses that month "\
-                        " and " + str(currAccesses.numTimesSmtpAccessedPerMonth) + " SMTP accesses that month.  The max number of recaptchas allowed per month is " \
-                        + str(MAX_FREE_RECAPTCHA) + " and the max num SMTP accesses is " + str(MAX_NUM_EMAIL_PER_MONTH)
-                    sendToEmailAddr = settings.EMAIL_HOST_USER
-                    try:
-                        #the minute you use your sendTo address to log into smtp server, that becomes the "from" addr anyway
-                        num_email_sent = send_mail(
-                                        subjectOfContact,
-                                        messageEscaped,
-                                        sendToEmailAddr,
-                                        [sendToEmailAddr],
-                                        fail_silently=False,
-                                        )
-                    except Exception as ex:
-                        #will fail on num email sent as 0.  Could get BadHeaderError if user input <LF>, 
-                        #could get auth error if Gmail rejects.  User should never ever get a 500 server error. Baaaaaad
-                        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-                        emsg = template.format(type(ex).__name__, ex.args)
-                        logger.error(f'SW ERROR: Sending Server Error email Exception is {emsg}')
-                        
-                    if num_email_sent == 0:
-                        logger.error(f'SW ERROR: Failed attempt to notify website designer via email of user contact page denials') 
-                          
-                #time to reset all the stats for new month, cant do update unless we filter() instead of get()
-                currAccesses.monthLastUpdated = dateNow.month
-                currAccesses.numTimesRecaptchaAccessedPerMonth = 0
-                currAccesses.numTimesSmtpAccessedPerMonth = 0
-                currAccesses.numClientsDeniedPerMonth = 0
-                currAccesses.save()
-                allowContact = True
-            else:
-                if (currAccesses.numTimesRecaptchaAccessedPerMonth < MAX_FREE_RECAPTCHA):
-                    if (currAccesses.numTimesSmtpAccessedPerMonth < MAX_NUM_EMAIL_PER_MONTH):
-                        allowContact = True
-                if (not allowContact):                    
-                #otherwise, client is not allowed to use contact form until next month, to keep Google cloud expenses at zero
-                #keep track of clients denied, ideally, this should be zero
-                    currAccesses.numClientsDeniedPerMonth = currAccesses.numClientsDeniedPerMonth + 1
-                    currAccesses.save()
-                    logger.error(f'ALLOCATION EXCEEDED: ABOVE ALLOTED Contact max, allow {MAX_FREE_RECAPTCHA} MAX recaptcha requests and {MAX_NUM_EMAIL_PER_MONTH} MAX email sends')
-                    logger.error(f'But we have {currAccesses.numTimesRecaptchaAccessedPerMonth} reCAPTCHA requests sent and {currAccesses.numTimesSmtpAccessedPerMonth} smtp mail messages were sent')
+        allow_contact = False
+        # Use timezone.now() - it respects your AUTH_TIMEZONE and is 5.2 ready
+        date_now = timezone.now() 
+
+        # 2. Use a transaction to prevent race conditions
+        with transaction.atomic():
+            # select_for_update() locks this row until the transaction finishes
+            curr_accesses = ContactAccesses.objects.select_for_update().first()
+            
+            if not curr_accesses:
+                logger.error("DATABASE ERROR: ContactAccesses entry missing.")
+                # Fallback: maybe create one or return an error page
+                return render(request, 'error.html', {'message': 'System offline'})
+
+            # 3. Monthly Reset Logic
+            if date_now.month != curr_accesses.monthLastUpdated:
+                if curr_accesses.numClientsDeniedPerMonth > 0:
+                    self.notify_admin_of_denials(curr_accesses)
                 
+                # Reset counters
+                curr_accesses.monthLastUpdated = date_now.month
+                curr_accesses.numTimesRecaptchaAccessedPerMonth = 0
+                curr_accesses.numTimesSmtpAccessedPerMonth = 0
+                curr_accesses.numClientsDeniedPerMonth = 0
+                curr_accesses.save()
+                allow_contact = True
+            else:
+                # Check limits
+                if (curr_accesses.numTimesRecaptchaAccessedPerMonth < MAX_FREE_RECAPTCHA and 
+                    curr_accesses.numTimesSmtpAccessedPerMonth < MAX_NUM_EMAIL_PER_MONTH):
+                    allow_contact = True
+                else:
+                    # Update denied count using F expression (atomic increment)
+                    ContactAccesses.objects.filter(pk=curr_accesses.pk).update(
+                        numClientsDeniedPerMonth=F('numClientsDeniedPerMonth') + 1
+                    )
+                    allow_contact = False
+
         context_dict = {
-                        'page_tab_header': 'Contact Us',
-                        'topic': None,
-                        'allowContactEmail': allowContact,
-                        'ContactCSS': getFullFileURL('css/Contact_me.css', True, request),
-                        'ContactJS': getFullFileURL('js/Contact_me.js', True, request),
-                        'form': contactForm(),
-                        'basePage': getBaseContextEntry(request),
-                        'botTestDone': botTestDone,
-                        'botTestPassed': botTestPassed
-                       } 
-        response = render(request, 'int_math/Contact_me.html', context=context_dict)
-        return response
+            'page_tab_header': 'Contact Us',
+            'allowContactEmail': allow_contact,
+            'ContactCSS': getFullFileURL('css/Contact_me.css', True, request),
+            'ContactJS': getFullFileURL('js/Contact_me.js', True, request),
+            'form': contactForm(),
+            'basePage': getBaseContextEntry(request),
+            'botTestDone': bot_done,
+            'botTestPassed': bot_passed,
+        }
+        return render(request, 'int_math/Contact_me.html', context=context_dict)
+
+    #best not to make this async as it hits only 1/month MAX and we do WSGI server, not ASGI server
+    #plus send_mail is a sync function
+    def notify_admin_of_denials(self, accesses):
+        """Helper to keep the main GET method clean"""
+        subject = "SERVER ERROR: USERS denied contact access"
+        message = f"{accesses.numClientsDeniedPerMonth} users denied in month {accesses.monthLastUpdated}."
+        try:
+            send_mail(subject, message, settings.EMAIL_HOST_USER, [settings.EMAIL_HOST_USER])
+        except Exception:
+            logger.exception("Failed to send admin notification email")
+

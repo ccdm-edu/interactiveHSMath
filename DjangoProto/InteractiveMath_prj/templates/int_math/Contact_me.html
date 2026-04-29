@@ -35,7 +35,7 @@
     
 	            <p id="ContactCompliance"> There is no guarantee of a personal or timely response.  {{ basePage.CompanyName }} reserves the right to save all information you provide.
 	            Contact submissions are protected by Google reCaptcha V3.  By contacting us, you acknowledge you are over 13 years old and agree to the <a href="{% url 'int_math:TermsOfUse' %}">Terms Of Use </a> 
-			    and <a href="{% url 'int_math:Privacy' %}">Privacy Policy</a> as well as any Google terms/privacy. <b>Click box to accept and continue</b>.
+			    and <a href="{% url 'int_math:Privacy' %}">Privacy Policy</a> as well as any Google terms/privacy. <b>Click box to accept the terms and continue</b>.
 	            </p>
 	          	<br>
 	          	
@@ -66,7 +66,7 @@
 
 {% block unique_js_block %}
 	<!-- Custom JS for this page -->
-	<script nonce="{{ request.csp_nonce }}">
+	<script nonce="{{ CSP_NONCE }}">
 			// Dont need advanced topic link popup or autodemo stuff
 			$('a[href="#AdvancedTopics"]').css('display', 'none');
 			$('#TrigPageTop').css('display', 'none');

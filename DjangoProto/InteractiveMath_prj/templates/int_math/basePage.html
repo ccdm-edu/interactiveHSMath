@@ -19,8 +19,8 @@
 	    <link href="https://getbootstrap.com/docs/4.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 	         
 	    <!-- Global site tag (gtag.js) - Google Analytics -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id={{ basePage.GoogleAnalID }}"></script>
-		<script nonce="{{ request.csp_nonce }}">
+		<script async nonce="{{ CSP_NONCE }}" src="https://www.googletagmanager.com/gtag/js?id={{ basePage.GoogleAnalID }}"></script>
+		<script nonce="{{ CSP_NONCE }}">
 		  window.dataLayer = window.dataLayer || [];
 		  function gtag(){dataLayer.push(arguments);}
 		  gtag('js', new Date());
@@ -33,7 +33,7 @@
 	    <!--  not sure how to get jquery ui draggable popups, i think this does it -->
 	    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 	    <!-- want to override things here,  will see IDE error for using django package to inline css, ignore it-->
-	    <style nonce="{{ request.csp_nonce }}">{% inline_asset 'css/IntMath.css' %}</style>
+	    <style nonce="{{ CSP_NONCE }}">{% inline_asset 'css/IntMath.css' %}</style>
 	
 	    {% block head_block %}
 	    	<!--  separate out page specific css here -->
@@ -41,7 +41,7 @@
 	
 		<!--  style blocks dont like comments in the middle -->
 		<!--  THIS MAKES THE RECAPTCHA LOGO ON ALL PAGES -->
-		<script src='https://www.google.com/recaptcha/api.js?render={{ basePage.recaptchaPublicKey }}'></script>
+		<script nonce="{{ CSP_NONCE }}" src='https://www.google.com/recaptcha/api.js?render={{ basePage.recaptchaPublicKey }}'></script>
 
     </head>
     <body>
@@ -243,21 +243,21 @@
 					<!-- Bootstrap core JavaScript,jquery must be before bootstrap -->	
     				<!-- Placed at the end of the document so the pages load faster -->
 					<!--  needed to run the drop down menus in bootstrap -->
-					<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-					<script nonce="{{ request.csp_nonce }}">
+					<script nonce="{{ CSP_NONCE }}" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+					<script nonce="{{ CSP_NONCE }}">
 							<!-- in case can't get from google, load from local -->
 							var localJQ = "{{ basePage.JQlocalJS }}";
 							window.jQuery || document.write('<script src="' + localJQ + '"><\/script>')
 					</script>
 					<!--  jquery ui needed for advanced topic draggable window -->
-					<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.3/jquery-ui.min.js"></script>
+					<script nonce="{{ CSP_NONCE }}" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.3/jquery-ui.min.js"></script>
 					<!-- jquery ui touch.js (v1.1.0) punch needed so draggable works (on some level) on touch devices. https://www.jqueryscript.net/mobile/jQuery-Plugin-For-Touch-Drag-Events-touch-js.html. -->
-			  		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touch/1.1.0/jquery.touch.min.js" integrity="sha384-XJrpR1kjsdEnOjnpWkeVzhNk0OA+DSw4TLSIvndAhHkQPDZ7AezmkE4Z8EhTgnuh" crossorigin="anonymous"></script>
-					<script src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
+			  		<script nonce="{{ CSP_NONCE }}" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touch/1.1.0/jquery.touch.min.js" integrity="sha384-XJrpR1kjsdEnOjnpWkeVzhNk0OA+DSw4TLSIvndAhHkQPDZ7AezmkE4Z8EhTgnuh" crossorigin="anonymous"></script>
+					<script nonce="{{ CSP_NONCE }}" src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
 					<!-- custom JS for all pages of site, IntMathUtils used by all js.  To reduce server calls, the following are inlined-->
 					<!-- Note, the two inlined js files will 'appear' to be an error in eclipse.  They are fine -->
-					<script nonce="{{ request.csp_nonce }}">{% inline_asset 'js/IntMath.js' %}</script>
-					<script nonce="{{ request.csp_nonce }}">{% inline_asset 'js/IntMathUtils.js' %}</script>
+					<script nonce="{{ CSP_NONCE }}">{% inline_asset 'js/IntMath.js' %}</script>
+					<script nonce="{{ CSP_NONCE }}">{% inline_asset 'js/IntMathUtils.js' %}</script>
 
 
                                      				

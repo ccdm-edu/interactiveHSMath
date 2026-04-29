@@ -17,7 +17,7 @@
 {% endblock %}		
 
 {% block unique_js_block %}
-	<script nonce="{{ request.csp_nonce }}">			
+	<script nonce="{{ CSP_NONCE }}">			
 			// Dont need advanced topic link popup
 			$('a[href="#AdvancedTopics"]').css('display', 'none');
 			// Dont need autodemo icon

@@ -54,16 +54,23 @@ def populate():
     for t in Topic.objects.all():
         for s in Subtopic.objects.filter(topic=t):
             print(f'- {t}: {s}')
-            
-    #initialize Contact Accesses, month zero will never happen
-    numAccesses = ContactAccesses.objects.get_or_create(monthLastUpdated = 0, 
-                                                        numTimesRecaptchaAccessedPerMonth = 0, 
-                                                        numTimesSmtpAccessedPerMonth = 0, 
-                                                        numClientsDeniedPerMonth = 0)[0]
-    #double check
-    print(f' numRecaptcha is {numAccesses.numTimesRecaptchaAccessedPerMonth} numSMTP is {numAccesses.numTimesSmtpAccessedPerMonth}')
-    print(f' last month of update is  {numAccesses.monthLastUpdated} num clients denied is {numAccesses.numClientsDeniedPerMonth}')
-    numAccesses.save()
+          
+    # Force pk=1 to ensure we only ever have ONE row in this table, does autosave
+    numAccesses, created = ContactAccesses.objects.get_or_create(
+        pk=1, 
+        defaults={
+            'monthLastUpdated': 0, 
+            'numTimesRecaptchaAccessedPerMonth': 0, 
+            'numTimesSmtpAccessedPerMonth': 0, 
+            'numClientsDeniedPerMonth': 0
+        }
+    )
+    
+    if created:
+        print("Created new ContactAccesses record.")
+    else:
+        print("ContactAccesses record already exists; values were not reset.")
+
     
             
 def add_subtop(topic, title, url):
