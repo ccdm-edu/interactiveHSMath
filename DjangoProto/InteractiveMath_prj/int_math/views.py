@@ -18,6 +18,7 @@ import json
 from zoneinfo import ZoneInfo
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
+from csp.decorators import csp_update  # to limit the youtube security issues to specific pages
 # homegrown stuff
 from int_math.forms import contactForm
 from int_math.models import ContactAccesses
@@ -27,7 +28,6 @@ import time
 import uuid
 import logging
 import datetime
-from pickle import NONE, FALSE
 
 
 
@@ -345,7 +345,7 @@ class GetDynamicFilename(View):
 class GetMarchingBandTuningNoteAudioConfig(View):
     def get(self, request):
         use_deploy = getattr(settings, 'USE_CLOUD_BUCKET', 'False').lower() == 'true'
-        config_dir = 'DeployConfig' if (use_deploy or not settings.DEBUG) else 'TestConfig'
+        config_dir = 'DeployConfig' if (use_deploy or settings.DEBUG) else 'TestConfig'
         
         # on localhost, dont use cloud files but rather the local versions of those files which will be uploaded to cloud once
         # tested
@@ -436,7 +436,8 @@ def get_array_item(configArray, index):
     if isinstance(configArray, list) and len(configArray) > index:
         return configArray[index]
     return ""
-# page 1 General Concepts Intro of trig function section
+# page 1 General Concepts Intro of trig function section. Youtube requires this to pass our csp
+@method_decorator(csp_update({"script-src-elem": ["'unsafe-inline'"]}), name='dispatch')
 class MusicTrigConceptIntroView(View):
     @method_decorator(never_cache)
     def get(self, request):
@@ -566,6 +567,7 @@ class MusicNotesTrigView(View):
         return response
     
 # page 8 Summary of Trig in music MusicSineSummary.html
+@method_decorator(csp_update({"script-src-elem": ["'unsafe-inline'"]}), name='dispatch')
 class TrigSummaryView(View):
     @method_decorator(never_cache)
     def get(self, request):

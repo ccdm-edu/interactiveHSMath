@@ -142,36 +142,7 @@
 	<script nonce="{{ CSP_NONCE }}">feather.replace()</script>
 
 	<!-- the next two scripts bring in mathjax, which is compatible with most number of browsers, these scripts will keep up with version changes in mathjax --> 
-	<!--  see https://docs.mathjax.org/en/latest/web/configuration.html for params used below -->
-	<!-- Configuration (Tells MathJax to use this Nonce) (from Gemini AI) cant rely on display property which may not exist yet -->		
-	<script nonce="{{ CSP_NONCE }}">
-		  window.MathJax = {
-		    chtml: {
-		      // This tells MathJax to apply the nonce specifically to CommonHTML output
-		      nonce: '{{ CSP_NONCE }}'
-		    },
-		    svg: {
-		      // This covers you if you switch to SVG output
-		      nonce: '{{ CSP_NONCE }}'
-		    },
-		    // Keep the rest of your standard config if you have any
-		    options: {
-		      enableScript: false
-		    },
-		    startup: {
-		        ready: () => {
-		            // Set the nonce on the output processor manually before it starts
-		            const output = MathJax.startup.output;
-		            if (output) {
-		              output.options.nonce = '{{ CSP_NONCE }}';
-		            }
-		            console.log("MathJax is using nonce:", '{{ CSP_NONCE }}');
-		            MathJax.startup.defaultReady();
-		        }
-		    }
-		  };
-	</script>
-	
+	<!--  see https://docs.mathjax.org/en/latest/web/configuration.html for params used below -->	
 	<!-- here are the possible config mathjax scripts you can use https://cdn.jsdelivr.net/npm/mathjax@3/es5/  Only latest will be used -->
 	<script nonce="{{ CSP_NONCE }}" type="text/javascript" id="MathJax-script" async 
 		src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">

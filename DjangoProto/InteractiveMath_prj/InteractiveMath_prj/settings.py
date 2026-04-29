@@ -125,70 +125,75 @@ SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
 #django 5.2
 #django-csp needs the flat, not dictionary format
-CSP_DEFAULT_SRC = (SELF,)
-CSP_STYLE_SRC = (SELF, NONCE)
-CSP_SCRIPT_SRC = (SELF, NONCE)
+# settings.py
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "default-src": [SELF],
+        "font-src": [
+            SELF, 
+            "https://cdn.jsdelivr.net/npm/mathjax@3/",  #for mathjax
+        ],
+        "style-src": [SELF, NONCE],
+        "script-src": [SELF, NONCE],
+        "style-src-elem": [
+            SELF,
+            "https://getbootstrap.com",
+            "https://code.jquery.com",
+            "https://staticcode.interactablemath.org",
+            NONCE,
+            "'sha256-JLEjeN9e5dGsz5475WyRaoA4eQOdNPxDIeUhclnJDCE='", # for mathjax, will change on upgrades
+            "'sha256-mQyxHEuwZJqpxCw3SLmc4YOySNKXunyu2Oiz1r3/wAE='",  #for mathjax
+            "'sha256-OCf+kv5Asiwp++8PIevKBYSgnNLNUZvxAp4a7wMLuKA='",   # for mathjax
+            "'sha256-trR7JwveKVMgnodBl3ld+T42sD/8Nob3daQDT5n8sYw='",  # for mathjax
+        ],
+        "style-src-attr": [SELF, "'unsafe-inline'"],
+        "worker-src": [SELF, "blob:"],
+        "script-src-elem": [
+            SELF,
+            "https://www.googletagmanager.com",
+            "https://www.google.com",
+            "https://getbootstrap.com",
+            "https://www.gstatic.com",
+            "https://ajax.googleapis.com",
+            "https://cdnjs.cloudflare.com",
+            "https://cdn.jsdelivr.net",
+            "https://staticcode.interactablemath.org",
+            "https://www.youtube.com",
+            "https://ytimg.com",
+            NONCE,
+        ],
+        "img-src": [
+            SELF,
+            "https://code.jquery.com",
+            "https://*.ytimg.com",
+            "https://*.google.com",
+            "data:",
+            "https://staticbinary.interactablemath.org",
+            "https://staticcode.interactablemath.org",
+        ],
+        "frame-src": [
+            SELF,
+            "data:",
+            "https://www.google.com",
+            "https://www.gstatic.com",
+            "https://staticbinary.interactablemath.org",
+            "https://www.youtube.com",
+            "https://www.youtube-nocookie.com",
+        ],
+        "media-src": [SELF, "https://staticbinary.interactablemath.org"],
+        "frame-ancestors": [SELF, "https://www.google.com"],
+        "connect-src": [
+            SELF,
+            "https://www.google.com",
+            "https://getbootstrap.com",
+            "https://www.gstatic.com",
+            "https://cdnjs.cloudflare.com",
+            "https://staticbinary.interactablemath.org",
+        ],
+        "form-action": [SELF],
+    }
+}
 
-# For MathJax and nonce-protected CSS
-CSP_STYLE_SRC_ELEM = (
-    SELF, 
-    'https://getbootstrap.com', 
-    'https://code.jquery.com',
-    'https://staticcode.interactablemath.org', 
-    NONCE
-)
-
-# For SVGs and inline attributes
-CSP_STYLE_SRC_ATTR = (SELF, "'unsafe-inline'")
-
-CSP_WORKER_SRC = (SELF, 'blob:')
-
-CSP_SCRIPT_SRC_ELEM = (
-    SELF, 
-    'https://www.googletagmanager.com', 
-    'https://www.google.com',
-    'https://getbootstrap.com', 
-    'https://www.gstatic.com',
-    'https://ajax.googleapis.com', 
-    'https://cdnjs.cloudflare.com',
-    'https://cdn.jsdelivr.net', 
-    'https://staticcode.interactablemath.org', 
-    NONCE
-)
-
-CSP_IMG_SRC = (
-    SELF, 
-    'https://code.jquery.com', 
-    'https://*.ytimg.com',
-    'https://*.google.com', 
-    'data:', 
-    'https://staticbinary.interactablemath.org', 
-    'https://staticcode.interactablemath.org'
-)
-
-CSP_FRAME_SRC = (
-    SELF, 
-    'data:', 
-    'https://www.google.com', 
-    'https://www.gstatic.com',
-    'https://staticbinary.interactablemath.org', 
-    'https://www.youtube-nocookie.com'
-)
-
-CSP_MEDIA_SRC = (SELF, 'https://staticbinary.interactablemath.org')
-
-CSP_FRAME_ANCESTORS = (SELF, 'https://www.google.com')
-
-CSP_CONNECT_SRC = (
-    SELF, 
-    'https://www.google.com', 
-    'https://getbootstrap.com',
-    'https://www.gstatic.com', 
-    'https://cdnjs.cloudflare.com',
-    'https://staticbinary.interactablemath.org'
-)
-
-CSP_FORM_ACTION = (SELF,)
 
 # These will ONLY report to the console/logger (useful for debugging)
 # CONTENT_SECURITY_POLICY_REPORT_ONLY = {
