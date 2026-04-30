@@ -276,7 +276,6 @@ class ProcessContactPage(View):
                 numTimesSmtpAccessedPerMonth=F('numTimesSmtpAccessedPerMonth') + num_email_sent,
                 numTimesRecaptchaAccessedPerMonth=F('numTimesRecaptchaAccessedPerMonth') + num_recapcha_sent
             )
-            from django.db.models import F
 
             #if need to see currAccesses again, do a currAccesses.refresh_from_db(
                 
@@ -738,6 +737,7 @@ class ContactMe(View):
 
         context_dict = {
             'page_tab_header': 'Contact Us',
+            'topic': None,
             'allowContactEmail': allow_contact,
             'ContactCSS': getFullFileURL('css/Contact_me.css', True, request),
             'ContactJS': getFullFileURL('js/Contact_me.js', True, request),
