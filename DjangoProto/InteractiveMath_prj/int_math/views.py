@@ -120,188 +120,221 @@ class ProcessContactPage(View):
     def post(self, request):  
         # check the form validity for basic stuff first
         form = self.form_class(request.POST) 
-        botTestDone = False
+        # ==========================================
+        # 1. ATOMIC CHECK & RESERVATION (Very fast) Needed in case bot attack with hijacked CSRF token
+        # will prevent limits being exceeded
+        # ==========================================
+        allow_processing = False
+        with transaction.atomic():
+            curr_accesses = ContactAccesses.objects.select_for_update().first()
+            if not curr_accesses:
+                curr_accesses = ContactAccesses.objects.create()
+
+            # Check if we have hit our hard limits
+            if (curr_accesses.numTimesRecaptchaAccessedPerMonth < MAX_FREE_RECAPTCHA and 
+                curr_accesses.numTimesSmtpAccessedPerMonth < MAX_NUM_EMAIL_PER_MONTH):
+                
+                # Preemptively RESERVE a slot so concurrent requests can't steal it
+                curr_accesses.numTimesRecaptchaAccessedPerMonth += 1
+                curr_accesses.numTimesSmtpAccessedPerMonth += 1
+                curr_accesses.save()
+                allow_processing = True
+
+        if not allow_processing:
+            logger.warning("Bot Blocked or Limits Exceeded: Direct POST request rejected.")
+            base_url = reverse('int_math:Contact_me')
+            query_string = urlencode({'botTestPassed': False})
+            return redirect(f'{base_url}?{query_string}')
+
+        # ==========================================
+        # 2. SLOW NETWORK CALLS (DB is fully unlocked here)
+        # ==========================================        
         testHasPassed = False
         num_email_sent = 0
         num_recapcha_sent = 0
         quartile = '1Q'
-        # increment accesses for next contact me user
-        currAccesses = ContactAccesses.objects.first()
-        if not currAccesses:
-            # CrashPrevent: Create one if it doesn't exist
-            currAccesses = ContactAccesses.objects.create() 
-        if form.is_valid():
-            # this only checks the format of the email, all other inputs are valid, we escape all text
-            #however, email is optional so a blank is ok
-            
-            #did a bot see the token empty box and try to fill it in? (honeypot test), value will be string
-            honey_pot_fail = request.POST.get('pooh_food_test', '').lower() == 'true'
+
+        try:  
+            #doing a reservation system for database counts, if user make mistake, will refund even if there is 
+            #return in try block.  Reservation system on just the counts (which are fast) means we don't atomically
+            #lock up the whole method (recaptcha and smtp are slow) so WSGI workers won't hang
+            if form.is_valid():
+                # this only checks the format of the email, all other inputs are valid, we escape all text
+                #however, email is optional so a blank is ok
                 
-            if honey_pot_fail:
-                #no need for recaptcha, honeypot test failed.
-                botTestDone = True
-                logger.info("Bot Blocked: Failed honeypot ('pooh_food_test' was filled).")
-            else:
-
-                #to get here means user has passed recaptcha/smtp limits.  yes, they could be exceeded by the time we 
-                # get here but its more important to know that their message went through and we allow a little "overage"
-                #it would be cruel to give client a form to fill out and then reject them for slight overage on limits
-
-                #Send off token to google recaptcha
-                recaptcha_str = request.POST.get('g_recaptcha_response')
-                if not recaptcha_str:
-                    # MISSING TOKEN: Likely a bot script skipping JS.
-                    logger.info("Bot Blocked: No reCAPTCHA token provided in request.")
+                #did a bot see the token empty box and try to fill it in? (honeypot test), value will be string
+                honey_pot_fail = request.POST.get('pooh_food_test', '').lower() == 'true'
+                    
+                if honey_pot_fail:
+                    #no need for recaptcha, honeypot test failed.
+                    logger.info("Bot Blocked: Failed honeypot ('pooh_food_test' was filled).")
                 else:
-                    #cant do this on the client since server is the only onw with secret key
-                    secret_key = settings.RECAPTCHA_SECRET_KEY
-                    payload = {
-                        'response': recaptcha_str,
-                        'secret': secret_key,
-                        'remoteip': request.META.get('REMOTE_ADDR')} # send IP to help recaptcha identify bots
-                    try:
-                        data = urllib.parse.urlencode(payload).encode()
-                        #urllib.request is fine for sync views, ensure timeout=5 remains to prevent slow recaptcha from hanging wsgi worker
-                        req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
-                        # Add a timeout (e.g., 5 seconds) so your app doesn't hang forever
-                        with urllib.request.urlopen(req, timeout=5) as response:
-                            result = json.loads(response.read().decode())
     
-                        #sending the second encrypted verify request to recaptcha counts toward max monthly total, log this
-                        num_recapcha_sent = 1
-                        #take action on robot test results.  we can get success but if score is low, we get action=verify
-                        #asking us to use another way to verify the user.  We don't do that at this time, we just reject low scores
-                        if (result['success']):
-                            botTestDone = True
-                            score = result.get('score',0)
-                            action = result.get('action','')
-                            logger.info(f"Processing Recaptcha: User returns score of  ({score}) for action '{action}'.")
-                            if (action == 'ContactUsForm'):
-                                if (score < 0.25):
-                                    quartile = '1Q'
-                                elif (score < 0.5): 
-                                    quartile = '2Q'
-                                elif (score < 0.75):
-                                    quartile = '3Q'
+                    #to get here means user has passed recaptcha/smtp limits.  yes, they could be exceeded by the time we 
+                    # get here but its more important to know that their message went through and we allow a little "overage"
+                    #it would be cruel to give client a form to fill out and then reject them for slight overage on limits
+    
+                    #Send off token to google recaptcha
+                    recaptcha_str = request.POST.get('g_recaptcha_response')
+                    if not recaptcha_str:
+                        # MISSING TOKEN: Likely a bot script skipping JS.
+                        logger.info("Bot Blocked: No reCAPTCHA token provided in request.")
+                    else:
+                        #cant do this on the client since server is the only onw with secret key
+                        secret_key = settings.RECAPTCHA_SECRET_KEY
+                        payload = {
+                            'response': recaptcha_str,
+                            'secret': secret_key,
+                            'remoteip': request.META.get('REMOTE_ADDR')} # send IP to help recaptcha identify bots
+                        try:
+                            data = urllib.parse.urlencode(payload).encode()
+                            #urllib.request is fine for sync views, ensure timeout=5 remains to prevent slow recaptcha from hanging wsgi worker
+                            req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
+                            # Add a timeout (e.g., 5 seconds) so your app doesn't hang forever
+                            with urllib.request.urlopen(req, timeout=5) as response:
+                                result = json.loads(response.read().decode())
+        
+                            #sending the second encrypted verify request to recaptcha counts toward max monthly total, log this
+                            num_recapcha_sent = 1
+                            #take action on robot test results.  we can get success but if score is low, we get action=verify
+                            #asking us to use another way to verify the user.  We don't do that at this time, we just reject low scores
+                            if (result['success']):
+                                score = result.get('score',0)
+                                action = result.get('action','')
+                                logger.info(f"Processing Recaptcha: User returns score of  ({score}) for action '{action}'.")
+                                if (action == 'ContactUsForm'):
+                                    if (score < 0.25):
+                                        quartile = '1Q'
+                                    elif (score < 0.5): 
+                                        quartile = '2Q'
+                                    elif (score < 0.75):
+                                        quartile = '3Q'
+                                    else:
+                                        quartile = '4Q'
+                                
+                                elif (action == 'verify'):
+                                    #this means bot was smart enough not to hit honeypot but we had to send recaptcha to find out its a bot
+                                    logger.info(f"ROBOT ALERT:  reCAPTCHA is asking for further verification of low score")
+                                    #which we choose to reject at this time
+                                    quartile = '1Q' # Explicitly keep it at 1Q to reject
                                 else:
-                                    quartile = '4Q'
-                            
-                            elif (action == 'verify'):
-                                #this means bot was smart enough not to hit honeypot but we had to send recaptcha to find out its a bot
-                                logger.info(f"ROBOT ALERT:  reCAPTCHA is asking for further verification of low score")
-                                #which we choose to reject at this time
-                                quartile = '1Q' # Explicitly keep it at 1Q to reject
+                                    # perhaps an old token was sent or bot wrote junk into recaptcha values??  reject client
+                                    logger.info(f"ERROR:  bad recaptcha token returned, raw result was {result.get('error-codes')}")
                             else:
-                                # perhaps an old token was sent or bot wrote junk into recaptcha values??  reject client
-                                logger.info(f"ERROR:  bad recaptcha token returned, raw result was {result.get('error-codes')}")
-                        else:
-                            # INVALID TOKEN: Clumsy bot or expired token.
-                            # LEVEL: WARNING (Could be a slow human with an expired session)
-                            errors = result.get('error-codes', [])
-                            logger.warning(f"reCAPTCHA Rejected: {errors}. Likely clumsy bot or expired session.")
-                        
-                        logger.info('FYI: gRecaptcha sent, results on quartile is ' + quartile)
-                    except (urllib.error.URLError, TimeoutError) as e:
-                        # SYSTEM ERROR: Google is down or your code broke.
-                        # LEVEL: ERROR (You need to know if your API integration is failing)
-                        logger.error(f"reCAPTCHA System Error: Could not verify token due to {type(e).__name__}: {e}")
-                        botTestDone = True
-                        # OR let possible human pass since they already passed the Honeypot test.
-                        quartile = '4Q' # "Fail-Open" strategy
-                    except Exception as e:
-                        logger.error(f"reCAPTCHA System Error: Fix SW error {type(e).__name__}: {e}")
+                                # INVALID TOKEN: Clumsy bot or expired token.
+                                # LEVEL: WARNING (Could be a slow human with an expired session)
+                                errors = result.get('error-codes', [])
+                                logger.warning(f"reCAPTCHA Rejected: {errors}. Likely clumsy bot or expired session.")
+                            
+                            logger.info('FYI: gRecaptcha sent, results on quartile is ' + quartile)
+                        except (urllib.error.URLError, TimeoutError) as e:
+                            # SYSTEM ERROR: Google is down or your code broke.
+                            # LEVEL: ERROR (You need to know if your API integration is failing)
+                            logger.error(f"reCAPTCHA System Error: Could not verify token due to {type(e).__name__}: {e}")
+                            # OR let possible human pass since they already passed the Honeypot test.
+                            quartile = '4Q' # "Fail-Open" strategy
+                        except Exception as e:
+                            logger.error(f"reCAPTCHA System Error: Fix SW error {type(e).__name__}: {e}")
+                
+                if ('4Q' == quartile):
+                    logger.info(f"Human Verified: 4Q score. Proceeding to email.")
+                    testHasPassed = True
+                    #get the email, name and message and ensure no html injection.  cleaned_data does that instead of escape()
+                    nameOfContact = form.cleaned_data.get('name')
+                    if nameOfContact == "":
+                        nameOfContact = "anonymous"
+                    subjectOfContact = form.cleaned_data.get('subject')
+                    returnAddrEscaped = form.cleaned_data.get('email')
+                    if returnAddrEscaped == "":
+                        returnAddrEscaped = "noemailaddr@nomail.com"
+                    messageEscaped = form.cleaned_data.get('message') 
+                    messageEscaped += " --From website user: " + nameOfContact + ".  At email addr: " + returnAddrEscaped
+                    sendToEmailAddr = settings.EMAIL_HOST_USER
+    
+                    # Configuration for retries
+                    MAX_RETRIES = 3
+                    RETRY_DELAY = 2  # Seconds to wait between attempts
+                    
+                    # Initialize to 0 so the variable exists even if the loop fails immediately
+                    num_email_sent = 0
+                    for attempt in range(MAX_RETRIES):
+                        try:
+                            #the minute you use your sendTo address to log into smtp server, that becomes the "from" addr anyway
+                            #as of Apr2025, you can send 500 emails per day for free using smtp service
+                            # Note: fail_silently=False allows us to catch the exception in our try block
+                            num_email_sent = send_mail(
+                                subjectOfContact,
+                                messageEscaped,
+                                sendToEmailAddr,
+                                [sendToEmailAddr],
+                                fail_silently=False,
+                            ) 
+                            # If we reach here, it succeeded
+                            break 
+                    
+                        except OSError as ex:
+                            # Specifically catch the network unreachable error to retry
+                            if (101 in ex.args or 'Network is unreachable' in str(ex)) and attempt < MAX_RETRIES - 1:
+                                logger.warning(f"Network unreachable. Retrying ({attempt + 1}/{MAX_RETRIES})...")
+                                time.sleep(RETRY_DELAY)
+                                continue
+                            logger.error(f"Final network failure after {MAX_RETRIES} attempts: {ex}")
+                            break
+                    
+                        except Exception as ex:
+                            # For other errors (Auth, BadHeader, etc.), don't retry, just log it.
+                            # Catches HeaderInjection, Auth failures, etc.
+                            logger.error(f"Email failure: {type(ex).__name__} - {ex}")
+                            break
+                          
+                    if num_email_sent == 0:
+                        #user has injected newlines and message rejected, could be bot?, or gmail rejects us.  Check log.  Inform user of failure
+                        testHasPassed = False 
+                        logger.error(f"Outcome: No email sent for {nameOfContact}. Check SMTP/Auth settings.") 
+    
+                else:
+                    #Count these up in the server log and just above this, will have reason
+                    logger.info(f"Bot Blocked: Low reCAPTCHA score {quartile}.  Process terminating")           
+                
+                #must use redirect to avoid a POST that will happen automatically when user refreshes
+                #could not get keywords to be sent in a redirect, this is safe since if bot changes this URL param, 
+                #they just get a false message and no submit button
+                base_url = reverse('int_math:Contact_me')
+                query_string = urlencode({'botTestPassed': testHasPassed})
+                return redirect(f'{base_url}?{query_string}')
+    
+            else: 
+                #user messed up, give them a chance to correct
+                #the only thing this form checks is email address errors if the user chooses to give one and makes user user puts something in msg
+                context_dict = {'page_tab_header': 'Contact Us',
+                            'topic': None,
+                            'allowContactEmail': True,
+                            'ContactCSS': getFullFileURL('css/Contact_me.css', True, request),
+                            'ContactJS': getFullFileURL('js/Contact_me.js', True, request),
+                            'form': form,  
+                            'basePage': getBaseContextEntry(request),
+                            'botTestDone': False,
+                            'botTestPassed': False
+                            } 
+                response = render(request, 'int_math/Contact_me.html', context=context_dict)
+                  
+            return response     
+        
+        finally:
+            # This block ALWAYS runs before the function exits (even on returns or exceptions!)
+            # ==========================================
+            # 3. REFUND UNUSED RESERVATIONS 
+            # ==========================================
+            # If the email failed to send, or we aborted before hitting reCAPTCHA, 
+            # we need to give the reserved slots back to the database.  This will be fast so no problem with atomic transaction
+            refund_smtp = 1 - num_email_sent
+            refund_recaptcha = 1 - num_recapcha_sent
             
-            if ('4Q' == quartile):
-                logger.info(f"Human Verified: 4Q score. Proceeding to email.")
-                testHasPassed = True
-                #get the email, name and message and ensure no html injection.  cleaned_data does that instead of escape()
-                nameOfContact = form.cleaned_data.get('name')
-                if nameOfContact == "":
-                    nameOfContact = "anonymous"
-                subjectOfContact = form.cleaned_data.get('subject')
-                returnAddrEscaped = form.cleaned_data.get('email')
-                if returnAddrEscaped == "":
-                    returnAddrEscaped = "noemailaddr@nomail.com"
-                messageEscaped = form.cleaned_data.get('message') 
-                messageEscaped += " --From website user: " + nameOfContact + ".  At email addr: " + returnAddrEscaped
-                sendToEmailAddr = settings.EMAIL_HOST_USER
-
-                # Configuration for retries
-                MAX_RETRIES = 3
-                RETRY_DELAY = 2  # Seconds to wait between attempts
-                
-                # Initialize to 0 so the variable exists even if the loop fails immediately
-                num_email_sent = 0
-                for attempt in range(MAX_RETRIES):
-                    try:
-                        #the minute you use your sendTo address to log into smtp server, that becomes the "from" addr anyway
-                        #as of Apr2025, you can send 500 emails per day for free using smtp service
-                        # Note: fail_silently=False allows us to catch the exception in our try block
-                        num_email_sent = send_mail(
-                            subjectOfContact,
-                            messageEscaped,
-                            sendToEmailAddr,
-                            [sendToEmailAddr],
-                            fail_silently=False,
-                        ) 
-                        # If we reach here, it succeeded
-                        break 
-                
-                    except OSError as ex:
-                        # Specifically catch the network unreachable error to retry
-                        if (101 in ex.args or 'Network is unreachable' in str(ex)) and attempt < MAX_RETRIES - 1:
-                            logger.warning(f"Network unreachable. Retrying ({attempt + 1}/{MAX_RETRIES})...")
-                            time.sleep(RETRY_DELAY)
-                            continue
-                        logger.error(f"Final network failure after {MAX_RETRIES} attempts: {ex}")
-                        break
-                
-                    except Exception as ex:
-                        # For other errors (Auth, BadHeader, etc.), don't retry, just log it.
-                        # Catches HeaderInjection, Auth failures, etc.
-                        logger.error(f"Email failure: {type(ex).__name__} - {ex}")
-                        break
-                      
-                if num_email_sent == 0:
-                    #user has injected newlines and message rejected, could be bot?, or gmail rejects us.  Check log.  Inform user of failure
-                    testHasPassed = False 
-                    logger.error(f"Outcome: No email sent for {nameOfContact}. Check SMTP/Auth settings.") 
-
-            else:
-                #Count these up in the server log and just above this, will have reason
-                logger.info(f"Bot Blocked: Low reCAPTCHA score {quartile}.  Process terminating")
-
-                
-            # increment accesses for next contact me user, do so atomically, better than fetch-modify-save
-            ContactAccesses.objects.filter(pk=currAccesses.pk).update(
-                numTimesSmtpAccessedPerMonth=F('numTimesSmtpAccessedPerMonth') + num_email_sent,
-                numTimesRecaptchaAccessedPerMonth=F('numTimesRecaptchaAccessedPerMonth') + num_recapcha_sent
-            )
-
-            #if need to see currAccesses again, do a currAccesses.refresh_from_db(
-                
-            #must use redirect to avoid a POST that will happen automatically when user refreshes
-            #could not get keywords to be sent in a redirect, this is safe since if bot changes this URL param, 
-            #they just get a false message and no submit button
-            base_url = reverse('int_math:Contact_me')
-            query_string = urlencode({'botTestPassed': testHasPassed})
-            return redirect(f'{base_url}?{query_string}')
-
-        else: 
-            #the only thing this form checks is email address errors if the user chooses to give one and makes user user puts something in msg
-            context_dict = {'page_tab_header': 'Contact Us',
-                        'topic': None,
-                        'allowContactEmail': True,
-                        'ContactCSS': getFullFileURL('css/Contact_me.css', True, request),
-                        'ContactJS': getFullFileURL('js/Contact_me.js', True, request),
-                        'form': form,  
-                        'basePage': getBaseContextEntry(request),
-                        'botTestDone': False,
-                        'botTestPassed': False
-                        } 
-            response = render(request, 'int_math/Contact_me.html', context=context_dict)
-              
-        return response                      
+            if refund_smtp > 0 or refund_recaptcha > 0:
+                ContactAccesses.objects.filter(pk=curr_accesses.pk).update(
+                    numTimesSmtpAccessedPerMonth=F('numTimesSmtpAccessedPerMonth') - refund_smtp,
+                    numTimesRecaptchaAccessedPerMonth=F('numTimesRecaptchaAccessedPerMonth') - refund_recaptcha
+                ) 
 
 #**********************************************************
 # functions used by page views. Will be a singleton that goes locally
