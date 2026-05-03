@@ -1,7 +1,7 @@
 <!-- This controls appearance of the subtopics off to the left side of the page -->
 <ul class="nav flex-column">
 {% if subtopics %}
-	<p id="headerForSubtopics"> {{current_topic.name}} Subtopics </p>
+	<p id="headerForSubtopics"> Subtopics </p>
 	{% for s in subtopics %}
 		<li class="nav-item">
 		<a class="nav-link" href={{ s.url }}>

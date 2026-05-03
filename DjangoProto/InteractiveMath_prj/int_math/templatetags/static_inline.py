@@ -1,4 +1,5 @@
 import os
+import functools
 from django import template
 from django.conf import settings
 from django.utils.safestring import mark_safe
@@ -10,6 +11,7 @@ register = template.Library()
 #finders.find() works while the aforementioned library's load_staticfile() throws a ValueError indicates 
 #a direct incompatibility between the library's loader and Django's production security model
 @register.simple_tag
+@functools.lru_cache(maxsize=128) #reduce inefficiency of constantly rereading same file and slamming wsgi
 def inline_asset(relative_path):
     """
     Reads CSS, JS, or SVG files from STATICFILES_DIRS and returns content as safe HTML.

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic import TemplateView
 from django.urls import reverse
 from django.apps import apps
 from django.db.models import F
@@ -430,160 +431,178 @@ class IndexView(View):
 #****************************************************************************************
 #  Trig functions section
 #****************************************************************************************
-#safe way to handle lists like artist credits in config file
-def get_array_item(configArray, index):
-    if isinstance(configArray, list) and len(configArray) > index:
-        return configArray[index]
-    return ""
+#create "base class" for trig function pages
+# By applying this to 'dispatch', it automatically covers get() and post()
+@method_decorator(never_cache, name='dispatch')
+class BaseMathView(TemplateView):
+    # Default values that child views can override
+    topic_name = "TrigFunct" 
+    page_tab_header = ""
+    artist_credit_idx = None
+    
+    # Dictionary mapping {'Template_Variable_Name': 'path/to/file.ext'}
+    public_static_files = {}
+
+    #safe way to handle lists like artist credits in config file
+    def get_array_item(self, configArray, index):
+        if isinstance(configArray, list) and len(configArray) > index:
+            return configArray[index]
+        return ""
+
+    def get_context_data(self, **kwargs):
+        # 1. Get the baseline context dictionary provided by Django
+        context = super().get_context_data(**kwargs)
+        
+        # 2. Add the standard math items
+        context['page_tab_header'] = self.page_tab_header
+        context['basePage'] = getBaseContextEntry(self.request)
+        
+        if self.topic_name:
+            context['topic'] = get_object_or_404(Topic, name=self.topic_name)
+            
+        # 3. Automatically loop through and load all CSS/JS/SVGs!
+        for context_key, file_path in self.public_static_files.items():
+            # (Assuming these standard assets are all True for getFromPublicRepo)
+            context[context_key] = getFullFileURL(file_path, True, self.request)
+            
+        # 4. Handle Artist Credits if an index was provided
+        if self.artist_credit_idx is not None:
+            textMap = ConfigMapper()
+            artistCredit = textMap.readConfigMapper('ArtistCredits')
+            context['artistCredit'] = self.get_array_item(artistCredit, self.artist_credit_idx)
+            
+        return context
+
 # page 1 General Concepts Intro of trig function section. Youtube requires this to pass our csp
 @method_decorator(csp_update({"script-src-elem": ["'unsafe-inline'"]}), name='dispatch')
-class MusicTrigConceptIntroView(View):
-    @method_decorator(never_cache)
-    def get(self, request):
-        trigMap = ConfigMapper()
-        realURLFreqVideo = trigMap.readConfigMapper("IntroToFrequencyVideo")
-        realURLTrigVideo = trigMap.readConfigMapper("IntroToTrigVideo")
-        realURLSoundVideo = trigMap.readConfigMapper("IntroToSoundVideo")
-        realFileCartoonGIF = trigMap.readConfigMapper("CartoonIntroGIF")
-        realFileIntroAudio = trigMap.readConfigMapper("TrigReviewIntroAudio")
-        artistCredit = trigMap.readConfigMapper('ArtistCredits')
+class MusicTrigConceptIntroView(BaseMathView):
+    template_name = 'int_math/IntroTrigMusicConcepts.html'
+    page_tab_header = 'IntroConcepts'
+    artist_credit_idx = 0
+    
+    # BaseMathView automatically handles these with getFullFileURL(..., True, request)
+    public_static_files = {
+        'TrigIntroMusicCSS': 'css/IntroTrigMusicConcepts.css',
+        'TrigIntroMusicJS': 'js/IntroTrigMusicConcepts.js',
+    }
 
-        context_dict = {'basePage': getBaseContextEntry(request),
-                        'page_tab_header': 'IntroConcepts',
-                        'topic': get_object_or_404(Topic, name="TrigFunct"),
-                        'introToFreqVideo': realURLFreqVideo,
-                        'introToTrigVideo': realURLTrigVideo,
-                        'introToSoundVideo': realURLSoundVideo,
-                        'cartoonIntroGIF': getFullFileURL(realFileCartoonGIF, False, request),
-                        'trigReviewIntroAudio': getFullFileURL(realFileIntroAudio, False, request),
-                        "artistCredit": get_array_item(artistCredit,0),
-                        'TrigIntroMusicCSS': getFullFileURL('css/IntroTrigMusicConcepts.css', True, request),
-                        'TrigIntroMusicJS': getFullFileURL('js/IntroTrigMusicConcepts.js', True, request),
-                        }
-        response = render(request, 'int_math/IntroTrigMusicConcepts.html', context=context_dict)
-        return response
+    def get_context_data(self, **kwargs):
+        # 1. Call super() so BaseMathView sets up the CSS, JS, artist credits, and basePage
+        context = super().get_context_data(**kwargs)
+        
+        # 2. Get the specific configurations for this view
+        trigMap = ConfigMapper()
+        
+        # 3. Add the direct video URLs
+        context['introToFreqVideo'] = trigMap.readConfigMapper("IntroToFrequencyVideo")
+        context['introToTrigVideo'] = trigMap.readConfigMapper("IntroToTrigVideo")
+        context['introToSoundVideo'] = trigMap.readConfigMapper("IntroToSoundVideo")
+        
+        # 4. Handle your custom binary files passing 'False' 
+        # (Note: Use self.request instead of request in Class-Based Views)
+        realFileCartoonGIF = trigMap.readConfigMapper("CartoonIntroGIF")
+        context['cartoonIntroGIF'] = getFullFileURL(realFileCartoonGIF, False, self.request)
+        
+        realFileIntroAudio = trigMap.readConfigMapper("TrigReviewIntroAudio")
+        context['trigReviewIntroAudio'] = getFullFileURL(realFileIntroAudio, False, self.request)
+        
+        return context
     
 # page 2 Music Sine Intro of trig function section.  Pg2MusicSineIntro.html  
-class MusicTrigView(View):
-    @method_decorator(never_cache)
-    def get(self, request):
-        context_dict = {
-                        'page_tab_header': 'MusicalTrig',
-                        'topic': get_object_or_404(Topic, name="TrigFunct"),
-                        'basePage': getBaseContextEntry(request),
-                        'MusicSineIntroCSS': getFullFileURL('css/Pg2MusicSineIntro.css', True, request),
-                        'MusicSineIntroJS': getFullFileURL('js/Pg2MusicSineIntro.js', True, request),
-                        'ColorfulClefSVG': getFullFileURL('svg/Prismatic-Clef-Hearts-2.svg', True, request),
-                        'WholeNoteSVG': getFullFileURL('svg/WholeNote.svg', True, request),
-                        'VolumeOffSVG': getFullFileURL('svg/volume-off.svg', True, request),
-                        'VolumeOnSVG': getFullFileURL('svg/volume.svg', True, request),
-                        }
-        response = render(request, 'int_math/Pg2MusicSineIntro.html', context=context_dict)
-        return response
+class MusicTrigView(BaseMathView):
+    template_name = 'int_math/Pg2MusicSineIntro.html'
+    page_tab_header = 'MusicalTrig'
+    # so we load up the base class context dictionary and it calls get/render the template
+    public_static_files = {
+        'MusicSineIntroCSS':'css/Pg2MusicSineIntro.css',
+        'MusicSineIntroJS': 'js/Pg2MusicSineIntro.js',
+        'ColorfulClefSVG': 'svg/Prismatic-Clef-Hearts-2.svg',
+        'WholeNoteSVG': 'svg/WholeNote.svg',
+        'VolumeOffSVG': 'svg/volume-off.svg',
+        'VolumeOnSVG': 'svg/volume.svg',
+    }
     
 # page 3 Where does sine/cosine come from? of trig function section       
-class StaticTrigView(View):
-    @method_decorator(never_cache)
-    def get(self, request):
-        context_dict = {
-                        'page_tab_header': 'StaticTrig',
-                        'topic': get_object_or_404(Topic, name="TrigFunct"),
-                        'basePage': getBaseContextEntry(request),
-                        'StaticTrigCSS': getFullFileURL('css/StaticTrig.css', True, request),
-                        'StaticTrigJS': getFullFileURL('js/StaticTrig.js', True, request),
-                        'ExplnQ2SVG': getFullFileURL('svg/StaticTrigQ2.svg', True, request),
-                        'ExplnQ3SVG': getFullFileURL('svg/StaticTrigQ3.svg', True, request),
-                        'ExplnQ4SVG': getFullFileURL('svg/StaticTrigQ4.svg', True, request),
-                        }
-        response = render(request, 'int_math/StaticTrig.html', context=context_dict)
-        return response
-# page 4 Lets add time and make frequency of trig function section     
-class DynamicTrig1View(View):
-    @method_decorator(never_cache)
-    def get(self, request):
-        context_dict = {
-                        'page_tab_header': 'DynamicTrig',
-                        'topic': get_object_or_404(Topic, name="TrigFunct"),
-                        'basePage': getBaseContextEntry(request),
-                        'DynTrig1CSS': getFullFileURL('css/DynamicTrig1.css', True, request),
-                        'DynTrig1JS': getFullFileURL('js/DynamicTrig1.js', True, request),
-                        }
-        response = render(request, 'int_math/DynamicTrig1.html', context=context_dict)
-        return response
+class StaticTrigView(BaseMathView):
+    template_name = 'int_math/StaticTrig.html'
+    page_tab_header = 'StaticTrig'
+    # so we load up the base class context dictionary and it calls get/render the template
+    public_static_files = {
+        'StaticTrigCSS': 'css/StaticTrig.css',
+        'StaticTrigJS': 'js/StaticTrig.js',
+        'ExplnQ2SVG': 'svg/StaticTrigQ2.svg',
+        'ExplnQ3SVG': 'svg/StaticTrigQ3.svg',
+        'ExplnQ4SVG': 'svg/StaticTrigQ4.svg',
+    }
+# page 4 Lets add time and make frequency of trig function section   
+class DynamicTrig1View(BaseMathView):
+    template_name = 'int_math/DynamicTrig1.html'
+    page_tab_header = 'DynamicTrig'
+    
+    public_static_files = {
+        'DynTrig1CSS': 'css/DynamicTrig1.css',
+        'DynTrig1JS': 'js/DynamicTrig1.js',
+    }  
     
 # page 5 Lets go faster in time of trig function section
-class DynamicTrig2View(View):
-    @method_decorator(never_cache)
-    def get(self, request):
-        textMap = ConfigMapper()
-        artistCredit = textMap.readConfigMapper('ArtistCredits')
-        context_dict = {
-                        'page_tab_header': 'DynamicTrig',
-                        'topic': get_object_or_404(Topic, name="TrigFunct"),
-                        'basePage': getBaseContextEntry(request),
-                        "artistCredit": get_array_item(artistCredit,3),
-                        'DynTrig2CSS': getFullFileURL('css/DynamicTrig2.css', True, request),
-                        'DynTrig2JS': getFullFileURL('js/DynamicTrig2.js', True, request),
-                        }
-        response = render(request, 'int_math/DynamicTrig2.html', context=context_dict)
-        return response
+class DynamicTrig2View(BaseMathView):
+    template_name = 'int_math/DynamicTrig2.html'
+    page_tab_header = 'DynamicTrig'
+    artist_credit_idx = 3
+    
+    public_static_files = {
+        'DynTrig2CSS': 'css/DynamicTrig2.css',
+        'DynTrig2JS': 'js/DynamicTrig2.js',
+    }
+
 # page 6 Lets get into audible sin/cosine tones of trig function section
-class ToneTrigView(View):
-    @method_decorator(never_cache)
-    def get(self, request):
-        textMap = ConfigMapper()
-        artistCredit = textMap.readConfigMapper('ArtistCredits')
-        context_dict = {
-                        'page_tab_header': 'ToneTrig',
-                        'topic': get_object_or_404(Topic, name="TrigFunct"),
-                        'basePage': getBaseContextEntry(request),
-                        "artistCredit": get_array_item(artistCredit,3),
-                        'ToneTrigCSS': getFullFileURL('css/ToneTrig.css', True, request),
-                        'ToneTrigJS': getFullFileURL('js/ToneTrig.js', True, request),
-                        'VolumeOffSVG': getFullFileURL('svg/volume-off.svg', True, request),
-                        'VolumeOnSVG': getFullFileURL('svg/volume.svg', True, request),
-                        }
-        response = render(request, 'int_math/ToneTrig.html', context=context_dict)
-        return response
+class ToneTrigView(BaseMathView):
+    template_name = 'int_math/ToneTrig.html'
+    page_tab_header = 'ToneTrig'
+    artist_credit_idx = 3
+    
+    public_static_files = {
+        'ToneTrigCSS': 'css/ToneTrig.css',
+        'ToneTrigJS': 'js/ToneTrig.js',
+        'VolumeOffSVG': 'svg/volume-off.svg',
+        'VolumeOnSVG': 'svg/volume.svg',
+    }    
 
 # page 7 Lets compare musical instruments to sine/cosine of same pitch of trig function section   
-class MusicNotesTrigView(View):
-    @method_decorator(never_cache)
-    def get(self, request):
-        textMap = ConfigMapper()
-        artistCredit = textMap.readConfigMapper('ArtistCredits')
-        context_dict = {
-                        'page_tab_header': 'MusicNotes',
-                        'topic': get_object_or_404(Topic, name="TrigFunct"),
-                        'basePage': getBaseContextEntry(request),
-                        "artistCredit": get_array_item(artistCredit,2),
-                        'MusicNotesTrigCSS': getFullFileURL('css/MusicNotesTrig.css', True, request),
-                        'MusicNotesTrigJS': getFullFileURL('js/MusicNotesTrig.js', True, request),
-                        'VolumeOffSVG': getFullFileURL('svg/volume-off.svg', True, request),
-                        'VolumeOnSVG': getFullFileURL('svg/volume.svg', True, request),
-                        }
-        response = render(request, 'int_math/MusicNotesTrig.html', context=context_dict)
-        return response
+class MusicNotesTrigView(BaseMathView):
+    template_name = 'int_math/MusicNotesTrig.html'
+    page_tab_header = 'MusicNotes'
+    artist_credit_idx = 2
+    
+    public_static_files = {
+        'MusicNotesTrigCSS': 'css/MusicNotesTrig.css',
+        'MusicNotesTrigJS': 'js/MusicNotesTrig.js',
+        'VolumeOffSVG': 'svg/volume-off.svg',
+        'VolumeOnSVG': 'svg/volume.svg',
+    }
     
 # page 8 Summary of Trig in music MusicSineSummary.html
 @method_decorator(csp_update({"script-src-elem": ["'unsafe-inline'"]}), name='dispatch')
-class TrigSummaryView(View):
-    @method_decorator(never_cache)
-    def get(self, request):
+class TrigSummaryView(BaseMathView):
+    template_name = 'int_math/MusicSineSummary.html'
+    page_tab_header = 'Summary'
+    artist_credit_idx = 1
+    
+    public_static_files = {
+        'TrigSummaryCss': 'css/MusicSineSummary.css',
+        'TrigSummaryJS': 'js/MusicSineSummary.js',
+    }
+
+    def get_context_data(self, **kwargs):
+        # Let BaseMathView handle all the CSS, JS, credits, and basic context
+        context = super().get_context_data(**kwargs)
+        
+        # Override and Add the specific video logic just for this view
         trigMap = ConfigMapper()
-        actualFilename = trigMap.readConfigMapper("MusicSummaryVideo")
-        artistCredit = trigMap.readConfigMapper('ArtistCredits')
-        context_dict = {
-                        'page_tab_header': 'Summary',
-                        'topic': get_object_or_404(Topic, name="TrigFunct"),
-                        'basePage': getBaseContextEntry(request),
-                        'musicSummaryVideo': actualFilename,
-                        "artistCredit": get_array_item(artistCredit,1),
-                        'TrigSummaryCss': getFullFileURL('css/MusicSineSummary.css', True, request),
-                        'TrigSummaryJS': getFullFileURL('js/MusicSineSummary.js', True, request),
-                        }
-        response = render(request, 'int_math/MusicSineSummary.html', context=context_dict)
-        return response
+        context['musicSummaryVideo'] = trigMap.readConfigMapper("MusicSummaryVideo")
+        
+        return context
+
 #****************************************************************************************
 #  END OF Trig functions section
 #****************************************************************************************    
