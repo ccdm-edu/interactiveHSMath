@@ -1,3 +1,15 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Module Name: apps.py
+Description: The website code is generic, a config file is needed to point to proprietery SVG, MP3 etc.  There is
+            a test config file with generic files (tiny) or the proprietary one created by user with artistic content. 
+            Load all this up once since it is not anticipated to change often
+Author: C De Meyer (and Gemini AI)
+Date: 5/4/2026
+Version: 1.0.0
+"""
 import json
 import logging
 from pathlib import Path

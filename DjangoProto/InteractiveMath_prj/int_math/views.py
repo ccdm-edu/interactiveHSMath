@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Module Name: views.py
+Description: Implements all user requests (get/post) and creates/modifies pages, interacts with server
+Author: C De Meyer (and Gemini AI)
+Date: 5/4/2026
+Version: 1.0.0
+"""
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import TemplateView
@@ -29,9 +39,6 @@ import time
 import uuid
 import logging
 import datetime
-
-
-
 
 #**********************************************************
 # These are actions that will require significant server time in recaptcha and smtp calls

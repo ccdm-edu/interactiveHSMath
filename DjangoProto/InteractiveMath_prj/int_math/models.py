@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Module Name: models.py
+Description: Create a structure for all database entries 
+Author: C De Meyer (and Gemini AI)
+Date: 5/4/2026
+Version: 1.0.0
+"""
 from django.db import models
 
 class Topic(models.Model):

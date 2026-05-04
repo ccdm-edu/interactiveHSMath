@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Module Name: populate_interactiveMath.py
+Description: Populate the database structures with initial values
+Author: C De Meyer
+Date: 5/4/2026
+Version: 1.0.0
+"""
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 
                         'InteractiveMath_prj.settings')

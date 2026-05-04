@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Module Name: urls.py
+Description: top level url mapper to views.  upgraded to django 5.2
+Author: C De Meyer
+Date: 5/4/2026
+Version: 1.0.0
+"""
 """InteractiveMath_prj URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:

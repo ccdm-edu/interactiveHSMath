@@ -1,8 +1,13 @@
-'''
-Created on Aug 20, 2021
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Module Name: intHSmath_template_tags.py
+Description: Creates the subtopics list to left of page for all but mobile devices
+Author: C De Meyer
+Date: 5/4/2026
+Version: 1.0.0
+"""
 
-@author: Owner
-'''
 from django import template
 from int_math.models import Topic, Subtopic
 

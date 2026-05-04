@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Module Name: static_inline.py
+Description: Reduces the number of server accesses required for a page by inlining items into the html (tradeoff,
+            if html gets too big, will affect load time and SEO).
+Author: C De Meyer (and Gemini AI)
+Date: 5/4/2026
+Version: 1.0.0
+"""
 import os
 import functools
 from django import template

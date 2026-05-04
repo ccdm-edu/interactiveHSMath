@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Module Name: forms.py
+Description: Create the forms that the user needs to interact with server
+Author: C De Meyer (and Gemini AI)
+Date: 5/4/2026
+Version: 1.0.0
+"""
 from django import forms
 from django.utils.safestring import mark_safe # Needed for your help_text HTML
 

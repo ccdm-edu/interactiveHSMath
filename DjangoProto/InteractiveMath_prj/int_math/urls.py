@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Module Name: urls.py (project level)
+Description: Direct website users to correct view to create requested pages
+Author: C De Meyer (and Gemini AI assist)
+Date: 5/4/2026
+Version: 1.0.0
+"""
+
 from django.urls import path
 from int_math import views
 
