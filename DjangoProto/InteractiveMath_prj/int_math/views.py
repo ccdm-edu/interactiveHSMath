@@ -29,6 +29,7 @@ import json
 from zoneinfo import ZoneInfo
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 from csp.decorators import csp_update  # to limit the youtube security issues to specific pages
 # homegrown stuff
 from int_math.forms import contactForm
@@ -676,7 +677,9 @@ class AckView(View):
             'AckCSS': getFullFileURL('css/Acknowledgements.css', True, request),
         }
         return render(request, 'int_math/acknowledgements.html', context=context_dict)
-     
+
+
+@method_decorator(xframe_options_sameorigin, name='dispatch')  #to allow iframe from pdf of my own URL (subdomain on cloudflare)     
 class Legal_TermsOfUse(View):
     @method_decorator(never_cache)
     def get(self, request):
@@ -691,6 +694,7 @@ class Legal_TermsOfUse(View):
         response = render(request, 'int_math/TermsOfUse.html', context=context_dict)
         return response
 
+@method_decorator(xframe_options_sameorigin, name='dispatch')  #to allow iframe from pdf of my own URL (subdomain on cloudflare)
 class Legal_Privacy(View):
     @method_decorator(never_cache)
     def get(self, request):

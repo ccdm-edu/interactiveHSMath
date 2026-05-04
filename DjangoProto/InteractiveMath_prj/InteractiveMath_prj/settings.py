@@ -119,7 +119,8 @@ if DEBUG:
     index = MIDDLEWARE.index('django.middleware.common.CommonMiddleware') + 1
     MIDDLEWARE.insert(index, 'debug_toolbar.middleware.DebugToolbarMiddleware')
 
-X_FRAME_OPTIONS = 'SAMEORIGIN'  #so the legal stuff will operate with correct headers
+X_FRAME_OPTIONS = 'DENY'  # need to do sameorigin for the two legal pages,use decorator on those views
+
 
 #this won't help us since we don't allow user upload of files but will kill a owasp zap low error
 SECURE_CONTENT_TYPE_NOSNIFF = True
