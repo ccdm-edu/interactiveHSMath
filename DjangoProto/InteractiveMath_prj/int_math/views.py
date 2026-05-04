@@ -541,7 +541,7 @@ class MusicTrigConceptIntroView(BaseMathView):
         
         return context
     
-# page 2 Music Sine Intro of trig function section.  Pg2MusicSineIntro.html  
+# page 2 Music Sine Intro of trig function section.  Pg2MusicSineIntro.html.  Has the C major scale + notes
 class MusicTrigView(BaseMathView):
     template_name = 'int_math/Pg2MusicSineIntro.html'
     page_tab_header = 'MusicalTrig'
@@ -639,17 +639,6 @@ class TrigSummaryView(BaseMathView):
 #****************************************************************************************
 #  END OF Trig functions section
 #****************************************************************************************    
-class ImagNumView(View):
-    @method_decorator(never_cache)
-    def get(self, request):
-        context_dict = {
-                        'page_tab_header': 'Imag_num',
-                        'topic': get_object_or_404(Topic, name="Imag_num"),
-                        'basePage': getBaseContextEntry(request),
-                        }        
-        response = render(request, 'int_math/imag_num.html', context=context_dict)
-        return response
-
 class TeacherStandardsView(View):
     @method_decorator(never_cache)
     def get(self, request):
@@ -660,17 +649,7 @@ class TeacherStandardsView(View):
                         }        
         response = render(request, 'int_math/TeacherStds.html', context=context_dict)
         return response
-         
-class PeopleView(View):
-    @method_decorator(never_cache)
-    def get(self, request):
-        context_dict = {
-                        'page_tab_header': 'People',
-                        'topic': get_object_or_404(Topic, name="Thanks"),
-                        'basePage': getBaseContextEntry(request),
-                        }
-        return render(request, 'int_math/acknowledgements.html', context=context_dict)
-
+#Thanks view         
 class AckView(View):
     @method_decorator(never_cache)
     def get(self, request):
@@ -690,29 +669,6 @@ class AckView(View):
             'AckCSS': getFullFileURL('css/Acknowledgements.css', True, request),
         }
         return render(request, 'int_math/acknowledgements.html', context=context_dict)
-
-class TrigIDView(View):
-    @method_decorator(never_cache)
-    def get(self, request):
-        context_dict = {
-                        'page_tab_header': 'Trig ID',
-                        'topic': get_object_or_404(Topic, name="TrigIdent"),
-                        'basePage': getBaseContextEntry(request),
-                        }
-        response = render(request, 'int_math/TrigIdentity.html', context=context_dict)
-        return response     
-   
-class TrigIDTuneView(View):
-    @method_decorator(never_cache)
-    def get(self, request):
-        context_dict = {
-                        'page_tab_header': 'Inst Tune',
-                        'topic': get_object_or_404(Topic, name="TrigIdent"),
-                        'basePage': getBaseContextEntry(request),
-                        }
-        response = render(request, 'int_math/TrigIdent_Tune.html', context=context_dict)
-        return response 
-
      
 class Legal_TermsOfUse(View):
     @method_decorator(never_cache)
@@ -811,3 +767,36 @@ class ContactMe(View):
         except Exception:
             logger.exception("Failed to send admin notification email")
 
+#TO BE done
+class ImagNumView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        context_dict = {
+                        'page_tab_header': 'Imag_num',
+                        'topic': get_object_or_404(Topic, name="Imag_num"),
+                        'basePage': getBaseContextEntry(request),
+                        }        
+        response = render(request, 'int_math/imag_num.html', context=context_dict)
+        return response
+    
+class TrigIDView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        context_dict = {
+                        'page_tab_header': 'Trig ID',
+                        'topic': get_object_or_404(Topic, name="TrigIdent"),
+                        'basePage': getBaseContextEntry(request),
+                        }
+        response = render(request, 'int_math/TrigIdentity.html', context=context_dict)
+        return response     
+   
+class TrigIDTuneView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        context_dict = {
+                        'page_tab_header': 'Inst Tune',
+                        'topic': get_object_or_404(Topic, name="TrigIdent"),
+                        'basePage': getBaseContextEntry(request),
+                        }
+        response = render(request, 'int_math/TrigIdent_Tune.html', context=context_dict)
+        return response 
