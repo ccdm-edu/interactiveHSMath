@@ -3,6 +3,12 @@
 import os
 import sys
 
+# Safely load dotenv only if installed
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # Silently skip on localhost where python-dotenv isn't installed
 
 def main():
     """Run administrative tasks."""
