@@ -74,12 +74,10 @@ if DEBUG:
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 else:
     CURRENT_HOST = os.environ.get('CURRENT_URL','') # Expects 'www.mainsite.org'
-    ALLOWED_HOSTS = [
-        CURRENT_HOST,
-        'interactablemath.org',
-        'interactablemath.com',
-        'interactivemath.org',
-    ]
+    env_hosts_string = os.environ.get('ALLOWED_DOMAINS', '')
+    # Convert the string into a clean Python list (ignoring empty strings)
+    env_hosts_list = [host.strip() for host in env_hosts_string.split(',') if host.strip()]
+    ALLOWED_HOSTS = [CURRENT_HOST] + env_hosts_list
     # Clean up any None values if the env var is missing
     ALLOWED_HOSTS = [host for host in ALLOWED_HOSTS if host]
     # Django 5.x requires the scheme (https://)
@@ -144,7 +142,7 @@ CONTENT_SECURITY_POLICY = {
             SELF,
             "https://getbootstrap.com",
             "https://code.jquery.com",
-            "https://staticcode.interactablemath.org",
+            CLOUD_URL_CODE,
             NONCE,
             "'sha256-JLEjeN9e5dGsz5475WyRaoA4eQOdNPxDIeUhclnJDCE='", # for mathjax, will change on upgrades
             "'sha256-mQyxHEuwZJqpxCw3SLmc4YOySNKXunyu2Oiz1r3/wAE='",  #for mathjax
@@ -162,7 +160,7 @@ CONTENT_SECURITY_POLICY = {
             "https://ajax.googleapis.com",
             "https://cdnjs.cloudflare.com",
             "https://cdn.jsdelivr.net",
-            "https://staticcode.interactablemath.org",
+            CLOUD_URL_CODE,
             "https://www.youtube.com",
             "https://ytimg.com",
             NONCE,
@@ -173,19 +171,19 @@ CONTENT_SECURITY_POLICY = {
             "https://*.ytimg.com",
             "https://*.google.com",
             "data:",
-            "https://staticbinary.interactablemath.org",
-            "https://staticcode.interactablemath.org",
+            CLOUD_URL_BINARY,
+            CLOUD_URL_CODE,
         ],
         "frame-src": [
             SELF,
             "data:",
             "https://www.google.com",
             "https://www.gstatic.com",
-            "https://staticbinary.interactablemath.org",
+            CLOUD_URL_BINARY,
             "https://www.youtube.com",
             "https://www.youtube-nocookie.com",
         ],
-        "media-src": [SELF, "https://staticbinary.interactablemath.org"],
+        "media-src": [SELF, CLOUD_URL_BINARY],
         "frame-ancestors": [SELF, "https://www.google.com"],
         "connect-src": [
             SELF,
@@ -193,7 +191,7 @@ CONTENT_SECURITY_POLICY = {
             "https://getbootstrap.com",
             "https://www.gstatic.com",
             "https://cdnjs.cloudflare.com",
-            "https://staticbinary.interactablemath.org",
+            CLOUD_URL_BINARY,
         ],
         "form-action": [SELF],
     }
@@ -298,7 +296,6 @@ TIME_ZONE = 'UTC'  # Best practice: keep DB in UTC, convert in views/templates
 USE_I18N = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
+# Django requires this variable to exist, but we use custom bucket variables instead
+STATIC_URL = None  
 
-STATIC_URL = '/static/'
