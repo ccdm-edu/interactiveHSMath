@@ -14,10 +14,6 @@ charset-normalizer==3.4.7
     # via requests
 click==8.3.2
     # via pip-tools
-colorama==0.4.6
-    # via
-    #   build
-    #   click
 django==4.2.30
     # via
     #   -r requirements_p312_d42.in
@@ -51,8 +47,12 @@ sqlparse==0.5.5
     # via
     #   django
     #   django-debug-toolbar
-tzdata==2026.1
-    # via django
+tomli==2.4.1
+    # via
+    #   build
+    #   pip-tools
+typing-extensions==4.15.0
+    # via asgiref
 ua-parser==1.0.2
     # via user-agents
 ua-parser-builtins==202603

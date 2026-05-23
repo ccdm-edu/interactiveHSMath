@@ -2,6 +2,6 @@ Django==4.2.30
 django-csp>=3.7
 django-debug-toolbar>=4.0
 django-widget-tweaks>=1.5.0
-pillow>=9.0.0
+pillow>=12.2.0
 requests>=2.31.0
 user-agents>=2.2.0
