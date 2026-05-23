@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//InteractiveMath_prj/urls.py=utf-8
+encoding//int_math/apps.py=utf-8
+encoding//int_math/forms.py=utf-8
+encoding//int_math/models.py=utf-8
+encoding//int_math/templatetags/intHSmath_template_tags.py=utf-8
+encoding//int_math/templatetags/static_inline.py=utf-8
+encoding//int_math/urls.py=utf-8
+encoding//int_math/views.py=utf-8
+encoding/populate_interactiveMath.py=utf-8

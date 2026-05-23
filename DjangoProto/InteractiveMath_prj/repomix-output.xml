@@ -1,0 +1,2243 @@
+This file is a merged representation of a subset of the codebase, containing files not matching ignore patterns, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching these patterns are excluded: **/templates/**, **/static/**, **/node_modules/**, **/venv_django52_py312/**
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.gitignore
+.project
+.pydevproject
+ConfigFiles/.gitignore
+ConfigFiles/TestConfig/binaryfilenamesforsite-portion1-rev-a.json
+ConfigFiles/TestConfig/filelistofmusicalinstrumentsplayingtuningnote.json
+int_math/__init__.py
+int_math/admin.py
+int_math/apps.py
+int_math/forms.py
+int_math/migrations/__init__.py
+int_math/migrations/.gitignore
+int_math/migrations/0003_contactaccesses.py
+int_math/migrations/0004_auto_20250329_2028.py
+int_math/migrations/0005_alter_contactaccesses_id_alter_subtopic_id_and_more.py
+int_math/migrations/0006_alter_contactaccesses_options_alter_topic_options_and_more.py
+int_math/models.py
+int_math/templatetags/__init__.py
+int_math/templatetags/intHSmath_template_tags.py
+int_math/templatetags/static_inline.py
+int_math/tests.py
+int_math/urls.py
+int_math/views.py
+InteractiveMath_prj/__init__.py
+InteractiveMath_prj/.gitignore
+InteractiveMath_prj/asgi.py
+InteractiveMath_prj/settings.py
+InteractiveMath_prj/urls.py
+InteractiveMath_prj/wsgi.py
+manage.py
+populate_interactiveMath.py
+requirements_p310_d42.in
+requirements_p310_d42.txt
+requirements_p312_d42.in
+requirements_p312_d42.txt
+requirements_p312_d52.in
+requirements_p312_d52.txt
+requirements.txt
+Test_Notes/BrowserPlatformTestResults_v1.0.pdf
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".gitignore">
+# Django #
+*.log
+*.pot
+*.pyc
+*.pyo
+__pycache__
+db.sqlite3
+media
+*.key
+
+#recommended by Eclipse but not inserted into this file
+*/.git/*
+.git
+
+# Backup files # 
+*.bak 
+
+# If you are using PyCharm # 
+.idea/**/workspace.xml 
+.idea/**/tasks.xml 
+.idea/dictionaries 
+.idea/**/dataSources/ 
+.idea/**/dataSources.ids 
+.idea/**/dataSources.xml 
+.idea/**/dataSources.local.xml 
+.idea/**/sqlDataSources.xml 
+.idea/**/dynamic.xml 
+.idea/**/uiDesigner.xml 
+.idea/**/gradle.xml 
+.idea/**/libraries 
+*.iws /out/ 
+
+# Python # 
+*.py[cod] 
+*$py.class 
+
+# Distribution / packaging 
+.Python build/ 
+develop-eggs/ 
+dist/ 
+downloads/ 
+eggs/ 
+.eggs/ 
+lib/ 
+lib64/ 
+parts/ 
+sdist/ 
+var/ 
+wheels/ 
+*.egg-info/ 
+.installed.cfg 
+*.egg 
+*.manifest 
+*.spec 
+
+# Installer logs 
+pip-log.txt 
+pip-delete-this-directory.txt 
+
+# Unit test / coverage reports 
+htmlcov/ 
+.tox/ 
+.coverage 
+.coverage.* 
+.cache 
+.pytest_cache/ 
+nosetests.xml 
+coverage.xml 
+*.cover 
+.hypothesis/ 
+
+# Jupyter Notebook 
+.ipynb_checkpoints 
+
+# pyenv 
+.python-version 
+
+# virtual environ
+venv_django32_py310/
+venv_django42_py310/
+venv_django42_py312/
+venv_django52_py312/
+
+# celery 
+celerybeat-schedule.* 
+
+# SageMath parsed files 
+*.sage.py 
+
+# Environments 
+.env 
+.venv 
+env/ 
+venv/ 
+ENV/ 
+env.bak/ 
+venv.bak/ 
+
+# mkdocs documentation 
+/site 
+
+# mypy 
+.mypy_cache/ 
+
+# Sublime Text # 
+*.tmlanguage.cache 
+*.tmPreferences.cache 
+*.stTheme.cache 
+*.sublime-workspace 
+*.sublime-project 
+
+# sftp configuration file 
+sftp-config.json 
+
+# Package control specific files Package 
+Control.last-run 
+Control.ca-list 
+Control.ca-bundle 
+Control.system-ca-bundle 
+GitHub.sublime-settings 
+
+# Visual Studio Code # 
+.vscode/* 
+!.vscode/settings.json 
+!.vscode/tasks.json 
+!.vscode/launch.json 
+!.vscode/extensions.json 
+.history
+
+#symbolic link used in debug
+/static_binaries
+</file>
+
+<file path=".project">
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>InteractiveMath_prj</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.python.pydev.PyDevBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.python.pydev.pythonNature</nature>
+		<nature>org.python.pydev.django.djangoNature</nature>
+	</natures>
+</projectDescription>
+</file>
+
+<file path=".pydevproject">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse-pydev version="1.0"?><pydev_project>
+        
+    <pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python interpreter</pydev_property>
+        
+    <pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">Default</pydev_property>
+        
+    <pydev_variables_property name="org.python.pydev.PROJECT_VARIABLE_SUBSTITUTION">
+        <key>DJANGO_MANAGE_LOCATION</key>
+        <value>manage.py</value>
+        <key>DJANGO_SETTINGS_MODULE</key>
+        <value>InteractiveMath_prj.settings</value>
+    </pydev_variables_property>
+    
+    <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
+        <path>/${PROJECT_DIR_NAME}</path>
+    </pydev_pathproperty>
+</pydev_project>
+</file>
+
+<file path="ConfigFiles/.gitignore">
+/DeployConfig/
+</file>
+
+<file path="ConfigFiles/TestConfig/binaryfilenamesforsite-portion1-rev-a.json">
+{
+	"ArtistCredits":[" "," "," "," "," "," "," "," "," "," ",
+					 " "," "," "," "," "," "," "," "," "," ",
+					 " "," "," "," "," "," "," "," "," "," "],
+	"GoogleAnalID": "NoStreamID",
+	"CompanyName": "I Luv Math",
+	"CartoonIntroTrig": "NonPublicImages/ImageTest.svg",
+	"CartoonIntroGIF": "NonPublicImages/ImageTest.svg",
+	"DynamicTrig1Seg0": "AudioExpln/AudioTest.mp3",
+	"DynamicTrig1Seg1": "AudioExpln/AudioTest.mp3",
+	"DynamicTrig1Seg2": "AudioExpln/AudioTest.mp3",
+	"DynamicTrig1Seg3": "AudioExpln/AudioTest.mp3",
+	"DynamicTrig2Seg0": "AudioExpln/AudioTest.mp3",
+	"DynamicTrig2Seg1": "AudioExpln/AudioTest.mp3",
+	"DynamicTrig2Seg2": "AudioExpln/AudioTest.mp3",
+	"FavICON": "none",
+	"IntroToFrequencyVideo_html": "VideoExpln/TestMP4file.mp4",
+	"IntroToFrequencyVideo": "VideoExpln/TestMP4file.mp4",
+	"IntroToTrigVideo":  "VideoExpln/TestMP4file.mp4", 
+	"IntroToSoundVideo": "VideoExpln/TestMP4file.mp4",	
+	"LandingPageLogo": "NonPublicImages/ImageTest.svg",
+	"LandingPageSeg0" : "AudioExpln/AudioTest.mp3",
+	"LandingPageSeg1" : "AudioExpln/AudioTest.mp3",
+	"LandingPageSeg1mobile": "AudioExpln/AudioTest.mp3",
+	"Legal_TermsCond": "LegalDocs/TestPDFfile.pdf",
+	"Legal_Privacy": "LegalDocs/TestPDFfile.pdf",
+	"MusicNotesTrigSeg0": "AudioExpln/AudioTest.mp3",
+	"MusicNotesTrigSeg1": "AudioExpln/AudioTest.mp3",
+	"MusicSummaryVideo": "VideoExpln/TestMP4file.mp4",
+	"SineMusicIntroSeg0": "AudioExpln/AudioTest.mp3",
+	"StaticTrigSeg0": "AudioExpln/AudioTest.mp3",
+	"Thankyou_list": [{"logo": "NonPublicImages/ImageTest.svg", "url":"https://nourl.com", "line1": "test Ack line1", "line2":"test ack line2"}],
+	"ToneTrigSeg0": "AudioExpln/AudioTest.mp3",
+	"ToneTrigSeg1": "AudioExpln/AudioTest.mp3",
+	"TrigReviewIntroAudio": "AudioExpln/AudioTest.mp3"
+}
+</file>
+
+<file path="ConfigFiles/TestConfig/filelistofmusicalinstrumentsplayingtuningnote.json">
+{
+	"TestNote": [
+		{"instrument": "Trumpet", "filenameURL": "TwoSecToneTest.mp3", "musicalNote": "C5", "title":"Sine Wave and Trumpet Play C<sub>5</sub> note", "fundamentalHz": "466.16", "tuneOffset": "10000", 
+		"todo": "TRY THIS:  Turn on your speaker.  Hit Play Tone and play the pitch tone at 466 Hz (almost a C<sub>5</sub>, which is 466.15 Hz).  Hit Play Instrument and play the trumpet mp3 recording which is very close to 466 Hz (a tiny bit out of tune).",
+		"expln": "EXPLANATION:  B<sup><span>&#9837;</span></sup> trumpet playing C<sub>5</sub> note, which comes out as B<sup><span>&#9837;</span></sup>, ideally at 466.16 Hz.  The orange line is the waveform created by the trumpet.  You can see the trumpet waveform is periodic, like the sine wave, and at (approximately) the same fundamental frequency as the sine wave tone. If you have a musically trained ear, you may hear a beat note with the synthesized tone since this trumpet is 2 Hz out of tune.  <br><br>An instrument plays a note but the sound/pitch depend on what group the instrument belongs to.  The trumpet, clarinet, soprano sax are all B<sup><span>&#9837;</span></sup> instruments.  So C<sub>5</sub> for these instruments has the same pitch frequency as the sine wave shown.  Try loading up some other instrument waveforms!  All waveforms will have the same fundamental pitch frequency (or an octave lower in the case of the tenor sax) but the waveforms will be shaped differently for each instrument, giving each instrument it's own unique sound.  One could synthesize this trumpet sound by using a tone at the pitch frequency of 466.16Hz and adding in other tones at different phases/amplitudes and frequencies that are multiples of the pitch frequency (i.e. 2*466.16Hz, 3*466.16Hz, etc) to obtain this unique waveform shape and sound."
+		},
+		{"instrument": "Clarinet", "filenameURL": "TwoSecToneTest.mp3", "musicalNote": "C5", "title":"Sine Wave and Clarinet Plays C<sub>5</sub> Note", "fundamentalHz": "466.16", "tuneOffset": "20000",
+		"todo": "TRY THIS:  Turn on your speaker.  Hit Play Tone and play the pitch tone at 466 Hz (almost a C<sub>5</sub>, which is 466.15 Hz).  Hit Play Instrument and play the clarinet MP3 recording which is close to 466 Hz.",
+		"expln": "EXPLANATION:  Clarinet playing C<sub>5</sub> note, which is ideally at 466.16 Hz.  The orange line is the waveform created by the clarinet.  You can see the waveform is periodic, like the sine wave tone, and at (approximately) the same fundamental frequency as the sine wave.  The harmonics and overtones give the clarinet its unique sound over the sine wave pitch frequency.  Try loading up some other instrument waveforms! One could synthesize this clarinet sound by using a tone at the fundamental frequency of 466.16Hz and adding in other tones at different phases/amplitudes and frequencies that are multiples of the pitch frequency (i.e. 2*466.16Hz, 3*466.16Hz, etc) to obtain this unique waveform shape and sound."
+		},
+	    {"instrument": "Soprano Sax", "filenameURL": "TwoSecToneTest.mp3", "musicalNote": "C5", "title":"Sine Wave and Soprano Sax Plays C<sub>5</sub> Note", "fundamentalHz": "466.16", "tuneOffset": "10000",
+		"todo": "TRY THIS:  Turn on your speaker.  Hit Play Tone and play the pitch tone at 466 Hz (almost a C<sub>5</sub>, which is 466.15 Hz).  Hit Play Instrument and play the soprano sax MP3 recording which is 466.16Hz. ",
+		"expln": "EXPLANATION:  Soprano Sax  playing C<sub>5</sub>, which is ideally at 466.16 Hz.  The orange line is the waveform created by the soprano sax.  You can see the waveform is periodic, like the sine wave, and at (approximately) the same fundamental frequency as the sine wave. Try loading up some other instrument waveforms!  Notice how the shape of each instruments waveform has the same fundamental pitch but different overtones/harmonics to give each instrument its unique sound.  One could synthesize this soprano sax sound by using a tone at the fundamental frequency of 466.16Hz and adding in other tones at different phases/amplitudes and frequencies that are multiples of the pitch frequency (i.e. 2*466.16Hz, 3*466.16Hz, etc) to obtain this unique waveform shape and sound."
+		},
+		{"instrument": "Tenor Sax", "filenameURL": "TwoSecToneTest.mp3", "musicalNote": "C4", "title":"Sine Wave and Tenor Sax Plays C<sub>4</sub> Note", "fundamentalHz": "233.08", "tuneOffset": "10000", 
+		"todo": "TRY THIS:  Turn on your speaker.  Hit Play Tone and play the pitch tone at 233 Hz, an octave lower than the soprano sax.  Hit Play Instrument and play the tenor sax MP3 recording which is close to 233 Hz.  Later check out the section on trig identities to see why we can tune an instrument an octave lower using an instrument that's an octave higher",
+		"expln": "EXPLANATION:  Tenor sax playing C<sub>4</sub> note, which is ideally at 233.08 Hz.  Like the trumpet, clarinet and soprano sax, the tenor sax is a B<sup><span>&#9837;</span></sup> instrument.  The C<sub>4</sub> is exactly 1/2 the frequency of the C<sub>5</sub> note.  The orange line is the waveform created by the tenor sax.  You can see the waveform is periodic, like the sine wave, and at (approximately) the same fundamental frequency as the sine wave pitch frequency"
+		},
+		{"instrument": "Flute", "filenameURL": "TwoSecToneTest.mp3", "musicalNote": "B4flat", "title":"Sine Wave and Flute Play B<sup>&#9837</sup><sub>4</sub> note", "fundamentalHz": "466.16", "tuneOffset": "10000",
+		"todo": "TRY THIS:  Turn on your speaker.  Hit Play Tone and play the pitch tone at 466 Hz.  Hit Play Instrument and play the flute MP3 recording which is very close to 466 Hz.  The flute is a C instrument and so it plays a slightly different note to match the other B<sup><span>&#9837;</span></sup> instruments.  ",
+		"expln": "EXPLANATION:  We are forcing a flute to match other B<sup><span>&#9837;</span></sup> instruments in pitch frequency of 466.16 Hz.  The orange line is the waveform created by the flute.  You can see the flute waveform is periodic, like the sine wave, and at (approximately) the same fundamental frequency as the sine wave."
+		},
+		{"instrument": "Human", "filenameURL": "TwoSecToneTest.mp3", "musicalNote": "B4flat", "title":"Sine Wave and Human sings B<sup>&#9837</sup><sub>4</sub> note", "fundamentalHz": "466.16", "tuneOffset": "8000",
+		"todo": "TRY THIS:  Turn on your speaker.  Hit Play Tone and play the pitch tone at 466 Hz.  Hit Play Instrument and play the MP3 recording of human singing a note, which is very close to 466 Hz.  The human voice is a C instrument, like the flute, and so it plays a slightly different note to match the other B<sup><span>&#9837;</span></sup> instruments.  ",
+		"expln": "EXPLANATION:  Our singer is matching other B<sup><span>&#9837;</span></sup> instruments in pitch frequency of 466.16 Hz.  The orange line is the waveform created by the singer.  You can see the singer's waveform is periodic, like the sine wave, and at (approximately) the same fundamental frequency as the sine wave."
+		}
+	]
+}
+</file>
+
+<file path="int_math/__init__.py">
+
+</file>
+
+<file path="int_math/admin.py">
+from django.contrib import admin
+
+# Register your models here.
+</file>
+
+<file path="int_math/apps.py">
+import json
+import logging
+from pathlib import Path
+from django.apps import AppConfig
+from django.conf import settings
+
+logger = logging.getLogger(__name__)
+
+class IntMathConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'int_math'
+    
+    # This will hold your mapping in memory for the life of the server
+    config_map = {}
+
+    def ready(self):
+        # Determine path (Using Pathlib for Django 5.2 style)
+        use_deploy = getattr(settings, 'USE_CLOUD_BUCKET', 'False').lower() == 'true'
+        config_subpath = 'DeployConfig' if (use_deploy or settings.DEBUG) else 'TestConfig'
+        
+        file_path = settings.BASE_DIR / 'ConfigFiles' / config_subpath / 'binaryfilenamesforsite-portion1-rev-a.json'
+        
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                # Store it directly on the class
+                IntMathConfig.config_map = json.load(f)
+            logger.info("Configuration Mapping loaded successfully.")
+        except Exception:
+            logger.exception(f"CRITICAL: Could not load config file at {file_path}")
+</file>
+
+<file path="int_math/forms.py">
+from django import forms
+from django.utils.safestring import mark_safe # Needed for your help_text HTML
+
+class contactForm(forms.Form):
+    # Using a CSS class instead of <font> tags is better practice for 5.2
+    # But if you want to keep the HTML here, use mark_safe:
+    help_not_required = mark_safe("<span style='color:DarkTurquoise; font-style:italic;'>Not required</span>")
+    help_reply_only = mark_safe("<span style='color:DarkTurquoise; font-style:italic;'>Required only for reply</span>")
+
+    name = forms.CharField(
+        label="", 
+        widget=forms.TextInput(attrs={'placeholder': 'Name, 40 char max'}), 
+        max_length=40, 
+        required=False, 
+        help_text=help_not_required
+    )
+
+    email = forms.EmailField(
+        label="", 
+        widget=forms.EmailInput(attrs={'placeholder': 'Email, 50 char max'}), # Use EmailInput widget
+        max_length=50, 
+        required=False, 
+        help_text=help_reply_only
+    )
+
+    REASONS_TO_CONTACT = [
+        ('Legal', "problem with legal documents"),
+        ('Bug', 'website bug found'),
+        ('Idea', 'idea for future'),
+        ('ConceptError', 'error in learning materials'),
+        ('Improvement', "suggested improvement"),
+        ('Other', "something else..."),
+    ]
+    subject = forms.ChoiceField(choices=REASONS_TO_CONTACT)
+
+    message = forms.CharField(
+        label="", 
+        max_length=2000, 
+        widget=forms.Textarea(attrs={
+            'placeholder': 'Your message, 2000 char max, plain text only, no newline characters or html',
+            'rows': 4 # Good to specify size for better UI
+        })
+    )
+
+    clickwrap_accept = forms.BooleanField(
+        required=True, 
+        initial=False, 
+        label='' # A much longer label will be in html doc
+    )
+
+    g_recaptcha_response = forms.CharField(
+        required=False, 
+        widget=forms.HiddenInput() # Ensure this is hidden
+    )
+
+    pooh_food_test = forms.BooleanField(
+        required=False, 
+        initial=False, 
+        widget=forms.HiddenInput(attrs={'aria-hidden': 'true', 'tabindex': '-1'}), 
+        label=''
+    )
+</file>
+
+<file path="int_math/migrations/__init__.py">
+
+</file>
+
+<file path="int_math/migrations/.gitignore">
+/0001_initial.py
+/0002_delete_botchkresults.py
+</file>
+
+<file path="int_math/migrations/0003_contactaccesses.py">
+# Generated by Django 3.1 on 2025-03-28 20:07
+
+from django.db import migrations, models
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('int_math', '0002_delete_botchkresults'),
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name='ContactAccesses',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('monthLastUpdated', models.CharField(max_length=10)),
+                ('numTimesRecaptchaAccessedPerMonth', models.IntegerField(default=0)),
+                ('numTimesSmtpAccessedPerMonth', models.IntegerField(default=0)),
+                ('numClientsDeniedPerMonth', models.IntegerField(default=0)),
+            ],
+        ),
+    ]
+</file>
+
+<file path="int_math/migrations/0004_auto_20250329_2028.py">
+# Generated by Django 3.1 on 2025-03-30 00:28
+
+from django.db import migrations, models
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('int_math', '0003_contactaccesses'),
+    ]
+
+    operations = [
+        migrations.AlterField(
+            model_name='contactaccesses',
+            name='monthLastUpdated',
+            field=models.IntegerField(default=0),
+        ),
+    ]
+</file>
+
+<file path="int_math/migrations/0005_alter_contactaccesses_id_alter_subtopic_id_and_more.py">
+# Generated by Django 4.2.30 on 2026-04-16 22:58
+
+from django.db import migrations, models
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('int_math', '0004_auto_20250329_2028'),
+    ]
+
+    operations = [
+        migrations.AlterField(
+            model_name='contactaccesses',
+            name='id',
+            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        ),
+        migrations.AlterField(
+            model_name='subtopic',
+            name='id',
+            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        ),
+        migrations.AlterField(
+            model_name='topic',
+            name='id',
+            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        ),
+    ]
+</file>
+
+<file path="int_math/migrations/0006_alter_contactaccesses_options_alter_topic_options_and_more.py">
+# Generated by Django 5.2.13 on 2026-04-28 22:30
+
+import django.db.models.deletion
+from django.db import migrations, models
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('int_math', '0005_alter_contactaccesses_id_alter_subtopic_id_and_more'),
+    ]
+
+    operations = [
+        migrations.AlterModelOptions(
+            name='contactaccesses',
+            options={'verbose_name_plural': 'Contact Accesses (Single Row)'},
+        ),
+        migrations.AlterModelOptions(
+            name='topic',
+            options={'verbose_name_plural': 'Topics'},
+        ),
+        migrations.AlterField(
+            model_name='contactaccesses',
+            name='monthLastUpdated',
+            field=models.PositiveIntegerField(db_default=0),
+        ),
+        migrations.AlterField(
+            model_name='contactaccesses',
+            name='numClientsDeniedPerMonth',
+            field=models.PositiveIntegerField(db_default=0),
+        ),
+        migrations.AlterField(
+            model_name='contactaccesses',
+            name='numTimesRecaptchaAccessedPerMonth',
+            field=models.PositiveIntegerField(db_default=0),
+        ),
+        migrations.AlterField(
+            model_name='contactaccesses',
+            name='numTimesSmtpAccessedPerMonth',
+            field=models.PositiveIntegerField(db_default=0),
+        ),
+        migrations.AlterField(
+            model_name='subtopic',
+            name='title',
+            field=models.CharField(max_length=255),
+        ),
+        migrations.AlterField(
+            model_name='subtopic',
+            name='topic',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='subtopics', to='int_math.topic'),
+        ),
+        migrations.AlterField(
+            model_name='topic',
+            name='name',
+            field=models.CharField(db_index=True, max_length=255, verbose_name='Topic Name'),
+        ),
+        migrations.AddConstraint(
+            model_name='topic',
+            constraint=models.UniqueConstraint(fields=('name',), name='unique_topic_name'),
+        ),
+    ]
+</file>
+
+<file path="int_math/models.py">
+from django.db import models
+
+class Topic(models.Model):
+    # Using 255 is the standard 'safe' maximum for most DB indexes
+    MAX_LENGTH=255
+    name = models.CharField(
+        max_length=MAX_LENGTH, 
+        db_index=True, 
+        verbose_name="Topic Name"
+    )
+
+    class Meta:
+        # You are 100% correct: UniqueConstraint is the Django 5.x way
+        constraints = [
+            models.UniqueConstraint(fields=['name'], name='unique_topic_name')
+        ]
+        # This fixes the 'Topics' pluralization in the Admin automatically
+        verbose_name_plural = "Topics"
+
+    def __str__(self):
+        return self.name
+
+
+
+
+class Subtopic(models.Model):
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='subtopics')
+    title = models.CharField(max_length=Topic.MAX_LENGTH)
+    url = models.URLField(help_text="Need http/s prefix, best to cut and paste from a website")
+
+    def __str__(self):
+        # Good practice: include the parent topic in the string representation
+        return f"{self.topic.name} -> {self.title}"
+
+class ContactAccesses(models.Model):
+    # Using db_default (Django 5.0+) sets the default in the SQL schema itself
+    monthLastUpdated = models.PositiveIntegerField(db_default=0)
+    numTimesRecaptchaAccessedPerMonth = models.PositiveIntegerField(db_default=0)
+    numTimesSmtpAccessedPerMonth = models.PositiveIntegerField(db_default=0)
+    numClientsDeniedPerMonth = models.PositiveIntegerField(db_default=0)
+
+    class Meta:
+        # This is a helpful hint for other devs (and yourself later)
+        verbose_name_plural = "Contact Accesses (Single Row)"
+
+    def save(self, *args, **kwargs):
+        # Force this object to always have ID 1
+        self.pk = 1
+        super().save(*args, **kwargs)
+</file>
+
+<file path="int_math/templatetags/__init__.py">
+
+</file>
+
+<file path="int_math/templatetags/intHSmath_template_tags.py">
+'''
+Created on Aug 20, 2021
+
+@author: Owner
+'''
+from django import template
+from int_math.models import Topic, Subtopic
+
+register = template.Library()
+ 
+@register.inclusion_tag('int_math/subtopics.html')
+def get_subtopic_list(topic = None):
+    return{'subtopics': Subtopic.objects.filter(topic=topic)}
+</file>
+
+<file path="int_math/templatetags/static_inline.py">
+import os
+from django import template
+from django.conf import settings
+from django.utils.safestring import mark_safe
+
+register = template.Library()
+
+#template for inlining CSS, JS and SVG files (will grow the html but reduce number of accesses)
+# django-inline-static package did not work with debug=False
+#finders.find() works while the aforementioned library's load_staticfile() throws a ValueError indicates 
+#a direct incompatibility between the library's loader and Django's production security model
+@register.simple_tag
+def inline_asset(relative_path):
+    """
+    Reads CSS, JS, or SVG files from STATICFILES_DIRS and returns content as safe HTML.
+    """
+    for static_dir in settings.STATICFILES_DIRS:
+        full_path = os.path.join(static_dir, relative_path)
+        if os.path.exists(full_path):
+            try:
+                # Open with utf-8 to avoid encoding issues on Linux
+                with open(full_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    # mark_safe is required so Django doesn't escape the < > characters
+                    return mark_safe(content)
+            except (IOError, UnicodeDecodeError):
+                continue
+    return mark_safe(f"<!-- Error: {relative_path} not found -->")
+</file>
+
+<file path="int_math/tests.py">
+from django.test import TestCase
+
+# Create your tests here.
+</file>
+
+<file path="int_math/urls.py">
+from django.urls import path
+from int_math import views
+
+
+app_name = 'int_math'
+
+#First parameter is the path that will show up in topmost browser location box
+# next param is how to handle this path (included html page rendering)
+#  and the third  parameter is what will be called in the django.  the name is for 
+# avoiding hardcoding {%url 'Rango:name' %}
+urlpatterns = [
+    path('', views.IndexView.as_view(), name='index'),
+#Trig functions
+    path('IntroTrigMusicConcepts/', views.MusicTrigConceptIntroView.as_view(), name='IntroTrigMusicConcepts'),
+    path('MusicSineIntro/', views.MusicTrigView.as_view(), name='MusicSineIntro'),
+    path('StaticTrig/', views.StaticTrigView.as_view(), name='StaticTrig'),
+    path('DynamicTrig1/', views.DynamicTrig1View.as_view(), name='DynamicTrig1'),
+    path('DynamicTrig2/', views.DynamicTrig2View.as_view(), name='DynamicTrig2'),
+    path('ToneTrig/', views.ToneTrigView.as_view(), name='ToneTrig'),
+    path('MusicNotesTrig/', views.MusicNotesTrigView.as_view(), name='MusicNotesTrig'),
+    path('MusicSineSummary/', views.TrigSummaryView.as_view(), name='MusicSineSummary'),
+#Trig Identities
+    path('TrigIdentity/', views.TrigIDView.as_view(), name="TrigID"),
+    path('TrigIdent_Tune/', views.TrigIDTuneView.as_view(), name="TrigIdent_Tune"),
+#imag num
+    path('imag_num/', views.ImagNumView.as_view(), name='imag_num'),
+#You page
+    path('acknowledgements/', views.AckView.as_view(), name='acknowledgements'),
+#legal
+    path('TermsOfUse/', views.Legal_TermsOfUse.as_view(), name='TermsOfUse'),
+    path('Privacy/', views.Legal_Privacy.as_view(), name='Privacy'),
+#contact me email sending  
+    path('Contact_me/', views.ContactMe.as_view(), name='Contact_me'),   
+    path('ProcessContact_me/', views.ProcessContactPage.as_view(), name='ProcessContact_me'), 
+# for teachers only
+    path('TeacherStds/', views.TeacherStandardsView.as_view(), name='TeacherStds'),
+# get the actual filenames for mp3 (with signed URL as appropriate
+    path('getDynamicFilename/', views.GetDynamicFilename.as_view(), name='getDynamicFilename'),
+    path('GetMarchingBandTuningNoteAudioConfig/', views.GetMarchingBandTuningNoteAudioConfig.as_view(), name='GetMarchingBandTuningNoteAudioConfig'),
+]
+</file>
+
+<file path="int_math/views.py">
+from django.shortcuts import render, redirect
+from django.views import View
+from django.urls import reverse
+from django.apps import apps
+from django.db.models import F
+from django.db import transaction
+from django.utils import timezone # Better than datetime.now
+from int_math.models import Topic
+from django.utils.http import urlencode
+from pathlib import Path
+from django.conf import settings
+from django.core.mail import send_mail
+from django.http import JsonResponse, FileResponse, Http404
+from django.shortcuts import get_object_or_404
+from user_agents import parse
+import urllib.request
+import json
+from zoneinfo import ZoneInfo
+from django.views.decorators.cache import never_cache
+from django.utils.decorators import method_decorator
+from csp.decorators import csp_update  # to limit the youtube security issues to specific pages
+# homegrown stuff
+from int_math.forms import contactForm
+from int_math.models import ContactAccesses
+# to generate signed URLs
+import hashlib
+import time
+import uuid
+import logging
+import datetime
+
+
+
+
+#**********************************************************
+# These are actions that will require significant server time in recaptcha and smtp calls
+#**********************************************************  
+MAX_FREE_RECAPTCHA = 5000  #as of 3/2025, google allows 10k for free/month
+MAX_NUM_EMAIL_PER_MONTH = 100   # I don't want more than this in my inbox, dammit!
+logger = logging.getLogger(__name__)
+
+def generateSignedURL4Bucket(filename, usePubDomainBucket, expiration_seconds=3600):
+    """
+    Generates a custom Cloudflare Worker-compatible signed URL.
+    """
+    sign_url_secret_code = ""
+    cloud_bucket_url = ""
+    if usePubDomainBucket: 
+        sign_url_secret_code = settings.SIGN_URL_SECRET_CODE 
+        cloud_bucket_url = str(settings.CLOUD_URL_CODE)
+        if not sign_url_secret_code:
+            raise ValueError("SIGN_URL_SECRET_CODE env variable secret key is not set.")
+    else:
+        sign_url_secret_code = settings.SIGN_URL_SECRET_BIN 
+        cloud_bucket_url = str(settings.CLOUD_URL_BINARY)  
+        if not sign_url_secret_code:
+            raise ValueError("SIGN_URL_SECRET_BIN secret key is not set.")
+            
+    # Generate a unique ID, required by your worker's logic
+    unique_id = str(uuid.uuid4())
+    expires_at = int(time.time()) + expiration_seconds
+    
+    signature_data = f"{sign_url_secret_code}:{filename}:{unique_id}:{expires_at}"
+    signature = hashlib.sha256(signature_data.encode()).hexdigest()
+
+    # Match the URL format your Worker expects
+    signed_url = cloud_bucket_url + f"/{filename}?expires={expires_at}&sig={signature}&id={unique_id}"
+    #print(f' signed (either code/binary) url is {signed_url}')
+    return signed_url
+
+  
+def getFullFileURL(filename, usePubDomainBucket, request):
+    if not filename: 
+        logger.error(f'SW ERROR: Failed filename mapping in getFullFileURL')
+        return None
+    
+    urlStaticSrc = ""
+    localURLbase = str(request.build_absolute_uri('/'))
+    
+    #Check for intermediate test mode where code is local (html is always local) but binaries are either local or cloud
+    use_local = settings.USE_LOCAL_CODE.lower() == 'true'
+    if use_local and filename.endswith((".css", ".js")):
+        logger.info("All JS and CSS will be served locally for intermediate testing")
+        return f"{localURLbase}static/{filename}"
+
+    useCloud = settings.USE_CLOUD_BUCKET.lower() == 'true'
+    if  useCloud:
+        #this cannot be tested from localhost due to security concerns with whitelisting localhost
+        urlStaticSrc = generateSignedURL4Bucket(filename, usePubDomainBucket)
+        #print(f'REMOTE code:  url will be {urlStaticSrc}')   
+        return urlStaticSrc         
+   
+    # use local copy of file.  This is expected to be used for initial testing only, not for deployment
+    #only used in localhost and (maybe) dev pythonanywhere account
+    sub_path = "static/" if usePubDomainBucket else "static/static_binaries/"
+    urlStaticSrc = f"{localURLbase}{sub_path}{filename}"
+
+    return urlStaticSrc
+
+def getBaseContextEntry(request):
+    #This sets up all the params for the base page used to template html docs
+    configMap = ConfigMapper()
+    companyName = configMap.readConfigMapper("CompanyName")
+    g_analyticsID = configMap.readConfigMapper('GoogleAnalID')
+    baseKVcontext = {'CompanyName': companyName, 
+                     'GoogleAnalID': g_analyticsID, 
+                     'recaptchaPublicKey':settings.RECAP_PUBLIC_KEY,
+                     'FavIco': getFullFileURL('NonPublicImages/favicon.ico', False, request),
+                     'JQlocalJS': getFullFileURL('js-lib/jquery-371min.js', True, request),
+                     'AutoDemoJS': getFullFileURL('js/autoDemo.js', True, request),
+                     }
+    
+    return baseKVcontext
+
+class ProcessContactPage(View):
+    template_name = 'int_math/Contact_me.html'
+    form_class = contactForm
+    @method_decorator(never_cache)
+    def post(self, request):  
+        # check the form validity for basic stuff first
+        form = self.form_class(request.POST) 
+        botTestDone = False
+        testHasPassed = False
+        num_email_sent = 0
+        num_recapcha_sent = 0
+        quartile = '1Q'
+        # increment accesses for next contact me user
+        currAccesses = ContactAccesses.objects.first()
+        if not currAccesses:
+            # CrashPrevent: Create one if it doesn't exist
+            currAccesses = ContactAccesses.objects.create() 
+        if form.is_valid():
+            # this only checks the format of the email, all other inputs are valid, we escape all text
+            #however, email is optional so a blank is ok
+            
+            #did a bot see the token empty box and try to fill it in? (honeypot test), value will be string
+            honey_pot_fail = request.POST.get('pooh_food_test', '').lower() == 'true'
+                
+            if honey_pot_fail:
+                #no need for recaptcha, honeypot test failed.
+                botTestDone = True
+                logger.info("Bot Blocked: Failed honeypot ('pooh_food_test' was filled).")
+            else:
+
+                #to get here means user has passed recaptcha/smtp limits.  yes, they could be exceeded by the time we 
+                # get here but its more important to know that their message went through and we allow a little "overage"
+                #it would be cruel to give client a form to fill out and then reject them for slight overage on limits
+
+                #Send off token to google recaptcha
+                recaptcha_str = request.POST.get('g_recaptcha_response')
+                if not recaptcha_str:
+                    # MISSING TOKEN: Likely a bot script skipping JS.
+                    logger.info("Bot Blocked: No reCAPTCHA token provided in request.")
+                else:
+                    #cant do this on the client since server is the only onw with secret key
+                    secret_key = settings.RECAPTCHA_SECRET_KEY
+                    payload = {
+                        'response': recaptcha_str,
+                        'secret': secret_key,
+                        'remoteip': request.META.get('REMOTE_ADDR')} # send IP to help recaptcha identify bots
+                    try:
+                        data = urllib.parse.urlencode(payload).encode()
+                        #urllib.request is fine for sync views, ensure timeout=5 remains to prevent slow recaptcha from hanging wsgi worker
+                        req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
+                        # Add a timeout (e.g., 5 seconds) so your app doesn't hang forever
+                        with urllib.request.urlopen(req, timeout=5) as response:
+                            result = json.loads(response.read().decode())
+    
+                        #sending the second encrypted verify request to recaptcha counts toward max monthly total, log this
+                        num_recapcha_sent = 1
+                        #take action on robot test results.  we can get success but if score is low, we get action=verify
+                        #asking us to use another way to verify the user.  We don't do that at this time, we just reject low scores
+                        if (result['success']):
+                            botTestDone = True
+                            score = result.get('score',0)
+                            action = result.get('action','')
+                            logger.info(f"Processing Recaptcha: User returns score of  ({score}) for action '{action}'.")
+                            if (action == 'ContactUsForm'):
+                                if (score < 0.25):
+                                    quartile = '1Q'
+                                elif (score < 0.5): 
+                                    quartile = '2Q'
+                                elif (score < 0.75):
+                                    quartile = '3Q'
+                                else:
+                                    quartile = '4Q'
+                            
+                            elif (action == 'verify'):
+                                #this means bot was smart enough not to hit honeypot but we had to send recaptcha to find out its a bot
+                                logger.info(f"ROBOT ALERT:  reCAPTCHA is asking for further verification of low score")
+                                #which we choose to reject at this time
+                                quartile = '1Q' # Explicitly keep it at 1Q to reject
+                            else:
+                                # perhaps an old token was sent or bot wrote junk into recaptcha values??  reject client
+                                logger.info(f"ERROR:  bad recaptcha token returned, raw result was {result.get('error-codes')}")
+                        else:
+                            # INVALID TOKEN: Clumsy bot or expired token.
+                            # LEVEL: WARNING (Could be a slow human with an expired session)
+                            errors = result.get('error-codes', [])
+                            logger.warning(f"reCAPTCHA Rejected: {errors}. Likely clumsy bot or expired session.")
+                        
+                        logger.info('FYI: gRecaptcha sent, results on quartile is ' + quartile)
+                    except (urllib.error.URLError, TimeoutError) as e:
+                        # SYSTEM ERROR: Google is down or your code broke.
+                        # LEVEL: ERROR (You need to know if your API integration is failing)
+                        logger.error(f"reCAPTCHA System Error: Could not verify token due to {type(e).__name__}: {e}")
+                        botTestDone = True
+                        # OR let possible human pass since they already passed the Honeypot test.
+                        quartile = '4Q' # "Fail-Open" strategy
+                    except Exception as e:
+                        logger.error(f"reCAPTCHA System Error: Fix SW error {type(e).__name__}: {e}")
+            
+            if ('4Q' == quartile):
+                logger.info(f"Human Verified: 4Q score. Proceeding to email.")
+                testHasPassed = True
+                #get the email, name and message and ensure no html injection.  cleaned_data does that instead of escape()
+                nameOfContact = form.cleaned_data.get('name')
+                if nameOfContact == "":
+                    nameOfContact = "anonymous"
+                subjectOfContact = form.cleaned_data.get('subject')
+                returnAddrEscaped = form.cleaned_data.get('email')
+                if returnAddrEscaped == "":
+                    returnAddrEscaped = "noemailaddr@nomail.com"
+                messageEscaped = form.cleaned_data.get('message') 
+                messageEscaped += " --From website user: " + nameOfContact + ".  At email addr: " + returnAddrEscaped
+                sendToEmailAddr = settings.EMAIL_HOST_USER
+
+                # Configuration for retries
+                MAX_RETRIES = 3
+                RETRY_DELAY = 2  # Seconds to wait between attempts
+                
+                # Initialize to 0 so the variable exists even if the loop fails immediately
+                num_email_sent = 0
+                for attempt in range(MAX_RETRIES):
+                    try:
+                        #the minute you use your sendTo address to log into smtp server, that becomes the "from" addr anyway
+                        #as of Apr2025, you can send 500 emails per day for free using smtp service
+                        # Note: fail_silently=False allows us to catch the exception in our try block
+                        num_email_sent = send_mail(
+                            subjectOfContact,
+                            messageEscaped,
+                            sendToEmailAddr,
+                            [sendToEmailAddr],
+                            fail_silently=False,
+                        ) 
+                        # If we reach here, it succeeded
+                        break 
+                
+                    except OSError as ex:
+                        # Specifically catch the network unreachable error to retry
+                        if (101 in ex.args or 'Network is unreachable' in str(ex)) and attempt < MAX_RETRIES - 1:
+                            logger.warning(f"Network unreachable. Retrying ({attempt + 1}/{MAX_RETRIES})...")
+                            time.sleep(RETRY_DELAY)
+                            continue
+                        logger.error(f"Final network failure after {MAX_RETRIES} attempts: {ex}")
+                        break
+                
+                    except Exception as ex:
+                        # For other errors (Auth, BadHeader, etc.), don't retry, just log it.
+                        # Catches HeaderInjection, Auth failures, etc.
+                        logger.error(f"Email failure: {type(ex).__name__} - {ex}")
+                        break
+                      
+                if num_email_sent == 0:
+                    #user has injected newlines and message rejected, could be bot?, or gmail rejects us.  Check log.  Inform user of failure
+                    testHasPassed = False 
+                    logger.error(f"Outcome: No email sent for {nameOfContact}. Check SMTP/Auth settings.") 
+
+            else:
+                #Count these up in the server log and just above this, will have reason
+                logger.info(f"Bot Blocked: Low reCAPTCHA score {quartile}.  Process terminating")
+
+                
+            # increment accesses for next contact me user, do so atomically, better than fetch-modify-save
+            ContactAccesses.objects.filter(pk=currAccesses.pk).update(
+                numTimesSmtpAccessedPerMonth=F('numTimesSmtpAccessedPerMonth') + num_email_sent,
+                numTimesRecaptchaAccessedPerMonth=F('numTimesRecaptchaAccessedPerMonth') + num_recapcha_sent
+            )
+
+            #if need to see currAccesses again, do a currAccesses.refresh_from_db(
+                
+            #must use redirect to avoid a POST that will happen automatically when user refreshes
+            #could not get keywords to be sent in a redirect, this is safe since if bot changes this URL param, 
+            #they just get a false message and no submit button
+            base_url = reverse('int_math:Contact_me')
+            query_string = urlencode({'botTestPassed': testHasPassed})
+            return redirect(f'{base_url}?{query_string}')
+
+        else: 
+            #the only thing this form checks is email address errors if the user chooses to give one and makes user user puts something in msg
+            context_dict = {'page_tab_header': 'Contact Us',
+                        'topic': None,
+                        'allowContactEmail': True,
+                        'ContactCSS': getFullFileURL('css/Contact_me.css', True, request),
+                        'ContactJS': getFullFileURL('js/Contact_me.js', True, request),
+                        'form': form,  
+                        'basePage': getBaseContextEntry(request),
+                        'botTestDone': False,
+                        'botTestPassed': False
+                        } 
+            response = render(request, 'int_math/Contact_me.html', context=context_dict)
+              
+        return response                      
+
+#**********************************************************
+# functions used by page views. Will be a singleton that goes locally
+# and gathers the configuration file (loaded up once per wsgi launch).  The configuration file tells
+# where to find files needed to populate the website (both code, images, mp3, mp4 etc)
+#**********************************************************
+class ConfigMapper:
+    def __init__(self):
+        # Simply point to the dictionary already loaded in apps.py
+        self._configMapDict = apps.get_app_config('int_math').config_map
+
+    def readConfigMapper(self, genericFileName):
+        if not self._configMapDict:
+            logger.error("SW ERROR: Config mapper dictionary is empty")
+            return "none"
+        return self._configMapDict.get(genericFileName, "none")
+
+
+# Some files are needed on the fly, like autodemo voice MP3 explanations or musician notes.  Only server knows which
+# config file to use and if file needed is on cloud, will add appropriate signed URL authorizations
+class GetDynamicFilename(View):  
+    def hasExtension(self, filename):
+        return bool(Path(filename).suffix)
+
+    def get(self, request):
+        realDynFilename = request.GET.get('fileKey') or request.GET.get('fileName')
+        if not self.hasExtension(realDynFilename):
+            # we have a key only, use config file to look up the filename
+            configMap = ConfigMapper()
+            realDynFilename = configMap.readConfigMapper(realDynFilename)
+        # now, either way, we have full filename, run with it
+        getFromPublicRepo = False
+        dynamicURL = getFullFileURL(realDynFilename, getFromPublicRepo, request) 
+        if dynamicURL is None:
+            return JsonResponse({'error': 'File not found'}, status=404)
+        #print(f'will return to client a full filename of {dynamicURL}')    
+        return JsonResponse({'url': dynamicURL})   
+    
+# client needs the configuration of the musical notes (filenames, notes, instruments etc).  Best to let Django serve it
+# since could be test file set or "real" set
+class GetMarchingBandTuningNoteAudioConfig(View):
+    def get(self, request):
+        use_deploy = getattr(settings, 'USE_CLOUD_BUCKET', 'False').lower() == 'true'
+        config_dir = 'DeployConfig' if (use_deploy or settings.DEBUG) else 'TestConfig'
+        
+        # on localhost, dont use cloud files but rather the local versions of those files which will be uploaded to cloud once
+        # tested
+        # on test server, can use either local test files (which are not at all like real deployed binaries but are tiny) or cloud
+        # here use local test files
+        file_path = settings.BASE_DIR / 'ConfigFiles' / config_dir / 'filelistofmusicalinstrumentsplayingtuningnote.json'
+
+        if not file_path.exists():
+            raise Http404(f"Configuration file not found at {file_path}")
+
+        # Open and return. Django 5.2 FileResponse handles this cleanly with file closing.
+        file_handle = file_path.open('rb')
+        return FileResponse(file_handle, content_type='application/json')
+
+#**********************************************************
+# these are all page views
+#**********************************************************
+class IndexView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        # add help to user based on device/browser, unknown is for bots/scrapers
+        ua_string = request.headers.get('user-agent',"unknown");
+        user_agent = parse(ua_string)
+        usingSafari = False;
+        if 'safari' in user_agent.browser.family.lower(): 
+            usingSafari = True;
+        isMobile = user_agent.is_mobile;
+        configMap = ConfigMapper()
+        realFileLandLogo = configMap.readConfigMapper("LandingPageLogo")
+
+        #check if there is an upcoming upgrade planned to site and notify users
+        upgrdSchedFile = settings.BASE_DIR / 'InteractiveMath_prj' / 'UpgradeSchedule.txt'
+        upgradeNoticePresent = False
+        upgradingNow = False
+        upgradeDate = None
+        upgradeTime = None
+
+        if upgrdSchedFile.exists():
+            try:
+                with upgrdSchedFile.open('r') as upgd:
+                    _ = upgd.readline()  # Skip comment
+                    dateTimeUpgdStr = upgd.readline().rstrip('\n')
+                    
+                dateTime_format = '%Y-%m-%d-%H %z'
+                dateTimeUpgd = datetime.datetime.strptime(dateTimeUpgdStr, dateTime_format)
+            except Exception:
+                logger.exception("SW ERROR: Failure obtaining or parsing upgrade date")
+                dateTimeUpgd = None
+            if dateTimeUpgd is not None:
+                tz = ZoneInfo("America/New_York")
+                dateNow = datetime.datetime.now(tz)
+                
+                # Ensure dateTimeUpgd is in the same timezone for comparison
+                dateTimeUpgd = dateTimeUpgd.astimezone(tz)
+            
+                if dateTimeUpgd.date() >= dateNow.date():
+                    if dateTimeUpgd.date() == dateNow.date() and dateTimeUpgd.time() < dateNow.time():
+                        upgradingNow = True
+                    else:
+                        upgradeNoticePresent = True
+                        # Add parentheses here to store the result, not the method
+                        upgradeDate = dateTimeUpgd.date() 
+                        upgradeTime = dateTimeUpgd.time()
+
+        context_dict = {
+                        'basePage': getBaseContextEntry(request),
+                        'page_tab_header': 'Home',
+                        'topic': None,
+                        'using_safari': usingSafari,
+                        'is_mobile': isMobile,
+                        'upgradeNoticePresent': upgradeNoticePresent,
+                        'upgradeDate': upgradeDate,
+                        'upgradeTime': upgradeTime,
+                        'upgradeNow': upgradingNow,
+                        'homePage': True,
+                        #This is signed URL to existing html files to go to Static buckets
+                        'LandPageCSS': getFullFileURL('css/LandingPage.css', True, request),
+                        'landingPageLogo': getFullFileURL(realFileLandLogo, False, request),
+                        'LandPageJS': getFullFileURL('js/LandingPage.js', True, request),
+                        }       
+        response = render(request, 'int_math/index.html', context=context_dict)       
+        return response
+#****************************************************************************************
+#  Trig functions section
+#****************************************************************************************
+#safe way to handle lists like artist credits in config file
+def get_array_item(configArray, index):
+    if isinstance(configArray, list) and len(configArray) > index:
+        return configArray[index]
+    return ""
+# page 1 General Concepts Intro of trig function section. Youtube requires this to pass our csp
+@method_decorator(csp_update({"script-src-elem": ["'unsafe-inline'"]}), name='dispatch')
+class MusicTrigConceptIntroView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        trigMap = ConfigMapper()
+        realURLFreqVideo = trigMap.readConfigMapper("IntroToFrequencyVideo")
+        realURLTrigVideo = trigMap.readConfigMapper("IntroToTrigVideo")
+        realURLSoundVideo = trigMap.readConfigMapper("IntroToSoundVideo")
+        realFileCartoonGIF = trigMap.readConfigMapper("CartoonIntroGIF")
+        realFileIntroAudio = trigMap.readConfigMapper("TrigReviewIntroAudio")
+        artistCredit = trigMap.readConfigMapper('ArtistCredits')
+
+        context_dict = {'basePage': getBaseContextEntry(request),
+                        'page_tab_header': 'IntroConcepts',
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
+                        'introToFreqVideo': realURLFreqVideo,
+                        'introToTrigVideo': realURLTrigVideo,
+                        'introToSoundVideo': realURLSoundVideo,
+                        'cartoonIntroGIF': getFullFileURL(realFileCartoonGIF, False, request),
+                        'trigReviewIntroAudio': getFullFileURL(realFileIntroAudio, False, request),
+                        "artistCredit": get_array_item(artistCredit,0),
+                        'TrigIntroMusicCSS': getFullFileURL('css/IntroTrigMusicConcepts.css', True, request),
+                        'TrigIntroMusicJS': getFullFileURL('js/IntroTrigMusicConcepts.js', True, request),
+                        }
+        response = render(request, 'int_math/IntroTrigMusicConcepts.html', context=context_dict)
+        return response
+    
+# page 2 Music Sine Intro of trig function section.  Pg2MusicSineIntro.html  
+class MusicTrigView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        context_dict = {
+                        'page_tab_header': 'MusicalTrig',
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
+                        'basePage': getBaseContextEntry(request),
+                        'MusicSineIntroCSS': getFullFileURL('css/Pg2MusicSineIntro.css', True, request),
+                        'MusicSineIntroJS': getFullFileURL('js/Pg2MusicSineIntro.js', True, request),
+                        'ColorfulClefSVG': getFullFileURL('svg/Prismatic-Clef-Hearts-2.svg', True, request),
+                        'WholeNoteSVG': getFullFileURL('svg/WholeNote.svg', True, request),
+                        'VolumeOffSVG': getFullFileURL('svg/volume-off.svg', True, request),
+                        'VolumeOnSVG': getFullFileURL('svg/volume.svg', True, request),
+                        }
+        response = render(request, 'int_math/Pg2MusicSineIntro.html', context=context_dict)
+        return response
+    
+# page 3 Where does sine/cosine come from? of trig function section       
+class StaticTrigView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        context_dict = {
+                        'page_tab_header': 'StaticTrig',
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
+                        'basePage': getBaseContextEntry(request),
+                        'StaticTrigCSS': getFullFileURL('css/StaticTrig.css', True, request),
+                        'StaticTrigJS': getFullFileURL('js/StaticTrig.js', True, request),
+                        'ExplnQ2SVG': getFullFileURL('svg/StaticTrigQ2.svg', True, request),
+                        'ExplnQ3SVG': getFullFileURL('svg/StaticTrigQ3.svg', True, request),
+                        'ExplnQ4SVG': getFullFileURL('svg/StaticTrigQ4.svg', True, request),
+                        }
+        response = render(request, 'int_math/StaticTrig.html', context=context_dict)
+        return response
+# page 4 Lets add time and make frequency of trig function section     
+class DynamicTrig1View(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        context_dict = {
+                        'page_tab_header': 'DynamicTrig',
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
+                        'basePage': getBaseContextEntry(request),
+                        'DynTrig1CSS': getFullFileURL('css/DynamicTrig1.css', True, request),
+                        'DynTrig1JS': getFullFileURL('js/DynamicTrig1.js', True, request),
+                        }
+        response = render(request, 'int_math/DynamicTrig1.html', context=context_dict)
+        return response
+    
+# page 5 Lets go faster in time of trig function section
+class DynamicTrig2View(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        textMap = ConfigMapper()
+        artistCredit = textMap.readConfigMapper('ArtistCredits')
+        context_dict = {
+                        'page_tab_header': 'DynamicTrig',
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
+                        'basePage': getBaseContextEntry(request),
+                        "artistCredit": get_array_item(artistCredit,3),
+                        'DynTrig2CSS': getFullFileURL('css/DynamicTrig2.css', True, request),
+                        'DynTrig2JS': getFullFileURL('js/DynamicTrig2.js', True, request),
+                        }
+        response = render(request, 'int_math/DynamicTrig2.html', context=context_dict)
+        return response
+# page 6 Lets get into audible sin/cosine tones of trig function section
+class ToneTrigView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        textMap = ConfigMapper()
+        artistCredit = textMap.readConfigMapper('ArtistCredits')
+        context_dict = {
+                        'page_tab_header': 'ToneTrig',
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
+                        'basePage': getBaseContextEntry(request),
+                        "artistCredit": get_array_item(artistCredit,3),
+                        'ToneTrigCSS': getFullFileURL('css/ToneTrig.css', True, request),
+                        'ToneTrigJS': getFullFileURL('js/ToneTrig.js', True, request),
+                        'VolumeOffSVG': getFullFileURL('svg/volume-off.svg', True, request),
+                        'VolumeOnSVG': getFullFileURL('svg/volume.svg', True, request),
+                        }
+        response = render(request, 'int_math/ToneTrig.html', context=context_dict)
+        return response
+
+# page 7 Lets compare musical instruments to sine/cosine of same pitch of trig function section   
+class MusicNotesTrigView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        textMap = ConfigMapper()
+        artistCredit = textMap.readConfigMapper('ArtistCredits')
+        context_dict = {
+                        'page_tab_header': 'MusicNotes',
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
+                        'basePage': getBaseContextEntry(request),
+                        "artistCredit": get_array_item(artistCredit,2),
+                        'MusicNotesTrigCSS': getFullFileURL('css/MusicNotesTrig.css', True, request),
+                        'MusicNotesTrigJS': getFullFileURL('js/MusicNotesTrig.js', True, request),
+                        'VolumeOffSVG': getFullFileURL('svg/volume-off.svg', True, request),
+                        'VolumeOnSVG': getFullFileURL('svg/volume.svg', True, request),
+                        }
+        response = render(request, 'int_math/MusicNotesTrig.html', context=context_dict)
+        return response
+    
+# page 8 Summary of Trig in music MusicSineSummary.html
+@method_decorator(csp_update({"script-src-elem": ["'unsafe-inline'"]}), name='dispatch')
+class TrigSummaryView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        trigMap = ConfigMapper()
+        actualFilename = trigMap.readConfigMapper("MusicSummaryVideo")
+        artistCredit = trigMap.readConfigMapper('ArtistCredits')
+        context_dict = {
+                        'page_tab_header': 'Summary',
+                        'topic': get_object_or_404(Topic, name="TrigFunct"),
+                        'basePage': getBaseContextEntry(request),
+                        'musicSummaryVideo': actualFilename,
+                        "artistCredit": get_array_item(artistCredit,1),
+                        'TrigSummaryCss': getFullFileURL('css/MusicSineSummary.css', True, request),
+                        'TrigSummaryJS': getFullFileURL('js/MusicSineSummary.js', True, request),
+                        }
+        response = render(request, 'int_math/MusicSineSummary.html', context=context_dict)
+        return response
+#****************************************************************************************
+#  END OF Trig functions section
+#****************************************************************************************    
+class ImagNumView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        context_dict = {
+                        'page_tab_header': 'Imag_num',
+                        'topic': get_object_or_404(Topic, name="Imag_num"),
+                        'basePage': getBaseContextEntry(request),
+                        }        
+        response = render(request, 'int_math/imag_num.html', context=context_dict)
+        return response
+
+class TeacherStandardsView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        context_dict = {
+                        'page_tab_header': 'Teachers',
+                        'topic': None,
+                        'basePage': getBaseContextEntry(request),
+                        }        
+        response = render(request, 'int_math/TeacherStds.html', context=context_dict)
+        return response
+         
+class PeopleView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        context_dict = {
+                        'page_tab_header': 'People',
+                        'topic': get_object_or_404(Topic, name="Thanks"),
+                        'basePage': getBaseContextEntry(request),
+                        }
+        return render(request, 'int_math/acknowledgements.html', context=context_dict)
+
+class AckView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        trigMap = ConfigMapper()
+        ty_list = trigMap.readConfigMapper("Thankyou_list")
+
+        # Prepare the data in Python, but leave the HTML to the template
+        for contributor in ty_list:
+            # Add the full URL to each dictionary in the list
+            contributor['full_logo_url'] = getFullFileURL(contributor["logo"], False, request)
+
+        context_dict = {
+            'page_tab_header': 'Thank You!',
+            'topic': get_object_or_404(Topic, name="Thanks"),
+            'basePage': getBaseContextEntry(request),
+            'ty_list': ty_list,  
+            'AckCSS': getFullFileURL('css/Acknowledgements.css', True, request),
+        }
+        return render(request, 'int_math/acknowledgements.html', context=context_dict)
+
+class TrigIDView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        context_dict = {
+                        'page_tab_header': 'Trig ID',
+                        'topic': get_object_or_404(Topic, name="TrigIdent"),
+                        'basePage': getBaseContextEntry(request),
+                        }
+        response = render(request, 'int_math/TrigIdentity.html', context=context_dict)
+        return response     
+   
+class TrigIDTuneView(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        context_dict = {
+                        'page_tab_header': 'Inst Tune',
+                        'topic': get_object_or_404(Topic, name="TrigIdent"),
+                        'basePage': getBaseContextEntry(request),
+                        }
+        response = render(request, 'int_math/TrigIdent_Tune.html', context=context_dict)
+        return response 
+
+     
+class Legal_TermsOfUse(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        configMap = ConfigMapper()
+        actualFilename = configMap.readConfigMapper("Legal_TermsCond")
+        context_dict = {
+                        'page_tab_header': 'Terms Of Use',
+                        'topic': get_object_or_404(Topic, name="Legal"),
+                        'basePage': getBaseContextEntry(request),
+                        'legalDocTerms': getFullFileURL(actualFilename, False, request) + "#toolbar=0",
+                       }  
+        response = render(request, 'int_math/TermsOfUse.html', context=context_dict)
+        return response
+
+class Legal_Privacy(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        configMap = ConfigMapper()
+        actualFilename = configMap.readConfigMapper("Legal_Privacy")
+        context_dict = {
+                        'page_tab_header': 'Privacy Policy',
+                        'topic': get_object_or_404(Topic, name="Legal"),
+                        'basePage': getBaseContextEntry(request),
+                        'legalDocPriv': getFullFileURL(actualFilename, False, request) + "#toolbar=0",
+                       }  
+        response = render(request, 'int_math/Privacy.html', context=context_dict)
+        return response
+
+class ContactMe(View):
+    @method_decorator(never_cache)
+    def get(self, request):
+        # 1. Cleaner Boolean parsing
+        bot_passed = request.GET.get('botTestPassed') == "True"
+        bot_done = request.GET.get('botTestPassed') is not None
+        
+        allow_contact = False
+        # Use timezone.now() - it respects your AUTH_TIMEZONE and is 5.2 ready
+        date_now = timezone.now() 
+
+        # 2. Use a transaction to prevent race conditions
+        with transaction.atomic():
+            # select_for_update() locks this row until the transaction finishes
+            curr_accesses = ContactAccesses.objects.select_for_update().first()
+            
+            if not curr_accesses:
+                logger.error("DATABASE ERROR: ContactAccesses entry missing.")
+                # Fallback: maybe create one or return an error page
+                return render(request, 'error.html', {'message': 'System offline'})
+
+            # 3. Monthly Reset Logic
+            if date_now.month != curr_accesses.monthLastUpdated:
+                if curr_accesses.numClientsDeniedPerMonth > 0:
+                    self.notify_admin_of_denials(curr_accesses)
+                
+                # Reset counters
+                curr_accesses.monthLastUpdated = date_now.month
+                curr_accesses.numTimesRecaptchaAccessedPerMonth = 0
+                curr_accesses.numTimesSmtpAccessedPerMonth = 0
+                curr_accesses.numClientsDeniedPerMonth = 0
+                curr_accesses.save()
+                allow_contact = True
+            else:
+                # Check limits
+                if (curr_accesses.numTimesRecaptchaAccessedPerMonth < MAX_FREE_RECAPTCHA and 
+                    curr_accesses.numTimesSmtpAccessedPerMonth < MAX_NUM_EMAIL_PER_MONTH):
+                    allow_contact = True
+                else:
+                    # Update denied count using F expression (atomic increment)
+                    ContactAccesses.objects.filter(pk=curr_accesses.pk).update(
+                        numClientsDeniedPerMonth=F('numClientsDeniedPerMonth') + 1
+                    )
+                    allow_contact = False
+
+        context_dict = {
+            'page_tab_header': 'Contact Us',
+            'topic': None,
+            'allowContactEmail': allow_contact,
+            'ContactCSS': getFullFileURL('css/Contact_me.css', True, request),
+            'ContactJS': getFullFileURL('js/Contact_me.js', True, request),
+            'form': contactForm(),
+            'basePage': getBaseContextEntry(request),
+            'botTestDone': bot_done,
+            'botTestPassed': bot_passed,
+        }
+        return render(request, 'int_math/Contact_me.html', context=context_dict)
+
+    #best not to make this async as it hits only 1/month MAX and we do WSGI server, not ASGI server
+    #plus send_mail is a sync function
+    def notify_admin_of_denials(self, accesses):
+        """Helper to keep the main GET method clean"""
+        subject = "SERVER ERROR: USERS denied contact access"
+        message = f"{accesses.numClientsDeniedPerMonth} users denied in month {accesses.monthLastUpdated}."
+        try:
+            send_mail(subject, message, settings.EMAIL_HOST_USER, [settings.EMAIL_HOST_USER])
+        except Exception:
+            logger.exception("Failed to send admin notification email")
+</file>
+
+<file path="InteractiveMath_prj/__init__.py">
+
+</file>
+
+<file path="InteractiveMath_prj/.gitignore">
+/UpgradeSchedule.txt
+</file>
+
+<file path="InteractiveMath_prj/asgi.py">
+"""
+ASGI config for InteractiveMath_prj project.
+
+It exposes the ASGI callable as a module-level variable named ``application``.
+
+For more information on this file, see
+https://docs.djangoproject.com/en/3.1/howto/deployment/asgi/
+"""
+
+import os
+
+from django.core.asgi import get_asgi_application
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'InteractiveMath_prj.settings')
+
+application = get_asgi_application()
+</file>
+
+<file path="InteractiveMath_prj/settings.py">
+"""
+Django settings for InteractiveMath_prj project.
+
+Generated by 'django-admin startproject' using Django 3.1 and upgraded via Gemini 
+
+"""
+
+from pathlib import Path
+import os
+from csp.constants import SELF, NONCE
+
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+
+#Can use cloud or local server (latter for test, former for test and deployment) for static code or static binary files
+USE_CLOUD_BUCKET = os.environ.get('USE_CLOUD_BUCKET','False')
+#location where static code is located in cloud
+CLOUD_URL_CODE = os.environ.get('CLOUD_URL_CODE','')
+#location where static binaries are located in cloud
+CLOUD_URL_BINARY = os.environ.get('CLOUD_URL_BINARY','')
+#for dev testing, may use local static code or use cloud static code, here we choose
+USE_LOCAL_CODE = os.environ.get('USE_LOCAL_CODE', 'False')
+
+BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
+STATIC_DIR = os.path.join(BASE_DIR,"static")
+#*****make a symbolic link to test how it works *****
+# this is the actual location of desired binaries
+BINARIES_LOC_str = os.environ.get('STATIC_BINARIES_DIR','')
+
+#this is the destination location and it only happens in local debug, dont want symlink in production
+SYMLINK_BINARIES_dir = os.path.join(STATIC_DIR,"static_binaries")
+if DEBUG:
+    #create symbolic link so everything gets served by runserver as though it was under main project 
+    if (not (os.path.exists(SYMLINK_BINARIES_dir))):
+        os.symlink(BINARIES_LOC_str, SYMLINK_BINARIES_dir)
+    STATICFILES_DIRS = [STATIC_DIR]
+else:
+    #https://stackoverflow.com/questions/24022558/differences-between-staticfiles-dir-static-root-and-media-root
+    #STATIC_ROOT is needed by deployment server for collectstatic, its where static files will be stored
+    # this directory will already have some static files, need to put the static_binaries in their expected place
+    STATIC_ROOT = os.path.join(STATIC_DIR,"static_binaries")
+    # STATICFILES_DIR used by collectstatic to serve other directories under deployment
+    # Build paths inside the project like this: BASE_DIR / 'subdir'.
+    #Adding STATIC_DIR so that we can inline using django-inline-static and the 'python manage.py findstatic myfile' works
+    STATICFILES_DIRS = [BINARIES_LOC_str, STATIC_DIR]
+
+RECAPTCHA_SECRET_KEY = os.environ.get('G_RECAPTCHA_V3_SECRET_KEY','')
+RECAP_PUBLIC_KEY = os.environ.get('G_RECAPTCHA_V3_PUBLIC_KEY','')
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get('INT_MATH_SECRET_KEY','')
+
+#signed URL for static code bucket
+SIGN_URL_SECRET_CODE = os.environ.get('SIGN_URL_SECRET_CODE','dev-placeholder')
+#signed URl for static binaries bucket
+SIGN_URL_SECRET_BIN = os.environ.get('SIGN_URL_SECRET_BIN','dev-placeholder')
+
+#setup the SMTP server for use in sending successful messages, based on https://help.pythonanywhere.com/pages/SMTPForFreeUsers/
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+#WEBSITE_EMAIL_ADDR is a gmail account and SMTP_APP_PSWD is the app password for that gmail account
+EMAIL_HOST_USER = os.environ.get('WEBSITE_EMAIL_ADDR','') 
+#NOTE:  app password disabled every time gmail acct changes
+EMAIL_HOST_PASSWORD = os.environ.get('SMTP_APP_PSWD','') 
+EMAIL_USE_TLS = True
+
+if DEBUG:
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+else:
+    CURRENT_HOST = os.environ.get('CURRENT_URL','') # Expects 'www.mainsite.org'
+    ALLOWED_HOSTS = [
+        CURRENT_HOST,
+        'interactablemath.org',
+        'interactablemath.com',
+        'interactivemath.org',
+    ]
+    # Clean up any None values if the env var is missing
+    ALLOWED_HOSTS = [host for host in ALLOWED_HOSTS if host]
+    # Django 5.x requires the scheme (https://)
+    CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS]
+    # when using proxy, user should see domain it requests, not internal versions
+    USE_X_FORWARDED_HOST = True
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+
+
+# Application definition
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'widget_tweaks',
+    'int_math.apps.IntMathConfig',  # Use this rather than just 'int_math'
+]
+if DEBUG:
+    INSTALLED_APPS.insert(0, 'debug_toolbar')
+#Sessionmiddleware must be before AuthenticationMiddleware    
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware', 
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
+]
+if DEBUG:
+    # Safely insert after CommonMiddleware
+    index = MIDDLEWARE.index('django.middleware.common.CommonMiddleware') + 1
+    MIDDLEWARE.insert(index, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'  #so the legal stuff will operate with correct headers
+
+#this won't help us since we don't allow user upload of files but will kill a owasp zap low error
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
+#django 5.2
+#django-csp needs the flat, not dictionary format
+# settings.py
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "default-src": [SELF],
+        "font-src": [
+            SELF, 
+            "https://cdn.jsdelivr.net/npm/mathjax@3/",  #for mathjax
+        ],
+        "style-src": [SELF, NONCE],
+        "script-src": [SELF, NONCE],
+        "style-src-elem": [
+            SELF,
+            "https://getbootstrap.com",
+            "https://code.jquery.com",
+            "https://staticcode.interactablemath.org",
+            NONCE,
+            "'sha256-JLEjeN9e5dGsz5475WyRaoA4eQOdNPxDIeUhclnJDCE='", # for mathjax, will change on upgrades
+            "'sha256-mQyxHEuwZJqpxCw3SLmc4YOySNKXunyu2Oiz1r3/wAE='",  #for mathjax
+            "'sha256-OCf+kv5Asiwp++8PIevKBYSgnNLNUZvxAp4a7wMLuKA='",   # for mathjax
+            "'sha256-trR7JwveKVMgnodBl3ld+T42sD/8Nob3daQDT5n8sYw='",  # for mathjax
+        ],
+        "style-src-attr": [SELF, "'unsafe-inline'"],
+        "worker-src": [SELF, "blob:"],
+        "script-src-elem": [
+            SELF,
+            "https://www.googletagmanager.com",
+            "https://www.google.com",
+            "https://getbootstrap.com",
+            "https://www.gstatic.com",
+            "https://ajax.googleapis.com",
+            "https://cdnjs.cloudflare.com",
+            "https://cdn.jsdelivr.net",
+            "https://staticcode.interactablemath.org",
+            "https://www.youtube.com",
+            "https://ytimg.com",
+            NONCE,
+        ],
+        "img-src": [
+            SELF,
+            "https://code.jquery.com",
+            "https://*.ytimg.com",
+            "https://*.google.com",
+            "data:",
+            "https://staticbinary.interactablemath.org",
+            "https://staticcode.interactablemath.org",
+        ],
+        "frame-src": [
+            SELF,
+            "data:",
+            "https://www.google.com",
+            "https://www.gstatic.com",
+            "https://staticbinary.interactablemath.org",
+            "https://www.youtube.com",
+            "https://www.youtube-nocookie.com",
+        ],
+        "media-src": [SELF, "https://staticbinary.interactablemath.org"],
+        "frame-ancestors": [SELF, "https://www.google.com"],
+        "connect-src": [
+            SELF,
+            "https://www.google.com",
+            "https://getbootstrap.com",
+            "https://www.gstatic.com",
+            "https://cdnjs.cloudflare.com",
+            "https://staticbinary.interactablemath.org",
+        ],
+        "form-action": [SELF],
+    }
+}
+
+
+# These will ONLY report to the console/logger (useful for debugging)
+# CONTENT_SECURITY_POLICY_REPORT_ONLY = {
+#     "DIRECTIVES": { ... new rules you are testing ... }
+# }
+
+ROOT_URLCONF = 'InteractiveMath_prj.urls'
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            BASE_DIR / 'templates', # Updated to Pathlib style for Django 5.2
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                # Add this line to make {{ CSP_NONCE }} available globally
+                'csp.context_processors.nonce',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'InteractiveMath_prj.wsgi.application'
+
+# for debug only
+INTERNAL_IPS = [
+    '127.0.0.1',
+    ]
+    
+if not DEBUG:
+    # we are deployed, not in localserver
+    # security for https deployment
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = False  # now that we are using Cloudflare for reverse proxy and https, don't do it here
+    #may need to increase this from 1 hour (3600) to 1 year (31536000) once all is working.  This forces https only
+    SECURE_HSTS_SECONDS= 604800 # 1 week.  # 86400 is 1 day and 31536000  # Recommended: 1 year (in seconds)  -- this used to be 3600 or 1 hour
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    # hstspreload.org recommends we set this to false--minimal protection gain from true but max hassle.
+    SECURE_HSTS_PRELOAD = False
+    
+    #defaulted already to true but repeating here
+    SESSION_COOKIE_HTTPONLY = True
+    #more secure csrf cookie--to pass owasp test
+    CSRF_COOKIE_HTTPONLY = True
+    CSRF_TRUSTED_ORIGINS = [f"https://{CURRENT_HOST}"] # since we are behind a reverse proxy 
+    #since on reverse proxy, avoid csrf verify fail on forms.  Essential 
+    #for preventing infinite redirect loops when your proxy terminates SSL and communicates with Django over HTTP
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    USE_X_FORWARDED_HOST = True
+    
+# Database
+# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+#required for upgrade to django3.2.25, as per gemini AI
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Password validation
+# https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+
+# Internationalization
+# https://docs.djangoproject.com/en/3.1/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+# upgrade to django 4.2 and py 3.10
+USE_TZ = True
+TIME_ZONE = 'UTC'  # Best practice: keep DB in UTC, convert in views/templates
+
+USE_I18N = True
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/3.1/howto/static-files/
+
+STATIC_URL = '/static/'
+</file>
+
+<file path="InteractiveMath_prj/urls.py">
+"""InteractiveMath_prj URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/3.1/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path
+from int_math import views
+from django.urls import include, path
+from django.conf import settings
+
+urlpatterns = [
+    path('', views.IndexView.as_view(), name='index'),
+    path('int_math/', include('int_math.urls')),
+    path('admin/', admin.site.urls),
+    
+]
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
+</file>
+
+<file path="InteractiveMath_prj/wsgi.py">
+"""
+WSGI config for InteractiveMath_prj project.
+
+It exposes the WSGI callable as a module-level variable named ``application``.
+
+For more information on this file, see
+https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/
+"""
+
+import os
+
+from django.core.wsgi import get_wsgi_application
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'InteractiveMath_prj.settings')
+
+application = get_wsgi_application()
+</file>
+
+<file path="manage.py">
+#!/usr/bin/env python
+"""Django's command-line utility for administrative tasks."""
+import os
+import sys
+
+
+def main():
+    """Run administrative tasks."""
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'InteractiveMath_prj.settings')
+    try:
+        from django.core.management import execute_from_command_line
+    except ImportError as exc:
+        raise ImportError(
+            "Couldn't import Django. Are you sure it's installed and "
+            "available on your PYTHONPATH environment variable? Did you "
+            "forget to activate a virtual environment?"
+        ) from exc
+    execute_from_command_line(sys.argv)
+
+
+if __name__ == '__main__':
+    main()
+</file>
+
+<file path="populate_interactiveMath.py">
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 
+                        'InteractiveMath_prj.settings')
+import django
+django.setup()
+from int_math.models import Topic, Subtopic, ContactAccesses
+
+def populate():
+    
+    #first we will create the subtopics for each topic. For trig, we land on the Origin page but then URL constructed relative
+    # to that page so need .. to get to pages on same level
+    trig_subtopics = [
+        {'title': '1. Intro to concepts', 'url':'../IntroTrigMusicConcepts'},
+        {'title': '2. Trig functions make music', 'url':'../MusicSineIntro'},
+        {'title': '3. Sine cosine angles', 'url':'../StaticTrig'},
+        {'title':'4. Sine meets time', 'url':'../DynamicTrig1'},
+        {'title':'5. Sine goes faster', 'url':'../DynamicTrig2'},
+        {'title': '6. Trig tones become audible', 'url':'../ToneTrig'},
+        {'title': '7. Trig tones within musical notes', 'url':'../MusicNotesTrig'},
+        {'title': '8. Summary of trig in music', 'url':'../MusicSineSummary'}]
+    
+    trigIdent_subtopics = [
+        {'title': 'Trig identities explained', 'url':'../TrigIdentity'},
+        {'title': 'Sum identity tunes your instrument', 'url':'../TrigIdent_Tune'}]
+    
+    imag_num_subtopics = [
+        {'title':'Imag Num topic 1', 'url':'#ImagNumTopic1'},
+        {'title':'Imag Num topic 2', 'url':'#ImagNumTopic2'},
+        {'title':'Imag Num topic 3', 'url':'#ImagNumTopic3'}]
+    
+    people_subtopics = [
+        {'title': 'Thank You!', 'url': '../acknowledgements'},
+        ]
+    
+    legal_subtopics = [
+        {'title': 'Terms Of Use', 'url': '../TermsOfUse'},
+        {'title': 'Privacy Policy', 'url': '../Privacy'},
+        ]
+    
+    topics = {'TrigFunct': [{'topic': trig_subtopics}],
+              'TrigIdent': [{'topic': trigIdent_subtopics}],
+            'Imag_num': [{'topic': imag_num_subtopics}],
+            'Thanks': [{'topic': people_subtopics}],
+            'Legal': [{'topic': legal_subtopics}],
+            }
+    #iterating through .items means cat is the key and cat_data is the value of 
+    #the cats dictionary item
+    for top, top_data in topics.items():
+        c = add_top(top)
+        for p in top_data[0]['topic']:
+            add_subtop(c,p['title'],p['url'])
+    
+    #check results at build
+    for t in Topic.objects.all():
+        for s in Subtopic.objects.filter(topic=t):
+            print(f'- {t}: {s}')
+          
+    # Force pk=1 to ensure we only ever have ONE row in this table, does autosave
+    numAccesses, created = ContactAccesses.objects.get_or_create(
+        pk=1, 
+        defaults={
+            'monthLastUpdated': 0, 
+            'numTimesRecaptchaAccessedPerMonth': 0, 
+            'numTimesSmtpAccessedPerMonth': 0, 
+            'numClientsDeniedPerMonth': 0
+        }
+    )
+    
+    if created:
+        print("Created new ContactAccesses record.")
+    else:
+        print("ContactAccesses record already exists; values were not reset.")
+
+    
+            
+def add_subtop(topic, title, url):
+    s = Subtopic.objects.get_or_create(topic=topic, title=title, url=url)[0]
+    s.save()
+    return s
+
+def add_top(name):
+    c=Topic.objects.get_or_create(name=name)[0]
+    c.save()
+    return c
+                                                               
+
+# Start execution here.  Makes this file work as either a module or
+#standalone app
+if __name__ == '__main__':
+    print('Starting Interactive Math population script..')
+    populate()
+</file>
+
+<file path="requirements_p310_d42.in">
+Django==4.2.30
+django-csp>=3.7
+django-debug-toolbar>=4.0
+django-widget-tweaks>=1.5.0
+pillow>=9.0.0
+requests>=2.31.0
+user-agents>=2.2.0
+</file>
+
+<file path="requirements_p310_d42.txt">
+#
+# This file is autogenerated by pip-compile with Python 3.10
+# by the following command:
+#
+#    pip-compile requirements_p310_d42.in
+#
+asgiref==3.11.1
+    # via django
+certifi==2026.2.25
+    # via requests
+charset-normalizer==3.4.7
+    # via requests
+django==4.2.30
+    # via
+    #   -r requirements_p310_d42.in
+    #   django-csp
+    #   django-debug-toolbar
+    #   django-widget-tweaks
+django-csp==4.0
+    # via -r requirements_p310_d42.in
+django-debug-toolbar==6.3.0
+    # via -r requirements_p310_d42.in
+django-widget-tweaks==1.5.1
+    # via -r requirements_p310_d42.in
+idna==3.11
+    # via requests
+packaging==26.1
+    # via django-csp
+pillow==12.2.0
+    # via -r requirements_p310_d42.in
+requests==2.33.1
+    # via -r requirements_p310_d42.in
+sqlparse==0.5.5
+    # via
+    #   django
+    #   django-debug-toolbar
+typing-extensions==4.15.0
+    # via asgiref
+tzdata==2026.1
+    # via django
+ua-parser==1.0.2
+    # via user-agents
+ua-parser-builtins==202603
+    # via ua-parser
+urllib3==2.6.3
+    # via requests
+user-agents==2.2.0
+    # via -r requirements_p310_d42.in
+</file>
+
+<file path="requirements_p312_d42.in">
+Django==4.2.30
+django-csp>=3.7
+django-debug-toolbar>=4.0
+django-widget-tweaks>=1.5.0
+pillow>=10.0.0
+requests>=2.31.0
+user-agents>=2.2.0
+pip-tools
+</file>
+
+<file path="requirements_p312_d42.txt">
+#
+# This file is autogenerated by pip-compile with Python 3.12
+# by the following command:
+#
+#    pip-compile requirements_p312_d42.in
+#
+asgiref==3.11.1
+    # via django
+build==1.4.3
+    # via pip-tools
+certifi==2026.2.25
+    # via requests
+charset-normalizer==3.4.7
+    # via requests
+click==8.3.2
+    # via pip-tools
+colorama==0.4.6
+    # via
+    #   build
+    #   click
+django==4.2.30
+    # via
+    #   -r requirements_p312_d42.in
+    #   django-csp
+    #   django-debug-toolbar
+    #   django-widget-tweaks
+django-csp==4.0
+    # via -r requirements_p312_d42.in
+django-debug-toolbar==6.3.0
+    # via -r requirements_p312_d42.in
+django-widget-tweaks==1.5.1
+    # via -r requirements_p312_d42.in
+idna==3.11
+    # via requests
+packaging==26.1
+    # via
+    #   build
+    #   django-csp
+    #   wheel
+pillow==12.2.0
+    # via -r requirements_p312_d42.in
+pip-tools==7.5.3
+    # via -r requirements_p312_d42.in
+pyproject-hooks==1.2.0
+    # via
+    #   build
+    #   pip-tools
+requests==2.33.1
+    # via -r requirements_p312_d42.in
+sqlparse==0.5.5
+    # via
+    #   django
+    #   django-debug-toolbar
+tzdata==2026.1
+    # via django
+ua-parser==1.0.2
+    # via user-agents
+ua-parser-builtins==202603
+    # via ua-parser
+urllib3==2.6.3
+    # via requests
+user-agents==2.2.0
+    # via -r requirements_p312_d42.in
+wheel==0.46.3
+    # via pip-tools
+
+# The following packages are considered to be unsafe in a requirements file:
+# pip
+# setuptools
+</file>
+
+<file path="requirements_p312_d52.in">
+Django>=5.2,<6.0
+django-csp>=4.0
+django-debug-toolbar
+django-widget-tweaks
+pillow>=10.0.0
+requests>=2.31.0
+user-agents>=2.2.0
+</file>
+
+<file path="requirements_p312_d52.txt">
+#
+# This file is autogenerated by pip-compile with Python 3.12
+# by the following command:
+#
+#    pip-compile requirements_p312_d52.in
+#
+asgiref==3.11.1
+    # via django
+certifi==2026.4.22
+    # via requests
+charset-normalizer==3.4.7
+    # via requests
+django==5.2.13
+    # via
+    #   -r requirements_p312_d52.in
+    #   django-csp
+    #   django-debug-toolbar
+    #   django-widget-tweaks
+django-csp==4.0
+    # via -r requirements_p312_d52.in
+django-debug-toolbar==6.3.0
+    # via -r requirements_p312_d52.in
+django-widget-tweaks==1.5.1
+    # via -r requirements_p312_d52.in
+idna==3.13
+    # via requests
+packaging==26.2
+    # via django-csp
+pillow==12.2.0
+    # via -r requirements_p312_d52.in
+requests==2.33.1
+    # via -r requirements_p312_d52.in
+sqlparse==0.5.5
+    # via
+    #   django
+    #   django-debug-toolbar
+tzdata==2026.2
+    # via django
+ua-parser==1.0.2
+    # via user-agents
+ua-parser-builtins==202603
+    # via ua-parser
+urllib3==2.6.3
+    # via requests
+user-agents==2.2.0
+    # via -r requirements_p312_d52.in
+</file>
+
+<file path="requirements.txt">
+asgiref==3.7.2
+build==1.1.1
+certifi==2025.11.12
+charset-normalizer==3.4.4
+click==8.1.8
+colorama==0.4.6
+Django==3.2.25
+django-csp==3.7
+django-debug-toolbar==2.2
+django-widget-tweaks==1.4.8
+idna==3.10
+importlib-metadata==6.7.0
+packaging==24.0
+Pillow>=8.3.2
+pip-tools==6.14.0
+pyproject_hooks==1.2.0
+pytz==2022.7.1
+requests==2.30.0
+sqlparse==0.4.3
+tomli==2.0.1
+typing_extensions==4.7.1
+ua-parser==0.16.1
+urllib3==1.25.10
+user-agents==2.2.0
+zipp==3.15.0
+</file>
+
+</files>
