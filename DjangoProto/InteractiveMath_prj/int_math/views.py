@@ -89,7 +89,7 @@ def getFullFileURL(filename, usePubDomainBucket, request):
     #Check for intermediate test mode where code is local (html is always local) but binaries are either local or cloud
     use_local = settings.USE_LOCAL_CODE.lower() == 'true'
     if use_local and filename.endswith((".css", ".js")):
-        logger.info("All JS and CSS will be served locally for intermediate testing")
+        #logger.info("All JS and CSS will be served locally for intermediate testing")
         return f"{localURLbase}static/{filename}"
 
     useCloud = settings.USE_CLOUD_BUCKET.lower() == 'true'

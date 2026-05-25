@@ -141,7 +141,13 @@
 {% endblock %}	
 	
 {% block unique_js_block %}	
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js" integrity="sha512-wDf6/iK+iu9N1zNvdOsL5/66HyMla4UHOkPkRYacvv9mSAD1S86XfrAvDFTX9S1FUzbwe9YOI11yOGALE8jQow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  
+	<script 
+	  nonce="{{ CSP_NONCE }}" 
+	  src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.2/feather.min.js" 
+	  integrity="sha512-zMm7+ZQ8AZr1r3W8Z8lDATkH05QG5Gm2xc6MlsCdBz9l6oE8Y7IXByMgSm/rdRQrhuHt99HAYfMljBOEZ68q5A==" 
+	  crossorigin="anonymous" 
+	  referrerpolicy="no-referrer">
+	</script>
 	<!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
 	<script nonce="{{ CSP_NONCE }}">feather.replace()</script>
 		

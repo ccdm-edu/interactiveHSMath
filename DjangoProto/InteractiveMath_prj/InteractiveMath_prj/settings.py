@@ -296,6 +296,9 @@ TIME_ZONE = 'UTC'  # Best practice: keep DB in UTC, convert in views/templates
 USE_I18N = True
 
 
-# Django requires this variable to exist, but we use custom bucket variables instead
-STATIC_URL = None  
+# Django requires this variable to exist, but we use custom bucket variables instead for production.  
+# Value is needed for localhost debug
+# Satisfies Django's requirement that these values must be different
+STATIC_URL = "/static/"
+MEDIA_URL = "/_dummy_media_/"
 
