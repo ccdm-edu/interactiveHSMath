@@ -191,7 +191,7 @@ $(function() {
 	function drawTone()
 	{
 				
-	    // update title to match new parameters, chart.js 4.3.0 will update from newly modified arrays
+	    // update title to match new parameters, chart.js 4.x will update from newly modified arrays
 	    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
 	    sine_plot_100_1k.options.plugins.title.text = "y = sin(2 " + MULT_DOT + PI +  MULT_DOT + selectedNote.freqHz + MULT_DOT + " t)";
 	    
