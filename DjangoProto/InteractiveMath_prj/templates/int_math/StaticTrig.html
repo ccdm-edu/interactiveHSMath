@@ -8,6 +8,14 @@
     
 {%block head_block %}
     <link href="{{ StaticTrigCSS }}" rel="stylesheet">
+    
+    <!-- KaTeX core stylesheet -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css" integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB" crossorigin="anonymous">
+    <!-- The loading of KaTeX is deferred to speed up page rendering -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.js" integrity="sha384-AtrdNsnxl/75rvBneBVH7DtOvCxSVahR2zWqle1coBKd8DEmLoviqNeJSx64gNAs" crossorigin="anonymous"></script>
+    <!-- To automatically render math in text elements, include the auto-render extension.  Auto find and parse math in your DOM: -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/contrib/auto-render.min.js" integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"></script>
+    
 {% endblock %}
  <!-- to side of autodemo -->					
 {% block supportMaterial %}
@@ -31,14 +39,15 @@
 		    </div>
 		    <p id="unitCircNotify">Unit Circle</p> 
 		    
-			<label id="xyValueLabel"><b>(x,y)</b></label>
-			<p id="xyEqtn_x"></p><p id="xyEqtn_y"></p>
-			<p id ="xyFilledIn"></p>
-			<p id="xyExactValue" data-toggle="tooltip" data-placement="right" title="Exact Value of (x,y)"></p>
-			<p id="xyValueDecimal"data-toggle="tooltip"  data-placement="right" title="Decimal Approx of (x,y)"></p>
-			<label id="thetaLabel"><b>&#952</b></label>
-			<p id="theta">  </p>
-			</p>	
+		    <div id="equationContainer">
+				<label id="xyValueLabel"><b>(x,y)</b></label>
+				<p id="xyEqtn_x"></p><p id="xyEqtn_y"></p>
+				<p id ="xyFilledIn"></p>
+				<p id="xyExactValue" data-toggle="tooltip" data-placement="right" title="Exact Value of (x,y)"></p>
+				<p id="xyValueDecimal"data-toggle="tooltip"  data-placement="right" title="Decimal Approx of (x,y)"></p>
+				<label id="thetaLabel"><b>&#952</b></label>
+				<p id="theta">  </p>
+			</div>
 		</div>
 	
 		<div id="Canvas_STrig">
@@ -145,13 +154,6 @@
 	</script>
 	<!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
 	<script nonce="{{ CSP_NONCE }}">feather.replace()</script>
-
-	<!-- the next two scripts bring in mathjax, which is compatible with most number of browsers, these scripts will keep up with version changes in mathjax --> 
-	<!--  see https://docs.mathjax.org/en/latest/web/configuration.html for params used below -->	
-	<!-- here are the possible config mathjax scripts you can use https://cdn.jsdelivr.net/npm/mathjax@3/es5/  Only latest will be used -->
-	<script nonce="{{ CSP_NONCE }}" type="text/javascript" id="MathJax-script" async 
-		src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-	</script>
 	
 	<!-- Custom JS for this page -->
 	<script src="{{ basePage.AutoDemoJS }}" crossorigin="anonymous"></script>	    

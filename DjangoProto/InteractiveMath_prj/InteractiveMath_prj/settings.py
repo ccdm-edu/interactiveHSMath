@@ -9,7 +9,7 @@ Version: 1.0.0
 
 from pathlib import Path
 import os
-from csp.constants import SELF, NONCE
+from csp.constants import SELF, NONCE, UNSAFE_INLINE
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -133,23 +133,26 @@ CONTENT_SECURITY_POLICY = {
     "DIRECTIVES": {
         "default-src": [SELF],
         "font-src": [
-            SELF, 
-            "https://cdn.jsdelivr.net/npm/mathjax@3/",  #for mathjax
+            SELF,
+            "https://cdn.jsdelivr.net", 
         ],
-        "style-src": [SELF, NONCE],
+        "style-src": [
+            SELF, 
+            NONCE, 
+        ],
         "script-src": [SELF, NONCE],
         "style-src-elem": [
             SELF,
             "https://getbootstrap.com",
             "https://code.jquery.com",
+            "https://cdn.jsdelivr.net",
             CLOUD_URL_CODE,
             NONCE,
-            "'sha256-JLEjeN9e5dGsz5475WyRaoA4eQOdNPxDIeUhclnJDCE='", # for mathjax, will change on upgrades
-            "'sha256-mQyxHEuwZJqpxCw3SLmc4YOySNKXunyu2Oiz1r3/wAE='",  #for mathjax
-            "'sha256-OCf+kv5Asiwp++8PIevKBYSgnNLNUZvxAp4a7wMLuKA='",   # for mathjax
-            "'sha256-trR7JwveKVMgnodBl3ld+T42sD/8Nob3daQDT5n8sYw='",  # for mathjax
         ],
-        "style-src-attr": [SELF, "'unsafe-inline'"],
+        "style-src-attr": [
+            SELF, 
+            UNSAFE_INLINE, #required by KaTeX
+        ],
         "worker-src": [SELF, "blob:"],
         "script-src-elem": [
             SELF,

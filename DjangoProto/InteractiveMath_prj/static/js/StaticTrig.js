@@ -1,6 +1,21 @@
 'use strict'
 //JQuery, dont do this script until document DOM objects are loaded and ready
 $(function() {
+	
+	// =========================================================================
+    // KATEX v0.17.0 INITIALIZATION
+    // =========================================================================
+    // Wipes out old MathJax logic and sets up KaTeX auto-rendering cleanly in jQuery
+    renderMathInElement(document.body, {
+        delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false // Gracefully handles typos in TeX without breaking JS execution
+    });
+
 	//if Next  button hit (in base template), set it up to go to intro page
 	$("#GoToNextPage").wrap('<a href="../DynamicTrig1"></a>');
 	$("#GoToPreviousPage").wrap('<a href="../MusicSineIntro"></a>');
@@ -181,10 +196,10 @@ $(function() {
 				xcos: (amp * CIRC_RAD),
 				ysin: 0,
 				angleRad: 0, 
-				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact:  "= " + ampStr + "(1, 0)",
-				thetaRad: "0",
-				thetaDeg: "\\(0^\\circ \\)",
+				// KaTeX formula 
+				xyExact:  "$= " + ampStr + "(1, 0)$",
+				thetaRad: "$0$",
+				thetaDeg: "$0^\\circ$",
 				xyApproxDecimal: "= (" + amp + " , 0)",
 
 			},
@@ -195,10 +210,10 @@ $(function() {
 				xcos: Math.round((amp * CIRC_RAD)*Math.cos(Math.PI/6)),
 				ysin: Math.round((amp * CIRC_RAD)*Math.sin(Math.PI/6)),
 				angleRad: 11*Math.PI/6,
-				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( {\\sqrt{3} \\over 2}, \\frac12 \\right) \\)',
-				thetaRad: "\\( {{\\mathrm\\pi} \\over 6 } \\)",
-				thetaDeg: "\\(30^\\circ \\)",
+				// KaTeX formula
+				xyExact: "$= " + ampStr + "\\left( \\frac{\\sqrt{3}}{2}, \\frac{1}{2} \\right)$",
+            	thetaRad: "$\\frac{\\mathrm\\pi}{6}$", 
+            	thetaDeg: "$30^\\circ$",
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos(Math.PI/6),3) + " , " + roundFP(amp*Math.sin(Math.PI/6),3) + ")",
 			},
 			{
@@ -208,10 +223,10 @@ $(function() {
 				xcos: Math.round((amp * CIRC_RAD)*Math.cos(Math.PI/4)),
 				ysin: Math.round((amp * CIRC_RAD)*Math.sin(Math.PI/4)),
 				angleRad: 7*Math.PI/4,
-				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( {\\sqrt{2} \\over 2} , {\\sqrt{2} \\over 2} \\right) \\)',
-				thetaRad: "\\( {{\\mathrm\\pi} \\over 4 } \\)",
-				thetaDeg: "\\(45^\\circ \\)",
+				// KaTeX
+				xyExact: "$= " + ampStr + "\\left( \\frac{\\sqrt{2}}{2} , \\frac{\\sqrt{2}}{2} \\right)$",
+            	thetaRad: "$\\frac{\\mathrm\\pi}{4}$", 
+            	thetaDeg: "$45^\\circ$",
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos(Math.PI/4),3) + " , " + roundFP(amp*Math.sin(Math.PI/4),3) + ")",
 			},
 			{
@@ -221,10 +236,10 @@ $(function() {
 				xcos: Math.round((amp * CIRC_RAD)*Math.cos(Math.PI/3)), 
 				ysin: Math.round((amp * CIRC_RAD)*Math.sin(Math.PI/3)),
 				angleRad: 5*Math.PI/3,
-				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( \\frac12, {\\sqrt{3} \\over 2} \\right) \\)',
-				thetaRad: "\\( {{\\mathrm\\pi} \\over 3 }\\)",
-				thetaDeg: "\\( 60^\\circ \\)",
+				// KaTeX
+				xyExact: "$= " + ampStr + "\\left( \\frac{1}{2}, \\frac{\\sqrt{3}}{2} \\right)$", 
+            	thetaRad: "$\\frac{\\mathrm\\pi}{3}$", 
+           		thetaDeg: "$60^\\circ$", 
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos(Math.PI/3),3) + " , " + roundFP(amp*Math.sin(Math.PI/3),3) + ")",
 			},
 			{
@@ -234,9 +249,9 @@ $(function() {
 				xcos: 0,
 				ysin: Math.round((amp * CIRC_RAD)),
 				angleRad: 3*Math.PI/2,
-				xyExact:  "= " + ampStr + "(0, 1)",
-				thetaRad: "\\( {{\\mathrm\\pi} \\over 2 } \\)",
-				thetaDeg: "\\(90^\\circ \\)",
+           		xyExact: "$= " + ampStr + "(0, 1)$", 
+            	thetaRad: "$\\frac{\\mathrm\\pi}{2}$", 
+            	thetaDeg: "$90^\\circ$", 
 				xyApproxDecimal: "= (0 , " + amp + ")",
 			},
 			{
@@ -246,10 +261,10 @@ $(function() {
 				xcos: Math.round((amp * CIRC_RAD)*Math.cos((2/3) * Math.PI)),
 				ysin: Math.round((amp * CIRC_RAD)*Math.sin((2/3) * Math.PI)),
 				angleRad: (4/3) * Math.PI,
-				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( -\\frac12, {\\sqrt{3} \\over 2} \\right) \\)',
-				thetaRad: "\\( {{2\\mathrm\\pi} \\over 3 } \\)",
-				thetaDeg: "\\(120^\\circ \\)",
+				// KaTeX
+				xyExact: "$= " + ampStr + "\\left( -\\frac{1}{2}, \\frac{\\sqrt{3}}{2} \\right)$", 
+            	thetaRad: "$\\frac{2\\mathrm\\pi}{3}$", 
+            	thetaDeg: "$120^\\circ$",
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos((2*Math.PI)/3),3) + " , " + roundFP(amp*Math.sin((2*Math.PI)/3),3) + ")",
 			},
 			{
@@ -259,10 +274,10 @@ $(function() {
 				xcos:  Math.round((amp * CIRC_RAD)*Math.cos(3*Math.PI/4)),
 				ysin:  Math.round((amp * CIRC_RAD)*Math.sin(3*Math.PI/4)),
 				angleRad: 5*Math.PI/4,
-				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( -{\\sqrt{2} \\over 2} , {\\sqrt{2} \\over 2} \\right) \\)',
-				thetaRad: "\\( {{3\\mathrm\\pi} \\over 4 } \\)",
-				thetaDeg: "\\( 135^\\circ \\)",
+				// KaTeX
+				xyExact: "$= " + ampStr + "\\left( -\\frac{\\sqrt{2}}{2} , \\frac{\\sqrt{2}}{2} \\right)$", 
+            	thetaRad: "$\\frac{3\\mathrm\\pi}{4}$", 
+            	thetaDeg: "$135^\\circ$", 
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos(3*Math.PI/4),3) + " , " + roundFP(amp*Math.sin(3*Math.PI/4),3) + ")",
 				
 			},
@@ -274,10 +289,10 @@ $(function() {
 				ysin:  Math.round((amp * CIRC_RAD)*Math.sin(5*Math.PI/6)),
 				angleRad: 7*Math.PI/6,
 				xyExact: "\begin{array}{l}\left(-\begin{array}{cc}\frac{\sqrt3}2,&\frac12\end{array}\right)\\(-0.866,\;0.5)\end{array}",
-				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( -{\\sqrt{3} \\over 2}, \\frac12 \\right) \\)',
-				thetaRad: "\\( {{5\\mathrm\\pi} \\over 6 } \\)",
-				thetaDeg: "\\(150^\\circ \\)",
+				// KaTeX
+				xyExact: "$= " + ampStr + "\\left( -\\frac{\\sqrt{3}}{2}, \\frac{1}{2} \\right)$", 
+            	thetaRad: "$\\frac{5\\mathrm\\pi}{6}$", 
+            	thetaDeg: "$150^\\circ$", 
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos(5*Math.PI/6),3) + " , " + roundFP(amp*Math.sin(5*Math.PI/6),3) + ")",
 			},
 			{
@@ -287,9 +302,9 @@ $(function() {
 				xcos:  -Math.round((amp * CIRC_RAD)),
 				ysin:  0,
 				angleRad: Math.PI,
-				xyExact:  "= " + ampStr + "(-1, 0)",
-				thetaRad: "\\( {\\mathrm\\pi} \\)",
-				thetaDeg: "\\(180^\\circ \\)",
+				xyExact: "$= " + ampStr + "(-1, 0)$", 
+            	thetaRad: "$\\mathrm\\pi$", 
+            	thetaDeg: "$180^\\circ$", 
 				xyApproxDecimal: "= ( -" + amp + " , " + "0)",
 			},
 			{
@@ -299,10 +314,10 @@ $(function() {
 				xcos:  Math.round((amp * CIRC_RAD)*Math.cos(7*Math.PI/6)),
 				ysin:  Math.round((amp * CIRC_RAD)*Math.sin(7*Math.PI/6)),
 				angleRad: 5*Math.PI/6,
-				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( -{\\sqrt{3} \\over 2}, -\\frac12 \\right) \\)',
-				thetaRad: "\\( {{7\\mathrm\\pi} \\over 6 } \\)",
-				thetaDeg: "\\(210^\\circ \\)",
+				// KaTeX
+				xyExact: "$= " + ampStr + "\\left( -\\frac{\\sqrt{3}}{2}, -\\frac{1}{2} \\right)$", 
+            	thetaRad: "$\\frac{7\\mathrm\\pi}{6}$", 
+            	thetaDeg: "$210^\\circ$", 
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos(7*Math.PI/6),3) + " , " + roundFP(amp*Math.sin(7*Math.PI/6),3) + ")",
 			},
 			{
@@ -312,10 +327,10 @@ $(function() {
 				xcos:  Math.round((amp * CIRC_RAD)*Math.cos(5*Math.PI/4)),
 				ysin:  Math.round((amp * CIRC_RAD)*Math.sin(5*Math.PI/4)),
 				angleRad: 3*Math.PI/4,
-				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( -{\\sqrt{2} \\over 2} , -{\\sqrt{2} \\over 2} \\right) \\)',
-				thetaRad: "\\( {{5\\mathrm\\pi} \\over 4 } \\)",
-				thetaDeg: "\\(225^\\circ \\)",
+				// KaTeX
+				xyExact: "$= " + ampStr + "\\left( -\\frac{\\sqrt{2}}{2} , -\\frac{\\sqrt{2}}{2} \\right)$", 
+            	thetaRad: "$\\frac{5\\mathrm\\pi}{4}$", 
+            	thetaDeg: "$225^\\circ$", 
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos(5*Math.PI/4),3) + " , " + roundFP(amp*Math.sin(5*Math.PI/4),3) + ")",
 			},
 			{
@@ -325,10 +340,10 @@ $(function() {
 				xcos:  Math.round((amp * CIRC_RAD)*Math.cos(4*Math.PI/3)),
 				ysin:  Math.round((amp * CIRC_RAD)*Math.sin(4*Math.PI/3)),
 				angleRad: 2*Math.PI/3,
-				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( -\\frac12, -{\\sqrt{3} \\over 2} \\right) \\)',
-				thetaRad: "\\( {{4\\mathrm\\pi} \\over 3 }\\)",
-				thetaDeg: "\\(240^\\circ \\)",
+				// KaTeX
+				xyExact: "$= " + ampStr + "\\left( -\\frac{1}{2}, -\\frac{\\sqrt{3}}{2} \\right)$", 
+            	thetaRad: "$\\frac{4\\mathrm\\pi}{3}$", 
+            	thetaDeg: "$240^\\circ$", 
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos(4*Math.PI/3),3) + " , " + roundFP(amp*Math.sin(4*Math.PI/3),3) + ")",
 			},
 			{
@@ -338,9 +353,9 @@ $(function() {
 				xcos: 0,
 				ysin: -Math.round((amp * CIRC_RAD)),
 				angleRad: Math.PI/2,
-				xyExact:  "= " + ampStr + "(0, -1)",
-				thetaRad: "\\( {3{\\mathrm\\pi} \\over 2 }\\)",
-				thetaDeg: "\\(270^\\circ \\)",
+				xyExact: "$= " + ampStr + "(0, -1)$", 
+            	thetaRad: "$\\frac{3\\mathrm\\pi}{2}$", 
+            	thetaDeg: "$270^\\circ$", 
 				xyApproxDecimal: "= (0 , " + -amp + ")",
 			},
 			{
@@ -351,9 +366,9 @@ $(function() {
 				ysin:  Math.round((amp * CIRC_RAD)*Math.sin(5*Math.PI/3)),
 				angleRad: Math.PI/3,
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( \\frac12, -{\\sqrt{3} \\over 2} \\right) \\)',
-				thetaRad: "\\( {{5\\mathrm\\pi} \\over 3 }\\)",
-				thetaDeg: "\\(300^\\circ \\)",
+				xyExact: "$= " + ampStr + "\\left( \\frac{1}{2}, -\\frac{\\sqrt{3}}{2} \\right)$", 
+            	thetaRad: "$\\frac{5\\mathrm\\pi}{3}$", 
+            	thetaDeg: "$300^\\circ$", 
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos(5*Math.PI/3),3) + " , " + roundFP(amp*Math.sin(5*Math.PI/3),3) + ")",
 			},	
 			{
@@ -364,9 +379,9 @@ $(function() {
 				ysin: Math.round((amp * CIRC_RAD)*Math.sin(7*Math.PI/4)),
 				angleRad: Math.PI/4,
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( {\\sqrt{2} \\over 2} , -{\\sqrt{2} \\over 2} \\right) \\)',
-				thetaRad: "\\( {{7\\mathrm\\pi} \\over 4 }\\)",
-				thetaDeg: "\\(315^\\circ \\)",
+				xyExact: "$= " + ampStr + "\\left( \\frac{\\sqrt{2}}{2} , -\\frac{\\sqrt{2}}{2} \\right)$", 
+            	thetaRad: "$\\frac{7\\mathrm\\pi}{4}$", 
+            	thetaDeg: "$315^\\circ$", 
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos(7*Math.PI/4),3) + " , " + roundFP(amp*Math.sin(7*Math.PI/4),3) + ")",
 
 			},
@@ -378,9 +393,9 @@ $(function() {
 				ysin: Math.round((amp * CIRC_RAD)*Math.sin(11*Math.PI/6)),
 				angleRad: Math.PI/6, 
 				// the following are in TeX for display to user, for some reason, MathJax will only translate TeX "on the fly" via promise
-				xyExact: "= " + ampStr + '\\( \\left( {\\sqrt{3} \\over 2}, -\\frac12 \\right) \\)',
-				thetaRad: "\\( {{11\\mathrm\\pi} \\over 6 }\\)",
-				thetaDeg: "\\(330^\\circ \\)",
+				xyExact: "$= " + ampStr + "\\left( \\frac{\\sqrt{3}}{2}, -\\frac{1}{2} \\right)$", 
+            	thetaRad: "$\\frac{11\\mathrm\\pi}{6}$", 
+            	thetaDeg: "$330^\\circ$", 
 				xyApproxDecimal: "= (" + roundFP(amp*Math.cos(11*Math.PI/6),3) + " , " + roundFP(amp*Math.sin(11*Math.PI/6),3) + ")",
 				
 			}
@@ -439,7 +454,8 @@ $(function() {
 	  		// make a dash seg and then skip and redo again.  
 	    	ctxExpandableUnitCircle.lineTo(TRIG_X_ORIGIN + i + DASH_SEG_PIX, SIN_Y_ORIGIN - yHi); 
 	  	}
-	  	// draw in the equation for sine/cos curves
+	  	
+	  	// draw in the text label for sine/cos equation over the graphs
 	  	ctxExpandableUnitCircle.fillStyle = COS_COLOR;
 		ctxExpandableUnitCircle.font = '20px Arial';
 	  	if (1.0 == amp) {
@@ -457,8 +473,7 @@ $(function() {
 			ctxExpandableUnitCircle.stroke(); 
 			ctxExpandableUnitCircle.fillText("y=f("+THETA+")=r"+MULT_DOT+"sin("+THETA+")", TRIG_X_ORIGIN - 130, SIN_Y_ORIGIN - MAX_AMP_AXIS);	
 		}					
-	  	
-		ctxExpandableUnitCircle.stroke(); 
+		//ctxExpandableUnitCircle.stroke(); 
 		
 		// NOW we have the background image done.  As users click on a point and new stuff happens, we always come back to 
 		// this point, so we save it to go back to it when we want to start over
@@ -482,14 +497,32 @@ $(function() {
 			//no need to show mpy by 1
 			ampStr = "";
 			$("#unitCircNotify").text("Unit Circle");
-			$('#xyEqtn_x').text('= (cos'+THETA+',');
-			$('#xyEqtn_y').text(' sin'+THETA+')');
+	        // UPGRADED TO KA_TEX: Wrap the strings in $ and run via .html()
+	        $('#xyEqtn_x').html('$= (\\cos ' + THETA + ',$'); 
+	        $('#xyEqtn_y').html('$ \\sin ' + THETA + ')$');
 		} else {
 			ampStr = amp.toString().concat(MULT_DOT);
 			$("#unitCircNotify").text("");
-			$('#xyEqtn_x').text('= (r'+ MULT_DOT + 'cos'+THETA+',');
-			$('#xyEqtn_y').text(' r'+ MULT_DOT + 'sin'+THETA+')');					
+			// UPGRADED TO KA_TEX: Wrap the strings in $ and run via .html()
+	        // Using \cdot instead of MULT_DOT text for cleaner LaTeX execution inside KaTeX
+	        $('#xyEqtn_x').html('$= (r \\cdot \\cos ' + THETA + ',$'); 
+	        $('#xyEqtn_y').html('$ r \\cdot \\sin ' + THETA + ')$'); 				
 		}
+		
+		// Since we dynamically altered equations, tell KaTeX to re-render just this container box
+	    // assuming they live within an #equationContainer wrapper element to keep it highly efficient
+	    if ($("#equationContainer").length) {
+	        renderMathInElement($("#equationContainer").get(0), {
+	            delimiters: [{left: '$', right: '$', display: false}],
+	            throwOnError: false
+	        });
+	    } else {
+	        // Fallback: render the whole document body if no wrapper container exists
+	        renderMathInElement(document.body, {
+	            delimiters: [{left: '$', right: '$', display: false}],
+	            throwOnError: false
+	        });
+	    }
 		
 		// since amplitude changed, need to clear out old values for xy and theta
 		$('#xyExactValue').text(" ");
@@ -599,8 +632,11 @@ $(function() {
 	//***********************************
 	// this code is used as user interacts with the yellow dots on main circle
 	//***********************************
-	$('#xyEqtn_x').text('= (cos'+THETA+',');
-	$('#xyEqtn_y').text(' sin'+THETA+')');
+	// Initialize the container math with KaTeX markup
+	$('#xyEqtn_x').html('$= (\\cos ' + THETA + ',$'); 
+	$('#xyEqtn_y').html('$ \\sin ' + THETA + ')$'); 
+	renderMathInElement(document.body, { delimiters: [{left: '$', right: '$', display: false}], throwOnError: false });
+
 	let userHasStarted = false;
 	circleDotsCanvas.addEventListener('click', (e) => {
 		// need to convert canvas coord into bitmap coord
@@ -628,8 +664,10 @@ $(function() {
 			  y: e.clientY - rect.top
 			};			
 		} else { console.error('ERROR:  unexpected event: ' + e);}
+		
 		Object.freeze(pos);
 		let cntr = 0;
+		
 		schoolAngles.forEach(dot => {
 			// not sure yet which dot the user clicked on, must search all
 			if (isInside(pos, dot, DOT_RADIUS)) {
@@ -684,21 +722,40 @@ $(function() {
 				ctxExpandableUnitCircle.stroke();
 				ctxExpandableUnitCircle.closePath();
 				
-				// put the labels up for this selection
-				if (1.0 == amp){
-					$('#xyEqtn_x').text('= (cos'+THETA+',');
-					$('#xyEqtn_y').text(' sin'+THETA+')');
-				} else {
-					$('#xyEqtn_x').text('= (r'+ MULT_DOT + 'cos'+THETA+',');
-					$('#xyEqtn_y').text(' r'+ MULT_DOT + 'sin'+THETA+')');					
-				}
-				$('#xyFilledIn').text("= (" + ampStr + "cos" + dot.thetaRad + " , " + ampStr + "sin" + dot.thetaRad + ") ");
-				$('#xyExactValue').text(dot.xyExact);
-				$('#xyValueDecimal').text(dot.xyApproxDecimal);
-				$('#theta').text(dot.thetaRad + " rad = " + dot.thetaDeg);
-				setTimeout(async function () {
-				    await MathJax.typesetPromise()
-				}, 100)
+	            // -----------------------------------------------------------------
+	            // UPGRADED DYNAMIC TEXT LABELS FOR KATEX RENDERING
+	            // -----------------------------------------------------------------
+	            if (1.0 == amp){ 
+	                $('#xyEqtn_x').html('$= (\\cos ' + THETA + ',$'); 
+	                $('#xyEqtn_y').html('$ \\sin ' + THETA + ')$'); 
+	            } else { 
+	                $('#xyEqtn_x').html('$= (r \\cdot \\cos ' + THETA + ',$'); 
+	                $('#xyEqtn_y').html('$ r \\cdot \\sin ' + THETA + ')$'); 
+	            } 
+	            
+	            // Strip the embedded $ signs off dot.thetaRad to keep it structurally perfect inside a single LaTeX string
+	            let cleanThetaTex = dot.thetaRad.replace(/\$/g, '');
+	            
+	            // Inject complete seamlessly bound LaTeX formulas using jQuery .html()
+	            $('#xyFilledIn').html("$= (" + ampStr + "\\cos " + cleanThetaTex + " , " + ampStr + "\\sin " + cleanThetaTex + ")$"); 
+	            $('#xyExactValue').html(dot.xyExact); 
+	            $('#xyValueDecimal').html(dot.xyApproxDecimal); 
+	            
+	            let cleanThetaDegTex = dot.thetaDeg.replace(/\$/g, '');
+	            $('#theta').html("$" + cleanThetaTex + "\\text{ rad} = " + cleanThetaDegTex + "$"); 
+	
+	            // EXPLICIT SYNC KATEX TRIGGER: Re-renders formulas instantaneously
+	            if ($("#equationContainer").length) { 
+	                renderMathInElement($("#equationContainer").get(0), { 
+	                    delimiters: [{left: '$', right: '$', display: false}], 
+	                    throwOnError: false 
+	                }); 
+	            } else { 
+	                renderMathInElement(document.body, { 
+	                    delimiters: [{left: '$', right: '$', display: false}], 
+	                    throwOnError: false 
+	                }); 
+	            }
 				
 				// snap a picture of what we have so we can go back to it during animation
 				preAnimatePlot = ctxExpandableUnitCircle.getImageData(0, 0, circleDotsCanvas.width, circleDotsCanvas.height);	
@@ -843,16 +900,19 @@ $(function() {
 		$('#ampCirc').val('1.0').selectmenu("refresh");  
 		ampStr = "";  // used in xy values as multiply factor
 		$("#unitCircNotify").text("Unit Circle");
-		$('#xyEqtn_x').text('= (cos'+THETA+',');
-		$('#xyEqtn_y').text(' sin'+THETA+')');
-		
-		// since user might have typed in a value that is close but not allowed, put in the value we chose
-		//$("#ampCirc").text(amp.toString());  not needed anymore
-		// since amplitude changed, need to clear out old values for (x,y) and theta
-		$('#xyExactValue').text(" ");
-		$('#xyFilledIn').text(" ");
-		$('#xyValueDecimal').text(" ");
-		$('#theta').text(" ");
+        // UPGRADED TO KATEX: Force clean mathematical markup presentation upon reset
+        $('#xyEqtn_x').html('$= (\\cos ' + THETA + ',$');
+        $('#xyEqtn_y').html('$ \\sin ' + THETA + ')$');
+        
+        // Clear old values
+        $('#xyExactValue, #xyFilledIn, #xyValueDecimal, #theta').text(" ");
+        
+        // Compile the default reset equations using KaTeX immediately
+        renderMathInElement(document.body, {
+            delimiters: [{left: '$', right: '$', display: false}],
+            throwOnError: false
+        });
+
 		redrawNewAmp();		
 	}
     //****************************************************************************
