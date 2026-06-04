@@ -488,9 +488,13 @@ $(function() {
     //***********************************
     // User changes amplitude of unit circle
     //***********************************
-    // allow user to change the size of the unit circle to bring in idea of amplitude/volume to sine-cosine graphs
-    $('#ampCirc').selectmenu({ style: "dropdown", width:80 }).position({of: "#ampCircLocation"});  // sets it up once and for ever
-    $('#ampCirc').on('selectmenuchange', function(event, ui){
+    // allow user to change the size of the unit circle to bring in idea of amplitude/volume to sine-cosine graphs   
+	// 1. Apply the visual width directly to the select element
+	$('#ampCirc').css('width', '80px');
+	// 2. Insert it cleanly into its target location wrapper to handle positioning
+	$('#ampCirc').appendTo('#ampCircLocation');
+
+	$('#ampCirc').on('selectmenuchange', function(event, ui){
 		let temp = ui.item.value;
 		amp = Number(temp);
 		if (1.0 == amp){
@@ -897,7 +901,7 @@ $(function() {
 	function resetStaticTrig(){
 		// force amplitude to unit circle for autodemo, even if already unit circle
 		amp = 1;
-		$('#ampCirc').val('1.0').selectmenu("refresh");  
+		$('#ampCirc').val('1.0').change(); // Sets the value and triggers your circle redraw event
 		ampStr = "";  // used in xy values as multiply factor
 		$("#unitCircNotify").text("Unit Circle");
         // UPGRADED TO KATEX: Force clean mathematical markup presentation upon reset

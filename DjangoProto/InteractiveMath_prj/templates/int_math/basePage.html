@@ -6,7 +6,7 @@
 <html lang="en">
     <head>
 	    <meta charset="utf-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <meta name="description" content="">
 	    <meta name="author" content="Cathy De Meyer">
 	    <!-- yes the icon is hardcoded, easier than adding it to all the django variables for all pages.  Only hurts test proto -->
@@ -14,10 +14,7 @@
 	    <title>
 	        {{ basePage.CompanyName }} - {% block title_block %}page-tab-header{% endblock %}
 	    </title>
-	    
-	    <!-- Bootstrap core CSS everything breaks with bootstrap 5  :( -->
-	    <link href="https://getbootstrap.com/docs/4.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-	         
+	    	         
 	    <!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async nonce="{{ CSP_NONCE }}" src="https://www.googletagmanager.com/gtag/js?id={{ basePage.GoogleAnalID }}"></script>
 		<script nonce="{{ CSP_NONCE }}">
@@ -28,10 +25,6 @@
 		  gtag('config', '{{ basePage.GoogleAnalID }}');
 		</script>
 	    
-	    <!-- Custom styles for this template -->
-	    <link href="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css" rel="stylesheet">
-	    <!--  not sure how to get jquery ui draggable popups, i think this does it -->
-	    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 	    <!-- want to override things here,  will see IDE error for using django package to inline css, ignore it-->
 	    <style nonce="{{ CSP_NONCE }}">{% inline_asset 'css/IntMath.css' %}</style>
 	
@@ -44,244 +37,217 @@
 		<script nonce="{{ CSP_NONCE }}" src='https://www.google.com/recaptcha/api.js?render={{ basePage.recaptchaPublicKey }}'></script>
 
     </head>
+    
     <body>
-        <header>
-            <nav id="topNavBarHeader" class="navbar navbar-expand-md navbar-light fixed-top p-0">
-            	<!-- getting rid of nav-brand anchor makes collapsible hamburger menu go to left, which is preferable and more convenient for android phones -->
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#upperNavbarCollapse" aria-controls="upperNavbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                
-                <div class="collapse navbar-collapse" id="upperNavbarCollapse">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item mathy">
-                        	<a class="nav-link" href="{% url 'int_math:index' %}">Home</a></li>
-				        <!-- Did this by looking at bootstrap dashboard navbar dropdown -->
-				        <li class="nav-item dropdown mathy">
-				            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				            Trig</a>
-				            <ul class="dropdown-menu dropright">
-				                <a class="dropdown-toggle" id="TrigFuncTopic" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				                Trig Functions</a>	
-
-								<div class="dropright">
-					                <ul class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
-	          							<li><a class="dropdown-item" href="{% url 'int_math:IntroTrigMusicConcepts' %}">1. Intro to concepts</a></li>
-	          							<li><a class="dropdown-item" href="{% url 'int_math:MusicSineIntro' %}">2. Trig functions make music</a></li>
-	          			          		<li><a class="dropdown-item" href="{% url 'int_math:StaticTrig' %}">3. Sine cosine angles</a></li>
-	          							<li><a class="dropdown-item" href="{% url 'int_math:DynamicTrig1' %}">4. Sine meets time</a></li>
-	          			          		<li><a class="dropdown-item" href="{% url 'int_math:DynamicTrig2' %}">5. Sine goes faster</a></li>
-	          							<li><a class="dropdown-item" href="{% url 'int_math:ToneTrig' %}">6. Trig tones become audible</a></li>
-	          			          		<li><a class="dropdown-item" href="{% url 'int_math:MusicNotesTrig' %}">7. Trig tones within musical notes</a></li>
-	          							<li><a class="dropdown-item" href="{% url 'int_math:MusicSineSummary' %}">8. Summary of trig in music</a></li>         		
-	        						</ul>
-        						</div>	    
-				                <a class="dropdown-item" href="{% url 'int_math:TrigID' %}">Trig Identities</a>
-				            </ul>
-				        </li>
-                    <!-- save for later  <li class="nav-item "><a class="nav-link" href="{% url 'int_math:imag_num' %}">Imaginary</a></li>  -->
-                    </ul>
-                    <!-- Let these items slide left since "non mathy" -->
-                    <ul class="navbar-nav">
-                        <li class="nav-item "><a class="nav-link" href="{% url 'int_math:acknowledgements' %}">Thanks</a></li>
-                        <li class="nav-item "><a class="nav-link" href="{% url 'int_math:TermsOfUse' %}">Legal</a></li>
-				        <li class="nav-item "><a class="nav-link" href="{% url 'int_math:Contact_me' %}">Contact</a></li>
-				        <li class="nav-item "><a class="nav-link" href="{% url 'int_math:TeacherStds' %}">Teachers</a></li>
-                    </ul>
+    <header>
+        <nav id="topNavBarHeader">
+            <!-- Native accessible hamburger button targeting our custom class menu -->
+            <button class="navbar-toggler" type="button" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="navbar-collapse" id="upperNavbarCollapse">
+                <ul class="navbar-nav left-nav">
+                    <li class="nav-item mathy">
+                    	<a class="nav-link" href="{% url 'int_math:index' %}">Home</a>
+                    </li>
+                    
+			        <li class="nav-item dropdown mathy">
+			            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button">Trig</a>
+			            <ul class="dropdown-menu">
+			                <li class="has-submenu">
+                                <a class="dropdown-toggle" id="TrigFuncTopic" href="#">Trig Functions</a>	
+                                <ul class="submenu">
+                                    <li><a class="dropdown-item" href="{% url 'int_math:IntroTrigMusicConcepts' %}">1. Intro to concepts</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'int_math:MusicSineIntro' %}">2. Trig functions make music</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'int_math:StaticTrig' %}">3. Sine cosine angles</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'int_math:DynamicTrig1' %}">4. Sine meets time</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'int_math:DynamicTrig2' %}">5. Sine goes faster</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'int_math:ToneTrig' %}">6. Trig tones become audible</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'int_math:MusicNotesTrig' %}">7. Trig tones within musical notes</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'int_math:MusicSineSummary' %}">8. Summary of trig in music</a></li>         		
+                                </ul>
+			                </li>	    
+			                <li><a class="dropdown-item" href="{% url 'int_math:TrigID' %}">Trig Identities</a></li>
+			            </ul>
+			        </li>
+			        
+                </ul>
+                <!-- Pushed to the right naturally via Flexbox space-between -->
+                <ul class="navbar-nav right-nav">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'int_math:acknowledgements' %}">Thanks</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'int_math:TermsOfUse' %}">Legal</a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'int_math:Contact_me' %}">Contact</a></li>
+					<li class="nav-item"><a class="nav-link" href="{% url 'int_math:TeacherStds' %}">Teachers</a></li>
+                  </ul>
+              </div>
+          </nav>
+      </header>
+      
+      <!-- this is the stylized pointer used in automated demo (autodemo) to show activity -->
+	  <div id="demoCursorID" alt="Stylized pointer used to demonstrate">
+		    {% inline_asset 'svg/DemoCursor.svg'%}
+      </div>
+      
+      <!-- Root CSS grid shell replacing container-fluid, row, and col sizing columns -->
+      <div class="site-layout">
+        <nav class="sidebar" id="sidebarMenu">
+            <div class="sidebar-sticky">
+                {% block sidebar_block %}
+                    {% get_subtopic_list topic %}
+                {% endblock %}
+                <div id="LegalNotice_Consent">
+                    <p>By continuing to use this site, you agree with the <a href="{% url 'int_math:TermsOfUse' %}">TERMS OF USE</a> 
+                    and <a href="{% url 'int_math:Privacy' %}">PRIVACY</a> policy.
+                    For questions/comments, use <a href="{% url 'int_math:Contact_me' %}">Contact</a> page.
+                    This site uses Google Analytics/associated cookies. Allow other cookies? (default: no)<br></p>
+                    <div id="CookieChoice">
+                        <br><button type="button" id='yesCookies'>Yes</button><button type="button" id='noCookies'>No</button>
+                    </div>
+                    <div class="cookieIndicator" id="cookieIndicatorNo" title="no cookies">
+                       {% inline_asset 'svg/nocookie.svg'%}
+                    </div>
+                    <div class="cookieIndicator" id="cookieIndicatorYes" title="cookies allowed">
+                       {% inline_asset 'svg/cookie.svg'%}
+                    </div>
                 </div>
-            </nav>
-        </header>
-        
-        <!-- moving this outside the bootstrap classes so offset() can be calculated correctly for demo cursor -->
-        <!-- this is the stylized pointer used in automated demo (autodemo) to show activity -->
-		<div id="demoCursorID" alt = "Stylized pointer used to demonstrate" >
-		    {% inline_asset 'svg/DemoCursor.svg'%}  <!-- safe keeps svg from being treated as text -->
-        </div>
-        
-        <div class="container-fluid">
-            <div class="row">
-                <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                    <div class="sidebar-sticky" id="sidebarMenu" >
-	                    {% block sidebar_block %}
-	                        {% get_subtopic_list topic %}
-	                    {% endblock %}
-		                <div id="LegalNotice_Consent">
-		                	<p>By continuing to use this site, you agree with the <a href="{% url 'int_math:TermsOfUse' %}">TERMS OF USE</a> 
-		                	and <a href="{% url 'int_math:Privacy' %}">PRIVACY</a> policy.
-		                	For questions/comments, use <a href="{% url 'int_math:Contact_me' %}">Contact</a> page.
-		                	This site uses Google Analytics/associated cookies.  Allow other cookies? (default: no)<br></p>
-		                	<div id="CookieChoice">
-		                		<br><button type="button" id='yesCookies'>Yes</button><button type="button" id='noCookies'>No</button>
-		                	</div>
-		                	<div class = "cookieIndicator" id="cookieIndicatorNo" title="no cookies">
-		                	   {% inline_asset 'svg/nocookie.svg'%}
-                            </div>
-		                	<div class = "cookieIndicator" id="cookieIndicatorYes" title="cookies allowed">
-		                	   {% inline_asset 'svg/cookie.svg'%}
-							</div>
-		                </div>
-                    </div>
-                </nav>
-                
-                <main role="main" class="col-md-9  ml-sm-auto col-lg-10 px-4">		
-                
-                	<!--  advanced topics popup window that can move and be reduced and brought up again and doesn't interfere with action on page -->
-					<a id="AdvancedTopicLink" href="#AdvancedTopics" data-backdrop="false" data-toggle="modal">Advanced (popup)</a>	
-					<div id="AdvancedTopics" class="modal fade">
-					    <div class="modal-dialog">
-					        <div class="modal-content border-primary">
-					        	<!-- next el uses bootstrap flex to arrange elements (https://getbootstrap.com/docs/4.3/utilities/flex/) -->
-					        	<!-- First3 classes arrange elements, the mx etc sets margins -->
-								<div id="advModal" class="modal-header row d-flex justify-content-between mx-1 mx-sm-3 mb-0 pb-0" data-toggle="tooltip" data-placement="top">
-									<h5 class="modal-title">Advanced Topics:</h5>
-									<div class="tabs active" id="tab01">
-									    <h6 class="font-weight-bold">Try This</h6>
-									</div>
-									<div class="tabs" id="tab02">
-									    <h6 class="text-muted ">Explanation</h6>
-									</div>
-									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-								</div>
-				                <div class="line"></div>
-					            <div class="modal-body">	            
-					                <fieldset class="show" id="tab011">
-						                <p>To Do: </p>
-				                    </fieldset>
-				                    <fieldset id="tab021">
-						                <p>Explanation: </p>
-				                    </fieldset>         
-					            </div>
-					            <div class="modal-footer">
-					                <button id="advModalClose" type="button" class="btn btn-primary" data-dismiss="modal">I'm done</button>
-					            </div>
-					        </div>
-					        <!-- /.modal-content -->
-					    </div>
-					    <!-- /.modal-dialog -->
-					</div>
-					<!-- /.modal -->
-					
-					<!-- this allows placement of autodemo below title on home page but to left of title on all other pages -->
-					<div id="TrigPageTop" class="vertical-layout">	
-					  	<!-- this will be populated only for home page, header text above all autodemo/question boxes -->				
-						{% if homePage|default:False %}
-							<div class="top-content">
-						        {% block mainHeaderText %}
-						        {% endblock %}
-	  						</div>
-  						{% endif %}
-  						<!--  want different layout on homepage vs rest of pages -->
-						<div id="TrigPageSideBySide" class="horizontal-layout" class="{% if homePage|default:False %}home-page{% else %}inner-page{% endif %}">				
-							<div id="autoDemo" >
-				                <div id="startAutoDemo" alt = "Demonstrate how to use page" data-toggle="tooltip" data-placement="left" title="Make sure your speaker is on">
-				                	{% inline_asset 'svg/autoDemoButton.svg' %}  <!-- safe keeps svg from being treated as text -->
-		                        </div>
-		                        
-		                        <!--  image placed to draw attention to play button -->
-				                <div id="clickHereCursor" alt = "Click here to start the demo segment" >
-				                	 {% inline_asset 'svg/clickhere_cursor.svg' %}  <!-- safe keeps svg from being treated as text -->
-		                        </div>	
-		                                                              
-								<!--  make a play/pause button set from bootstrap icons -->
-								<div id="autoDemoCtls">
-									<h1>Let's demo this page!</h1>
-								    <table>
-										<tr align="center">
-											<td align="left" colspan="2">
-												Segment Name: <span id="segName"></span>
-											</td>
-										</tr>
-										<tr>
-											<td align="left">
-												<!--  max value of input will have to be set after JS runs to see how big the script is -->
-												Segment Number/Total Segments:
-											</td>
-											<td align="left">
-												<select id="segNum">
-												<!-- JS for each page will add the correct number of options, cannot change blue color of hover items in dropdown-->
-												    <option value="1">1</option>
-												</select>
-												<span id="totalSeg">/0</span>
-											</td>
-										</tr>
-										<tr align="center">
-											<td align='left'>
-												<div class="btn-group" id="autoDemoPlayPause">
-													<button type="button" class="btn btn-outline-secondary" id="playSegment" data-toggle="tooltip" data-placement="top" title="Play">
-														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-play" viewBox="0 0 16 16">
-											  			<path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
-														</svg>
-											        </button>
-											        <button type="button" class="btn btn-outline-secondary" id="stopSegment" data-toggle="tooltip" data-placement="top" title="Stop">
-											        	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-stop" viewBox="0 0 16 16">
-														<path d="M3.5 5A1.5 1.5 0 0 1 5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5zM5 4.5a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5V5a.5.5 0 0 0-.5-.5H5z"/>
-														</svg>					        	
-													</button>
-										        </div>
-										        <div id="spinner"></div>
-									        </td>
-									        <td align='right'>
-									        	<!-- btn-info is a dark cyan that contrasts to the dropdown seg num items -->
-									        	<button type="button" class="btn btn-info" id='dismissAutoDemo'>I'm done</button>
-									        </td>
-								        </tr>
-									</table>
-								</div> <!--  autodemo controls -->
-							</div> <!--  autodemo controls plus start image -->
-							
-							<div id="side-content">
-						        {% block supportMaterial %}
-						        {% endblock %}
-	  						</div>
-  						</div> <!-- doing the side by side layout -->
-  						
-					</div> <!-- autodemo plus header from pages -->
-                    					
-					{% block body_block %}
-                    {% endblock %}	
-                    
-					<!-- Bootstrap core JavaScript,jquery must be before bootstrap -->	
-    				<!-- Placed at the end of the document so the pages load faster -->
-					<!--  needed to run the drop down menus in bootstrap -->
-					<script nonce="{{ CSP_NONCE }}" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-					<script nonce="{{ CSP_NONCE }}">
-							<!-- in case can't get from google, load from local -->
-							var localJQ = "{{ basePage.JQlocalJS }}";
-							window.jQuery || document.write('<script src="' + localJQ + '"><\/script>')
-					</script>
-					<!--  jquery ui needed for advanced topic draggable window -->
-					<script nonce="{{ CSP_NONCE }}" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.3/jquery-ui.min.js"></script>
-					<!-- jquery ui touch.js (v1.1.0) punch needed so draggable works (on some level) on touch devices. https://www.jqueryscript.net/mobile/jQuery-Plugin-For-Touch-Drag-Events-touch-js.html. -->
-			  		<script nonce="{{ CSP_NONCE }}" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touch/1.1.0/jquery.touch.min.js" integrity="sha384-XJrpR1kjsdEnOjnpWkeVzhNk0OA+DSw4TLSIvndAhHkQPDZ7AezmkE4Z8EhTgnuh" crossorigin="anonymous"></script>
-					<script nonce="{{ CSP_NONCE }}" src="https://getbootstrap.com/docs/4.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
-					<!-- custom JS for all pages of site, IntMathUtils used by all js.  To reduce server calls, the following are inlined-->
-					<!-- Note, the two inlined js files will 'appear' to be an error in eclipse.  They are fine -->
-					<script nonce="{{ CSP_NONCE }}">{% inline_asset 'js/IntMath.js' %}</script>
-					<script nonce="{{ CSP_NONCE }}">{% inline_asset 'js/IntMathUtils.js' %}</script>
-
-
-                                     				
-                    <!-- FOOTER -->
-                    <div id="Site-footer">
-                    	<button type="button" class="btn btn-info" id="GoToPreviousPage">< Back</button>
-                    	<button type="button" class="btn btn-info" id="GoToNextPage">Next ></button>
-                    	<br>
-                        <p id="SiteInfo-links"> 
-                        {% block artist_credit %}
-	    				{% endblock %}
-                        <!-- legal precedent supports acceptance if links are capitalized, explained as links and underlined -->
-                        <br> By continuing on this site, you agree to the following two legal document links:  
-                        <a href="{% url 'int_math:Privacy' %}"><u>PRIVACY</u></a> &middot; <a href="{% url 'int_math:TermsOfUse' %}"><u>TERMS</u></a>
-                        </p>
-                    </div>
-                    
-                    {% block unique_js_block %}
-                    {% endblock %}
-                </main>
             </div>
-        </div>
+        </nav>
         
-        <!--  can't put jquery loads here since the individual pages still need it and it gets treated as a double load, which messes up jquery.ui -->
-        
+        <main role="main" class="main-content">		
+            <!-- Trigger link for native HTML5 <dialog> wrapper element -->
+            <a id="AdvancedTopicLink" href="#AdvancedTopics">Advanced (popup)</a>	
+            
+            <!-- Native accessible <dialog> element. No custom overlay backdrop elements or wrappers needed -->
+            <dialog id="AdvancedTopics">
+                <div class="modal-content">
+                    <div id="advModal" class="modal-header">
+                        <h5 class="modal-title">Advanced Topics:</h5>
+                        <div class="tabs active" id="tab01">
+                            <h6>Try This</h6>
+                        </div>
+                        <div class="tabs" id="tab02">
+                            <h6 class="text-muted">Explanation</h6>
+                        </div>
+                        <button type="button" class="close dialog-close-trigger">&times;</button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="modal-body">	            
+                        <fieldset class="show" id="tab011">
+                            <p>To Do: </p>
+                        </fieldset>
+                        <fieldset id="tab021">
+                            <p>Explanation: </p>
+                        </fieldset>         
+                    </div>
+                    <div class="modal-footer">
+                        <button id="advModalClose" type="button" class="btn-primary dialog-close-trigger">I'm done</button>
+                    </div>
+                </div>
+            </dialog>
+            
+            <div id="TrigPageTop" class="vertical-layout">	
+                {% if homePage|default:False %}
+                    <div class="top-content">
+                        {% block mainHeaderText %}
+                        {% endblock %}
+                    </div>
+                {% endif %}
+                
+                <div id="TrigPageSideBySide" class="horizontal-layout {% if homePage|default:False %}home-page{% else %}inner-page{% endif %}">				
+                    <div id="autoDemo">
+                        <!-- Replaced Bootstrap tooltip with standard native title attribute -->
+                        <div id="startAutoDemo" alt="Demonstrate how to use page" title="Make sure your speaker is on">
+                            {% inline_asset 'svg/autoDemoButton.svg' %}
+                        </div>
+                        
+                        <div id="clickHereCursor" alt="Click here to start the demo segment">
+                             {% inline_asset 'svg/clickhere_cursor.svg' %}
+                        </div>	
+                                                              
+                        <div id="autoDemoCtls">
+                            <h1>Let's demo this page!</h1>
+                            <table>
+                                <tr align="center">
+                                    <td align="left" colspan="2">
+                                        Segment Name: <span id="segName"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">
+                                        Segment Number/Total Segments:
+                                    </td>
+                                    <td align="left">
+                                        <select id="segNum">
+                                            <option value="1">1</option>
+                                        </select>
+                                        <span id="totalSeg">/0</span>
+                                    </td>
+                                </tr>
+                                <tr align="center">
+                                    <td align='left'>
+                                        <!-- Replaced btn-group with a simple layout class -->
+                                        <div class="control-btn-group" id="autoDemoPlayPause">
+                                            <!-- Stripped Bootstrap classes and updated tooltips to native title attributes -->
+                                            <button type="button" class="btn-outline" id="playSegment" title="Play">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" viewBox="0 0 16 16">
+                                                    <path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
+                                                </svg>
+                                            </button>
+                                            <button type="button" class="btn-outline" id="stopSegment" title="Stop">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" viewBox="0 0 16 16">
+                                                    <path d="M3.5 5A1.5 1.5 0 0 1 5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5zM5 4.5a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5V5a.5.5 0 0 0-.5-.5H5z"/>
+                                                </svg>					        	
+                                            </button>
+                                        </div>
+                                        <div id="spinner"></div>
+                                    </td>
+                                    <td align='right'>
+                                        <!-- Custom native class replacing btn-info (dark cyan color format) -->
+                                        <button type="button" class="btn-cyan" id='dismissAutoDemo'>I'm done</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div> 
+                    </div> 
+                    
+                    <div id="side-content">
+                        {% block supportMaterial %}
+                        {% endblock %}
+                    </div>
+                </div> 
+            </div>
+			{% block body_block %}
+            {% endblock %}	
+               
+            <!-- "macros" to allow jquery syntax without heavy jquery libraries -->
+            <!-- will appear to be an error in eclipse but its not -->
+
+			<!-- custom JS for all pages of site, IntMathUtils used by all js. To reduce server calls, the following are inlined-->
+			<!-- Note, the inlined js files will 'appear' to be an error in eclipse. They are fine -->
+			<script nonce="{{ CSP_NONCE }}">{% inline_asset 'js-lib/jq-shorthand.js' %}</script>
+			<script nonce="{{ CSP_NONCE }}">{% inline_asset 'js/IntMath.js' %}</script>
+			<script nonce="{{ CSP_NONCE }}">{% inline_asset 'js/IntMathUtils.js' %}</script>
+                              				
+            <!-- FOOTER -->
+            <div id="Site-footer">
+                <!-- Swapped Bootstrap classes for your native cyan layout buttons -->
+            	<button type="button" class="btn-cyan" id="GoToPreviousPage">< Back</button>
+            	<button type="button" class="btn-cyan" id="GoToNextPage">Next ></button>
+            	<br>
+                <p id="SiteInfo-links"> 
+                {% block artist_credit %}
+				{% endblock %}
+                <!-- legal precedent supports acceptance if links are capitalized, explained as links and underlined -->
+                <br> By continuing on this site, you agree to the following two legal document links:  
+                <a href="{% url 'int_math:Privacy' %}"><u>PRIVACY</u></a> &middot; <a href="{% url 'int_math:TermsOfUse' %}"><u>TERMS</u></a>
+                </p>
+            </div>
+            
+            {% block unique_js_block %}
+            {% endblock %}
+           </main>
+         </div> <!-- This matches <div class="site-layout"> container -->
     </body>
 </html>
+            
