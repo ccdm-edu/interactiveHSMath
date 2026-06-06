@@ -12,13 +12,14 @@
 {% block artist_credit %}
 	 {{ artistCredit }}
 	 <br>
-	 <a href="https://iconscout.com/icons/volume" class="text-underline font-size-sm" target="_blank">Volume</a> by <a href="https://iconscout.com/contributors/eva-icons" class="text-underline font-size-sm" target="_blank">Akveo</a>.  
-	 <a href="https://iconscout.com/icons/volume-off" class="text-underline font-size-sm" target="_blank">Volume Off</a> by <a href="https://iconscout.com/contributors/eva-icons" class="text-underline font-size-sm">Akveo</a> on <a href="https://iconscout.com" class="text-underline font-size-sm">IconScout</a>	 
+	 <!-- Removed Bootstrap .text-underline and .font-size-sm layout classes -->
+	 <a href="https://iconscout.com/icons/volume" style="text-decoration: underline; font-size: 0.875rem;" target="_blank">Volume</a> by <a href="https://iconscout.com/contributors/eva-icons" style="text-decoration: underline; font-size: 0.875rem;" target="_blank">Akveo</a>.  
+	 <a href="https://iconscout.com/icons/volume-off" style="text-decoration: underline; font-size: 0.875rem;" target="_blank">Volume Off</a> by <a href="https://iconscout.com/contributors/eva-icons" style="text-decoration: underline; font-size: 0.875rem;">Akveo</a> on <a href="https://iconscout.com" style="text-decoration: underline; font-size: 0.875rem;">IconScout</a>	 
 {% endblock %}	
 
 {% block supportMaterial %}
-	<div id ="headerMusicPitch">
-    	<h1 id = "musicalActivity"></h1>
+	<div id="headerMusicPitch">
+    	<h1 id="musicalActivity"></h1>
     </div>
 {% endblock %}
    
@@ -26,30 +27,29 @@
 
 <div id="SineCosBlock">
     
-	<!--  dont put tables inside a div, they stop "working", elements aren't functional anymore -->
 	<div id="MusicNotesToneControl">
 	
 		<div id="musicNotes">
 			<table>
 				<tbody>
 					<tr>
-						<th colspan='2'>Musical Notes Parameters</th>
-					    <!--  this button plays the tone and is visible only when instrument chosen -->
-						<div class="allowNotePlay" >
-    						<img class="VolOff hidden" src={{ VolumeOffSVG }} alt="Volume is currently off" data-toggle="tooltip" data-placement="top" title="turn on speaker and click to hear musical note">
-    						<img class="VolOn hidden" src={{ VolumeOnSVG }} alt="Volume is currently on" data-toggle="tooltip" data-placement="top" title="turn on speaker and click to hear musical note">
-						</div>						
+						<th colspan="2">
+							Musical Notes Parameters
+							<div class="allowNotePlay">
+								<!-- Swapped Bootstrap '.hidden' for your standard vanilla utility wrapper class '.d-none' -->
+								<img class="VolOff d-none" src="{{ VolumeOffSVG }}" alt="Volume is currently off" title="turn on speaker and click to hear musical note">
+								<img class="VolOn d-none" src="{{ VolumeOnSVG }}" alt="Volume is currently on" title="turn on speaker and click to hear musical note">
+							</div>	
+						</th>					
 					</tr>	
 					<tr>		
-						<td align="left">
+						<td style="text-align: left;">
 							<div class="dropdown" id="InstrumentSel">
-								<!-- use warning button to get nice gold color -->
-								<button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="InstrumentTypeSel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<button class="btn-cyan" type="button" id="InstrumentTypeSel">
 				    				Pick an instrument
 								</button>
-								<div class="dropdown-menu" aria-labelledby="InstrumentTypeSel" id="InstrumentSelections">
-									<!-- The value attribute must match the instrument on JSON filelistofmusicalinstrumentsplayingtuningnote.json -->
-								    <button class="dropdown-item" type="button" value="Trumpet">B<sup>&#9837;</sup> Trumpet</button>
+								<div class="dropdown-menu" id="InstrumentSelections">
+								    <button class="dropdown-item" type="button" value="Trumpet">B<sup>♭</sup> Trumpet</button>
 								    <button class="dropdown-item" type="button" value="Clarinet">Clarinet</button>
 								    <button class="dropdown-item" type="button" value="Soprano Sax">Soprano Sax</button>
 								    <button class="dropdown-item" type="button" value="Tenor Sax">Tenor Sax</button>
@@ -58,17 +58,16 @@
 								</div>
 	        				</div>
 						</td>
-						<td align="right">
+						<td style="text-align: right;">
 							Volume: <span id="currMusicVolLabel"></span>
 						</td>						
 					</tr>
 					<tr>
-						<td align="left">
+						<td style="text-align: left;">
 							Current Note: <span id="currMusicNoteLabel"></span>
 						</td>
-						<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz, use bootstrap for tooltips  -->
-						<td align="right">
-							<input id="music-amp" type="range" step="1" value="3" min="0" max="10" data-toggle="tooltip" data-placement="left" title="We'll leave graph the same for simplicity">
+						<td style="text-align: right;">
+							<input id="music-amp" type="range" step="1" value="3" min="0" max="10" title="We'll leave graph the same for simplicity">
 						</td>
 					</tr>
 				</tbody>
@@ -79,12 +78,13 @@
 			<table>
 				<tbody>
 					<tr>
-						<th colspan='2'>Sine Wave (tone) Parameters</th>
- 	 					<!--  this button plays the tone and is visible all the time -->
-						<div class="toneStartButton" >
-    						<img class="VolOff" src={{ VolumeOffSVG }} alt="Volume is currently off" data-toggle="tooltip" data-placement="top" title="turn on speaker and click to hear sine wave">
-    						<img class="VolOn hidden" src={{ VolumeOnSVG }} alt="Volume is currently on" data-toggle="tooltip" data-placement="top" title="turn on speaker and click to hear sine wave">
-						</div>
+						<th colspan="2">
+							Sine Wave (tone) Parameters
+							<div class="toneStartButton">
+								<img class="VolOff" src="{{ VolumeOffSVG }}" alt="Volume is currently off" title="turn on speaker and click to hear sine wave">
+								<img class="VolOn d-none" src="{{ VolumeOnSVG }}" alt="Volume is currently on" title="turn on speaker and click to hear sine wave">
+							</div>
+						</th>
 					</tr>	
 					<tr>		
 						<td>
@@ -95,17 +95,17 @@
 						</td>						
 					</tr>
 					<tr>
-						<!-- vertical orientation not supported the same way by all browsers and likely to change, keep horiz, use bootstrap for tooltips  -->
 						<td>  <!-- placeholder for missing element -->
 						     
 						</td>
-						<td align="right">
-							<input id="tone-amp" type="range" step="1" value="3" min="0" max="10" data-toggle="tooltip" data-placement="left" title="We'll leave graph the same for simplicity">
+						<td style="text-align: right;">
+							<input id="tone-amp" type="range" step="1" value="3" min="0" max="10" title="We'll leave graph the same for simplicity">
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
+
 		
 		<!-- default startup, will change as user loads musician notes-->
 	    <p class="AdvTopic_ToDo"> TRY THIS:  Turn on your speaker.  Select an instrument from the drop down menu.  
@@ -132,24 +132,24 @@
 
 	</div>
 	
- 	<div id="GraphPlusPeriodMarkers">
- 		<!--  want to overlap the top graph with expansion lines below it -->
- 		<!--  canvas used for chart js need the size defined one level up at div -->
-	 	<div id = "sinePlotLongWrapper">
+	<div id="GraphPlusPeriodMarkers">
+ 		<!-- want to overlap the top graph with expansion lines below it -->
+ 		<!-- canvas used for chart js need the size defined one level up at div -->
+	 	<div id="sinePlotLongWrapper">
 	 		<!-- Needs to be a bit bigger since it has the title -->
 	 		<canvas id="sine_plotsLong">
-	 		Your Browser does not support canvas tag, you are missing graph capability
+	 			Your Browser does not support canvas tag, you are missing graph capability
 	 		</canvas>
 	 	</div>
 	 	<div class="Period_Tone First_Period"></div>
 	 	<div class="Period_Tone Second_Period"></div>
 	 	<div class="Period_Tone Third_Period"></div>
 	 	<div class="Period_Tone Fourth_Period"></div>
-	 	<div id = "Period_Text1" ></div>
-	 	<div id = "Period_Text2" ></div>
+	 	<div id="Period_Text1"></div>
+	 	<div id="Period_Text2"></div>
 	 	
 	 	<!-- Needed for the period markers showing periodicity -->
-	 	<!--  use following for debug on canvas placement  style="border:1px solid #FF0000; to see the canvas in red -->
+	 	<!-- use following for debug on canvas placement style="border:1px solid #FF0000;" to see the canvas in red -->
 		<canvas id="periodicityIndicator">
  			Your Browser does not support canvas tag, you are missing graph capability
  		</canvas>
@@ -157,10 +157,10 @@
 </div>
 {% endblock %}	
         
-
 {% block unique_js_block %}
-    <!-- Get the correct cdn chart.js from https://cdnjs.com/libraries/Chart.js (see stackoverflow, use umd version)-->
-	<script nonce="{{ CSP_NONCE }}"
+    <!-- Get the correct cdn chart.js from https://cdnjs.com/libraries/Chart.js (see stackoverflow, use umd version) -->
+	<script 
+	    nonce="{{ CSP_NONCE }}"
 	    src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" 
 	    integrity="sha512-ZwR1/gSZM3ai6vCdI+LVF1zSq/5HznD3ZSTk7kajkaj4D292NLuduDCO1c/NT8Id+jE58KYLKT7hXnbtryGmMg==" 
 	    crossorigin="anonymous" 
@@ -171,7 +171,7 @@
 	    src="https://cdnjs.cloudflare.com/ajax/libs/tone/15.0.0/Tone.min.js" 
 	    integrity="sha512-1FevU8nAzI3lwCmDN8jhSaOWFXCMvEQt+k6BhC9+OMpPjGDS/CmxG6yFwxsyX1QNSyXmmgfmVZfYwIWIlpMylw==" 
 	    crossorigin="anonymous" 
-	    referrerpolicy="no-referrer" >
+	    referrerpolicy="no-referrer">
 	</script>
 	<script 
 	  nonce="{{ CSP_NONCE }}" 
@@ -181,11 +181,12 @@
 	  referrerpolicy="no-referrer">
 	</script>
 	<!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
-	<script nonce="{{ CSP_NONCE }}">feather.replace()</script>
+	<script nonce="{{ CSP_NONCE }}">
+		feather.replace();
+	</script>
 	
-	<!-- Custom JS for this page -->
+	<!-- Framework-Free Asset Scripts for this Page -->
 	<script src="{{ basePage.AutoDemoJS }}" crossorigin="anonymous"></script>	    
     <script src="{{ MusicNotesTrigJS }}" crossorigin="anonymous"></script>	 
-
-{% endblock %}	
+{% endblock %}
 

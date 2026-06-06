@@ -1,605 +1,683 @@
-/***********************
-This is the style sheet for the entire website and all common items
-************************/
+/*********************** This is the style sheet for the entire website and all common items ************************/ 
+/****************All pages, layout grid replacement***************************/ 
+/* Replaces Bootstrap's grid architecture natively */ 
+.site-layout { 
+  display: grid; 
+  grid-template-columns: 1fr; /* Default mobile view is stacked */ 
+  margin-top: 56px; /* Avoids clipping under fixed header */ 
+} 
 
-/****************All pages, layout grid replacement***************************/
-/* Replaces Bootstrap's grid architecture natively */
-.site-layout {
-    display: grid;
-    grid-template-columns: 1fr; /* Default mobile view is stacked */
-    margin-top: 56px; /* Avoids clipping under fixed header */
+@media (min-width: 768px) { 
+  .site-layout { 
+    grid-template-columns: 240px 1fr; /* Forces fixed sidebar width on desktops safely */ 
+  } 
+  .sidebar { 
+    display: block !important; 
+  } 
+} 
+
+.main-content { 
+  padding: 24px; 
+} 
+
+/****************All pages, subtopic section on left side***************************/ 
+/* change text/color/font for subtopics header off to the side */ 
+p#headerForSubtopics { 
+  color: blue; 
+  font-size: 30px; 
+} 
+
+/*****************All pages, left section legal notices********************************/ 
+.sidebar { 
+  box-sizing: border-box; /* FIX: Prevents padding from exploding the 240px grid slot */
+  width: 100%; /* FIX: Scales fluidly to fill the 240px column definition */
+  background-color: #f8f9fa; 
+  padding: 20px; 
+} 
+
+#sidebarMenu { 
+  position: relative; 
+} 
+
+#LegalNotice_Consent { 
+  position: relative; /* Changed to relative to let height scale naturally with variable content */ 
+  margin: 5px 5px 20px 5px; 
+  border: 3px double #333; 
+  padding: 10px; 
+  background: #fff; 
+} 
+
+#CookieChoice { 
+  margin-top: 15px; 
+  display: flex; 
+  gap: 10px; /* Aligns cookie action buttons cleanly without absolute hacks */ 
+} 
+
+/* lets user know what choice they have made (default is no) */ 
+.cookieIndicator { 
+  display: inline-block; 
+  height: 25px; 
+  width: 25px; 
+  margin-top: 10px; 
+} 
+
+#yesCookies { 
+  background-color: green; 
+  border: none; 
+  color: white; 
+  text-align: center; 
+  padding: 4px 12px; 
+  cursor: pointer; 
+  border-radius: 4px; 
+} 
+
+#noCookies { 
+  background-color: red; 
+  border: none; 
+  color: white; 
+  text-align: center; 
+  padding: 4px 12px; 
+  cursor: pointer; 
+  border-radius: 4px; 
+} 
+
+/******************* All pages, advanced topic native dialog window ***********************/ 
+:root { 
+  --ADV_TOPIC_WINDOW_HEIGHT: 350px; 
+  --ADV_TOPIC_WINDOW_WIDTH: 500px; 
+} 
+
+a:hover { 
+  text-decoration: none; 
+  color: #1565C0; /* darker blue */ 
 }
 
-@media (min-width: 768px) {
-    .site-layout {
-        grid-template-columns: 240px 1fr; /* Forces fixed sidebar width on desktops safely */
-    }
-    .sidebar {
-        display: block !important;
-    }
-}
+/* Core native <dialog> configuration */ 
+#AdvancedTopics { 
+  position: fixed; 
+  top: 10%; /* Changed left math definition to track absolute window viewport widths (vw) */ 
+  left: calc(50vw - (var(--ADV_TOPIC_WINDOW_WIDTH) / 2)); 
+  margin: 0; 
+  padding: 0; 
+  border: none; 
+  background: transparent; 
+  height: var(--ADV_TOPIC_WINDOW_HEIGHT); 
+  width: var(--ADV_TOPIC_WINDOW_WIDTH); 
+  z-index: 1050; 
+} 
 
-.main-content {
-    padding: 24px;
-}
+#AdvancedTopics:not([open]) { 
+  display: none !important; 
+} 
 
-/****************All pages, subtopic section on left side***************************/
-/* change text/color/font for subtopics header off to the side */
-p#headerForSubtopics {
-	color: blue;
-	font-size: 30px;
-}
+#AdvancedTopics[open] { 
+  display: block !important; 
+} 
 
-/*****************All pages, left section legal notices********************************/
-.sidebar {
-	width: 240px;  
-    background-color: #f8f9fa;
-    padding: 20px;
-}
-#sidebarMenu {
-	position: relative;
-}
-#LegalNotice_Consent {
-	position: relative; /* Changed to relative to let height scale naturally with variable content */
-	margin: 5px 5px 20px 5px;
-	border: 3px double #333;
-	padding: 10px;
-    background: #fff;
-}
+#AdvancedTopics::backdrop { 
+  background: transparent; 
+} 
 
-#CookieChoice {
-	margin-top: 15px;
-    display: flex;
-    gap: 10px; /* Aligns cookie action buttons cleanly without absolute hacks */
-}
+/* Vanilla alternative to Bootstrap's .modal-content card system */ 
+#AdvancedTopics .modal-content { 
+  background-color: #fff; 
+  border: 3px solid #0056b3; 
+  border-radius: 6px; 
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+  display: flex; 
+  flex-direction: column; 
+  height: 100%; /* FIX: Stretch to seamlessly match parent dialog height limits */ 
+  width: 100%;  /* FIX: Stretch to seamlessly match parent dialog width limits */ 
+  touch-action: none; 
+} 
 
-/* lets user know what choice they have made (default is no) */
-.cookieIndicator {
-	display: inline-block;
-	height: 25px;
-	width: 25px;
-    margin-top: 10px;
-}
-#yesCookies {
-	background-color: green; 
-  	border: none;
-  	color: white;
-    text-align: center;
-    padding: 4px 12px;
-    cursor: pointer;
-    border-radius: 4px;
-}
-#noCookies {
-	background-color: red; 
-  	border: none;
-  	color: white;
-    text-align: center;
-    padding: 4px 12px;
-    cursor: pointer;
-    border-radius: 4px;
-}
+#AdvancedTopics .modal-header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  margin: 5px; 
+  padding: 0 15px; 
+} 
 
-/******************* All pages, advanced topic native dialog window ***********************/
-:root {
-	--ADV_TOPIC_WINDOW_HEIGHT: 350px;  
-	--ADV_TOPIC_WINDOW_WIDTH: 500px; 
-}
+#AdvancedTopics .modal-footer { 
+  display: flex; 
+  justify-content: flex-end; 
+  margin: 5px; 
+  padding: 10px 15px; 
+} 
 
-a:hover {
-    text-decoration: none;
-    color: #1565C0;  /* darker blue */
-}
+#AdvancedTopics .modal-body { 
+  background-color: #F0FFFF; /* pale blue */ 
+  overflow-y: auto; 
+  flex-grow: 1; 
+  padding: 15px; 
+} 
 
-/* Core native <dialog> configuration */
-#AdvancedTopics {
-    position: fixed;
-    top: 10%;
-    /* Changed left math definition to track absolute window viewport widths (vw) */
-    left: calc(50vw - (var(--ADV_TOPIC_WINDOW_WIDTH) / 2)); 
-    margin: 0;
+#AdvancedTopics .modal-body > fieldset { 
+  display: none; 
+} 
+
+#AdvancedTopics .modal-body > fieldset.show { 
+  display: block; 
+} 
+
+#AdvancedTopics .modal-header > .tabs { 
+  margin: 5px 10px 0px 10px; 
+  padding-bottom: 5px; 
+  cursor: pointer; 
+} 
+
+#AdvancedTopics .modal-header > .tabs:hover { 
+  border-bottom: 2px solid #7FFFD4; /* aqua green */ 
+} 
+
+#AdvancedTopics .modal-header > .tabs.active { 
+  border-bottom: 2px solid #2196F3; /* aqua blue */ 
+} 
+
+#AdvancedTopics .line { 
+  background-color: #CFD8DC; /* light grey */ 
+  height: 1px; 
+  width: 100%; 
+} 
+
+/* Vanilla alternative to Bootstrap's close cross button layout icon shape */ 
+button.close.dialog-close-trigger { 
+  background: none; 
+  border: none; 
+  font-size: 28px; 
+  font-weight: bold; 
+  line-height: 1; 
+  color: #000; 
+  opacity: 0.5; 
+  cursor: pointer; 
+  padding: 0; 
+} 
+
+button.close.dialog-close-trigger:hover { 
+  opacity: 0.8; 
+} 
+
+button.close.dialog-close-trigger:focus, 
+button.close.dialog-close-trigger:active, 
+button.close.dialog-close-trigger:focus-visible { 
+  outline: none !important; 
+  box-shadow: none !important; 
+} 
+
+p.AdvTopic_Expln { 
+  display: none !important; 
+} 
+
+p.AdvTopic_ToDo { 
+  display: none !important; 
+} 
+/* end of modal pages*/ 
+
+/****************All pages, tool tips***************************/ 
+/*this tooltip stuff didn't work if i only used class=, I had to up the specificity to id */ 
+div#tooltip:hover p { /* FIX: Scoped layout change explicitly to the tooltip div to prevent site-wide breakage */
+  display: block; 
+} 
+
+div#tooltip { 
+  position: relative; 
+  display: inline-block; 
+  border-bottom: 1px dotted black; 
+} 
+
+div#tooltip .tooltiptext { 
+  visibility: hidden; 
+  width: 120px; 
+  background-color: black; 
+  color: #fff; 
+  text-align: center; 
+  border-radius: 6px; 
+  padding: 5px 0; 
+  /* Position the tooltip */ 
+  position: absolute; 
+  z-index: 1; /* FIXED: Added missing trailing semicolon */ 
+} 
+
+div#tooltip:hover .tooltiptext { 
+  visibility: visible; 
+} 
+
+/* want to send back django variable but not have it visible, use different server params if local/test or remote server */ 
+#sendServerLoc{ 
+  display: none; 
+}
+/******************* All pages, framework-free navigation bar utilities ***********************/ 
+/* Added native styles to replace missing Bootstrap top menu structural foundation classes */ 
+#topNavBarHeader { 
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  height: 56px; 
+  background-color: #e3f2fd; /* <--- THIS IS THE COLOR LINE */ 
+  font-size: 140%; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  padding: 0 16px; 
+  z-index: 1030; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+} 
+
+.navbar-collapse { 
+  display: none; 
+  width: 100%; 
+} 
+
+.navbar-collapse.show { 
+  display: flex; 
+  flex-direction: column; 
+  position: absolute; 
+  top: 56px; 
+  left: 0; 
+  background: #f8f9fa; 
+  padding: 16px; 
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+} 
+
+.navbar-nav { 
+  list-style: none; 
+  padding: 0; 
+  margin: 0; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 8px; 
+} 
+
+.nav-link { 
+  text-decoration: none; 
+  color: rgba(0,0,0,0.7); 
+} 
+
+@media (min-width: 768px) { 
+  .navbar-toggler { 
+    display: none; 
+  } 
+  .navbar-collapse { 
+    display: flex !important; 
+    flex-direction: row; 
+    justify-content: space-between; 
+    width: auto; 
+    /* FIX: Clear out mobile menu positioning when shifting to desktop screen layouts */
+    position: static; 
     padding: 0;
-    border: none;
+    box-shadow: none;
     background: transparent;
-    height: var(--ADV_TOPIC_WINDOW_HEIGHT);  
-    width: var(--ADV_TOPIC_WINDOW_WIDTH);
-    z-index: 1050;
-}
+  } 
+  .navbar-nav { 
+    flex-direction: row; 
+    gap: 16px; 
+  } 
+} 
 
-#AdvancedTopics:not([open]) {
-    display: none !important;
-}
+/******************pull in the "good" part of bootstrap--which is otherwise gone from all code *********/ 
+/* Framework-Free Dropdown and Submenu Flyouts */ 
+/* Styling targets for the Native Expire Modal Window */ 
+dialog#expiremodal { 
+  border: none; 
+  background: transparent; 
+  padding: 0; 
+  position: fixed; 
+  top: 20%; 
+  margin: auto; 
+  z-index: 1060; 
+} 
 
-#AdvancedTopics[open] {
-    display: block !important;
-}
+dialog#expiremodal .modal-content { 
+  background-color: #fff; 
+  border: 3px solid #dc3545; /* Crimson/Red warning indicator border */ 
+  border-radius: 6px; 
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+  display: flex; 
+  flex-direction: column; 
+  padding: 15px; 
+  max-width: 450px; 
+} 
 
-#AdvancedTopics::backdrop {
-    background: transparent;
-}
+dialog#expiremodal button.dialog-close-trigger { 
+  background-color: #28a745; /* Custom solid green replacement for btn-success */ 
+  color: white; 
+  border: none; 
+  padding: 8px 16px; 
+  border-radius: 4px; 
+  cursor: pointer; 
+  font-weight: bold; 
+} 
 
-/* Vanilla alternative to Bootstrap's .modal-content card system */
-#AdvancedTopics .modal-content {
-    background-color: #fff;
-    border: 3px solid #0056b3;  
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    display: flex;
-    flex-direction: column;
-    height: var(--ADV_TOPIC_WINDOW_HEIGHT);  
-    width: var(--ADV_TOPIC_WINDOW_WIDTH); 
-    touch-action: none; 
-}
+.nav-item.dropdown { 
+  position: relative; 
+} 
 
-#AdvancedTopics .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-	margin: 5px;
-	padding: 0 15px;
-}
+.dropdown-menu { 
+  display: none; 
+  position: absolute; 
+  top: 100%; 
+  left: 0; 
+  background: #fff; 
+  border: 1px solid #ccc; 
+  list-style: none; 
+  padding: 8px 0; 
+  min-width: 160px; 
+  z-index: 1000; 
+} 
 
-#AdvancedTopics .modal-footer {
-    display: flex;
-    justify-content: flex-end;
-	margin: 5px;
-	padding: 10px 15px;
-}
+.dropdown-menu .dropdown-item { 
+  display: block; 
+  padding: 6px 16px; 
+  color: #333; 
+  text-decoration: none; 
+} 
 
-#AdvancedTopics .modal-body {
-	background-color: #F0FFFF;  /* pale blue */
-    overflow-y: auto; 
-    flex-grow: 1;
-    padding: 15px;
-}
+.dropdown-menu .dropdown-item:hover { 
+  background: #f1f1f1; 
+} 
 
-#AdvancedTopics .modal-body > fieldset {
-    display: none;
-}
-#AdvancedTopics .modal-body > fieldset.show {
-    display: block;
-}
+.nav-item.dropdown:hover > .dropdown-menu { 
+  display: block; 
+} 
 
-#AdvancedTopics .modal-header > .tabs {
-    margin: 5px 10px 0px 10px;
-    padding-bottom: 5px;
-    cursor: pointer;
-}
+.has-submenu { 
+  position: relative; 
+} 
 
-#AdvancedTopics .modal-header > .tabs:hover {
-	border-bottom: 2px solid #7FFFD4;  /* aqua green */
-}
+.submenu { 
+  display: none; 
+  position: absolute; 
+  left: 100%; 
+  top: 0; 
+  background: #fff; 
+  border: 1px solid #ccc; 
+  list-style: none; 
+  padding: 8px 0; 
+  min-width: 220px; 
+} 
 
-#AdvancedTopics .modal-header > .tabs.active {
-    border-bottom: 2px solid #2196F3;  /* aqua blue */
-}
+.has-submenu:hover > .submenu { 
+  display: block; 
+} 
 
-#AdvancedTopics .line {
-    background-color: #CFD8DC;  /* light grey */
-    height: 1px;
-    width: 100%;
-}
+/* Control Button Groups (Play / Stop Alignment Utility) */ 
+.control-btn-group { 
+  display: inline-flex; 
+  vertical-align: middle; 
+} 
 
-/* Vanilla alternative to Bootstrap's close cross button layout icon shape */
-button.close.dialog-close-trigger {
-    background: none;
-    border: none;
-    font-size: 28px;
-    font-weight: bold;
-    line-height: 1;
-    color: #000;
-    opacity: 0.5;
-    cursor: pointer;
-    padding: 0;
-}
-button.close.dialog-close-trigger:hover {
-    opacity: 0.8;
-}
+.control-btn-group button { 
+  border: 1px solid #6c757d; 
+  background: transparent; 
+  padding: 6px 12px; 
+  cursor: pointer; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+} 
 
-button.close.dialog-close-trigger:focus,
-button.close.dialog-close-trigger:active,
-button.close.dialog-close-trigger:focus-visible {
-    outline: none !important;
-    box-shadow: none !important;
-}
+.control-btn-group button:first-child { 
+  border-top-left-radius: 4px; 
+  border-bottom-left-radius: 4px; 
+  border-right: none; 
+} 
 
-p.AdvTopic_Expln {
-	display: none !important;  
-}
-p.AdvTopic_ToDo {
-	display: none !important;
-}
+.control-btn-group button:last-child { 
+  border-top-right-radius: 4px; 
+  border-bottom-right-radius: 4px; 
+} 
 
-/* end of modal pages*/
+.control-btn-group button:hover { 
+  background-color: #6c757d; 
+} 
 
-/****************All pages, tool tips***************************/
-/*this tooltip stuff didn't work if i only used class=, I had to up the specificity to id  */
+.control-btn-group button:hover svg { 
+  fill: #fff; 
+} 
 
-div:hover p {
-  display: block;
-}
+.btn-cyan { 
+  background-color: #17a2b8; 
+  color: #fff; 
+  border: 1px solid #17a2b8; 
+  padding: 6px 12px; 
+  border-radius: 4px; 
+  cursor: pointer; 
+  font-weight: 500; 
+} 
 
-div#tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black;
-}
-
-div#tooltip .tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: black;
+.btn-cyan:hover { 
+  background-color: #138496; 
+  border-color: #117a8b; 
   color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
+} 
 
-  /* Position the tooltip */
-  position: absolute;
-  z-index: 1; /* FIXED: Added missing trailing semicolon */
-}
+/********** all pages, arrange the header, the auto demo so they never collide but fit into each other *********/ 
+/* Home Page: Vertical Stack */ 
+/* Ensures mainHeaderText stays ABOVE the side-by-side row */ 
+#TrigPageTop.vertical-layout { 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; /* Centers your header text */ 
+  text-align: center; 
+  width: 100%; 
+} 
 
-div#tooltip:hover .tooltiptext {
-  visibility: visible;
-}
+/* Home Page: The row with AutoDemo and Question Box */ 
+#TrigPageSideBySide.horizontal-layout.home-page { 
+  display: flex !important; /* Force flex mode */ 
+  flex-direction: row; /* Force horizontal alignment */ 
+  flex-wrap: nowrap; /* PREVENTS the form from jumping underneath */ 
+  justify-content: center; /* Centers the pair on the screen */ 
+  align-items: flex-start; /* Aligns their tops */ 
+  width: 100%; 
+  gap: 40px; /* Space between them */ 
+} 
 
-/* want to send back django variable but not have it visible, use different server params if local/test or remote server */
-#sendServerLoc{
-	display: none;
-}
+#TrigPageSideBySide.horizontal-layout:not(.home-page) { 
+  display: flex !important; 
+  flex-direction: row; /* Force horizontal alignment */ 
+  flex-wrap: nowrap; /* FORCES them to stay on one line */ 
+  justify-content: flex-start; /* Shifts both to the left */ 
+  padding-left: 20px; /* Your "small padding" on the left */ 
+  width: 100%; 
+} 
 
-/******************* All pages, framework-free navigation bar utilities ***********************/
-/* Added native styles to replace missing Bootstrap top menu structural foundation classes */
-#topNavBarHeader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 56px;
-    background-color: #e3f2fd; /* <--- THIS IS THE COLOR LINE */
-    font-size: 140%;           
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-    z-index: 1030;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-.navbar-collapse {
-    display: none;
-    width: 100%;
-}
-.navbar-collapse.show {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 56px;
-    left: 0;
-    background: #f8f9fa;
-    padding: 16px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-.navbar-nav {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-.nav-link {
-    text-decoration: none;
-    color: rgba(0,0,0,0.7);
-}
-@media (min-width: 768px) {
-    .navbar-toggler { display: none; }
-    .navbar-collapse { display: flex !important; flex-direction: row; justify-content: space-between; width: auto; }
-    .navbar-nav { flex-direction: row; gap: 16px; }
-}
-/******************pull in the "good" part of bootstrap--which is otherwise gone from all code *********/
-/* Framework-Free Dropdown and Submenu Flyouts */
-.nav-item.dropdown { position: relative; }
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: #fff;
-    border: 1px solid #ccc;
-    list-style: none;
-    padding: 8px 0;
-    min-width: 160px;
-    z-index: 1000;
-}
-.dropdown-menu .dropdown-item {
-    display: block;
-    padding: 6px 16px;
-    color: #333;
-    text-decoration: none;
-}
-.dropdown-menu .dropdown-item:hover { background: #f1f1f1; }
-.nav-item.dropdown:hover > .dropdown-menu { display: block; }
-.has-submenu { position: relative; }
-.submenu {
-    display: none;
-    position: absolute;
-    left: 100%;
-    top: 0;
-    background: #fff;
-    border: 1px solid #ccc;
-    list-style: none;
-    padding: 8px 0;
-    min-width: 220px;
-}
-.has-submenu:hover > .submenu { display: block; }
+/****************autodemo***********************************/ 
+/* Ensure the AutoDemo doesn't shrink when text is long and left justify it under text*/ 
+#autoDemo { 
+  flex: 0 0 auto; 
+  width: 330px; /* FIXED: Increased from 150px to match min-width below so table layout fits safely */ 
+  display: block; /* Standard block behavior */ 
+  text-align: left; /* Forces inline/inline-block content to the left */ 
+} 
 
-/* Control Button Groups (Play / Stop Alignment Utility) */
-.control-btn-group {
-    display: inline-flex;
-    vertical-align: middle;
-}
-.control-btn-group button {
-    border: 1px solid #6c757d;
-    background: transparent;
-    padding: 6px 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.control-btn-group button:first-child {
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-    border-right: none;
-}
-.control-btn-group button:last-child {
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-}
-.control-btn-group button:hover {
-    background-color: #6c757d;
-}
-.control-btn-group button:hover svg {
-    fill: #fff;
-}
-.btn-cyan {
-    background-color: #17a2b8;
-    color: #fff;
-    border: 1px solid #17a2b8;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-}
-.btn-cyan:hover {
-    background-color: #138496;
-    border-color: #117a8b;
-}
+/* Target the SVG specifically to remove any centering */ 
+#autoDemo svg { 
+  display: block; /* or inline-block if you prefer */ 
+  margin-left: 0; /* Overrides margin: auto if it was being used to center */ 
+  margin-right: auto; /* Pushes any remaining space to the right */ 
+} 
 
-/********** all pages, arrange the header, the auto demo so they never collide but fit into each other *********/
-/* Home Page: Vertical Stack */
-/* Ensures mainHeaderText stays ABOVE the side-by-side row */
-#TrigPageTop.vertical-layout {
-    display: flex;
-    flex-direction: column; 
-    align-items: center; /* Centers your header text */
-    text-align: center;
-    width: 100%;
+/* Style for your Support Material (Question Box) */ 
+#side-content { 
+  flex: 0 0 500px; /* FIX: Synced flex basis to mirror exact layout width parameters */ 
+  width: 500px; 
+  min-height: 120px; /* Ensure it has a footprint */ 
+  display: block; 
+  overflow: visible; 
 }
+/*************all pages, auto demo controls and starting image **********************/ 
+/* its there, but if the page wants it, must turn it on */ 
+#autoDemo { 
+  position: relative; /* This "pins" the children to this container */ 
+  min-height: 130px; /* size needs to be calculable for flexbox */ 
+  min-width: 330px; /* box needs to be big enough for controls box when autodemo started */ 
+  z-index: 500; /* needs to be max value to sit all this on top */ 
+} 
 
-/* Home Page: The row with AutoDemo and Question Box */
-#TrigPageSideBySide.horizontal-layout.home-page {   
-    display: flex !important;  /* Force flex mode */
-    flex-direction: row;       /* Force horizontal alignment */
-    flex-wrap: nowrap;         /* PREVENTS the form from jumping underneath */
-    justify-content: center;   /* Centers the pair on the screen */
-    align-items: flex-start;   /* Aligns their tops */
-    width: 100%;
-    gap: 40px;                 /* Space between them */
-}
-#TrigPageSideBySide.horizontal-layout:not(.home-page) {
-	display: flex !important;
-    flex-direction: row;       /* Force horizontal alignment */
-    flex-wrap: nowrap;         /* FORCES them to stay on one line */
-    justify-content: flex-start; /* Shifts both to the left */
-    padding-left: 20px;        /* Your "small padding" on the left */
-    width: 100%;
-}
-/****************autodemo***********************************/
-/* Ensure the AutoDemo doesn't shrink when text is long and left justify it under text*/
-#autoDemo {
-    flex: 0 0 auto;
-    width: 330px; /* FIXED: Increased from 150px to match min-width below so table layout fits safely */
-    display: block;   /* Standard block behavior */
-    text-align: left; /* Forces inline/inline-block content to the left */
-}
-/* Target the SVG specifically to remove any centering */
-#autoDemo svg {
-    display: block;   /* or inline-block if you prefer */
-    margin-left: 0;   /* Overrides margin: auto if it was being used to center */
-    margin-right: auto; /* Pushes any remaining space to the right */
-}
-/* Style for your Support Material (Question Box) */
-#side-content {
-    flex: 0 0 300px;    /* Force a width immediately */
-    width: 500px;
-    min-height: 120px;  /* Ensure it has a footprint */
-    display: block;
-    overflow: visible;
-}
+/* image that says Start Here */ 
+#startAutoDemo.expertMode { 
+  opacity: 0; 
+} 
 
-/*************all pages, auto demo controls and starting image **********************/
-/* its there, but if the page wants it, must turn it on */
-#autoDemo{
-	position: relative; /* This "pins" the children to this container */
-	min-height: 130px;   /* size needs to be calculable for flexbox */
-	min-width: 330px;    /* box needs to be big enough for controls box when autodemo started */    
-	z-index: 500;  /* needs to be max value to sit all this on top */
-}
-/* image that says Start Here */
-#startAutoDemo.expertMode{
-	opacity: 0;  
-}
-#startAutoDemo.newbieMode {
-    display: inline-block;      /* Prevents it from shrinking to 0 or taking 100% width */
-    vertical-align: middle;
-    margin-left: 15px;          /* Your "small padding" from the left */
-    margin-right: auto;         /* Pushes other things away to the right */
-    
-    transform-origin: center;   /* Scale from its own middle */
-    animation: autoDemo_newbieMode 2s forwards 3; /* expand and contract, drawing attention to image */
-}
-/* Ensure the internal SVG doesn't fight for space */
-#startAutoDemo.newbieMode svg {
-    display: block;
-    width: 100px;               
-    height: auto;
-}
-@keyframes autoDemo_newbieMode{
-	 0%   {transform: scale(1.0)}
-	 50%   {transform: scale(1.3)}
-	 100%   {transform: scale(1.0)}
-}
-/* client has selected auto demo, now give controls to use it */
-#autoDemoCtls{
-	border: 2px solid cyan;
-	border-radius: 10px;
-	display: none;
-}
-#autoDemoCtls h1{
-	text-align: center;
-	font-size: 18px;
-}
-/*This portion is the animation that flashes a big red cursor that says "click here" */
-/* when the user starts the autodemo ctrls, the top/left will be set and animation started 
-position setting based on where it would have been placed near the play/pause */
-#clickHereCursor {
-	position: absolute;
-	height: 80px;
-	width: 80px;
-	left: -50px;
-	top: 100px;	
-	display: block;
-	visibility: hidden;  /*cant use opacity else cursor slips below the sidebar */
-	z-index: 10;  /*within container,its all relative to other contained items, need to sit on top of controls*/
-}
-/* animation to flash the click here cursor as needed when code adds this class to element */
-#clickHereCursor.userHitPlay {
-	opacity: 1;
-	animation-delay: 1s;
-	animation-name: getUserAttentionToClick;
-	animation-duration: 3s;
-	animation-iteration-count: 4;
-	animation-fill-mode: forwards;
-}
-/* idea is that it ends with the image gone... */
-@keyframes getUserAttentionToClick {
-	0%		{visibility: visible;}
-	50%		{visibility: hidden;}
-	100%	{visibility: hidden;} 
-}
+#startAutoDemo.newbieMode { 
+  display: inline-block; /* Prevents it from shrinking to 0 or taking 100% width */ 
+  vertical-align: middle; 
+  margin-left: 15px; /* Your "small padding" from the left */ 
+  margin-right: auto; /* Pushes other things away to the right */ 
+  transform-origin: center; /* Scale from its own middle */ 
+  animation: autoDemo_newbieMode 2s forwards 3; /* expand and contract, drawing attention to image */ 
+} 
 
-/* this is the stylized pointer that shows the user what is being demonstrated */
-#demoCursorID {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 40px;  /* must supply when inline svg */
-    height: 40px;   /* must supply when inline svg */
-    pointer-events: none; /* Allows clicks to pass through to the canvas */
-    z-index: 10000;
-    display: none; /* Hidden until demo starts */
-    transition: transform 0.3s ease-in-out; /* Smooth movement between points */
-  }
-  
-/* a spinner animation to show server is busy getting the file */
-#spinner{
-  visibility: hidden;  
-  width: 40px;
-  height: 40px;
+/* Ensure the internal SVG doesn't fight for space */ 
+#startAutoDemo.newbieMode svg { 
+  display: block; 
+  width: 100px; 
+  height: auto; 
+} 
 
-  border: 2px solid #f3f3f3;
-  border-top:3px solid #ff00ff;  /* Barbie pink*/
-  border-radius: 100%;
+@keyframes autoDemo_newbieMode { 
+  0% {transform: scale(1.0)} 
+  50% {transform: scale(1.3)} 
+  100% {transform: scale(1.0)} 
+} 
 
-  position: absolute;
-  top:0;
-  bottom:0;
-  left:0;
-  right: 0;
-  margin: auto;
+/* client has selected auto demo, now give controls to use it */ 
+#autoDemoCtls { 
+  border: 2px solid cyan; 
+  border-radius: 10px; 
+  display: none; 
+} 
 
-  animation: spin 1s infinite linear;
-}
+#autoDemoCtls h1 { 
+  text-align: center; 
+  font-size: 18px; 
+} 
 
-@keyframes spin {
-  from {
-      transform: rotate(0deg);
-  } to {
-      transform: rotate(360deg);
-  }
-}
-#spinner.show {
-  visibility: visible;
-}
+/*This portion is the animation that flashes a big red cursor that says "click here" */ 
+/* when the user starts the autodemo ctrls, the top/left will be set and animation started position setting based on where it would have been placed near the play/pause */ 
+#clickHereCursor { 
+  position: absolute; 
+  height: 80px; 
+  width: 80px; 
+  left: -50px; 
+  top: 100px; 
+  display: block; 
+  visibility: hidden; /*cant use opacity else cursor slips below the sidebar */ 
+  z-index: 10; /*within container,its all relative to other contained items, need to sit on top of controls*/ 
+  pointer-events: none; /* FIX: Prevents empty bounding box from dead-clicking or locking up underlying playback controls */
+} 
 
-/************all pages, header and tables should not "wrap" and break line, expand browser! 
-             user needs to know these are big pages with lots of things going on               *****/
+/* animation to flash the click here cursor as needed when code adds this class to element */ 
+#clickHereCursor.userHitPlay { 
+  opacity: 1; 
+  animation-delay: 1s; 
+  animation-name: getUserAttentionToClick; 
+  animation-duration: 3s; 
+  animation-iteration-count: 4; 
+  animation-fill-mode: forwards; 
+} 
+
+/* idea is that it ends with the image gone... */ 
+@keyframes getUserAttentionToClick { 
+  0% {visibility: visible;} 
+  50% {visibility: hidden;} 
+  100% {visibility: hidden;} 
+} 
+
+/* this is the stylized pointer that shows the user what is being demonstrated */ 
+#demoCursorID { 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 40px; /* must supply when inline svg */ 
+  height: 40px; /* must supply when inline svg */ 
+  pointer-events: none; /* Allows clicks to pass through to the canvas */ 
+  z-index: 10000; 
+  display: none; /* Hidden until demo starts */ 
+  transition: transform 0.3s ease-in-out; /* Smooth movement between points */ 
+} 
+
+/* a spinner animation to show server is busy getting the file */ 
+#spinner { 
+  visibility: hidden; 
+  width: 40px; 
+  height: 40px; 
+  border: 2px solid #f3f3f3; 
+  border-top: 3px solid #ff00ff; /* Barbie pink*/ 
+  border-radius: 100%; 
+  position: absolute; 
+  top: 0; 
+  bottom: 0; 
+  left: 0; 
+  right: 0; 
+  margin: auto; 
+  animation: spin 1s infinite linear; 
+} 
+
+@keyframes spin { 
+  from { transform: rotate(0deg); } 
+  to { transform: rotate(360deg); } 
+} 
+
+#spinner.show { 
+  visibility: visible; 
+} 
+
+/************all pages, header and tables should not "wrap" and break line, expand browser! user needs to know these are big pages with lots of things going on *****/ 
 h1, h2 { 
-	white-space: nowrap; 
-}
+  white-space: nowrap; 
+} 
 
-td { 
-	/* keep dynamicTrig2 table from collapsing if screen too small, user should expand screen--there is lots of good stuff to see */
-	white-space: nowrap; 
-}
+td { /* keep dynamicTrig2 table from collapsing if screen too small, user should expand screen--there is lots of good stuff to see */ 
+  white-space: nowrap; 
+} 
 
-/*****************container for expandable youtube videos, both summary and review pages *************/
-#video-resizable-container {
-    /* 1. Set original size as the starting point */
-    width: 560px;
-    height: 315px;
-     
-    /* 2. Enable resizing and ensure it's visible */
-    resize: both;
-    overflow: hidden; /* Required for resize handle */
-    border: 2px solid #444;
-    background-color: #f0f0f0;
-    box-sizing: border-box; /* Ensures padding doesn't break dimensions */
-    display: flex;          /* Helps the iframe fill the space accurately */
-    flex-direction: column; 
-    
-    /* 3. Add a "Grab Zone" at the bottom-right */
-    /* This ensures you have a 20px area to grab that the iframe won't cover */
-    padding-bottom: 20px; 
-    
-    /* 4. Keep your original positioning */
-    margin: 0 auto;
-    position: relative;
-    top: var(--SPACE_TO_SQUEEZE_OUT);
-    
-    /* 5. Set limits so it doesn't get too small or too big */
-    min-width: 320px;
-    min-height: 200px;
-    max-width: 100%; /* Responsive on smaller screens */
-}
+/*****************container for expandable youtube videos, both summary and review pages *************/ 
+#video-resizable-container { 
+  /* 1. Set original size as the starting point */ 
+  width: 560px; 
+  height: 315px; 
+  /* 2. Enable resizing and ensure it's visible */ 
+  resize: both; 
+  overflow: hidden; /* Required for resize handle */ 
+  border: 2px solid #444; 
+  background-color: #f0f0f0; 
+  box-sizing: border-box; /* Ensures padding doesn't break dimensions */ 
+  display: flex; /* Helps the iframe fill the space accurately */ 
+  flex-direction: column; 
+  /* 3. Add a "Grab Zone" at the bottom-right */ 
+  /* This ensures you have a 20px area to grab that the iframe won't cover */ 
+  padding-bottom: 20px; 
+  /* 4. Keep your original positioning */ 
+  margin: 0 auto; 
+  position: relative; 
+  top: var(--SPACE_TO_SQUEEZE_OUT); 
+  /* 5. Set limits so it doesn't get too small or too big */ 
+  min-width: 320px; 
+  min-height: 200px; 
+  max-width: 100%; /* Responsive on smaller screens */ 
+} 
 
-/* Make the handle area look like a 'grabber' */
-#video-resizable-container::after {
-    content: "◢";
-    position: absolute;
-    bottom: 0;
-    right: 5px;
-    font-size: 12px;
-    color: #888;
-    pointer-events: none;
-}
+/* Make the handle area look like a 'grabber' */ 
+#video-resizable-container::after { 
+  content: "◢"; 
+  position: absolute; 
+  bottom: 0; 
+  right: 5px; 
+  font-size: 12px; 
+  color: #888; 
+  pointer-events: none; 
+} 
 
-/************all pages, footer **************************/
-#Site-footer {
-	position: relative;
-	bottom: -100px; 
-	margin-left: auto;
-	margin-right: auto;
+/************all pages, footer **************************/ 
+#Site-footer { 
+  position: relative; 
+  bottom: -100px; 
+  margin-left: auto; 
+  margin-right: auto; 
 }
 
 

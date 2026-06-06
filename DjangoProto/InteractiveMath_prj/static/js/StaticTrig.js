@@ -1,49 +1,65 @@
 'use strict'
-//JQuery, dont do this script until document DOM objects are loaded and ready
-$(function() {
-	
-	// =========================================================================
-    // KATEX v0.17.0 INITIALIZATION
-    // =========================================================================
-    // Wipes out old MathJax logic and sets up KaTeX auto-rendering cleanly in jQuery
-    renderMathInElement(document.body, {
-        delimiters: [
-            {left: '$$', right: '$$', display: true},
-            {left: '$', right: '$', display: false},
-            {left: '\\(', right: '\\)', display: false},
-            {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false // Gracefully handles typos in TeX without breaking JS execution
-    });
 
-	//if Next  button hit (in base template), set it up to go to intro page
-	$("#GoToNextPage").wrap('<a href="../DynamicTrig1"></a>');
-	$("#GoToPreviousPage").wrap('<a href="../MusicSineIntro"></a>');
-	
+// Replacing $(function() { ... }) with native standard DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
 
-	// user can only pick expert/newbie mode on the first home page
-	let newbieMode = sessionStorage.getItem('UserIsNew');
-	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
-		// emphasize the auto demo as first place
-		$("#startAutoDemo").addClass('newbieMode');
-		$("#FirstHelp_ST").addClass('newbieMode');
-	} else if (newbieMode && (newbieMode.toLowerCase() === 'false')) {
-		// remind user what to do 
-		$("#FirstHelp_ST").addClass('expertMode');
-	} else {
-		// user somehow got here without going through landing page or deleted sessionStorage, put in newbie mode
-		$("#startAutoDemo").addClass('newbieMode');
-		$("#FirstHelp_ST").addClass('newbieMode');
-	}
-	
-	let ctxExpandableUnitCircle;
-	let circleDotsCanvas =  $("#AmpSinCosCircle").get(0);;  // later on, this will set the "background image" for animation
-	// get ready to start drawing on this canvas, first get the context
-	if ( $("#AmpSinCosCircle").length ) {
-    	ctxExpandableUnitCircle = $("#AmpSinCosCircle").get(0).getContext('2d');
-	} else {
-    	console.error('Cannot obtain Sin/Cos unit circle context');
-	}
+  // =========================================================================
+  // KATEX v0.17.0 INITIALIZATION
+  // =========================================================================
+  // Wipes out old MathJax logic and sets up KaTeX auto-rendering cleanly in jQuery
+  renderMathInElement(document.body, { 
+    delimiters: [ 
+      {left: '$$', right: '$$', display: true}, 
+      {left: '$', right: '$', display: false}, 
+      {left: '\\(', right: '\\)', display: false}, 
+      {left: '\\[', right: '\\]', display: true} 
+    ], 
+    throwOnError: false // Gracefully handles typos in TeX without breaking JS execution 
+  });
+
+  // Helper function to handle wrapping nodes natively
+  const wrapNode = (el, wrapperType) => {
+    let wrapper = document.createElement(wrapperType);
+    el.parentNode.insertBefore(wrapper, el);
+    wrapper.appendChild(el);
+    return wrapper;
+  };
+
+  // if Next button hit (in base template), set it up to go to intro page
+  let nextBtn = document.getElementById("GoToNextPage");
+  if (nextBtn) wrapNode(nextBtn, "a").href = "../DynamicTrig1";
+
+  let prevBtn = document.getElementById("GoToPreviousPage");
+  if (prevBtn) wrapNode(prevBtn, "a").href = "../MusicSineIntro";
+
+  // user can only pick expert/newbie mode on the first home page
+  let newbieMode = sessionStorage.getItem('UserIsNew');
+  let startDemoBtn = document.getElementById("startAutoDemo");
+  let firstHelpBlock = document.getElementById("FirstHelp_ST");
+
+  if (newbieMode && (newbieMode.toLowerCase() === "true")) {
+    // emphasize the auto demo as first place
+    if (startDemoBtn) startDemoBtn.classList.add('newbieMode');
+    if (firstHelpBlock) firstHelpBlock.classList.add('newbieMode');
+  } else if (newbieMode && (newbieMode.toLowerCase() === 'false')) {
+    // remind user what to do
+    if (firstHelpBlock) firstHelpBlock.classList.add('expertMode');
+  } else {
+    // user somehow got here without going through landing page or deleted sessionStorage, put in newbie mode
+    if (startDemoBtn) startDemoBtn.classList.add('newbieMode');
+    if (firstHelpBlock) firstHelpBlock.classList.add('newbieMode');
+  }
+
+  let ctxExpandableUnitCircle;
+  let circleDotsCanvas = document.getElementById("AmpSinCosCircle"); // Framework-free native extraction replaces .get(0)
+
+  // get ready to start drawing on this canvas, first get the context
+  if (circleDotsCanvas) {
+    ctxExpandableUnitCircle = circleDotsCanvas.getContext('2d');
+  } else {
+    console.error('Cannot obtain Sin/Cos unit circle context');
+  }
+
 	
 	// When user changes a parameter or a animation is running, need to be able to go back to an intermediate canvas picture to 
 	// clear out the "old values" to allow writing new values selected by user or animation
@@ -484,98 +500,116 @@ $(function() {
 	//*********************************************************
 	// Setup the user buttons
 	//*********************************************************
+  //*********************************** 
+  // User changes amplitude of unit circle 
+  //*********************************** 
+  // allow user to change the size of the unit circle to bring in idea of amplitude/volume to sine-cosine graphs 
+  let $ampCirc = document.getElementById('ampCirc');
+  if ($ampCirc) {
+    // 1. Apply the visual width directly to the select element 
+    $ampCirc.style.width = '80px'; 
     
-    //***********************************
-    // User changes amplitude of unit circle
-    //***********************************
-    // allow user to change the size of the unit circle to bring in idea of amplitude/volume to sine-cosine graphs   
-	// 1. Apply the visual width directly to the select element
-	$('#ampCirc').css('width', '80px');
-	// 2. Insert it cleanly into its target location wrapper to handle positioning
-	$('#ampCirc').appendTo('#ampCircLocation');
+    // 2. Insert it cleanly into its target location wrapper to handle positioning 
+    let $ampLoc = document.getElementById('ampCircLocation');
+    if ($ampLoc) {
+      $ampLoc.appendChild($ampCirc);
+    }
 
-	$('#ampCirc').on('selectmenuchange', function(event, ui){
-		let temp = ui.item.value;
-		amp = Number(temp);
-		if (1.0 == amp){
-			//no need to show mpy by 1
-			ampStr = "";
-			$("#unitCircNotify").text("Unit Circle");
-	        // UPGRADED TO KA_TEX: Wrap the strings in $ and run via .html()
-	        $('#xyEqtn_x').html('$= (\\cos ' + THETA + ',$'); 
-	        $('#xyEqtn_y').html('$ \\sin ' + THETA + ')$');
-		} else {
-			ampStr = amp.toString().concat(MULT_DOT);
-			$("#unitCircNotify").text("");
-			// UPGRADED TO KA_TEX: Wrap the strings in $ and run via .html()
-	        // Using \cdot instead of MULT_DOT text for cleaner LaTeX execution inside KaTeX
-	        $('#xyEqtn_x').html('$= (r \\cdot \\cos ' + THETA + ',$'); 
-	        $('#xyEqtn_y').html('$ r \\cdot \\sin ' + THETA + ')$'); 				
-		}
-		
-		// Since we dynamically altered equations, tell KaTeX to re-render just this container box
-	    // assuming they live within an #equationContainer wrapper element to keep it highly efficient
-	    if ($("#equationContainer").length) {
-	        renderMathInElement($("#equationContainer").get(0), {
-	            delimiters: [{left: '$', right: '$', display: false}],
-	            throwOnError: false
-	        });
-	    } else {
-	        // Fallback: render the whole document body if no wrapper container exists
-	        renderMathInElement(document.body, {
-	            delimiters: [{left: '$', right: '$', display: false}],
-	            throwOnError: false
-	        });
-	    }
-		
-		// since amplitude changed, need to clear out old values for xy and theta
-		$('#xyExactValue').text(" ");
-		$('#xyFilledIn').text(" ");
-		$('#xyValueDecimal').text(" ");
-		$('#theta').text(" ");
-		redrawNewAmp();
-	});
-	
-	//console.log(" width is " + circleDotsCanvas.width + " height is " + circleDotsCanvas.height);
-	
-	//***********************************
-	// This sets up the array for the animation.  After user click yellow dot, this is called to fill the array which
-	// is used every specified time interval to draw the sin/cos lines from the circle to the appropriate graph
-	// after animation is complete, this array is destroyed till needed again
-	//***********************************
-	const NUM_ANIMATION_SIN_COS = 5;  // we show 5 steps from unit circle to graph
-	const NORMAL_LINE_WIDTH = 3;
-	const ZERO_PT_WIDTH = 8;
-	let sinLineMovement = [];
-	let cosLineMovement = [];
-	let line;
-	function animate_circ2graph(whichGraph, x1Axis, y1Axis, x1Circ, y1Circ, indx) {
-		// find the end place for this line to be used in animation using indx, x2Top = x2Bottom since vert lines
-		let x2Axis = TRIG_X_ORIGIN + thetaGraph[indx].pix;
-		let x2Graph = x2Axis;
-		let y2Axis;
-		let y2Graph;
-		let lineWidth = NORMAL_LINE_WIDTH;
-		let makeAPoint = 0;  // if sin/cos is zero, let a tiny point travel to the graph, else this does nothing
-		if (whichGraph ==="sin") {
-			 //we know x axis origin of sin graph is at SIN_Y_ORIGIN
-			y2Axis = SIN_Y_ORIGIN;
-			// remember, Y grows downward (yeah, counterintuitive
-			y2Graph = y2Axis - schoolAngles[indx].ysin;
-			if (y1Circ === y1Axis) {
-				makeAPoint = 8;	// if sin = 0, want to show a tiny point moving to proper place, else nothing would move	
-				lineWidth = ZERO_PT_WIDTH; // make zero point a little bigger, as per user request
-			}
-		} else if (whichGraph == "cos") {
-			 //we know x axis origin of cos graph is at COS_Y_ORIGIN
-			y2Axis = COS_Y_ORIGIN;
-			// remember, Y grows downward (yeah, counterintuitive
-			y2Graph = y2Axis - schoolAngles[indx].xcos;
-			if (x1Circ === x1Axis) {
-				makeAPoint = 8;	// if cos = 0, want to show a tiny point moving to proper place, else nothing would move
-				lineWidth = ZERO_PT_WIDTH; // make zero point a little bigger, as per user request
-			}
-		}
+    // Modern native fallback listener replaces legacy jQuery UI 'selectmenuchange' hooks
+    $ampCirc.addEventListener('change', function(event) {
+      let temp = event.target.value;
+      amp = Number(temp);
+
+      let $unitCircNotify = document.getElementById("unitCircNotify");
+      let $xyEqtnX = document.getElementById('xyEqtn_x');
+      let $xyEqtnY = document.getElementById('xyEqtn_y');
+
+      if (1.0 == amp) { 
+        // no need to show mpy by 1 
+        ampStr = ""; 
+        if ($unitCircNotify) $unitCircNotify.textContent = "Unit Circle"; 
+        // UPGRADED TO KA_TEX: Wrap the strings in $ and run via .html() 
+        if ($xyEqtnX) $xyEqtnX.innerHTML = '$= (\\cos ' + THETA + ',$'; 
+        if ($xyEqtnY) $xyEqtnY.innerHTML = '$ \\sin ' + THETA + ')$'; 
+      } else { 
+        ampStr = amp.toString().concat(MULT_DOT); 
+        if ($unitCircNotify) $unitCircNotify.textContent = ""; 
+        // UPGRADED TO KA_TEX: Wrap the strings in $ and run via .html() 
+        // Using \cdot instead of MULT_DOT text for cleaner LaTeX execution inside KaTeX 
+        if ($xyEqtnX) $xyEqtnX.innerHTML = '$= (r \\cdot \\cos ' + THETA + ',$'; 
+        if ($xyEqtnY) $xyEqtnY.innerHTML = '$ r \\cdot \\sin ' + THETA + ')$'; 
+      } 
+
+      // Since we dynamically altered equations, tell KaTeX to re-render just this container box 
+      // assuming they live within an #equationContainer wrapper element to keep it highly efficient 
+      let $equationContainer = document.getElementById("equationContainer");
+      if ($equationContainer) { 
+        renderMathInElement($equationContainer, { 
+          delimiters: [{left: '$', right: '$', display: false}], 
+          throwOnError: false 
+        }); 
+      } else { 
+        // Fallback: render the whole document body if no wrapper container exists 
+        renderMathInElement(document.body, { 
+          delimiters: [{left: '$', right: '$', display: false}], 
+          throwOnError: false 
+        }); 
+      } 
+
+      // since amplitude changed, need to clear out old values for xy and theta 
+      let IDsToClear = ['xyExactValue', 'xyFilledIn', 'xyValueDecimal', 'theta'];
+      IDsToClear.forEach(id => {
+        let el = document.getElementById(id);
+        if (el) el.textContent = " ";
+      });
+
+      redrawNewAmp(); 
+    });
+  }
+
+  //console.log(" width is " + circleDotsCanvas.width + " height is " + circleDotsCanvas.height); 
+  //*********************************** 
+  // This sets up the array for the animation. After user click yellow dot, this is called to fill the array which 
+  // is used every specified time interval to draw the sin/cos lines from the circle to the appropriate graph 
+  // after animation is complete, this array is destroyed till needed again 
+  //*********************************** 
+  const NUM_ANIMATION_SIN_COS = 5; // we show 5 steps from unit circle to graph 
+  const NORMAL_LINE_WIDTH = 3; 
+  const ZERO_PT_WIDTH = 8; 
+  let sinLineMovement = []; 
+  let cosLineMovement = []; 
+  let line; 
+
+  function animate_circ2graph(whichGraph, x1Axis, y1Axis, x1Circ, y1Circ, indx) { 
+    // find the end place for this line to be used in animation using indx, x2Top = x2Bottom since vert lines 
+    let x2Axis = TRIG_X_ORIGIN + thetaGraph[indx].pix; 
+    let x2Graph = x2Axis; 
+    let y2Axis; 
+    let y2Graph; 
+    let lineWidth = NORMAL_LINE_WIDTH; 
+    let makeAPoint = 0; 
+    
+    // if sin/cos is zero, let a tiny point travel to the graph, else this does nothing 
+    if (whichGraph === "sin") { 
+      // we know x axis origin of sin graph is at SIN_Y_ORIGIN 
+      y2Axis = SIN_Y_ORIGIN; 
+      // remember, Y grows downward (yeah, counterintuitive 
+      y2Graph = y2Axis - schoolAngles[indx].ysin; 
+      if (y1Circ === y1Axis) { 
+        makeAPoint = 8; // if sin = 0, want to show a tiny point moving to proper place, else nothing would move 
+        lineWidth = ZERO_PT_WIDTH; // make zero point a little bigger, as per user request 
+      } 
+    } else if (whichGraph == "cos") { 
+      // we know x axis origin of cos graph is at COS_Y_ORIGIN 
+      y2Axis = COS_Y_ORIGIN; 
+      // remember, Y grows downward (yeah, counterintuitive 
+      y2Graph = y2Axis - schoolAngles[indx].xcos; 
+      if (x1Circ === x1Axis) { 
+        makeAPoint = 8; // if cos = 0, want to show a tiny point moving to proper place, else nothing would move 
+        lineWidth = ZERO_PT_WIDTH; // make zero point a little bigger, as per user request 
+      } 
+    }
+    
 				
 		let deltaX_Pt = (x2Graph - x1Circ)/NUM_ANIMATION_SIN_COS;
 		let deltaX_Ax = (x2Axis - x1Axis)/NUM_ANIMATION_SIN_COS;
@@ -633,66 +667,67 @@ $(function() {
 	
 	}, 500); // every 500 ms, move the animation
 
-	//***********************************
-	// this code is used as user interacts with the yellow dots on main circle
-	//***********************************
-	// Initialize the container math with KaTeX markup
-	$('#xyEqtn_x').html('$= (\\cos ' + THETA + ',$'); 
-	$('#xyEqtn_y').html('$ \\sin ' + THETA + ')$'); 
-	renderMathInElement(document.body, { delimiters: [{left: '$', right: '$', display: false}], throwOnError: false });
+  //*********************************** 
+  // this code is used as user interacts with the yellow dots on main circle 
+  //*********************************** 
+  // Initialize the container math with KaTeX markup 
+  let $xyEqtnX = document.getElementById('xyEqtn_x');
+  let $xyEqtnY = document.getElementById('xyEqtn_y');
+  if ($xyEqtnX) $xyEqtnX.innerHTML = '$= (\\cos ' + THETA + ',$'; 
+  if ($xyEqtnY) $xyEqtnY.innerHTML = '$ \\sin ' + THETA + ')$'; 
 
-	let userHasStarted = false;
-	circleDotsCanvas.addEventListener('click', (e) => {
-		// need to convert canvas coord into bitmap coord
-		let rect = circleDotsCanvas.getBoundingClientRect();
-		let pos;
-		if (e instanceof CustomEvent) {
-			// user is running automated demo
-			pos = {
-				x: e.detail.xVal,
-				y: e.detail.yVal
-			}
-		}
-		else if (e instanceof PointerEvent) {
-			// user clicked on the circle
-			pos = {
-			  x: e.clientX - rect.left,
-			  y: e.clientY - rect.top
-			};	
-		} 
-		else if (e instanceof MouseEvent) {
-			// DELETE THIS CODE when Safari and Firefox fix their bug (over 2 yrs old) referred to here
-			// https://stackoverflow.com/questions/70626381/why-chrome-emits-pointerevents-and-firefox-mouseevents-and-which-type-definition
-			pos = {
-			  x: e.clientX - rect.left,
-			  y: e.clientY - rect.top
-			};			
-		} else { console.error('ERROR:  unexpected event: ' + e);}
-		
-		Object.freeze(pos);
-		let cntr = 0;
-		
-		schoolAngles.forEach(dot => {
-			// not sure yet which dot the user clicked on, must search all
-			if (isInside(pos, dot, DOT_RADIUS)) {
-				//once user has figured this all out, hide the obvious help
-				$('#FirstHelp_ST').css("visibility", "hidden");
-				
-				// we found the dot the user clicked on
-		  		//clear any old drawings before we put up the new stuff, take it back to the background image
-				ctxExpandableUnitCircle.putImageData(backgroundPlot, 0, 0);
-		  		// create line from center to dot (only done on selection)
-		  		ctxExpandableUnitCircle.beginPath();
-				ctxExpandableUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
-				ctxExpandableUnitCircle.lineTo(dot.x, dot.y);
-				ctxExpandableUnitCircle.lineWidth = NORMAL_LINE_WIDTH;
-				ctxExpandableUnitCircle.strokeStyle = 'black';
-				ctxExpandableUnitCircle.fillStyle = 'black';
-				ctxExpandableUnitCircle.font = '20px Arial';
-				ctxExpandableUnitCircle.fillText("r", CIRC_X0 + (dot.x - CIRC_X0)/2 - 10, CIRC_Y0 + (dot.y - CIRC_Y0)/2);	
-				ctxExpandableUnitCircle.stroke();
-				ctxExpandableUnitCircle.closePath();
-				
+  renderMathInElement(document.body, { 
+    delimiters: [{left: '$', right: '$', display: false}], 
+    throwOnError: false 
+  }); 
+
+  let userHasStarted = false; 
+
+  if (circleDotsCanvas) {
+    circleDotsCanvas.addEventListener('click', (e) => { 
+      // need to convert canvas coord into bitmap coord 
+      let rect = circleDotsCanvas.getBoundingClientRect(); 
+      let pos; 
+      if (e instanceof CustomEvent) { 
+        // user is running automated demo 
+        pos = { x: e.detail.xVal, y: e.detail.yVal } 
+      } else if (e instanceof PointerEvent) { 
+        // user clicked on the circle 
+        pos = { x: e.clientX - rect.left, y: e.clientY - rect.top }; 
+      } else if (e instanceof MouseEvent) { 
+        // DELETE THIS CODE when Safari and Firefox fix their bug (over 2 yrs old) referred to here 
+        // https://stackoverflow.com/questions/70626381/why-chrome-emits-pointerevents-and-firefox-mouseevents-and-which-type-definition 
+        pos = { x: e.clientX - rect.left, y: e.clientY - rect.top }; 
+      } else { 
+        console.error('ERROR: unexpected event: ' + e);
+      } 
+      Object.freeze(pos); 
+      let cntr = 0; 
+
+      schoolAngles.forEach(dot => { 
+        // not sure yet which dot the user clicked on, must search all 
+        if (isInside(pos, dot, DOT_RADIUS)) { 
+          // once user has figured this all out, hide the obvious help 
+          let $firstHelp = document.getElementById('FirstHelp_ST');
+          if ($firstHelp) $firstHelp.style.visibility = "hidden"; 
+
+          // we found the dot the user clicked on 
+          // clear any old drawings before we put up the new stuff, take it back to the background image 
+          if (ctxExpandableUnitCircle && backgroundPlot) {
+            ctxExpandableUnitCircle.putImageData(backgroundPlot, 0, 0); 
+            
+            // create line from center to dot (only done on selection) 
+            ctxExpandableUnitCircle.beginPath(); 
+            ctxExpandableUnitCircle.moveTo(CIRC_X0, CIRC_Y0); 
+            ctxExpandableUnitCircle.lineTo(dot.x, dot.y); 
+            ctxExpandableUnitCircle.lineWidth = NORMAL_LINE_WIDTH; 
+            ctxExpandableUnitCircle.strokeStyle = 'black'; 
+            ctxExpandableUnitCircle.fillStyle = 'black'; 
+            ctxExpandableUnitCircle.font = '20px Arial'; 
+            ctxExpandableUnitCircle.fillText("r", CIRC_X0 + (dot.x - CIRC_X0) / 2 - 10, CIRC_Y0 + (dot.y - CIRC_Y0) / 2); 
+            ctxExpandableUnitCircle.stroke(); 
+            ctxExpandableUnitCircle.closePath(); 
+          
 				// create line for cos portions (only done on selection)
 				ctxExpandableUnitCircle.beginPath();
 				ctxExpandableUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
@@ -725,54 +760,62 @@ $(function() {
 				ctxExpandableUnitCircle.fillText(THETA, CIRC_X0 + ANGLE_IND, CIRC_Y0 - ANGLE_IND/4);	
 				ctxExpandableUnitCircle.stroke();
 				ctxExpandableUnitCircle.closePath();
-				
-	            // -----------------------------------------------------------------
-	            // UPGRADED DYNAMIC TEXT LABELS FOR KATEX RENDERING
-	            // -----------------------------------------------------------------
-	            if (1.0 == amp){ 
-	                $('#xyEqtn_x').html('$= (\\cos ' + THETA + ',$'); 
-	                $('#xyEqtn_y').html('$ \\sin ' + THETA + ')$'); 
-	            } else { 
-	                $('#xyEqtn_x').html('$= (r \\cdot \\cos ' + THETA + ',$'); 
-	                $('#xyEqtn_y').html('$ r \\cdot \\sin ' + THETA + ')$'); 
-	            } 
-	            
-	            // Strip the embedded $ signs off dot.thetaRad to keep it structurally perfect inside a single LaTeX string
-	            let cleanThetaTex = dot.thetaRad.replace(/\$/g, '');
-	            
-	            // Inject complete seamlessly bound LaTeX formulas using jQuery .html()
-	            $('#xyFilledIn').html("$= (" + ampStr + "\\cos " + cleanThetaTex + " , " + ampStr + "\\sin " + cleanThetaTex + ")$"); 
-	            $('#xyExactValue').html(dot.xyExact); 
-	            $('#xyValueDecimal').html(dot.xyApproxDecimal); 
-	            
-	            let cleanThetaDegTex = dot.thetaDeg.replace(/\$/g, '');
-	            $('#theta').html("$" + cleanThetaTex + "\\text{ rad} = " + cleanThetaDegTex + "$"); 
-	
-	            // EXPLICIT SYNC KATEX TRIGGER: Re-renders formulas instantaneously
-	            if ($("#equationContainer").length) { 
-	                renderMathInElement($("#equationContainer").get(0), { 
-	                    delimiters: [{left: '$', right: '$', display: false}], 
-	                    throwOnError: false 
-	                }); 
-	            } else { 
-	                renderMathInElement(document.body, { 
-	                    delimiters: [{left: '$', right: '$', display: false}], 
-	                    throwOnError: false 
-	                }); 
-	            }
-				
-				// snap a picture of what we have so we can go back to it during animation
-				preAnimatePlot = ctxExpandableUnitCircle.getImageData(0, 0, circleDotsCanvas.width, circleDotsCanvas.height);	
-				
-				// now animate the sine/cos lines going over to graph, first fill in the array, then turn on animate
-				animate_circ2graph("sin", dot.x, CIRC_Y0, dot.x, dot.y, cntr);
-				animate_circ2graph("cos", CIRC_X0, CIRC_Y0, dot.x, CIRC_Y0, cntr);
-				//console.log("sin length is " + sinLineMovement.length + "cosine len is " + cosLineMovement.length)
-				doAnimation = true;
-		    }	
-		    cntr = cntr + 1;
-		});
-	});
+			}	
+          // ----------------------------------------------------------------- 
+          // UPGRADED DYNAMIC TEXT LABELS FOR KATEX RENDERING 
+          // ----------------------------------------------------------------- 
+          let $xyEqtnX = document.getElementById('xyEqtn_x');
+          let $xyEqtnY = document.getElementById('xyEqtn_y');
+
+          if (1.0 == amp) { 
+            if ($xyEqtnX) $xyEqtnX.innerHTML = '$= (\\cos ' + THETA + ',$'; 
+            if ($xyEqtnY) $xyEqtnY.innerHTML = '$ \\sin ' + THETA + ')$'; 
+          } else { 
+            if ($xyEqtnX) $xyEqtnX.innerHTML = '$= (r \\cdot \\cos ' + THETA + ',$'; 
+            if ($xyEqtnY) $xyEqtnY.innerHTML = '$ r \\cdot \\sin ' + THETA + ')$'; 
+          } 
+
+          // Strip the embedded $ signs off dot.thetaRad to keep it structurally perfect inside a single LaTeX string 
+          let cleanThetaTex = dot.thetaRad.replace(/\$/g, ''); 
+          
+          // Inject complete seamlessly bound LaTeX formulas using vanilla .innerHTML updates
+          let $xyFilledIn = document.getElementById('xyFilledIn');
+          if ($xyFilledIn) $xyFilledIn.innerHTML = "$= (" + ampStr + "\\cos " + cleanThetaTex + " , " + ampStr + "\\sin " + cleanThetaTex + ")$"; 
+
+          let $xyExactValue = document.getElementById('xyExactValue');
+          let $xyValueDecimal = document.getElementById('xyValueDecimal');
+          if ($xyExactValue) $xyExactValue.innerHTML = dot.xyExact; 
+          if ($xyValueDecimal) $xyValueDecimal.innerHTML = dot.xyApproxDecimal; 
+
+          let cleanThetaDegTex = dot.thetaDeg.replace(/\$/g, ''); 
+          let $thetaLabel = document.getElementById('theta');
+          if ($thetaLabel) $thetaLabel.innerHTML = "$" + cleanThetaTex + "\\text{ rad} = " + cleanThetaDegTex + "$"; 
+
+          // EXPLICIT SYNC KATEX TRIGGER: Re-renders formulas instantaneously 
+          let $equationContainer = document.getElementById("equationContainer");
+          if ($equationContainer) { 
+            renderMathInElement($equationContainer, { delimiters: [{left: '$', right: '$', display: false}], throwOnError: false }); 
+          } else { 
+            renderMathInElement(document.body, { delimiters: [{left: '$', right: '$', display: false}], throwOnError: false }); 
+          } 
+
+          // snap a picture of what we have so we can go back to it during animation 
+          if (ctxExpandableUnitCircle && circleDotsCanvas) {
+            preAnimatePlot = ctxExpandableUnitCircle.getImageData(0, 0, circleDotsCanvas.width, circleDotsCanvas.height); 
+          }
+
+          // now animate the sine/cos lines going over to graph, first fill in the array, then turn on animate 
+          animate_circ2graph("sin", dot.x, CIRC_Y0, dot.x, dot.y, cntr); 
+          animate_circ2graph("cos", CIRC_X0, CIRC_Y0, dot.x, CIRC_Y0, cntr); 
+          
+          //console.log("sin length is " + sinLineMovement.length + "cosine len is " + cosLineMovement.length) 
+          doAnimation = true; 
+        } 
+        cntr = cntr + 1; 
+      }); 
+    }); 
+  }
+
 	
 	//******************constants for auto demo*********************************
 	const SCRIPT_AUTO_DEMO = [
@@ -895,65 +938,94 @@ $(function() {
 			},
 	  ]
 	}];
+  // take the page back to beginning, before user changed things 
+  function resetStaticTrig(){ 
+    // force amplitude to unit circle for autodemo, even if already unit circle 
+    let $ampSelect = document.getElementById('ampCirc');
+    if ($ampSelect) {
+      $ampSelect.value = '1.0';
+      // Native framework-free fallback trigger architecture replaces jQuery .change()
+      let changeEvt = new Event('change', { bubbles: true });
+      $ampSelect.dispatchEvent(changeEvt);
+    }
+    
+    amp = 1; 
+    ampStr = ""; // used in xy values as multiply factor 
+    
+    let $unitCircNotify = document.getElementById("unitCircNotify");
+    if ($unitCircNotify) $unitCircNotify.textContent = "Unit Circle"; 
+    
+    // UPGRADED TO KATEX: Force clean mathematical markup presentation upon reset 
+    let $xyEqtnX = document.getElementById('xyEqtn_x');
+    let $xyEqtnY = document.getElementById('xyEqtn_y');
+    if ($xyEqtnX) $xyEqtnX.innerHTML = '$= (\\cos ' + (typeof THETA !== 'undefined' ? THETA : "\u03B8") + ',$'; 
+    if ($xyEqtnY) $xyEqtnY.innerHTML = '$ \\sin ' + (typeof THETA !== 'undefined' ? THETA : "\u03B8") + ')$'; 
+    
+    // Clear old values 
+    let IDsToClear = ['xyExactValue', 'xyFilledIn', 'xyValueDecimal', 'theta'];
+    IDsToClear.forEach(id => {
+      let el = document.getElementById(id);
+      if (el) el.textContent = " ";
+    });
+    
+    // Compile the default reset equations using KaTeX immediately 
+    renderMathInElement(document.body, { delimiters: [{left: '$', right: '$', display: false}], throwOnError: false }); 
+    redrawNewAmp(); 
+  } 
+
+  //**************************************************************************** 
+  // User initiates autoDemo activity 
+  //**************************************************************************** 
+  //*** user clicks the start demo image, iniitalize everything 
+  let demo = new AutoDemoWithCanvas(SCRIPT_AUTO_DEMO, 'funTutorial_ST'); // give the demo the full script 
+
+  let $startAutoDemoBtn = $('#startAutoDemo');
+  if ($startAutoDemoBtn) {
+    $startAutoDemoBtn.on('click', function() { 
+      // prep the control box for user to interact with auto demo 
+      demo.prepDemoControls(); 
+    }); 
+  }
+
+  //**************************************************************************** 
+  // User has interacted with autoDemo controls 
+  //**************************************************************************** 
+  // User has selected play 
+  let $playSegmentBtn = $('#playSegment');
+  if ($playSegmentBtn) {
+    $playSegmentBtn.on('click', function(){ 
+      resetStaticTrig(); // just in case user has leftover stuff, let autodemo start fresh 
+      demo.startDemo(); 
+    }); 
+  }
+
+  let $stopSegmentBtn = $('#stopSegment');
+  if ($stopSegmentBtn) {
+    $stopSegmentBtn.on('click', function(){ 
+      demo.stopThisSegment(false); // we don't want to destroy controls box 
+    }); 
+  }
+
+  let $dismissAutoDemoBtn = $('#dismissAutoDemo');
+  if ($dismissAutoDemoBtn) {
+    $dismissAutoDemoBtn.on('click', function(){ 
+      // user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen 
+      demo.stopThisSegment(); // may or may not be needed 
+    }); 
+  }
+
+  let $segNumSelect = $("#segNum");
+  if ($segNumSelect) {
+    $segNumSelect.on('change', function(){ 
+      let currSeg = parseInt($segNumSelect.value); 
+      demo.setCurrSeg(currSeg); 
+      
+      // remove the class so the animation will work on next page, cant do this until animation completes 
+      let $clickHereCursor = $('#clickHereCursor');
+      if ($clickHereCursor) $clickHereCursor.classList.remove('userHitPlay'); 
+    }); 
+  }
+
+}); 
 
 			  	
-	// take the page back to beginning, before user changed things
-	function resetStaticTrig(){
-		// force amplitude to unit circle for autodemo, even if already unit circle
-		amp = 1;
-		$('#ampCirc').val('1.0').change(); // Sets the value and triggers your circle redraw event
-		ampStr = "";  // used in xy values as multiply factor
-		$("#unitCircNotify").text("Unit Circle");
-        // UPGRADED TO KATEX: Force clean mathematical markup presentation upon reset
-        $('#xyEqtn_x').html('$= (\\cos ' + THETA + ',$');
-        $('#xyEqtn_y').html('$ \\sin ' + THETA + ')$');
-        
-        // Clear old values
-        $('#xyExactValue, #xyFilledIn, #xyValueDecimal, #theta').text(" ");
-        
-        // Compile the default reset equations using KaTeX immediately
-        renderMathInElement(document.body, {
-            delimiters: [{left: '$', right: '$', display: false}],
-            throwOnError: false
-        });
-
-		redrawNewAmp();		
-	}
-    //****************************************************************************
-    // User initiates autoDemo activity
-    //****************************************************************************   
-	//*** user clicks the start demo image, iniitalize everything
-	let demo = new AutoDemoWithCanvas(SCRIPT_AUTO_DEMO, 'funTutorial_ST');  // give the demo the full script
-    $('#startAutoDemo').on('click', function() {
-  		// prep the control box for user to interact with auto demo
-		demo.prepDemoControls();
-    });
-    	
-    //****************************************************************************
-    // User has interacted with autoDemo controls
-    //****************************************************************************
-
-	// User has selected play
-    $('#playSegment').on('click', function(){	
-		resetStaticTrig();  // just in case user has leftover stuff, let autodemo start fresh
-    	demo.startDemo();
-    });
-    
-    $('#stopSegment').on('click', function(){	
-    	demo.stopThisSegment(false);  //we don't want to destroy controls box
-    });
-    
-    $('#dismissAutoDemo').on('click', function(){	
-    	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
-    	demo.stopThisSegment();  // may or may not be needed
-
-    });
-    
- 	$("#segNum").change(function(){
-		let currSeg = parseInt($('#segNum').val());
-		demo.setCurrSeg(currSeg);
-		// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay'); 
-	});
-
-})

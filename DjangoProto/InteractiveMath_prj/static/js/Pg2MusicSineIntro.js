@@ -1,46 +1,70 @@
 'use strict'
-//JQuery, dont do this script until document DOM objects are loaded and ready
-$(function() {
-	//if Next  button hit (in base template), set it up to go to intro page
-	$("#GoToNextPage").wrap('<a href="../StaticTrig"></a>');
-	$("#GoToPreviousPage").wrap('<a href="../IntroTrigMusicConcepts"></a>');
-	
-	// user can only pick expert/newbie mode on the first home page
-	let newbieMode = sessionStorage.getItem('UserIsNew');
-	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
-		// emphasize the auto demo as first place
-		$("#startAutoDemo").addClass('newbieMode');
-		$("#initialInstrMusicTrigIntro").addClass('newbieMode');
-		$("#dropdownMenuSong").addClass('newbieMode');
-		$("#trumpetersNotes").addClass('newbieMode');
-	} else if (newbieMode && (newbieMode.toLowerCase()==='false'))  {
-		// remind user what to do , expert mode
-		$("#initialInstrMusicTrigIntro").addClass('expertMode');
-		$("#dropdownMenuSong").addClass('expertMode');
-		$("#trumpetersNotes").addClass('expertMode');
-	} else {
-		// user somehow got here without going through landing page or deleted sessionStorage, put in newbie mode
-		$("#startAutoDemo").addClass('newbieMode');
-		$("#initialInstrMusicTrigIntro").addClass('newbieMode');
-		$("#dropdownMenuSong").addClass('newbieMode');
-		$("#trumpetersNotes").addClass('newbieMode');
-	}		
-		
-	let musicCanvas =  $("#ClefWithNotes").get(0);  // foreground to detect user clicks
-	let bkgdMusicCanvas = $("#NotesFilledIn").get(0);   // background to color in the notes when clicked
-	// get ready to start drawing on this canvas, first get the context
-	let ctxMusicCanvas;
-	if ( $("#ClefWithNotes").length ) {
-    	ctxMusicCanvas = $("#ClefWithNotes").get(0).getContext('2d');
-	} else {
-    	console.error('Cannot obtain C major notes context, ctxMusicCanvas on Pg2MusicSinIntro.js');
-	}
-	let ctxBkgdMusicCanvas;
-	if ( $("#NotesFilledIn").length ) {
-    	ctxBkgdMusicCanvas = $("#NotesFilledIn").get(0).getContext('2d');
-	} else {
-    	console.error('Cannot obtain C major background notes context, ctxBkgdMusicCanvas on Pg2MusicSinIntro.js');
-	}
+
+// Replacing $(function() { ... }) with native standard DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Helper function to handle wrapping nodes natively
+  const wrapNode = (el, wrapperType) => {
+    let wrapper = document.createElement(wrapperType);
+    el.parentNode.insertBefore(wrapper, el);
+    wrapper.appendChild(el);
+    return wrapper;
+  };
+
+  // if Next button hit (in base template), set it up to go to intro page
+  let nextBtn = document.getElementById("GoToNextPage");
+  if (nextBtn) wrapNode(nextBtn, "a").href = "../StaticTrig";
+
+  let prevBtn = document.getElementById("GoToPreviousPage");
+  if (prevBtn) wrapNode(prevBtn, "a").href = "../IntroTrigMusicConcepts";
+
+  // user can only pick expert/newbie mode on the first home page
+  let newbieMode = sessionStorage.getItem('UserIsNew');
+  let startDemoBtn = document.getElementById("startAutoDemo");
+  let listSelectors = [
+    "#initialInstrMusicTrigIntro",
+    "#dropdownMenuSong",
+    "#trumpetersNotes"
+  ];
+
+  if (newbieMode && (newbieMode.toLowerCase() === "true")) {
+    // emphasize the auto demo as first place
+    if (startDemoBtn) startDemoBtn.classList.add('newbieMode');
+    listSelectors.forEach(sel => {
+      let el = document.querySelector(sel);
+      if (el) el.classList.add('newbieMode');
+    });
+  } else if (newbieMode && (newbieMode.toLowerCase() === 'false')) {
+    // remind user what to do , expert mode
+    listSelectors.forEach(sel => {
+      let el = document.querySelector(sel);
+      if (el) el.classList.add('expertMode');
+    });
+  } else {
+    // user somehow got here without going through landing page or deleted sessionStorage, put in newbie mode
+    if (startDemoBtn) startDemoBtn.classList.add('newbieMode');
+    listSelectors.forEach(sel => {
+      let el = document.querySelector(sel);
+      if (el) el.classList.add('newbieMode');
+    });
+  }
+  let musicCanvas = document.getElementById("ClefWithNotes"); // foreground to detect user clicks
+  let bkgdMusicCanvas = document.getElementById("NotesFilledIn"); // background to color in the notes when clicked
+
+  // get ready to start drawing on this canvas, first get the context
+  let ctxMusicCanvas;
+  if (musicCanvas) {
+    ctxMusicCanvas = musicCanvas.getContext('2d');
+  } else {
+    console.error('Cannot obtain C major notes context, ctxMusicCanvas on Pg2MusicSinIntro.js');
+  }
+
+  let ctxBkgdMusicCanvas;
+  if (bkgdMusicCanvas) {
+    ctxBkgdMusicCanvas = bkgdMusicCanvas.getContext('2d');
+  } else {
+    console.error('Cannot obtain C major background notes context, ctxBkgdMusicCanvas on Pg2MusicSinIntro.js');
+  }
 	
 	// put up the horizontal lines for notes
 	const LEFT_X = 20;
@@ -64,12 +88,12 @@ $(function() {
 	// fill in the note when user selects it and set up freq/equation
 	var root = document.querySelector(':root');
 	var rootStyles = window.getComputedStyle(root);
-	// go to CSS, pull out scales values and pull off px suffix and convert to numbers
-	const SCALES_HIGHEST_Y = parseInt(rootStyles.getPropertyValue('--HIGHEST_Y').replace('px',''));
-	const SCALES_LOWEST_X = parseInt(rootStyles.getPropertyValue('--LOWEST_X').replace('px',''));
-	const SCALES_DELTA_Y = parseInt(rootStyles.getPropertyValue('--DELTA_Y').replace('px',''));
-	const SCALES_DELTA_X = parseInt(rootStyles.getPropertyValue('--DELTA_X').replace('px',''));
-	const SCALES_IMAGE_X_OFFSET = 5;  // location of image is about this much off of center of note in x in pixels
+	  // go to CSS, pull out scales values and pull off px suffix and convert to numbers
+	  const SCALES_HIGHEST_Y = parseInt(rootStyles.getPropertyValue('--HIGHEST_Y').replace('px', '')) || 0;
+	  const SCALES_LOWEST_X = parseInt(rootStyles.getPropertyValue('--LOWEST_X').replace('px', '')) || 0;
+	  const SCALES_DELTA_Y = parseInt(rootStyles.getPropertyValue('--DELTA_Y').replace('px', '')) || 0;
+	  const SCALES_DELTA_X = parseInt(rootStyles.getPropertyValue('--DELTA_X').replace('px', '')) || 0;	
+	  const SCALES_IMAGE_X_OFFSET = 5;  // location of image is about this much off of center of note in x in pixels
 	const SCALES_IMAGE_Y_OFFSET = 15; // location of image is about this much off of center of note in y in pixels
 
 	//frequencies based on https://pages.mtu.edu/~suits/notefreqs.html for C major scale, old freq were notes with freq sounded by 
@@ -149,71 +173,74 @@ $(function() {
 		},
 		
 	];
-	// Add text on the staff for the proper note		
-	$('#LowCNote').text(CmajorNotes[0].notePlayed);
-	$('#DNote').text(CmajorNotes[1].notePlayed);
-	$('#ENote').text(CmajorNotes[2].notePlayed);
-	$('#FNote').text(CmajorNotes[3].notePlayed);
-	$('#GNote').text(CmajorNotes[4].notePlayed);
-	$('#ANote').text(CmajorNotes[5].notePlayed);
-	$('#BNote').text(CmajorNotes[6].notePlayed);
-	$('#CNote').text(CmajorNotes[7].notePlayed);
-	
-	// set up for outputing a tone of proper freq
-	let osc = new Tone.Oscillator(); 
-	// all tones have the following in common
-	osc.type = "sine";
-	
-	// NOW we have the background image done.  As users click on a point and new stuff happens, we always come back to 
-	// this point, so we save it to go back to it when we want to start over
-	let bkgdPlotNotes = ctxBkgdMusicCanvas.getImageData(0, 0, bkgdMusicCanvas.width, bkgdMusicCanvas.height);
+  // Add text on the staff for the proper note
+  let idNotesMap = {
+    'LowCNote': 0, 'DNote': 1, 'ENote': 2, 'FNote': 3,
+    'GNote': 4, 'ANote': 5, 'BNote': 6, 'CNote': 7
+  };
+  Object.keys(idNotesMap).forEach(id => {
+    let el = document.getElementById(id);
+    if (el) el.textContent = CmajorNotes[idNotesMap[id]].notePlayed;
+  });
 
-	//***********************************
-	// this code is used to draw the sine waves on a graph
-	//***********************************
-	let timeMsLong = [];
-	let ampLong = [];
+  // set up for outputing a tone of proper freq
+  let osc = (typeof Tone !== 'undefined') ? new Tone.Oscillator() : { type: "sine" }; 
+  // all tones have the following in common
+  osc.type = "sine";
 
-	const NUM_PTS_PLOT_LONG = 1000;
-	const DURATION_LONG_PLOT_MS = 10;	
-	//sample period in sec
-	// yes, these are ridiculously high rates, didn't want to have ANY sampling artifacts in plots...
-	const samplePeriodLong = DURATION_LONG_PLOT_MS/(1000 * NUM_PTS_PLOT_LONG);
-	
-	function fillInArrays(){
-		let i;
-		for (i=0; i<=NUM_PTS_PLOT_LONG; i++) {
-			ampLong[i] = Math.sin(2 * Math.PI * (selectedNote.freqHz * i * samplePeriodLong) );
-			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 2);		
-		}
+  // NOW we have the background image done. As users click on a point and new stuff happens, we always come back to
+  // this point, so we save it to go back to it when we want to start over
+  let bkgdPlotNotes;
+  if (ctxBkgdMusicCanvas && bkgdMusicCanvas) {
+    bkgdPlotNotes = ctxBkgdMusicCanvas.getImageData(0, 0, bkgdMusicCanvas.width, bkgdMusicCanvas.height);
+  }
 
-	};
-	function drawTone()
-	{
-				
-	    // update title to match new parameters, chart.js 4.x will update from newly modified arrays
-	    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
-	    sine_plot_100_1k.options.plugins.title.text = "y = sin(2 " + MULT_DOT + PI +  MULT_DOT + selectedNote.freqHz + MULT_DOT + " t)";
-	    
-		// now fill the arrays and push them to the plots
-		fillInArrays();   
-		// update 10 ms plot, no need to repush the same array to the data structure, change will be noticed	
-		sine_plot_100_1k.data.datasets[0].borderColor = selectedNote.noteColor;
-		
-	    // make all these changes happen
-	    sine_plot_100_1k.update();	                    
-	};
-	
-	let pitchGraphCanvas =  $("#PitchGraph").get(0);  
-	let ctxPitchGraphCanvas;
-	if ( $("#PitchGraph").length ) {
-    	ctxPitchGraphCanvas = $("#PitchGraph").get(0).getContext('2d');
-	} else {
-    	console.error('Cannot obtain tone graph context, ctxPitchGraphCanvas in Pg2MusicSineIntro.js');
-	}
+  //***********************************
+  // this code is used to draw the sine waves on a graph
+  //***********************************
+  let timeMsLong = [];
+  let ampLong = [];
+  const NUM_PTS_PLOT_LONG = 1000;
+  const DURATION_LONG_PLOT_MS = 10; //sample period in sec
+  // yes, these are ridiculously high rates, didn't want to have ANY sampling artifacts in plots...
+  const samplePeriodLong = DURATION_LONG_PLOT_MS / (1000 * NUM_PTS_PLOT_LONG);
+
+  function fillInArrays(){
+    if (typeof selectedNote === 'undefined' || !selectedNote) return;
+    let i;
+    for (i=0; i<=NUM_PTS_PLOT_LONG; i++) {
+      ampLong[i] = Math.sin(2 * Math.PI * (selectedNote.freqHz * i * samplePeriodLong) );
+      timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 2);
+    }
+  };
+
+  function drawTone() {
+    if (typeof selectedNote === 'undefined' || !selectedNote || typeof sine_plot_100_1k === 'undefined') return;
+    // update title to match new parameters, chart.js 4.x will update from newly modified arrays
+    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
+    if (sine_plot_100_1k.options.plugins && sine_plot_100_1k.options.plugins.title) {
+      sine_plot_100_1k.options.plugins.title.text = "y = sin(2 " + MULT_DOT + PI + MULT_DOT + selectedNote.freqHz + MULT_DOT + " t)";
+    }
+    // now fill the arrays and push them to the plots
+    fillInArrays();
+    // update 10 ms plot, no need to repush the same array to the data structure, change will be noticed
+    if (sine_plot_100_1k.data.datasets[0]) {
+      sine_plot_100_1k.data.datasets[0].borderColor = selectedNote.noteColor;
+    }
+    // make all these changes happen
+    sine_plot_100_1k.update();
+  };
+
+  let pitchGraphCanvas = document.getElementById("PitchGraph");
+  let ctxPitchGraphCanvas;
+  if (pitchGraphCanvas) {
+    ctxPitchGraphCanvas = pitchGraphCanvas.getContext('2d');
+  } else {
+    console.error('Cannot obtain tone graph context, ctxPitchGraphCanvas in Pg2MusicSineIntro.js');
+  }
+
 	//if x and y axis labels don't show, probably chart size isn't big enough and they get clipped out
 	const CHART_OPTIONS = {
-//		maintainAspectRatio: false,  //uses the size it is given.  For some reason, this doesn't work here
 		responsive: true,
 		elements:{
 			point:{
@@ -264,207 +291,320 @@ $(function() {
 	    },
 	    options: TOP_CHART, 
 	});
+  //***********************************
+  // user interacts with the trumpet notes
+  //***********************************
+  // Radius of whole note is 10px, this gives a little slop. Users said 20 wasn't quite enough, especially for
+  // touch screen. Can't go any larger else notes will overlap.
+  const NOTE_RADIUS = 30;
+  const COLOR_RADIUS = 8;
+  let selectedNote = null;
 
-	
-	//***********************************
-	// user interacts with the trumpet notes
-	//***********************************
-	// Radius of whole note is 10px, this gives a little slop.  Users said 20 wasn't quite enough, especially for 
-	// touch screen.  Can't go any larger else notes will overlap.
-	const NOTE_RADIUS = 30;  
-	const COLOR_RADIUS = 8; 
-	let selectedNote = null;
+  if (musicCanvas) {
     musicCanvas.addEventListener('click', (e) => {
-		// need to convert canvas coord into bitmap coord
-		let rect = musicCanvas.getBoundingClientRect();
-		let pos;
-		if (e instanceof CustomEvent) {
-			// user is running automated demo
-			pos = {
-				x: e.detail.xVal,
-				y: e.detail.yVal
-			}
-		}
-		else if (e instanceof PointerEvent) {
-			// user clicked on the circle
-			pos = {
-			  x: e.clientX - rect.left,
-			  y: e.clientY - rect.top
-			};	
-		} 
-		else if (e instanceof MouseEvent) {
-			// DELETE THIS CODE when Safari and Firefox fix their bug (over 2 yrs old) referred to here
-			// https://stackoverflow.com/questions/70626381/why-chrome-emits-pointerevents-and-firefox-mouseevents-and-which-type-definition
-			pos = {
-			  x: e.clientX - rect.left,
-			  y: e.clientY - rect.top
-			};			
-		} else { console.error('ERROR:  unexpected event: ' + e);}
-		Object.freeze(pos);
-		let cntr = 0;
-		
-		// if user clicks a note, the sound must come on and icons must match
-		$(".VolOnOff .VolOff").addClass('hidden');
-		$(".VolOnOff .VolOn").removeClass('hidden');
-		volumeOn = true;
-		
-		CmajorNotes.forEach(note => {
-			// not sure yet which dot the user clicked on, must search all
-			if (isInside(pos, note, NOTE_RADIUS)) {
-				// turn off colors of previously selected notes
-				//clear any old drawings before we put up the new stuff, take it back to the background image
-				ctxBkgdMusicCanvas.putImageData(bkgdPlotNotes, 0, 0);
-				// turn note the new color on the bottommost layer of canvases
-				ctxBkgdMusicCanvas.beginPath();
-				ctxBkgdMusicCanvas.arc(note.x, note.y, COLOR_RADIUS, 0, 2 * Math.PI, true);
-				ctxBkgdMusicCanvas.fillStyle = note.noteColor;
-				ctxBkgdMusicCanvas.fill();
-				ctxBkgdMusicCanvas.stroke();
-				ctxBkgdMusicCanvas.closePath();
-				// put up the freq info and equation and play note
-				$("#noteSelectVal").text(note.notePlayed);
-				$("#FreqOfNoteVal").text(note.freqHz + " Hz");
-				// we want a blip between notes as user "plays a simple song", 
-				osc.toDestination().stop(); // turn off existing tone to add a "blip" into the sound 
-				osc.frequency.value = note.freqHz;
-				setTimeout(function(){
-					// put a blip in the note change
-				if (volumeOn) {
-						//play only if volume is on, we know note is selected
-						osc.toDestination().start();
-					}	
-				},100);
-				selectedNote = note;
-				$(".VolOnOff").prop("title", "");  // note is selected, no need to pester the user
-				drawTone();
-			}
-		});
-		// Now that user is getting into page, put up the audio intro "click me" verbiage
-		$("#verbalIntro").css('visibility', 'visible');
-	});	
+      // need to convert canvas coord into bitmap coord
+      let rect = musicCanvas.getBoundingClientRect();
+      let pos;
+      if (e instanceof CustomEvent) {
+        // user is running automated demo
+        pos = { x: e.detail.xVal, y: e.detail.yVal }
+      } else if (e instanceof PointerEvent) {
+        // user clicked on the circle
+        pos = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      } else if (e instanceof MouseEvent) {
+        // DELETE THIS CODE when Safari and Firefox fix their bug (over 2 yrs old) referred to here
+        // https://stackoverflow.com/questions/70626381/why-chrome-emits-pointerevents-and-firefox-mouseevents-and-which-type-definition
+        pos = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      } else {
+        console.error('ERROR: unexpected event: ' + e);
+      }
+      Object.freeze(pos);
+      let cntr = 0;
+      
+      // if user clicks a note, the sound must come on and icons must match
+      let $volOffIcon = $(".VolOnOff .VolOff");
+      let $volOnIcon = $(".VolOnOff .VolOn");
+      if ($volOffIcon) $volOffIcon.addClass('hidden');
+      if ($volOnIcon) $volOnIcon.removeClass('hidden');
+      volumeOn = true;
 
+      CmajorNotes.forEach(note => {
+        // not sure yet which dot the user clicked on, must search all
+        if (isInside(pos, note, NOTE_RADIUS)) {
+          // turn off colors of previously selected notes
+          // clear any old drawings before we put up the new stuff, take it back to the background image
+          if (ctxBkgdMusicCanvas && bkgdPlotNotes) {
+            ctxBkgdMusicCanvas.putImageData(bkgdPlotNotes, 0, 0);
+            
+            // turn note the new color on the bottommost layer of canvases
+            ctxBkgdMusicCanvas.beginPath();
+            ctxBkgdMusicCanvas.arc(note.x, note.y, COLOR_RADIUS, 0, 2 * Math.PI, true);
+            ctxBkgdMusicCanvas.fillStyle = note.noteColor;
+            ctxBkgdMusicCanvas.fill();
+            ctxBkgdMusicCanvas.stroke();
+            ctxBkgdMusicCanvas.closePath();
+          }
+
+          // put up the freq info and equation and play note
+          let $noteSelect = $("#noteSelectVal");
+          let $freqVal = $("#FreqOfNoteVal");
+          if ($noteSelect) $noteSelect.textContent = note.notePlayed;
+          if ($freqVal) $freqVal.textContent = note.freqHz + " Hz";
+
+          // we want a blip between notes as user "plays a simple song",
+          if (osc && typeof osc.stop === 'function') {
+            osc.stop();
+          } else if (osc && osc.toDestination) {
+            try { osc.toDestination().stop(); } catch(err) {}
+          }
+          
+          if (osc) {
+            if (osc.frequency) {
+              osc.frequency.value = note.freqHz;
+            } else {
+              osc.frequency = { value: note.freqHz };
+            }
+          }
+
+          setTimeout(function(){
+            // put a blip in the note change
+            if (volumeOn) {
+              // play only if volume is on, we know note is selected
+              if (osc && typeof osc.start === 'function') {
+                osc.start();
+              } else if (osc && osc.toDestination) {
+                try { osc.toDestination().start(); } catch(err) {}
+              }
+            }
+          }, 100);
+
+          selectedNote = note;
+          
+          let $volOnOffBtn = $(".VolOnOff");
+          if ($volOnOffBtn) $volOnOffBtn.setAttribute("title", ""); // note is selected, no need to pester the user
+          
+          drawTone();
+        }
+      });
+      
+      // Now that user is getting into page, put up the audio intro "click me" verbiage
+      let $verbalIntro = $("#verbalIntro");
+      if ($verbalIntro) $verbalIntro.style.visibility = 'visible';
+    });
+  }
 	
-	//***********************************
-	// user adjusts volume, start out with default values
-	//***********************************
-	function setVolume(){
-		$currVolume = $("#noteVol");
-		$("#noteVolValue").text($currVolume.val());
-		tonejs_dB = -40 + 20.0 * Math.log10($currVolume.val());
-		osc.volume.value = tonejs_dB;		
-	}
-	// set the default initial value to low value
-	let DEFAULT_VOL = 20; // as set in html for element
-	$("#noteVol").prop("value", DEFAULT_VOL);
-	let $currVolume, tonejs_dB;
-	setVolume();
+  //***********************************
+  // user adjusts volume, start out with default values
+  //***********************************
+  function setVolume(){ 
+    let $noteVolInput = $("#noteVol");
+    let activeVol = $noteVolInput ? $noteVolInput.value : "20";
+    
+    let $volText = $("#noteVolValue");
+    if ($volText) $volText.textContent = activeVol; 
+    
+    tonejs_dB = -40 + 20.0 * Math.log10(parseFloat(activeVol)); 
+    if (osc && osc.volume) {
+      osc.volume.value = tonejs_dB; 
+    }
+  } 
 
-	// allow for user changes
-	$('#noteVol').on('input', function(){
-		setVolume();
-	});
-	//***********************************
-	// user turns on and off sound
-	//***********************************
-	let volumeOn = (!$('.VolOnOff .VolOn').hasClass('hidden'))  ? true: false;
+  // set the default initial value to low value 
+  let DEFAULT_VOL = 20; // as set in html for element 
+  let $noteVolInput = $("#noteVol");
+  if ($noteVolInput) $noteVolInput.value = DEFAULT_VOL; 
+  
+  let tonejs_dB; 
+  setVolume(); 
 
-	// Handle user button interaction
-	$('.VolOnOff').on('click', function(event){
-		// if sound is on, button will say TURN_SOUND_OFF and vice versa
-		volumeOn = (!$('.VolOnOff .VolOn').hasClass('hidden'))  ? true: false;
-		if (null != selectedNote) {
-			// user has selected note, let volume be on/off
-			if (volumeOn) {
-				// sound is on, we turn it off, leave sliders alone
-				osc.toDestination().stop();
-				// here we change color/text on button
-				$('.VolOnOff .VolOn, .VolOnOff .VolOff').toggleClass('hidden');
-				volumeOn = false;
-			} else {
-				// turn on tone				
-				osc.toDestination().start();
-				// here we change color/text on button
-				$('.VolOnOff .VolOn, .VolOnOff .VolOff').toggleClass('hidden');
-				volumeOn = true;
-			}
-		} else {
-			//user has not selected a note yet, since cursor over volume button, tell them to select a note
-			$(".VolOnOff").prop("title", "Select note from above scales first");
-		}	
-	});
+  // allow for user changes 
+  let $noteVolSlider = $('#noteVol');
+  if ($noteVolSlider) {
+    $noteVolSlider.on('input', function(){ 
+      setVolume(); 
+    }); 
+  }
 
-	//***********************************
-	// User clicks on either image or the words around the image to get the audio intro
-	//***********************************
-	function resetNotes(){
-		// turn off whatever note is already playing and set up staff to initial state
-		osc.toDestination().stop();
-		// deselect note
-		ctxBkgdMusicCanvas.putImageData(bkgdPlotNotes, 0, 0);
-		$("#noteSelectVal").text("");
-		$("#FreqOfNoteVal").text("");
-		// clear out graph and associated equation
-		sine_plot_100_1k.options.plugins.title.text = "";
-		ampLong.length = 0; // zero out data and push to graph
-		sine_plot_100_1k.data.datasets[0].data.push(ampLong);
-		sine_plot_100_1k.update(); 
-		selectedNote = null; // dont want to play any notes since notes deselected
-		// set up volume icon as it is when first enter page, volume on but no sound since no note selected
-		volumeOn = true;
-		// go back to original html defaults
-		$(".VolOnOff .VolOn").addClass('hidden');
-		$(".VolOnOff .VolOff").removeClass('hidden');
+  //***********************************
+  // user turns on and off sound
+  //***********************************
+  let $volOnIndicator = $('.VolOnOff .VolOn');
+  let volumeOn = ($volOnIndicator && !$volOnIndicator.classList.contains('hidden')) ? true : false; 
 
-		// set the volume value to the default we start on the page (so its not too loud in case user has played with it before autodemo)
-		$("#noteVol").prop("value", DEFAULT_VOL);
-		setVolume();
-		// in case user was playing notes for a song, delete all that and put back to clear
-		$('#notesToPlay').css('display', 'none')
-  		$('#notesToPlayLabel').text("");
-	};
+  // Handle user button interaction 
+  let $volOnOffContainer = $('.VolOnOff');
+  if ($volOnOffContainer) {
+    $volOnOffContainer.on('click', function(event){ 
+      // if sound is on, button will say TURN_SOUND_OFF and vice versa 
+      let $onInd = $('.VolOnOff .VolOn');
+      volumeOn = ($onInd && !$onInd.classList.contains('hidden')) ? true : false; 
+      
+      if (null != selectedNote) { 
+        // user has selected note, let volume be on/off 
+        if (volumeOn) { 
+          // sound is on, we turn it off, leave sliders alone 
+          if (osc && osc.toDestination) {
+            try { osc.toDestination().stop(); } catch(e) {}
+          } else if (osc && typeof osc.stop === 'function') {
+            osc.stop();
+          }
+          
+          // here we change color/text on button 
+          let $vOn = $('.VolOnOff .VolOn');
+          let $vOff = $('.VolOnOff .VolOff');
+          if ($vOn) $vOn.toggleClass('hidden');
+          if ($vOff) $vOff.toggleClass('hidden');
+          volumeOn = false; 
+        } else { 
+          // turn on tone 
+          if (osc && osc.toDestination) {
+            try { osc.toDestination().start(); } catch(e) {}
+          } else if (osc && typeof osc.start === 'function') {
+            osc.start();
+          }
+          
+          // here we change color/text on button 
+          let $vOn = $('.VolOnOff .VolOn');
+          let $vOff = $('.VolOnOff .VolOff');
+          if ($vOn) $vOn.toggleClass('hidden');
+          if ($vOff) $vOff.toggleClass('hidden');
+          volumeOn = true; 
+        } 
+      } else { 
+        // user has not selected a note yet, since cursor over volume button, tell them to select a note 
+        if ($volOnOffContainer) $volOnOffContainer.setAttribute("title", "Select note from above scales first"); 
+      } 
+    });
+  }
 
-	//***********************************
-	// user wants a clean "reloaded" screen.  Mostly used at end of autodemo to clean things up
-	//***********************************	
-	$('#ResetPage').on('click', function(event){	
-		//resets graphs, scale and sound from tones only
-		resetNotes();
-	});	
-	
-	//***********************************
-	// user selects a song and code puts up notes to hit on staff
-	//***********************************	
-	$( "#Song1" ).click(function() {
-  		//Twinkle Twinkle little star, how I wonder where you are
-  		$('#notesToPlay').text("C4,C4,G4,G4,A4,A4,G4 - F4,F4,E4,E4,D4,D4,C4");
-  		$('#notesToPlay').height('20px');
-  		$('#notesToPlay').show();
-  		$('#notesToPlayLabel').text("Notes For Twinkle Twinkle tune:");
-  		// make the notes come out of trumpet to get the users attention at this point
-		$("#trumpetersNotes").css('visibility', 'visible');
-	});
-	$( "#Song2" ).click(function() {
-  		//Happy Birthday to you, Happy Birthday to you, Happy birthday dear 
-  		$('#notesToPlay').text("C4,C4,D4,C4,F4,E4 - C4,C4,D4,C4,G4,F4 - C4,C4,C5,A4,F4,E4,D4");
-  		$('#notesToPlay').height('40px');
-  		$('#notesToPlay').show();
-  		$('#notesToPlayLabel').text("Notes For Happy Birthday tune:");
-  		// make the notes come out of trumpet to get the users attention at this point
-		$("#trumpetersNotes").css('visibility', 'visible');
-	});
-	$( "#Song3" ).click(function() {
-  		//Jingle Bells Jingle Bells, Jingle all the way
-  		$('#notesToPlay').text("E4,E4,E4,E4,E4,E4,E4,G4,C4,D4,E4");
-  		$('#notesToPlay').height('20px');
-  		$('#notesToPlay').show();
-  		$('#notesToPlayLabel').text("Notes For Jingle Bells tune:");
-  		// make the notes come out of trumpet to get the users attention at this point
-		$("#trumpetersNotes").css('visibility', 'visible');
-	});
-	
-	//since this is on template and dont need it here...
-	$('a[href="#AdvancedTopics"]').css('display', 'none');
+  //***********************************
+  // User clicks on either image or the words around the image to get the audio intro
+  //***********************************
+  function resetNotes(){ 
+    // turn off whatever note is already playing and set up staff to initial state 
+    if (osc && osc.toDestination) {
+      try { osc.toDestination().stop(); } catch(e) {}
+    } else if (osc && typeof osc.stop === 'function') {
+      osc.stop();
+    }
+    
+    // deselect note 
+    if (ctxBkgdMusicCanvas && bkgdPlotNotes) {
+      ctxBkgdMusicCanvas.putImageData(bkgdPlotNotes, 0, 0); 
+    }
+    
+    let $noteSelectVal = $("#noteSelectVal");
+    let $freqOfNoteVal = $("#FreqOfNoteVal");
+    if ($noteSelectVal) $noteSelectVal.textContent = ""; 
+    if ($freqOfNoteVal) $freqOfNoteVal.textContent = ""; 
+    
+    // clear out graph and associated equation 
+    if (typeof sine_plot_100_1k !== 'undefined' && sine_plot_100_1k.options.plugins && sine_plot_100_1k.options.plugins.title) {
+      sine_plot_100_1k.options.plugins.title.text = ""; 
+    }
+    ampLong.length = 0; // zero out data and push to graph 
+    
+    if (typeof sine_plot_100_1k !== 'undefined' && sine_plot_100_1k.data && sine_plot_100_1k.data.datasets) {
+      sine_plot_100_1k.data.datasets[0].data.push(ampLong); 
+      sine_plot_100_1k.update(); 
+    }
+    
+    selectedNote = null; // dont want to play any notes since notes deselected 
+    // set up volume icon as it is when first enter page, volume on but no sound since no note selected 
+    volumeOn = true; 
+    
+    // go back to original html defaults 
+    let $vOn = $(".VolOnOff .VolOn");
+    let $vOff = $(".VolOnOff .VolOff");
+    if ($vOn) $vOn.addClass('hidden'); 
+    if ($vOff) $vOff.removeClass('hidden'); 
+    
+    // set the volume value to the default we start on the page (so its not too loud in case user has played with it before autodemo) 
+    let $noteVol = $("#noteVol");
+    if ($noteVol) $noteVol.value = DEFAULT_VOL; 
+    setVolume(); 
+    
+    // in case user was playing notes for a song, delete all that and put back to clear 
+    let $notesToPlay = $('#notesToPlay');
+    let $notesToPlayLabel = $('#notesToPlayLabel');
+    if ($notesToPlay) $notesToPlay.style.display = 'none'; 
+    if ($notesToPlayLabel) $notesToPlayLabel.textContent = ""; 
+  } 
 
+  //***********************************
+  // user wants a clean "reloaded" screen. Mostly used at end of autodemo to clean things up
+  //***********************************
+  let $resetPageBtn = $('#ResetPage');
+  if ($resetPageBtn) {
+    $resetPageBtn.on('click', function(event){ 
+      // resets graphs, scale and sound from tones only 
+      resetNotes(); 
+    });
+  }
+
+  //***********************************
+  // user selects a song and code puts up notes to hit on staff
+  //***********************************
+  let $song1Btn = $("#Song1");
+  if ($song1Btn) {
+    $song1Btn.on('click', function() { 
+      // Twinkle Twinkle little star, how I wonder where you are 
+      let $notesToPlay = $('#notesToPlay');
+      let $notesToPlayLabel = $('#notesToPlayLabel');
+      let $trumpetersNotes = $("#trumpetersNotes");
+      
+      if ($notesToPlay) {
+        $notesToPlay.textContent = "C4,C4,G4,G4,A4,A4,G4 - F4,F4,E4,E4,D4,D4,C4"; 
+        $notesToPlay.style.height = '20px'; 
+        $notesToPlay.style.display = 'block'; 
+      }
+      if ($notesToPlayLabel) $notesToPlayLabel.textContent = "Notes For Twinkle Twinkle tune:"; 
+      // make the notes come out of trumpet to get the users attention at this point 
+      if ($trumpetersNotes) $trumpetersNotes.style.visibility = 'visible'; 
+    });
+  }
+
+  let $song2Btn = $("#Song2");
+  if ($song2Btn) {
+    $song2Btn.on('click', function() { 
+      // Happy Birthday to you, Happy Birthday to you, Happy birthday dear 
+      let $notesToPlay = $('#notesToPlay');
+      let $notesToPlayLabel = $('#notesToPlayLabel');
+      let $trumpetersNotes = $("#trumpetersNotes");
+      
+      if ($notesToPlay) {
+        $notesToPlay.textContent = "C4,C4,D4,C4,F4,E4 - C4,C4,D4,C4,G4,F4 - C4,C4,C5,A4,F4,E4,D4"; 
+        $notesToPlay.style.height = '40px'; 
+        $notesToPlay.style.display = 'block'; 
+      }
+      if ($notesToPlayLabel) $notesToPlayLabel.textContent = "Notes For Happy Birthday tune:"; 
+      // make the notes come out of trumpet to get the users attention at this point 
+      if ($trumpetersNotes) $trumpetersNotes.style.visibility = 'visible'; 
+    });
+  }
+
+  let $song3Btn = $("#Song3");
+  if ($song3Btn) {
+    $song3Btn.on('click', function() { 
+      // Jingle Bells Jingle Bells, Jingle all the way 
+      let $notesToPlay = $('#notesToPlay');
+      let $notesToPlayLabel = $('#notesToPlayLabel');
+      let $trumpetersNotes = $("#trumpetersNotes");
+      
+      if ($notesToPlay) {
+        $notesToPlay.textContent = "E4,E4,E4,E4,E4,E4,E4,G4,C4,D4,E4"; 
+        $notesToPlay.style.height = '20px'; 
+        $notesToPlay.style.display = 'block'; 
+      }
+      if ($notesToPlayLabel) $notesToPlayLabel.textContent = "Notes For Jingle Bells tune:"; 
+      // make the notes come out of trumpet to get the users attention at this point 
+      if ($trumpetersNotes) $trumpetersNotes.style.visibility = 'visible'; 
+    });
+  }
+
+  // since this is on template and dont need it here... 
+  let advTopicLinks = document.querySelectorAll('a[href="#AdvancedTopics"]');
+  advTopicLinks.forEach(el => el.style.display = 'none');
     //********************************************************
 	// create a "script" for the auto-demo tutorial, by now, all variables should be set
 	//********************************************************	
@@ -654,48 +794,77 @@ $(function() {
 	}
 	];
 
-    //****************************************************************************
-    // User initiates autoDemo activity
-    //****************************************************************************   
-	//*** user clicks the start demo image in upper left corner, iniitalize everything
-	let demo = new AutoDemoWithCanvas(SCRIPT_AUTO_DEMO, 'funTutorial_MSIntro');  // give the demo the full script
-    $('#startAutoDemo').on('click', function(event) {			
-		// prep the control box for user to interact with auto demo
-		demo.prepDemoControls();	
-    });
-    	
-    //****************************************************************************
-    // User has interacted with autoDemo controls
-    //****************************************************************************
+  //**************************************************************************** 
+  // User initiates autoDemo activity 
+  //**************************************************************************** 
+  //*** user clicks the start demo image in upper left corner, iniitalize everything 
+  let demo = new AutoDemoWithCanvas(SCRIPT_AUTO_DEMO, 'funTutorial_MSIntro'); 
 
-	// User has selected play
-    $('#playSegment').on('click', function(){	
-		//So Safari requires that a user touch (cant do CustomEvent) instigates a WebAudio event
-		// here we "cheat" and let user play button touch do a quick audio action to satisfy Safari before Autodemo
-		// which will play tones or music
-		osc.toDestination().start();
-		osc.frequency.value = 80;  // below what most speakers will play
-		osc.toDestination().stop();	
+  let $startAutoDemoBtn = $('#startAutoDemo');
+  if ($startAutoDemoBtn) {
+    $startAutoDemoBtn.on('click', function(event) { 
+      // prep the control box for user to interact with auto demo 
+      demo.prepDemoControls(); 
+    }); 
+  }
 
-		// just in case a note is playing, turn it off
-		resetNotes();		
-    	demo.startDemo();
-    });
-    
-    $('#stopSegment').on('click', function(){	
-    	demo.stopThisSegment(false);  //we don't want to destroy controls box
-    });
-    
-    $('#dismissAutoDemo').on('click', function(){	
-    	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
-    	demo.stopThisSegment();  // may or may not be needed
-    });
- 
- 	$("#segNum").change(function(){
-		let currSeg = parseInt($('#segNum').val());
-		demo.setCurrSeg(currSeg);
-		
-		// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
-	});
-})
+  //**************************************************************************** 
+  // User has interacted with autoDemo controls 
+  //**************************************************************************** 
+  // User has selected play 
+  let $playSegmentBtn = $('#playSegment');
+  if ($playSegmentBtn) {
+    $playSegmentBtn.on('click', function(){ 
+      // So Safari requires that a user touch (cant do CustomEvent) instigates a WebAudio event 
+      // here we "cheat" and let user play button touch do a quick audio action to satisfy Safari before Autodemo 
+      // which will play tones or music 
+      if (osc && osc.toDestination) {
+        try {
+          osc.toDestination().start(); 
+          osc.frequency.value = 80; // below what most speakers will play 
+          osc.toDestination().stop(); 
+        } catch(e) {}
+      } else if (osc && typeof osc.start === 'function') {
+        try {
+          osc.start();
+          osc.frequency.value = 80;
+          osc.stop();
+        } catch(e) {}
+      }
+
+      // just in case a note is playing, turn it off 
+      resetNotes(); 
+      demo.startDemo(); 
+    }); 
+  }
+
+  let $stopSegmentBtn = $('#stopSegment');
+  if ($stopSegmentBtn) {
+    $stopSegmentBtn.on('click', function(){ 
+      demo.stopThisSegment(false); // we don't want to destroy controls box 
+    }); 
+  }
+
+  let $dismissAutoDemoBtn = $('#dismissAutoDemo');
+  if ($dismissAutoDemoBtn) {
+    $dismissAutoDemoBtn.on('click', function(){ 
+      // user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen 
+      demo.stopThisSegment(); // may or may not be needed 
+    }); 
+  }
+
+  let $segNumSelect = $("#segNum");
+  if ($segNumSelect) {
+    $segNumSelect.on('change', function(){ 
+      let currSeg = parseInt($segNumSelect.value); 
+      demo.setCurrSeg(currSeg); 
+      
+      // remove the class so the animation will work on next page, cant do this until animation completes 
+      let $clickHereCursor = $('#clickHereCursor');
+      if ($clickHereCursor) {
+        $clickHereCursor.classList.remove('userHitPlay'); 
+      }
+    }); 
+  }
+
+}); 

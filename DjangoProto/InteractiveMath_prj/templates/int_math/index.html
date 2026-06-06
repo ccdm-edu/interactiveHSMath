@@ -13,7 +13,7 @@
 
 <!-- front and center text -->
 {% block mainHeaderText %}
-	<h1><span id=homePageHeader>{{ basePage.CompanyName }} </span></h1> 
+	<h1><span id="homePageHeader">{{ basePage.CompanyName }}</span></h1> 
 	<h2>High School Algebra 2, PreCalculus and Physics</h2>
 {% endblock %}
 
@@ -41,15 +41,13 @@
 	</div>
 {% endblock %}
   				
-
 {% block body_block %}
 	<div id="LandingMainBody">
 
-	  	<img id="logo-home-page" src="{{ landingPageLogo }}" alt = "Landing Page Logo">
+	  	<img id="logo-home-page" src="{{ landingPageLogo }}" alt="Landing Page Logo">
 		<div class="home_expln">
 
 			{% if is_mobile %}
-
 				<br>
 				<span id="upgradeSchedule">
 				{%if upgradeNoticePresent %}
@@ -71,7 +69,7 @@
 				<noscript>
 					<!-- however, we must have javascript enabled, only client knows if this is true -->
 					<br>
-						Since this site is interactive, Javascript <font size="+2">MUST </font>be enabled to fully experience the site.
+						Since this site is interactive, Javascript <span style="font-size: 1.5em;">MUST</span> be enabled to fully experience the site.
 						You do not have Javascript enabled in your browser. 
 					<br>
 				</noscript>
@@ -106,16 +104,13 @@
 	<br>
 	<br>	
 	
-	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  
-	At the bottom it doesn't consume space from other elements but it does give search engines a clue what page is all about. -->
-    <p class="AdvTopic_ToDo">TRY THIS: On complicated pages, a list of stuff to try out will be here.
-	</p>
-	<p class="AdvTopic_Expln">EXPLANATION: On complicated pages, a detailed explanation of advanced concepts will be here
-	</p>
+	<!-- Leave this text at the bottom to be consumed by JS and put in proper place. -->
+    <p class="AdvTopic_ToDo">TRY THIS: On complicated pages, a list of stuff to try out will be here.</p>
+	<p class="AdvTopic_Expln">EXPLANATION: On complicated pages, a detailed explanation of advanced concepts will be here</p>
 {% endblock %}	
 
 {% block unique_js_block %}	
-	<!-- custom JS for this page -->
+	<!-- Icon Utility Library (Feather Icons) -->
 	<script 
 	  nonce="{{ CSP_NONCE }}" 
 	  src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.2/feather.min.js" 
@@ -124,16 +119,20 @@
 	  referrerpolicy="no-referrer">
 	</script>
 	<!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
-	<script nonce="{{ CSP_NONCE }}">feather.replace()</script>
+	<script nonce="{{ CSP_NONCE }}">
+		feather.replace();
+	</script>
 
+	<!-- Framework-Free Asset Scripts for this Page -->
 	<script src="{{ basePage.AutoDemoJS }}" crossorigin="anonymous"></script>	
 	<script src="{{ LandPageJS }}" crossorigin="anonymous"></script>
 	<script nonce="{{ CSP_NONCE }}">
-		//no advanced topics on intro page
-		$('a[href="#AdvancedTopics"]').css('visibility', 'hidden');
+		// No advanced topics link on intro page - Native Vanilla JS mutation
+		let advTopicsLink = document.querySelector('a[href="#AdvancedTopics"]');
+		if (advTopicsLink) {
+			advTopicsLink.style.visibility = 'hidden';
+		}
 	</script>
-
 {% endblock %}
-
 
 

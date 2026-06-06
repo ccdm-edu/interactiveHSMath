@@ -1,96 +1,70 @@
 'use strict'
-//JQuery, dont do this script until document DOM objects are loaded and ready
-$(function() {
-   	 	
-	// if the user has saved an old mode, resurrect it here
-	let newbieMode = sessionStorage.getItem('UserIsNew');
-	if (!newbieMode) {
-		// first arrival to site, default newbie mode
-		$("#newbieMode").prop('checked', true); // put them in newbie mode
-		sessionStorage.setItem('UserIsNew', true);  // if user never changes anything, they are classed as newbie
-	} else if (newbieMode.toLowerCase() === "false") {
-		$("#expertMode").prop('checked', true); // put them in newbie mode
-	} else {
-		// user saved newbie mode or its their first arrival to site,
-		sessionStorage.setItem('UserIsNew', true);  // if user never changes anything, they are classed as newbie
-		$("#newbieMode").prop('checked', true); // put them in newbie mode
-	}
-	
-	//Dont want a next button on this page so kill it here	
-    $("#GoToNextPage").css('display', 'none');
-    $("#GoToPreviousPage").css('display', 'none');
 
-	//legal precedent states that on the home page, browserwrap must be in upper left of home page to be "more" valid */    
-    //$('#LegalNotice_Consent').css('top', '100px');
-    //********************************************************
-	// create a "script" for the auto-demo tutorial, by now, all variables should be set
-	// The script differs for mobile since we don't have a left menu but rather a "hamburger" menu to right
-	//********************************************************	
+// Replacing $(function() { ... }) with native standard DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
 
-	const INTRO_FEATURES = 	  [
-		{segmentActivity: "PLAY_AUDIO",
-		 segmentParams: 
-		 	{filenameURL: 'LandingPageSeg0',
-		 	waitTimeMillisec: 1000}
-		},
-		{segmentActivity: "ANNOTATE_ELEMENT",
-		 segmentParams: 
-		 	{element: 'segNum', 
-		 	 color: "red",
-		 	 waitTimeMillisec: 2000}
-		},
-		{segmentActivity: "ANNOTATE_ELEMENT",
-		 segmentParams: 
-		 	{element: 'totalSeg', 
-		 	 color: "green",
-		 	 waitTimeMillisec: 7000}
-		},
-		{segmentActivity: "REMOVE_ALL_ANNOTATE_ELEMENT",
-		 segmentParams: 
-		 	{waitTimeMillisec: 14000}
-		},
-		{segmentActivity: "ACT_ON_ELEMENT", 
-		 segmentParams:
-		 	{element:'#segNum',
-		 	 action: "focus",
-		 	 // positive values for offset x and y move the cursor "southwest"
-		 	 offset: {x: 30, y: 15},
-		 	waitTimeMillisec: 17000}  // this is wait before you go on to next item
-		},
-		{segmentActivity: "REMOVE_ACT_ON_ELEMENT", 
-		 segmentParams:
-		 	{element:'#segNum',
-		 	 action: "focus",
-		 	 // positive values for offset x and y move the cursor "southwest"
-		 	waitTimeMillisec: 12000}
-		},
-		{segmentActivity: "ACT_ON_ELEMENT", 
-		 segmentParams:
-		 	{element:'#AdvancedTopicLink',
-		 	 action: "click",
-		 	 // positive values for offset x and y move the cursor "southwest", so neg x is south east
-		 	 offset: {x: 0, y: 15},
-		 	waitTimeMillisec: 1000}  // this is wait before you go on to next item
-		},
-		{segmentActivity: "SHOW_MODAL",
-		 segmentParams:
-		 	{element: 'AdvancedTopics',
-		 	waitTimeMillisec: 1000},  // wait time doesn't matter here
-		 }	 
-    ];
-    
-	// the intro to the site varies whether we have a hamburger menu (generally present on mobile) or not
-	let noHamburgerMenu = $('#upperNavbarCollapse').is(":visible");
-   
-    let SCRIPT_AUTO_DEMO;
-	if (noHamburgerMenu){
-		// we get a left menu, we can demo it
-	    SCRIPT_AUTO_DEMO = [
-		{ segmentName: "Intro to Auto Demo",
-		  headStartForAudioMillisec: 25000, // generally the audio is longer than the cursor/annotate activity
-		  segmentActivities: INTRO_FEATURES
-	
-		},
+  // if the user has saved an old mode, resurrect it here
+  let newbieMode = sessionStorage.getItem('UserIsNew');
+  let $newbieRadio = document.getElementById("newbieMode");
+  let $expertRadio = document.getElementById("expertMode");
+
+  if (!newbieMode) {
+    // first arrival to site, default newbie mode
+    if ($newbieRadio) $newbieRadio.checked = true; // put them in newbie mode
+    sessionStorage.setItem('UserIsNew', true); // if user never changes anything, they are classed as newbie
+  } else if (newbieMode.toLowerCase() === "false") {
+    if ($expertRadio) $expertRadio.checked = true; // put them in newbie mode
+  } else {
+    // user saved newbie mode or its their first arrival to site,
+    sessionStorage.setItem('UserIsNew', true); // if user never changes anything, they are classed as newbie
+    if ($newbieRadio) $newbieRadio.checked = true; // put them in newbie mode
+  }
+
+  // Dont want a next button on this page so kill it here
+  let $nextBtn = $("#GoToNextPage");
+  let $prevBtn = $("#GoToPreviousPage");
+  if ($nextBtn) $nextBtn.style.display = 'none';
+  if ($prevBtn) $prevBtn.style.display = 'none';
+
+  // legal precedent states that on the home page, browserwrap must be in upper left of home page to be "more" valid */
+  
+  //********************************************************
+  // create a "script" for the auto-demo tutorial, by now, all variables should be set
+  // The script differs for mobile since we don't have a left menu but rather a "hamburger" menu to right
+  //********************************************************
+  const INTRO_FEATURES = [
+    {segmentActivity: "PLAY_AUDIO", segmentParams: {filenameURL: 'LandingPageSeg0', waitTimeMillisec: 1000} },
+    {segmentActivity: "ANNOTATE_ELEMENT", segmentParams: {element: 'segNum', color: "red", waitTimeMillisec: 2000} },
+    {segmentActivity: "ANNOTATE_ELEMENT", segmentParams: {element: 'totalSeg', color: "green", waitTimeMillisec: 7000} },
+    {segmentActivity: "REMOVE_ALL_ANNOTATE_ELEMENT", segmentParams: {waitTimeMillisec: 14000} },
+    {segmentActivity: "ACT_ON_ELEMENT", segmentParams: {element:'#segNum', action: "focus", // positive values for offset x and y move the cursor "southwest"
+     offset: {x: 30, y: 15}, waitTimeMillisec: 17000} // this is wait before you go on to next item
+    },
+    {segmentActivity: "REMOVE_ACT_ON_ELEMENT", segmentParams: {element:'#segNum', action: "focus", // positive values for offset x and y move the cursor "southwest"
+     waitTimeMillisec: 12000}
+    },
+    {segmentActivity: "ACT_ON_ELEMENT", segmentParams: {element:'#AdvancedTopicLink', action: "click", // positive values for offset x and y move the cursor "southwest", so neg x is south east
+     offset: {x: 0, y: 15}, waitTimeMillisec: 1000} // this is wait before you go on to next item
+    },
+    {segmentActivity: "SHOW_MODAL", segmentParams: {element: 'AdvancedTopics', waitTimeMillisec: 1000}, // wait time doesn't matter here
+    }
+  ];
+
+  // the intro to the site varies whether we have a hamburger menu (generally present on mobile) or not
+  let menuContainer = document.getElementById('upperNavbarCollapse');
+  // Native replacement for jQuery .is(":visible") by validating window style dimensions
+  let noHamburgerMenu = menuContainer && window.getComputedStyle(menuContainer).display !== 'none';
+  let SCRIPT_AUTO_DEMO;
+
+  if (noHamburgerMenu){
+    // we get a left menu, we can demo it
+    SCRIPT_AUTO_DEMO = [
+      {
+        segmentName: "Intro to Auto Demo",
+        headStartForAudioMillisec: 25000, // generally the audio is longer than the cursor/annotate activity
+        segmentActivities: INTRO_FEATURES
+      },
+
 		{ segmentName: "Welcome to this site...",
 		  headStartForAudioMillisec: 12000, // generally the audio is longer than the cursor/annotate activity
 		  segmentActivities: 
@@ -364,71 +338,105 @@ $(function() {
 		];		
 	}
 	
-    //****************************************************************************
-    // User initiates autoDemo activity
-    //****************************************************************************   
-	//*** user clicks the start demo image, iniitalize everything
-	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
-    $('#startAutoDemo').on('click', function() {
-		demo.prepDemoControls();
-		// need to move down legal stuff to make more room for demo list of subtopics
-		$('#LegalNotice_Consent').css('top', '400px');
+  //**************************************************************************** 
+  // User initiates autoDemo activity 
+  //**************************************************************************** 
+  //*** user clicks the start demo image, iniitalize everything 
+  let demo = new AutoDemo(SCRIPT_AUTO_DEMO); // give the demo the full script 
+
+  let $startAutoDemoBtn = $('#startAutoDemo');
+  if ($startAutoDemoBtn) {
+    $startAutoDemoBtn.on('click', function() { 
+      demo.prepDemoControls(); 
+      // need to move down legal stuff to make more room for demo list of subtopics natively 
+      let $legalNotice = $('#LegalNotice_Consent');
+      if ($legalNotice) $legalNotice.style.top = '400px'; 
+    }); 
+  }
+
+  //**************************************************************************** 
+  // User has interacted with autoDemo controls 
+  //**************************************************************************** 
+  // User has selected play 
+  let $playSegmentBtn = $('#playSegment');
+  if ($playSegmentBtn) {
+    $playSegmentBtn.on('click', function(){ 
+      // this is only true for this pages demo... 
+      let $segNumSelect = $('#segNum');
+      let currSeg = $segNumSelect ? parseInt($segNumSelect.value) : 1; 
+      
+      if (currSeg === 1) { 
+        // only illustrative for the first segment on autodemo intro 
+        // Multiple matches handled natively via selector arrays to match sugar baseline rules
+        let targetLinks = document.querySelectorAll('a[href="#AdvancedTopics"]');
+        targetLinks.forEach(el => {
+          el.style.display = 'inline-block';
+          el.style.visibility = 'visible';
+        });
+      } 
+      demo.startDemo(); 
+    }); 
+  }
+
+  let $stopSegmentBtn = $('#stopSegment');
+  if ($stopSegmentBtn) {
+    $stopSegmentBtn.on('click', function(){ 
+      demo.stopThisSegment(false); // we don't want to destroy controls box 
+      // get rid of adv topics link, was for demo only 
+      let targetLinks = document.querySelectorAll('a[href="#AdvancedTopics"]');
+      targetLinks.forEach(el => el.style.display = 'none');
+    }); 
+  }
+
+  let $dismissAutoDemoBtn = $('#dismissAutoDemo');
+  if ($dismissAutoDemoBtn) {
+    $dismissAutoDemoBtn.on('click', function(){ 
+      // user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen 
+      demo.stopThisSegment(); // may or may not be needed 
+      // get rid of adv topics link, was for demo only 
+      let targetLinks = document.querySelectorAll('a[href="#AdvancedTopics"]');
+      targetLinks.forEach(el => el.style.display = 'none');
+      
+      let $legalNotice = $('#LegalNotice_Consent');
+      if ($legalNotice) $legalNotice.style.top = ''; // let it float back up where it belongs 
+    }); 
+  }
+
+  let $segNumSelect = $("#segNum");
+  if ($segNumSelect) {
+    $segNumSelect.on('change', function(){ 
+      let currSeg = parseInt($segNumSelect.value); 
+      demo.setCurrSeg(currSeg); 
+      
+      // remove the class so the animation will work on next page, cant do this until animation completes 
+      let $clickHereCursor = $('#clickHereCursor');
+      if ($clickHereCursor) $clickHereCursor.classList.remove('userHitPlay'); 
+    }); 
+  }
+
+  //**************************************************************************** 
+  // User has changed newbie/expert mode selection 
+  //**************************************************************************** 
+  // Framework-free event delegation loop maps directly onto your custom element factory structures
+  let radioButtons = document.querySelectorAll("#selectNewbieOrExpert input[name='helpLevel']");
+  radioButtons.forEach(radio => {
+    let $radio = extendElement(radio);
+    $radio.on('click', function(event) {
+      // Find the active chosen option state natively via quick runtime properties
+      let checkedRadio = document.querySelector('input[name="helpLevel"]:checked');
+      let currentModeValue = checkedRadio ? checkedRadio.value : "";
+
+      if (currentModeValue === "newbieMode") { 
+        sessionStorage.setItem('UserIsNew', true); 
+        console.log(' newbie mode'); 
+      } else if (currentModeValue === "expertMode") { 
+        // go to expert mode 
+        console.log('expert mode'); 
+        sessionStorage.setItem('UserIsNew', false); 
+      } else { 
+        console.log('Coding error on selection of user proficiency level'); 
+      } 
     });
-    	
-    //****************************************************************************
-    // User has interacted with autoDemo controls
-    //****************************************************************************
+  });
 
-	// User has selected play
-    $('#playSegment').on('click', function(){	
-
-    	// this is only true for this pages demo...
-    	let currSeg = parseInt($('#segNum').val());
-    	if (currSeg === 1){
-    		// only illustrative for the first segment on autodemo intro
-	    	$('a[href="#AdvancedTopics"]').css('display', 'inline-block');
-	    	$('a[href="#AdvancedTopics"]').css('visibility', 'visible');
-    	}
-    	demo.startDemo();
-    });
-    
-    $('#stopSegment').on('click', function(){	
-    	demo.stopThisSegment(false);  //we don't want to destroy controls box
-    	// get rid of adv topics link, was for demo only
-    	$('a[href="#AdvancedTopics"]').css('display', 'none');
-
-    });
-    
-    $('#dismissAutoDemo').on('click', function(){	
-    	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
-    	demo.stopThisSegment();  // may or may not be needed   	
-		
-		// get rid of adv topics link, was for demo only
-    	$('a[href="#AdvancedTopics"]').css('display', 'none');
-    	$('#LegalNotice_Consent').css('top', '');   //let it float back up where it belongs
-    });
-
-	$("#segNum").change(function(){
-		let currSeg = parseInt($('#segNum').val());
-		demo.setCurrSeg(currSeg);
-		// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay'); 
-	});
-
-    //****************************************************************************
-    // User has changed newbie/expert mode selection
-    //****************************************************************************
-	$("#selectNewbieOrExpert input[name='helpLevel']").on('click', function(event) {
-		if($('input:radio[name=helpLevel]:checked').val() == "newbieMode"){
-			sessionStorage.setItem('UserIsNew', true);
-			console.log(' newbie mode');
-		} else if($('input:radio[name=helpLevel]:checked').val() == "expertMode") {
-			// go to expert mode
-			console.log('expert mode');
-			sessionStorage.setItem('UserIsNew', false);
-		} else {
-			console.log('Coding error on selection of user proficiency level');
-		}    
-	});   
-     
-})
+}); 

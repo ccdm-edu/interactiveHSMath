@@ -20,7 +20,7 @@
 {% block body_block %}
 	<div id="DynamicTrig1Block">
 		<div id="CircleValues_DT1">	
-			<input type="button" id="ClearOldFreq_DT1" value="Clear" data-toggle="tooltip" data-placement="top" title="Stop clock.  Clear plots">
+			<input type="button" id="ClearOldFreq_DT1" value="Clear" title="Stop clock.  Clear plots">
 			<label id = "time_DT1"><strong>Time (sec)</strong></label>
 			<p id="timeVal_DT1"> </p>
 			<label id="thetaLabel_DT1"><strong>&#920</strong></label>
@@ -30,7 +30,7 @@
 			<p id="UserNotices_DT1" ></p>	
 			<p id='ExplnFreqMark'>Look at the two circles.  They both reflect the time it took you to <br>accumulate 360 degrees of phase.  
 			This is the period (T) of the waveform.  <br>The frequency of the waveform is 1/T.  Pull out your calculator and confirm!</p>
-			<input type="button" id="StartOver_DT1" value="Start Over" data-toggle="tooltip" data-placement="top" title="Back to beginning on user help">
+			<input type="button" id="StartOver_DT1" value="Start Over" title="Back to beginning on user help">
 		</div>
 		
 		<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
@@ -65,23 +65,21 @@
 	</div>
 	
 	<!-- Tell user there is a timer counting their phase accumulation, they need to keep up -->
-	<div class="modal fade" id="expiremodal" role="dialog" tabindex="-1">
-		<div class="modal-dialog modal-dialog-scrollable" role="document">
-			<div class="modal-content">
-				<div class="modal-body">
-					<h1>Time Expired!</h1>
-					<p>The purpose of this page is to accumulate 360&#176 phase within 30 seconds of time.  
-					The faster you do it, the higher the frequency of the sine wave. 
-					 Frequency = 1/T where T is how long it takes you to make a complete 360&#176 turn around the circle. 
-					 <br><b>We are going to start over. Follow the pop up box and go as fast as you can</b></p>
-				</div>
-				<div class="modal-footer">
-					<!--  when clicked, this will dismiss the modal -->
-					<button class="btn btn-success" data-dismiss="modal" type="button">Got it!</button><br class="visible-xs">	
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
+	<dialog id="expiremodal">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h1>Time Expired!</h1>
+				<p>The purpose of this page is to accumulate 360&#176 phase within 30 seconds of time.  
+				The faster you do it, the higher the frequency of the sine wave. 
+				 Frequency = 1/T where T is how long it takes you to make a complete 360&#176 turn around the circle. 
+				 <br><b>We are going to start over. Follow the pop up box and go as fast as you can</b></p>
+			</div>
+			<div class="modal-footer">
+				<!-- Changed Bootstrap tracking dismiss triggers to a uniform custom class indicator -->
+				<button class="dialog-close-trigger" type="button">Got it!</button>	
+			</div>
+		</div>
+	</dialog>
 	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  
 	At the bottom it doesn't consume space from other elements but it does give search engines a clue what page is all about. -->
@@ -145,7 +143,6 @@
 	will not be able to show the actual sampling on the unit circle.  Human hearing starts around 20Hz but most common computer speakers 
 	start producing sound at around 100 Hz.  We'll get to these much higher frequencies on the next page Trig Tones become audible and page 7 Trig 
 	tones within musical notes.
-	
 	</p>
 
 {% endblock %}	

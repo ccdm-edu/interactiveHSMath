@@ -19,8 +19,8 @@
 {% endblock %}
  <!-- to side of autodemo -->					
 {% block supportMaterial %}
-		<div id ="headerAndCtl_ST">
-			<h1 >Where do sine waves<br> come from?</h1>
+		<div id="headerAndCtl_ST">
+			<h1>Where do sine waves<br> come from?</h1>
 		</div>
 {% endblock %}	
     
@@ -30,7 +30,8 @@
 		<div id="CircleValues">	
 	    	<label id="ampCircLabel"><b>Amplitude (r)</b></label>
 	    	<div id="ampCircLocation">
-		    	<select name="ampCirc" id="ampCirc" class="custom-select">
+		    	<!-- Stripped old Bootstrap custom-select wrapper class -->
+		    	<select name="ampCirc" id="ampCirc">
 				    <option value="0.8">0.8</option>
 				    <option value="0.9">0.9</option>
 				    <option value="1.0" selected>1.0</option>
@@ -42,9 +43,10 @@
 		    <div id="equationContainer">
 				<label id="xyValueLabel"><b>(x,y)</b></label>
 				<p id="xyEqtn_x"></p><p id="xyEqtn_y"></p>
-				<p id ="xyFilledIn"></p>
-				<p id="xyExactValue" data-toggle="tooltip" data-placement="right" title="Exact Value of (x,y)"></p>
-				<p id="xyValueDecimal"data-toggle="tooltip"  data-placement="right" title="Decimal Approx of (x,y)"></p>
+				<p id="xyFilledIn"></p>
+				<!-- Transformed old data tooltips into stable standard cross-browser title tags -->
+				<p id="xyExactValue" title="Exact Value of (x,y)"></p>
+				<p id="xyValueDecimal" title="Decimal Approx of (x,y)"></p>
 				<label id="thetaLabel"><b>&#952</b></label>
 				<p id="theta">  </p>
 			</div>
@@ -53,28 +55,27 @@
 		<div id="Canvas_STrig">
 			<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
 			<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas:  you must set bitmap for canvas in html, css only -->
-			<!-- sets element size, resulting in distortion -->
-			<!--  use this to create border for debug  style="border:1px solid #000000;" -->
-			<canvas id="AmpSinCosCircle" width=1050 height=650 >
+			<!-- Encapsulated width and height variables within proper structural string double quotes -->
+			<canvas id="AmpSinCosCircle" width="1050" height="650">
 					Your Browser does not support canvas tag, you are missing graph capability
 			</canvas>
 			<div class="quadIdentifiers">
-				<p id = "quad1_ID">I</p>
-				<p id = "quad2_ID">II</p>
-				<p id = "quad3_ID">III</p>
-				<p id = "quad4_ID">IV</p>
+				<p id="quad1_ID">I</p>
+				<p id="quad2_ID">II</p>
+				<p id="quad3_ID">III</p>
+				<p id="quad4_ID">IV</p>
 			</div>	
 			
 			<div id="FirstHelp_ST">
 			<!--  will dynamically add elements here -->
 				<p> Start clicking yellow dots, which represent phase &#920 values</p>
 			</div>
-			<canvas id="funTutorial_ST" width=1050 height=650 >   <!-- needed to move cursor around circle canvas -->
+			<canvas id="funTutorial_ST" width="1050" height="650">   <!-- needed to move cursor around circle canvas -->
 				Your Browser does not support canvas tag, you are missing graph capability
 			</canvas>		
 		</div>
 	</div>
-	
+
 	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  
 	At the bottom it doesn't consume space from other elements but it does give search engines a clue what page is all about. Can only add inline elements to a <p></p>, <ul> is block -->

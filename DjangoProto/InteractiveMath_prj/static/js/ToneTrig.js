@@ -1,229 +1,289 @@
 'use strict'
-//JQuery, dont do this script until document DOM objects are loaded and ready
-$(function() {
-	//if Next  button hit (in base template), set it up to go to intro page
-	$("#GoToNextPage").wrap('<a href="../MusicNotesTrig"></a>');
-	$("#GoToPreviousPage").wrap('<a href="../DynamicTrig2"></a>');
-	
-	// user can only pick expert/newbie mode on the first home page
-	let newbieMode = sessionStorage.getItem('UserIsNew');
-	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
-		// emphasize the auto demo as first place
-		$("#startAutoDemo").addClass('newbieMode');
-	} else {
-		// user somehow got here without going through landing page or deleted sessionStorage, put in newbie mode
-		$("#startAutoDemo").addClass('newbieMode');
-	}
 
-	let ctxLong, ctxShort, ctxExpandTime;
-	//***********************************
-	//  Immediate execution here
-	//***********************************
+// Replacing $(function() { ... }) with native standard DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
 
-	// With the graphs drawn, prepare to draw explanatory lines between the charts
-	//https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
-	if ( $("#timeExpand").length ) {
-    	ctxExpandTime = $("#timeExpand").get(0).getContext('2d');
-	} else {
-    	console.error('Cannot obtain timeExpand context');
-	};
-	// prepare to draw the 10ms plot at top
-    if ( $("#sine_plotsLong").length ) {
-    	ctxLong = $("#sine_plotsLong").get(0).getContext('2d');
-	} else {
-    	console.error('Cannot obtain sin_plotsLo context');
-	};
-	// prepare to draw the 1ms plot below the top 10 ms plot
-    if ( $("#sine_plotsShort").length ) {
-    	ctxShort = $("#sine_plotsShort").get(0).getContext('2d');
-	} else {
-    	console.error('Cannot obtain sin_plotsHi context');
-	};
-	
-	// implement the Tone sounding and chart tools
-	let $currFreq = $("#in-range-freq");
-	let $currAmp = $("#in-range-amp");
-	let $currPhase = $("#in-range-phase")
-	
-	let ToneIsOnNow = false;  // for synthesized tone, both musical note and tone can play additively.
-	let osc = new Tone.Oscillator(); 
-	
-	// used for plotting
-	let timeMsLong = [];
-	let ampLong = [];
-	let timeMsShort = [];
-	let ampShort = [];
+  // Helper function to handle wrapping nodes natively
+  const wrapNode = (el, wrapperType) => {
+    let wrapper = document.createElement(wrapperType);
+    el.parentNode.insertBefore(wrapper, el);
+    wrapper.appendChild(el);
+    return wrapper;
+  };
 
-	const NUM_PTS_PLOT_SHORT = 200;
-	const NUM_PTS_PLOT_LONG = 1000;
-	const DURATION_LONG_PLOT_MS = 10;
-	const DURATION_SHORT_PLOT_MS = 1;	
-	//sample period in sec
-	// yes, these are ridiculously high rates, didn't want to have ANY sampling artifacts in plots...
-	const samplePeriodLong = DURATION_LONG_PLOT_MS/(1000 * NUM_PTS_PLOT_LONG);
-	const samplePeriodShort = DURATION_SHORT_PLOT_MS/(1000 * NUM_PTS_PLOT_SHORT);
-	
-	function fillInArrays(){
-		let i;
-		for (i=0; i<=NUM_PTS_PLOT_LONG; i++) {
-			ampLong[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodLong + $currPhase.val() / 360.0) );
-			timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 3);		
-		}
-		for (i=0; i<=NUM_PTS_PLOT_SHORT; i++) {
-			ampShort[i] = $currAmp.val() * Math.sin(2 * Math.PI * ($currFreq.val() * i * samplePeriodShort + $currPhase.val() / 360.0) );
-			// need higher precision here on time than with the longer plot
-			timeMsShort[i] = roundFP(i * samplePeriodShort * 1000, 4);				
-		}	
-	};
-	
-	function drawTone()
-	{	    
-	    // update title to match new parameters
-	    // http://www.javascripter.net/faq/greekletters.htm added pi in as greek letter
-	    let currTitleText = 'Pitch tone y = ' + $currAmp.val() + ' ' + MULT_DOT + ' sin{ 2 ' + MULT_DOT + ' ' + PI + ' ' +  MULT_DOT +  ' (' + $currFreq.val() + ' ' + MULT_DOT + ' t + ' + $currPhase.val() + '/360) }';
-		sine_plot_100_1k.options.plugins.title.text = currTitleText;
-		// now fill the arrays and they will automatically be reread into plots
-		fillInArrays();   
+  // if Next button hit (in base template), set it up to go to intro page
+  let nextBtn = document.getElementById("GoToNextPage");
+  if (nextBtn) wrapNode(nextBtn, "a").href = "../MusicNotesTrig";
 
-	    // make all these changes happen
-	    sine_plot_100_1k.update();	                    
-	    sine_plot_1k_10k.update();  
-	};
-	
-	function updateFreq() {
-		//min and max freq chosen depends on audio speakers used, my speakers can just barely respond at 100 Hz
-		//max freq depends on value set by user in #freqMax
-		$currFreq= $("#in-range-freq")   // get slider value
-		$("#currFreqLabel").text($currFreq.val());   // and put it on the label as string
-		if (ToneIsOnNow==true) {
-			osc.frequency.value = $currFreq.val();
-			// if tone isn't on, don't have to change anything...
-		}
-	}
-	
-	function updatePhase() {
-		$currPhase = $("#in-range-phase")
-		$("#currPhaseLabel").text($currPhase.val());
-		if (ToneIsOnNow==true) {
-			osc.phase = $currPhase.val();
-			// if tone isn't on, don't have to change anything...
-		}	
-	}
+  let prevBtn = document.getElementById("GoToPreviousPage");
+  if (prevBtn) wrapNode(prevBtn, "a").href = "../DynamicTrig2";
+
+  // user can only pick expert/newbie mode on the first home page
+  let newbieMode = sessionStorage.getItem('UserIsNew');
+  let startDemoBtn = document.getElementById("startAutoDemo");
+
+  if (newbieMode && (newbieMode.toLowerCase() === "true")) {
+    // emphasize the auto demo as first place
+    if (startDemoBtn) startDemoBtn.classList.add('newbieMode');
+  } else {
+    // user somehow got here without going through landing page or deleted sessionStorage, put in newbie mode
+    if (startDemoBtn) startDemoBtn.classList.add('newbieMode');
+  }
+
+  let ctxLong, ctxShort, ctxExpandTime;
+
+  //***********************************
+  // Immediate execution here
+  //***********************************
+  // With the graphs drawn, prepare to draw explanatory lines between the charts
+  // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
+  let expandTimeCanvas = document.getElementById("timeExpand");
+  if (expandTimeCanvas) {
+    ctxExpandTime = expandTimeCanvas.getContext('2d');
+  } else {
+    console.error('Cannot obtain timeExpand context');
+  }
+
+  // prepare to draw the 10ms plot at top
+  let plotsLongCanvas = document.getElementById("sine_plotsLong");
+  if (plotsLongCanvas) {
+    ctxLong = plotsLongCanvas.getContext('2d');
+  } else {
+    console.error('Cannot obtain sin_plotsLo context');
+  }
+
+  // prepare to draw the 1ms plot below the top 10 ms plot
+  let plotsShortCanvas = document.getElementById("sine_plotsShort");
+  if (plotsShortCanvas) {
+    ctxShort = plotsShortCanvas.getContext('2d');
+  } else {
+    console.error('Cannot obtain sin_plotsHi context');
+  }
+
+  // implement the Tone sounding and chart tools
+  let $currFreq = document.getElementById("in-range-freq");
+  let $currAmp = document.getElementById("in-range-amp");
+  let $currPhase = document.getElementById("in-range-phase");
+  
+  let ToneIsOnNow = false; // for synthesized tone, both musical note and tone can play additively.
+  let osc = (typeof Tone !== 'undefined') ? new Tone.Oscillator() : { type: "sine" };
+
+  // used for plotting
+  let timeMsLong = [];
+  let ampLong = [];
+  let timeMsShort = [];
+  let ampShort = [];
+  
+  const NUM_PTS_PLOT_SHORT = 200;
+  const NUM_PTS_PLOT_LONG = 1000;
+  const DURATION_LONG_PLOT_MS = 10;
+  const DURATION_SHORT_PLOT_MS = 1; //sample period in sec
+  
+  // yes, these are ridiculously high rates, didn't want to have ANY sampling artifacts in plots...
+  const samplePeriodLong = DURATION_LONG_PLOT_MS / (1000 * NUM_PTS_PLOT_LONG);
+  const samplePeriodShort = DURATION_SHORT_PLOT_MS / (1000 * NUM_PTS_PLOT_SHORT);
+
+  function fillInArrays(){
+    let i;
+    let freqVal = $currFreq ? parseFloat($currFreq.value) : 440;
+    let ampVal = $currAmp ? parseFloat($currAmp.value) : 1;
+    let phaseVal = $currPhase ? parseFloat($currPhase.value) : 0;
+
+    for (i=0; i<=NUM_PTS_PLOT_LONG; i++) {
+      ampLong[i] = ampVal * Math.sin(2 * Math.PI * (freqVal * i * samplePeriodLong + phaseVal / 360.0) );
+      timeMsLong[i] = roundFP(i * samplePeriodLong * 1000, 3);
+    }
+    for (i=0; i<=NUM_PTS_PLOT_SHORT; i++) {
+      ampShort[i] = ampVal * Math.sin(2 * Math.PI * (freqVal * i * samplePeriodShort + phaseVal / 360.0) );
+      // need higher precision here on time than with the longer plot
+      timeMsShort[i] = roundFP(i * samplePeriodShort * 1000, 4);
+    }
+  };
+  // Update Chart.js plots with current UI values
+  function drawTone() { 
+    if (typeof sine_plot_100_1k === 'undefined' || typeof sine_plot_1k_10k === 'undefined') return;
+
+    let freqVal = $currFreq ? $currFreq.value : "440";
+    let ampVal = $currAmp ? $currAmp.value : "1";
+    let phaseVal = $currPhase ? $currPhase.value : "0";
+
+    // http://javascripter.net added pi in as greek letter
+    let currTitleText = 'Pitch tone y = ' + ampVal + ' ' + MULT_DOT + ' sin{ 2 ' + MULT_DOT + ' ' + PI + ' ' + MULT_DOT + ' (' + freqVal + ' ' + MULT_DOT + ' t + ' + phaseVal + '/360) }'; 
+    
+    if (sine_plot_100_1k.options.plugins && sine_plot_100_1k.options.plugins.title) {
+      sine_plot_100_1k.options.plugins.title.text = currTitleText; 
+    }
+
+    fillInArrays(); 
+    sine_plot_100_1k.update(); 
+    sine_plot_1k_10k.update(); 
+  } 
+
+  // Native DOM input event handlers
+  function updateFreq() { 
+    $currFreq = document.getElementById("in-range-freq"); 
+    let $freqLabel = document.getElementById("currFreqLabel");
+    if ($freqLabel && $currFreq) $freqLabel.textContent = $currFreq.value; 
+    
+    if (ToneIsOnNow == true && osc && $currFreq) { 
+      osc.frequency.value = parseFloat($currFreq.value);
+    } 
+  } 
+
+  function updatePhase() { 
+    $currPhase = document.getElementById("in-range-phase"); 
+    let $phaseLabel = document.getElementById("currPhaseLabel");
+    if ($phaseLabel && $currPhase) $phaseLabel.textContent = $currPhase.value; 
+    
+    if (ToneIsOnNow == true && osc && $currPhase) { 
+      osc.phase = parseFloat($currPhase.value);
+    } 
+  } 
+
+  // Native Canvas2D API for drawing connections
+  function DrawExpansionLinesBtwnGraphs() { 
+    if (!ctxExpandTime) return;
+
+    const ZERO = 20; 
+    const ONE_MS = 48; 
+    const CNV_W = ctxExpandTime.canvas.width; 
+    const CNV_H = ctxExpandTime.canvas.height; 
+    const END = CNV_W / 2.69; 
+    const ARW = 5; 
+    
+    ctxExpandTime.lineWidth = 1; 
+    ctxExpandTime.beginPath(); 
+    ctxExpandTime.strokeStyle = "black"; 
+    
+    // Draw lines and arrows
+    ctxExpandTime.moveTo(ZERO, 0); ctxExpandTime.lineTo(ZERO, CNV_H); 
+    ctxExpandTime.moveTo(ZERO - ARW, CNV_H - ARW); ctxExpandTime.lineTo(ZERO, CNV_H); 
+    ctxExpandTime.moveTo(ZERO + ARW, CNV_H - ARW); ctxExpandTime.lineTo(ZERO, CNV_H); 
+    ctxExpandTime.moveTo(ONE_MS, 0); ctxExpandTime.lineTo(END, CNV_H - ARW); 
+    ctxExpandTime.moveTo(END - ARW, CNV_H); ctxExpandTime.lineTo(END, CNV_H - ARW); 
+    ctxExpandTime.moveTo(END - ARW, CNV_H - 3 * ARW); ctxExpandTime.lineTo(END, CNV_H - ARW); 
+    
+    ctxExpandTime.fillStyle = "black"; 
+    ctxExpandTime.font = "20px Arial"; 
+    ctxExpandTime.fillText("1ms", 40, CNV_H / 2.5); 
+    ctxExpandTime.fillText("expanded", 40, CNV_H / 2.5 + 20); 
+    ctxExpandTime.stroke(); 
+    ctxExpandTime.closePath(); 
+  }
+
 	//--------------------------------------------------------------------------------------------------------------------
-	function DrawExpansionLinesBtwnGraphs() {
-		// CONSTANTS FOR DRAWING LINES BETWEEN GRAPHS
-		const ZERO = 20;  // about where the zero axis ends up on the canvas
-		const ONE_MS = 48;
-		const CNV_W = ctxExpandTime.canvas.scrollWidth; 
-		const CNV_H = ctxExpandTime.canvas.scrollHeight; 
-		// I have no idea why I need this crazy fudge factor on  width of canvas, but it works
-		// I think javascript and css treat sizes differently
-		const END = CNV_W /2.69;
-		const ARW = 5;   // what seems to be good for number of pixels for arrow
-		ctxExpandTime.lineWidth = 1;
 		
-		// draw a line from 0 ms to 0 ms
-		ctxExpandTime.beginPath();
-		ctxExpandTime.strokeStyle = "black";	
-		ctxExpandTime.moveTo(ZERO, 0);
-		ctxExpandTime.lineTo(ZERO, CNV_H);
-		// left arrow
-		ctxExpandTime.moveTo(ZERO - ARW, CNV_H - ARW);
-		ctxExpandTime.lineTo(ZERO, CNV_H);
-		// right arrow
-		ctxExpandTime.moveTo(ZERO + ARW, CNV_H - ARW);
-		ctxExpandTime.lineTo(ZERO, CNV_H);
-		
-		
-		// draw line from 1 ms to 1 ms
-		ctxExpandTime.moveTo(ONE_MS, 0);
-		ctxExpandTime.lineTo(END, CNV_H - ARW);
-		// bottom arrow
-		ctxExpandTime.moveTo(END - ARW, CNV_H);
-		ctxExpandTime.lineTo(END, CNV_H - ARW)
-		//top arrow
-		ctxExpandTime.moveTo(END - ARW, CNV_H - 3*ARW)
-		ctxExpandTime.lineTo(END, CNV_H - ARW)
+  //*********************************** 
+  // User instigated callback events 
+  //*********************************** 
+  // When user changes max freq allowed, update all 
+  let $freqMax = $('#freqMax');
+  if ($freqMax) {
+    $freqMax.on('change', function(){ 
+      let val = parseFloat($freqMax.value);
+      
+      // clamp max/min value for user entry 
+      if (val < 1000) { 
+        $freqMax.value = 1000; 
+      } else if (val > 10000) { 
+        $freqMax.value = 10000; 
+      } 
+      
+      let $currToneFreq = document.getElementById("in-range-freq"); 
+      if ($currToneFreq) {
+        // setting the max will cap out current freq, if it exceeds max down to new max 
+        $currToneFreq.setAttribute("max", $freqMax.value); 
+      }
+      updateFreq(); 
+    }); 
+  }
 
-		ctxExpandTime.fillStyle = "black";
-		ctxExpandTime.font = "20px Arial";
-		ctxExpandTime.fillText("1ms", 40, CNV_H/2.5);
-		ctxExpandTime.fillText("expanded", 40, CNV_H/2.5 + 20);
-		ctxExpandTime.stroke();
-		ctxExpandTime.closePath();
-	}
-	//--------------------------------------------------------------------------------------------------------------------
-		
-	//***********************************
-	//  User instigated callback events
-	//***********************************
-	// When user changes max freq allowed, update all
-	$('#freqMax').on('change', function(){
-		let $maxFreq = $("#freqMax");
-		//clamp max/min value for user entry
-		if ($maxFreq.val() < 1000) {
-			$maxFreq.prop('value', 1000);
-		} else if ($maxFreq.val() > 10000) {
-			$maxFreq.prop('value', 10000);
-		}
-		let $maxFreqForSlider = ($maxFreq.val());
-		let $currToneFreq = $("#in-range-freq");
-		// setting the max will cap out current freq,if it exceeds max down to new max
-		$currToneFreq.attr("max", $maxFreqForSlider);
-		updateFreq();
-	});
+  // Change label on freq slider and adjust the tone as appropriate 
+  let $freqSlider = $('#in-range-freq');
+  if ($freqSlider) {
+    $freqSlider.on('change', function(){ 
+      updateFreq(); 
+    }); 
+  }
 
-	// Change label on freq slider and adjust the tone as appropriate
-	$('#in-range-freq').on('change', function(){
-		updateFreq();
-	});
-	
-	// Change label on amplitude slider and adjust the tone as appropriate
-	$('#in-range-amp').on('change', function(){
-		$currAmp = $("#in-range-amp");
-		$("#currAmpLabel").text($currAmp.val());
-		if (ToneIsOnNow==true) {
-			let tonejs_dB = -40 + 20.0 * Math.log10($currAmp.val());
-			osc.volume.value = tonejs_dB;
-			// if tone isn't on, don't have to change anything...
-		}
-	});
-	
-	// Change label on phase slider and adjust the tone as appropriate
-	$('#in-range-phase').on('change', function(){		
-		updatePhase();
-	});
-	
-	// handle user clicking on/off the tone on/off button
-	$('.toneStartButton').on('click', function(){
-		if (typeof ToneIsOnNow == "undefined")  {
-			// First time in, 
-			ToneIsOnNow = false;
-		};
-		// convert amplitude to what tone.js calls decibels.  In tone.js, -40 dB is very quiet
-		// and 0 dB is plenty loud enough.  I know this isn't the music industry definition (decibel SPL where 0 dB
-		// is the quietest sound one can hear and 100 dB will cause hearing damage) so I will say Amplitude = 1
-		// is min audible and amplitude 40 dB higher (40 = 20log(A1/A0) or A1=100 if A0 = 1) is max we want to put out
-		let tonejs_dB = -40 + 20.0 * Math.log10($currAmp.val());
-		if (ToneIsOnNow==false) {
-			// currently false, clicked by user and about to be true 
-			osc = new Tone.Oscillator({
-					frequency: $currFreq.val(), 
-					volume: tonejs_dB,
-					phase: $currPhase.val(),
-					type:"sine"});
-			osc.toDestination().start();	
-			$('.toneStartButton .VolOn, .toneStartButton .VolOff').toggleClass('hidden');
-			ToneIsOnNow = true;
-		} else {
-			osc.toDestination().stop();
-			$('.toneStartButton .VolOn, .toneStartButton .VolOff').toggleClass('hidden');
-			ToneIsOnNow = false;
-		}
-	});
-	
-	//whenever any of the tone params change, redraw both graphs and update
-	$("#toneChanges").on('change',drawTone);
+  // Change label on amplitude slider and adjust the tone as appropriate 
+  let $ampSlider = $('#in-range-amp');
+  if ($ampSlider) {
+    $ampSlider.on('change', function(){ 
+      $currAmp = document.getElementById("in-range-amp"); 
+      let $ampLabel = document.getElementById("currAmpLabel");
+      
+      if ($ampLabel && $currAmp) $ampLabel.textContent = $currAmp.value; 
+      
+      if (ToneIsOnNow == true && osc && $currAmp) { 
+        let tonejs_dB = -40 + 20.0 * Math.log10(parseFloat($currAmp.value)); 
+        osc.volume.value = tonejs_dB; // if tone isn't on, don't have to change anything... 
+      } 
+    }); 
+  }
+
+  // Change label on phase slider and adjust the tone as appropriate 
+  let $phaseSlider = $('#in-range-phase');
+  if ($phaseSlider) {
+    $phaseSlider.on('change', function(){ 
+      updatePhase(); 
+    }); 
+  }
+
+  // handle user clicking on/off the tone on/off button 
+  let $toneStartBtn = $('.toneStartButton');
+  if ($toneStartBtn) {
+    $toneStartBtn.on('click', function(){ 
+      if (typeof ToneIsOnNow == "undefined") { 
+        ToneIsOnNow = false; 
+      } 
+      
+      // convert amplitude to what tone.js calls decibels. In tone.js, -40 dB is very quiet 
+      // and 0 dB is plenty loud enough. I know this isn't the music industry definition (decibel SPL where 0 dB 
+      // is the quietest sound one can hear and 100 dB will cause hearing damage) so I will say Amplitude = 1 
+      // is min audible and amplitude 40 dB higher (40 = 20log(A1/A0) or A1=100 if A0 = 1) is max we want to put out 
+      let currentAmpVal = $currAmp ? parseFloat($currAmp.value) : 1;
+      let tonejs_dB = -40 + 20.0 * Math.log10(currentAmpVal); 
+      
+      let $volOn = document.querySelector('.toneStartButton .VolOn');
+      let $volOff = document.querySelector('.toneStartButton .VolOff');
+
+      if (ToneIsOnNow == false) { 
+        // currently false, clicked by user and about to be true 
+        let currentFreqVal = $currFreq ? parseFloat($currFreq.value) : 440;
+        let currentPhaseVal = $currPhase ? parseFloat($currPhase.value) : 0;
+
+        osc = new Tone.Oscillator({ 
+          frequency: currentFreqVal, 
+          volume: tonejs_dB, 
+          phase: currentPhaseVal, 
+          type: "sine"
+        }); 
+        osc.toDestination().start(); 
+        
+        if ($volOn) $volOn.classList.toggle('hidden');
+        if ($volOff) $volOff.classList.toggle('hidden');
+        ToneIsOnNow = true; 
+      } else { 
+        if (osc && osc.toDestination) {
+          try { osc.toDestination().stop(); } catch(e) {}
+        } else if (osc && typeof osc.stop === 'function') {
+          osc.stop();
+        }
+        
+        if ($volOn) $volOn.classList.toggle('hidden');
+        if ($volOff) $volOff.classList.toggle('hidden');
+        ToneIsOnNow = false; 
+      } 
+    }); 
+  }
+
+  // whenever any of the tone params change, redraw both graphs and update 
+  let $toneChanges = $("#toneChanges");
+  if ($toneChanges) {
+    $toneChanges.on('change', drawTone); 
+  }
+
 	
 	const CHART_OPTIONS = {
 		responsive: true,
@@ -301,40 +361,66 @@ $(function() {
 	//***********************************
 	//initialize values for tone as page first comes up
 	//***********************************
-	function initializePage(){
-		//reset all values to default wake up values
-		const DEFAULT_MAX_FREQ=2000; //
-		$("#freqMax").prop("value", DEFAULT_MAX_FREQ);
-		$("#in-range-freq").attr("max", DEFAULT_MAX_FREQ);
-		const DEFAULT_FREQ = 1000; // as set in html for element
-		$("#in-range-freq").prop("value", DEFAULT_FREQ);
-		const DEFAULT_AMP = 10;
-		$("#in-range-amp").prop("value", DEFAULT_AMP);
-		const DEFAULT_PHASE = 0;
-		$("#in-range-phase").prop("value", DEFAULT_PHASE);
-		$("#currFreqLabel").text($("#in-range-freq").val());
-		$("#currAmpLabel").text($("#in-range-amp").val());
-		$("#currPhaseLabel").text($("#in-range-phase").val());
-		$currFreq = $("#in-range-freq");
-		$currAmp = $("#in-range-amp");
-		$currPhase = $("#in-range-phase")
-	
-		//turn off tone initially
-		ToneIsOnNow = false;
-		osc.toDestination().stop();
-		// go back to original html defaults
-		$(".toneStartButton .VolOn").addClass('hidden');
-		$(".toneStartButton .VolOff").removeClass('hidden');
-		// on power up, draw the expansion lines between graphs
-		DrawExpansionLinesBtwnGraphs();
-		// draw current selected freq
-		fillInArrays();
-		drawTone();
-		
-	}
-    // do on power up and as needed
-    initializePage();
+  function initializePage(){ 
+    // reset all values to default wake up values 
+    const DEFAULT_MAX_FREQ = 2000; 
     
+    let $freqMaxInput = document.getElementById("freqMax");
+    if ($freqMaxInput) $freqMaxInput.value = DEFAULT_MAX_FREQ;
+
+    let $rangeFreqInput = document.getElementById("in-range-freq");
+    if ($rangeFreqInput) $rangeFreqInput.setAttribute("max", DEFAULT_MAX_FREQ.toString()); 
+
+    const DEFAULT_FREQ = 1000; // as set in html for element 
+    if ($rangeFreqInput) $rangeFreqInput.value = DEFAULT_FREQ; 
+
+    const DEFAULT_AMP = 10; 
+    let $rangeAmpInput = document.getElementById("in-range-amp");
+    if ($rangeAmpInput) $rangeAmpInput.value = DEFAULT_AMP; 
+
+    const DEFAULT_PHASE = 0; 
+    let $rangePhaseInput = document.getElementById("in-range-phase");
+    if ($rangePhaseInput) $rangePhaseInput.value = DEFAULT_PHASE; 
+
+    // Sync labels natively via textContent
+    let $freqLabel = document.getElementById("currFreqLabel");
+    let $ampLabel = document.getElementById("currAmpLabel");
+    let $phaseLabel = document.getElementById("currPhaseLabel");
+
+    if ($freqLabel && $rangeFreqInput) $freqLabel.textContent = $rangeFreqInput.value; 
+    if ($ampLabel && $rangeAmpInput) $ampLabel.textContent = $rangeAmpInput.value; 
+    if ($phaseLabel && $rangePhaseInput) $phaseLabel.textContent = $rangePhaseInput.value; 
+
+    // Globally expose baseline tracker mappings for other scope scripts
+    $currFreq = $rangeFreqInput; 
+    $currAmp = $rangeAmpInput; 
+    $currPhase = $rangePhaseInput; 
+
+    // turn off tone initially 
+    ToneIsOnNow = false; 
+    if (osc && osc.toDestination) {
+      try { osc.toDestination().stop(); } catch(e) {}
+    } else if (osc && typeof osc.stop === 'function') {
+      osc.stop();
+    }
+
+    // go back to original html defaults 
+    let $volOn = document.querySelector('.toneStartButton .VolOn');
+    let $volOff = document.querySelector('.toneStartButton .VolOff');
+    if ($volOn) $volOn.classList.add('hidden'); 
+    if ($volOff) $volOff.classList.remove('hidden'); 
+
+    // on power up, draw the expansion lines between graphs 
+    DrawExpansionLinesBtwnGraphs(); 
+
+    // draw current selected freq 
+    fillInArrays(); 
+    drawTone(); 
+  } 
+
+  // do on power up and as needed 
+  initializePage();
+
     //****************************************************************************
     // Autodemo script for tone trig
     //**************************************************************************** 
@@ -673,54 +759,82 @@ $(function() {
 		}
 	];
 
-    //****************************************************************************
-    // User initiates autoDemo activity
-    //****************************************************************************   
-	//*** user clicks the start demo image, iniitalize everything
-	let demo = new AutoDemo(SCRIPT_AUTO_DEMO);  // give the demo the full script
-    $('#startAutoDemo').on('click', function(event) {
-  		// prep the control box for user to interact with auto demo
-		demo.prepDemoControls();
-    });
-   
-    //****************************************************************************
-    // User has interacted with autoDemo controls
-    //****************************************************************************
+  //**************************************************************************** 
+  // User initiates autoDemo activity 
+  //**************************************************************************** 
+  //*** user clicks the start demo image, iniitalize everything 
+  let demo = new AutoDemo(SCRIPT_AUTO_DEMO); // give the demo the full script 
 
-	// User has selected play
-    $('#playSegment').on('click', function(){	
-		//So Safari requires that a user touch (cant do CustomEvent) instigates a WebAudio event
-		// here we "cheat" and let user play button touch do a quick audio action to satisfy Safari before Autodemo
-		// which will play tones or music
-		osc.toDestination().start();
-		osc.frequency.value = 80;  // below what most speakers will play
-		osc.toDestination().stop();
-		// end Safari hack	
-		
-    	// in case plots have other stuff on them from other activities, clean it up
-    	initializePage();
-    	demo.startDemo();
-    });
-    
-    $('#stopSegment').on('click', function(){	
-    	demo.stopThisSegment(false);  //we don't want to destroy controls box
-    	// turn off sound and put page back the way it was
-    	initializePage();
-    });
-    
-    $('#dismissAutoDemo').on('click', function(){	
-    	// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen
-    	demo.stopThisSegment();  // may or may not be needed
-  		// turn off sound and put page back the way it was
-    	initializePage(); 	
-    });
-    
-    $("#segNum").change(function(){
-		let currSeg = parseInt($('#segNum').val());
-		demo.setCurrSeg(currSeg);
-		
-		// remove the class so the animation will work on next page, cant do this until animation completes
-    	$('#clickHereCursor').removeClass('userHitPlay');
-	});
-	
-})
+  let $startAutoDemoBtn = $('#startAutoDemo');
+  if ($startAutoDemoBtn) {
+    $startAutoDemoBtn.on('click', function(event) { 
+      // prep the control box for user to interact with auto demo 
+      demo.prepDemoControls(); 
+    }); 
+  }
+
+  //**************************************************************************** 
+  // User has interacted with autoDemo controls 
+  //**************************************************************************** 
+  // User has selected play 
+  let $playSegmentBtn = $('#playSegment');
+  if ($playSegmentBtn) {
+    $playSegmentBtn.on('click', function(){ 
+      // So Safari requires that a user touch (cant do CustomEvent) instigates a WebAudio event 
+      // here we "cheat" and let user play button touch do a quick audio action to satisfy Safari before Autodemo 
+      // which will play tones or music 
+      if (osc && osc.toDestination) {
+        try {
+          osc.toDestination().start(); 
+          osc.frequency.value = 80; // below what most speakers will play 
+          osc.toDestination().stop(); 
+        } catch(e) {}
+      } else if (osc && typeof osc.start === 'function') {
+        try {
+          osc.start();
+          osc.frequency.value = 80;
+          osc.stop();
+        } catch(e) {}
+      }
+      // end Safari hack 
+      
+      // in case plots have other stuff on them from other activities, clean it up 
+      initializePage(); 
+      demo.startDemo(); 
+    }); 
+  }
+
+  let $stopSegmentBtn = $('#stopSegment');
+  if ($stopSegmentBtn) {
+    $stopSegmentBtn.on('click', function(){ 
+      demo.stopThisSegment(false); // we don't want to destroy controls box 
+      // turn off sound and put page back the way it was 
+      initializePage(); 
+    }); 
+  }
+
+  let $dismissAutoDemoBtn = $('#dismissAutoDemo');
+  if ($dismissAutoDemoBtn) {
+    $dismissAutoDemoBtn.on('click', function(){ 
+      // user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen 
+      demo.stopThisSegment(); // may or may not be needed 
+      // turn off sound and put page back the way it was 
+      initializePage(); 
+    }); 
+  }
+
+  let $segNumSelect = $("#segNum");
+  if ($segNumSelect) {
+    $segNumSelect.on('change', function(){ 
+      let currSeg = parseInt($segNumSelect.value); 
+      demo.setCurrSeg(currSeg); 
+      
+      // remove the class so the animation will work on next page, cant do this until animation completes 
+      let $clickHereCursor = $('#clickHereCursor');
+      if ($clickHereCursor) {
+        $clickHereCursor.classList.remove('userHitPlay'); 
+      }
+    }); 
+  }
+
+});

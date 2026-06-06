@@ -32,6 +32,7 @@
 {% endblock %}	
 
 {% block unique_js_block %}
+	<!-- Icon Utility Library (Feather Icons) -->
 	<script 
 	  nonce="{{ CSP_NONCE }}" 
 	  src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.2/feather.min.js" 
@@ -40,12 +41,16 @@
 	  referrerpolicy="no-referrer">
 	</script>
 	<!-- The feather.replace() causes all data-feather to be replaced with proper svg icon -->
-	<script nonce="{{ CSP_NONCE }}">feather.replace()</script>
-	<script nonce="{{ CSP_NONCE }}">	
-		// Dont need autodemo icon
-		$('#TrigPageTop').css('display', 'none');
+	<script nonce="{{ CSP_NONCE }}">
+		feather.replace();
 	</script>
-	<!-- Custom JS for this page -->
+	<script nonce="{{ CSP_NONCE }}">	
+		// Don't need autodemo icon - Native Vanilla JS replacement
+		let trigPageTop = document.getElementById('TrigPageTop');
+		if (trigPageTop) {
+			trigPageTop.style.display = 'none';
+		}
+	</script>
+	<!-- Framework-Free Asset Scripts for this Page -->
     <script src="{{ TrigSummaryJS }}" crossorigin="anonymous"></script>	
-	
 {% endblock %}
