@@ -143,8 +143,6 @@ CONTENT_SECURITY_POLICY = {
         "script-src": [SELF, NONCE],
         "style-src-elem": [
             SELF,
-            "https://getbootstrap.com",
-            "https://code.jquery.com",
             "https://cdn.jsdelivr.net",
             CLOUD_URL_CODE,
             NONCE,
@@ -158,7 +156,6 @@ CONTENT_SECURITY_POLICY = {
             SELF,
             "https://www.googletagmanager.com",
             "https://www.google.com",
-            "https://getbootstrap.com",
             "https://www.gstatic.com",
             "https://ajax.googleapis.com",
             "https://cdnjs.cloudflare.com",
@@ -170,7 +167,6 @@ CONTENT_SECURITY_POLICY = {
         ],
         "img-src": [
             SELF,
-            "https://code.jquery.com",
             "https://*.ytimg.com",
             "https://*.google.com",
             "data:",
@@ -191,7 +187,6 @@ CONTENT_SECURITY_POLICY = {
         "connect-src": [
             SELF,
             "https://www.google.com",
-            "https://getbootstrap.com",
             "https://www.gstatic.com",
             "https://cdnjs.cloudflare.com",
             CLOUD_URL_BINARY,

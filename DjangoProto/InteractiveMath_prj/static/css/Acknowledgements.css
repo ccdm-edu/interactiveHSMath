@@ -1,46 +1,45 @@
 /***********************
 This is the style sheet for the acknowledgements.html page
 ************************/
-:root {
-    --NUM_COL: 3;
+:root { --NUM_COL: 3;
 }
 
 #AcknowledgementsBlock {
-    display: grid;
-    /* FIXED: added var() wrapper for the variable */
-    grid-template-columns: repeat(var(--NUM_COL), 1fr); 
-    grid-gap: 20px;
-    grid-auto-rows: auto;
-    align-items: start; /* changed from safe center for better alignment */
-    justify-items: center;
-    margin: 20px;
+	display: grid;
+	/* FIXED: added var() wrapper for the variable */
+	grid-template-columns: repeat(var(--NUM_COL), 1fr);
+	grid-gap: 20px;
+	grid-auto-rows: auto;
+	align-items: start; /* changed from safe center for better alignment */
+	justify-items: center;
+	margin: 20px;
 }
 
 h1, #VillageThanks {
-    /* Use the variable to span the full width */
-    grid-column: 1 / span var(--NUM_COL);
-    text-align: center;
+	/* Use the variable to span the full width */
+	grid-column: 1/span var(--NUM_COL);
+	text-align: center;
 }
 
 #VillageThanks {
-    font-size: 20px;
-    color: lightcoral;
-    margin-bottom: 30px;
+	font-size: 20px;
+	color: lightcoral;
+	margin-bottom: 30px;
 }
 
 .contributor_contact {
-    text-align: center;
-    padding: 10px;
+	text-align: center;
+	padding: 10px;
 }
 
 .contributor_contact img {
-    max-width: 250px;
-    max-height: 80px;
-    object-fit: contain; /* Keeps logos from stretching */
+	max-width: 250px;
+	max-height: 80px;
+	object-fit: contain; /* Keeps logos from stretching */
 }
 
 /* Remove underlines from the links in the grid */
 .contributor_contact a {
-    text-decoration: none;
-    color: inherit;
+	text-decoration: none;
+	color: inherit;
 }

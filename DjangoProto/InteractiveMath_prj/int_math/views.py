@@ -115,7 +115,6 @@ def getBaseContextEntry(request):
                      'GoogleAnalID': g_analyticsID, 
                      'recaptchaPublicKey':settings.RECAP_PUBLIC_KEY,
                      'FavIco': getFullFileURL('NonPublicImages/favicon.ico', False, request),
-                     'JQlocalJS': getFullFileURL('js-lib/jquery-371min.js', True, request),
                      'AutoDemoJS': getFullFileURL('js/autoDemo.js', True, request),
                      }
     
