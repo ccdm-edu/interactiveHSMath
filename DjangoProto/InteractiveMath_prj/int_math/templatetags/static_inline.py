@@ -7,7 +7,7 @@ Description: Reduces the number of server accesses required for a page by inlini
             if html gets too big, will affect load time and SEO).
 Author: C De Meyer (and Gemini AI)
 Date: 5/4/2026
-Version: 1.0.0
+Version:  (see Git)
 """
 import os
 import functools

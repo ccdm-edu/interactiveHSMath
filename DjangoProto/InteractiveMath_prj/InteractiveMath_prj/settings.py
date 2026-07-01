@@ -4,7 +4,7 @@ Module Name: settings.py
 Description: generated originally by django-admin startproject with Django 3.1 and upgraded to 5.2 with CSP
 Author: C De Meyer (and Gemini AI)
 Date: 5/4/2026
-Version: 1.0.0
+Version:  (see Git)
 """
 
 from pathlib import Path

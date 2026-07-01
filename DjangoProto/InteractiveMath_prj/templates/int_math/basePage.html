@@ -1,4 +1,30 @@
-<!DOCTYPE html>
+<!--
+ * ============================================================================
+ * COMPONENT: Django HTML 
+ * FILE:      basePage.html
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Performs common html doc features of trig pages. Built to run framework-free using light shims.
+ * 
+ * DEPENDENCIES:
+ * - Styles:   see section head
+ * - Scripts:  see section head
+ * - Backend:  Django HTML, Static files served over cloud service such as Cloudflare
+ * 
+ * ARCHITECTURE NOTES:
+ * - Automated demos (autodemo) consist of mp3 of teens explaining math and timed JS
+ * 	that executes the spoken actions as a demonstration on using the page.
+ * - Advanced Topic is a popup that user can move around that suggests activities
+ *      and explains things that are more advanced or applied engineering 
+ * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
+ *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+ -->
+ <!DOCTYPE html>
 {% load static %}
 <!--  another difference from django 2 to 3.1 -->
 {% load intHSmath_template_tags %}
@@ -8,41 +34,41 @@
 
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author" content="Cathy De Meyer">
-<!-- yes the icon is hardcoded, easier than adding it to all the django variables for all pages.  Only hurts test proto -->
-<link rel="icon" href="{{ basePage.FavIco }}">
-<title>
-	{{ basePage.CompanyName }} - 
-	{% block title_block%}
-		page-tab-header
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="C. De Meyer">
+	<!-- yes the icon is hardcoded, easier than adding it to all the django variables for all pages.  Only hurts test proto -->
+	<link rel="icon" href="{{ basePage.FavIco }}">
+	<title>
+		{{ basePage.CompanyName }} - 
+		{% block title_block%}
+			page-tab-header
+		{% endblock %}
+	</title>
+	
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async nonce="{{ CSP_NONCE }}"
+		src="https://www.googletagmanager.com/gtag/js?id={{ basePage.GoogleAnalID }}"></script>
+	<script nonce="{{ CSP_NONCE }}">
+			  window.dataLayer = window.dataLayer || [];
+			  function gtag(){dataLayer.push(arguments);}
+			  gtag('js', new Date());
+			
+			  gtag('config', '{{ basePage.GoogleAnalID }}');
+			</script>
+	
+	<!-- want to override things here,  will see IDE error for using django package to inline css, ignore it-->
+	<style nonce="{{ CSP_NONCE }}">{%inline_asset 'css/IntMath.css' %}</style>
+	
+	{% block head_block %}
+	<!--  separate out page specific css here -->
 	{% endblock %}
-</title>
-
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async nonce="{{ CSP_NONCE }}"
-	src="https://www.googletagmanager.com/gtag/js?id={{ basePage.GoogleAnalID }}"></script>
-<script nonce="{{ CSP_NONCE }}">
-		  window.dataLayer = window.dataLayer || [];
-		  function gtag(){dataLayer.push(arguments);}
-		  gtag('js', new Date());
-		
-		  gtag('config', '{{ basePage.GoogleAnalID }}');
-		</script>
-
-<!-- want to override things here,  will see IDE error for using django package to inline css, ignore it-->
-<style nonce="{{ CSP_NONCE }}">{%inline_asset 'css/IntMath.css' %}</style>
-
-{% block head_block %}
-<!--  separate out page specific css here -->
-{% endblock %}
-
-<!--  style blocks dont like comments in the middle -->
-<!--  THIS MAKES THE RECAPTCHA LOGO ON ALL PAGES -->
-<script nonce="{{ CSP_NONCE }}"
-	src='https://www.google.com/recaptcha/api.js?render={{ basePage.recaptchaPublicKey }}'></script>
+	
+	<!--  style blocks dont like comments in the middle -->
+	<!--  THIS MAKES THE RECAPTCHA LOGO ON ALL PAGES -->
+	<script nonce="{{ CSP_NONCE }}"
+		src='https://www.google.com/recaptcha/api.js?render={{ basePage.recaptchaPublicKey }}'></script>
 
 </head>
 

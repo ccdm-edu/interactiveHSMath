@@ -5,7 +5,7 @@ Module Name: intHSmath_template_tags.py
 Description: Creates the subtopics list to left of page for all but mobile devices
 Author: C De Meyer
 Date: 5/4/2026
-Version: 1.0.0
+Version:  (see Git)
 """
 
 from django import template

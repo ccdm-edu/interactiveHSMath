@@ -1,5 +1,34 @@
-{% extends 'int_math/basePage.html' %}
-{% load static %} <!--  another difference from django 2 to 3.1 -->
+<!--
+ * ============================================================================
+ * COMPONENT: Django HTML 
+ * FILE:      MusicNotesTrig.html
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Plot and listen to musicians playing marching band tuning note.  Parse the MP3
+ * file and compare to sine wave at perfect pitch.  Listen to both tone and musician at 
+ * same time. Tenor sax is one octave lower.
+ * 
+ * DEPENDENCIES:
+ * - Styles:   see section head_block also section head in file basePage.html
+ * - Scripts:  see section unique_js_block or head_block also section head in file basePage.html
+ * - Backend:  Django HTML, Static files served over cloud service such as Cloudflare
+ * 
+ * ARCHITECTURE NOTES:
+ * - Automated demos (autodemo) consist of mp3 of teens explaining math and timed JS
+ * 	that executes the spoken actions as a demonstration on using the page.
+ * - Advanced Topic is a popup that user can move around that suggests activities
+ *      and explains things that are more advanced or applied engineering
+ * This HTML page depends on basePage.html. 
+ * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
+ *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+ -->
+ {% extends 'int_math/basePage.html' %}
+{% load static %} 
 
 {%block title_block %}
 	{{ page_tab_header }}
@@ -25,136 +54,136 @@
    
 {% block body_block %}
 
-<div id="SineCosBlock">
-    
-	<div id="MusicNotesToneControl">
-	
-		<div id="musicNotes">
-			<table>
-				<tbody>
-					<tr>
-						<th colspan="2">
-							Musical Notes Parameters
-							<div class="allowNotePlay">
-								<!-- Swapped Bootstrap '.hidden' for your standard vanilla utility wrapper class '.d-none' -->
-								<img class="VolOff d-none" src="{{ VolumeOffSVG }}" alt="Volume is currently off" title="turn on speaker and click to hear musical note">
-								<img class="VolOn d-none" src="{{ VolumeOnSVG }}" alt="Volume is currently on" title="turn on speaker and click to hear musical note">
-							</div>	
-						</th>					
-					</tr>	
-					<tr>		
-						<td style="text-align: left;">
-							<div class="dropdown" id="InstrumentSel">
-								<button class="btn-cyan" type="button" id="InstrumentTypeSel">
-				    				Pick an instrument
-								</button>
-								<div class="dropdown-menu" id="InstrumentSelections">
-								    <button class="dropdown-item" type="button" value="Trumpet">B<sup>♭</sup> Trumpet</button>
-								    <button class="dropdown-item" type="button" value="Clarinet">Clarinet</button>
-								    <button class="dropdown-item" type="button" value="Soprano Sax">Soprano Sax</button>
-								    <button class="dropdown-item" type="button" value="Tenor Sax">Tenor Sax</button>
-								    <button class="dropdown-item" type="button" value="Flute">Flute</button>
-								    <button class="dropdown-item" type="button" value="Human">Human Voice</button>
-								</div>
-	        				</div>
-						</td>
-						<td style="text-align: right;">
-							Volume: <span id="currMusicVolLabel"></span>
-						</td>						
-					</tr>
-					<tr>
-						<td style="text-align: left;">
-							Current Note: <span id="currMusicNoteLabel"></span>
-						</td>
-						<td style="text-align: right;">
-							<input id="music-amp" type="range" step="1" value="3" min="0" max="10" title="We'll leave graph the same for simplicity">
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-
-		<div id="toneChanges">
-			<table>
-				<tbody>
-					<tr>
-						<th colspan="2">
-							Sine Wave (tone) Parameters
-							<div class="toneStartButton">
-								<img class="VolOff" src="{{ VolumeOffSVG }}" alt="Volume is currently off" title="turn on speaker and click to hear sine wave">
-								<img class="VolOn d-none" src="{{ VolumeOnSVG }}" alt="Volume is currently on" title="turn on speaker and click to hear sine wave">
-							</div>
-						</th>
-					</tr>	
-					<tr>		
-						<td>
-							Frequency: <span id="currFreqLabel"></span> Hz
-						</td>
-						<td>
-							Volume: <span id="currToneVolLabel"></span>
-						</td>						
-					</tr>
-					<tr>
-						<td>  <!-- placeholder for missing element -->
-						     
-						</td>
-						<td style="text-align: right;">
-							<input id="tone-amp" type="range" step="1" value="3" min="0" max="10" title="We'll leave graph the same for simplicity">
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-
+	<div id="SineCosBlock">
+	    
+		<div id="MusicNotesToneControl">
 		
-		<!-- default startup, will change as user loads musician notes-->
-	    <p class="AdvTopic_ToDo"> TRY THIS:  Turn on your speaker.  Select an instrument from the drop down menu.  
-	    Hit Play Tone button to hear the sine wave frequency of this note (to within 1 Hz) then hit Start Instrument button.
-	    Look at the plot of the MP3 waveform of the musician playing the note versus the sine wave basic frequency.  
-	    The period of the two waveforms are the same.  The musicians sound is much richer than the sine
-	    wave at the pitch frequency, which you would expect by looking at the more complex waveform produced.
-		</p>
-	    <p class="AdvTopic_Expln"> EXPLANATION:  Sine and Cosine functions, when translated to voltage and sent to a speaker are just tones.  
-	    Here we set the frequencies to the pitch frequency of the instrument/note played. 
-	    Musical notes are made up of a pitch frequency, which is the sine wave tone shown here plus some harmonics of the pitch frequency 
-	    and overtones that give the instrument its richness.  
-	    The harmonics and overtones are multiples of the pitch frequency which is why the musical instrument playing a note repeats at the rate 
-	    of the sine wave pitch frequency.  
-	    In fact, we could start with a sine at the pitch frequency and a calculated amplitude and phase.  Then we add another sine at 
-	    2 times the pitch frequency with newly calculated amplitude and phase.  
-	    We continue and add another sine and cosine of 3x the pitch frequency with calculated amplitude and phase and so on up to a very 
-	    high multiple of the pitch frequency.  This is how you can mathematically represent ANY of these
-	    musical instruments playing a note.  The amplitudes calculated would be different for a trumpet versus a flute versus the human voice 
-	    but you could create any of these
-	    waveforms of an instrument playing a note. This is the basis for Fourier Series, a college concept for mathematically representing 
-	    ANY periodic waveform.  The concept is used in musical digital synthesizers to generate a wide variety of sounds.
-	    </p>  
-
-	</div>
+			<div id="musicNotes">
+				<table>
+					<tbody>
+						<tr>
+							<th colspan="2">
+								Musical Notes Parameters
+								<div class="allowNotePlay">
+									<!-- Swapped Bootstrap '.hidden' for your standard vanilla utility wrapper class '.d-none' -->
+									<img class="VolOff d-none" src="{{ VolumeOffSVG }}" alt="Volume is currently off" title="turn on speaker and click to hear musical note">
+									<img class="VolOn d-none" src="{{ VolumeOnSVG }}" alt="Volume is currently on" title="turn on speaker and click to hear musical note">
+								</div>	
+							</th>					
+						</tr>	
+						<tr>		
+							<td style="text-align: left;">
+								<div class="dropdown" id="InstrumentSel">
+									<button class="btn-cyan" type="button" id="InstrumentTypeSel">
+					    				Pick an instrument
+									</button>
+									<div class="dropdown-menu" id="InstrumentSelections">
+									    <button class="dropdown-item" type="button" value="Trumpet">B<sup>♭</sup> Trumpet</button>
+									    <button class="dropdown-item" type="button" value="Clarinet">Clarinet</button>
+									    <button class="dropdown-item" type="button" value="Soprano Sax">Soprano Sax</button>
+									    <button class="dropdown-item" type="button" value="Tenor Sax">Tenor Sax</button>
+									    <button class="dropdown-item" type="button" value="Flute">Flute</button>
+									    <button class="dropdown-item" type="button" value="Human">Human Voice</button>
+									</div>
+		        				</div>
+							</td>
+							<td style="text-align: right;">
+								Volume: <span id="currMusicVolLabel"></span>
+							</td>						
+						</tr>
+						<tr>
+							<td style="text-align: left;">
+								Current Note: <span id="currMusicNoteLabel"></span>
+							</td>
+							<td style="text-align: right;">
+								<input id="music-amp" type="range" step="1" value="3" min="0" max="10" title="We'll leave graph the same for simplicity">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 	
-	<div id="GraphPlusPeriodMarkers">
- 		<!-- want to overlap the top graph with expansion lines below it -->
- 		<!-- canvas used for chart js need the size defined one level up at div -->
-	 	<div id="sinePlotLongWrapper">
-	 		<!-- Needs to be a bit bigger since it has the title -->
-	 		<canvas id="sine_plotsLong">
+			<div id="toneChanges">
+				<table>
+					<tbody>
+						<tr>
+							<th colspan="2">
+								Sine Wave (tone) Parameters
+								<div class="toneStartButton">
+									<img class="VolOff" src="{{ VolumeOffSVG }}" alt="Volume is currently off" title="turn on speaker and click to hear sine wave">
+									<img class="VolOn d-none" src="{{ VolumeOnSVG }}" alt="Volume is currently on" title="turn on speaker and click to hear sine wave">
+								</div>
+							</th>
+						</tr>	
+						<tr>		
+							<td>
+								Frequency: <span id="currFreqLabel"></span> Hz
+							</td>
+							<td>
+								Volume: <span id="currToneVolLabel"></span>
+							</td>						
+						</tr>
+						<tr>
+							<td>  <!-- placeholder for missing element -->
+							     
+							</td>
+							<td style="text-align: right;">
+								<input id="tone-amp" type="range" step="1" value="3" min="0" max="10" title="We'll leave graph the same for simplicity">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+	
+			
+			<!-- default startup, will change as user loads musician notes-->
+		    <p class="AdvTopic_ToDo"> TRY THIS:  Turn on your speaker.  Select an instrument from the drop down menu.  
+		    Hit Play Tone button to hear the sine wave frequency of this note (to within 1 Hz) then hit Start Instrument button.
+		    Look at the plot of the MP3 waveform of the musician playing the note versus the sine wave basic frequency.  
+		    The period of the two waveforms are the same.  The musicians sound is much richer than the sine
+		    wave at the pitch frequency, which you would expect by looking at the more complex waveform produced.
+			</p>
+		    <p class="AdvTopic_Expln"> EXPLANATION:  Sine and Cosine functions, when translated to voltage and sent to a speaker are just tones.  
+		    Here we set the frequencies to the pitch frequency of the instrument/note played. 
+		    Musical notes are made up of a pitch frequency, which is the sine wave tone shown here plus some harmonics of the pitch frequency 
+		    and overtones that give the instrument its richness.  
+		    The harmonics and overtones are multiples of the pitch frequency which is why the musical instrument playing a note repeats at the rate 
+		    of the sine wave pitch frequency.  
+		    In fact, we could start with a sine at the pitch frequency and a calculated amplitude and phase.  Then we add another sine at 
+		    2 times the pitch frequency with newly calculated amplitude and phase.  
+		    We continue and add another sine and cosine of 3x the pitch frequency with calculated amplitude and phase and so on up to a very 
+		    high multiple of the pitch frequency.  This is how you can mathematically represent ANY of these
+		    musical instruments playing a note.  The amplitudes calculated would be different for a trumpet versus a flute versus the human voice 
+		    but you could create any of these
+		    waveforms of an instrument playing a note. This is the basis for Fourier Series, a college concept for mathematically representing 
+		    ANY periodic waveform.  The concept is used in musical digital synthesizers to generate a wide variety of sounds.
+		    </p>  
+	
+		</div>
+		
+		<div id="GraphPlusPeriodMarkers">
+	 		<!-- want to overlap the top graph with expansion lines below it -->
+	 		<!-- canvas used for chart js need the size defined one level up at div -->
+		 	<div id="sinePlotLongWrapper">
+		 		<!-- Needs to be a bit bigger since it has the title -->
+		 		<canvas id="sine_plotsLong">
+		 			Your Browser does not support canvas tag, you are missing graph capability
+		 		</canvas>
+		 	</div>
+		 	<div class="Period_Tone First_Period"></div>
+		 	<div class="Period_Tone Second_Period"></div>
+		 	<div class="Period_Tone Third_Period"></div>
+		 	<div class="Period_Tone Fourth_Period"></div>
+		 	<div id="Period_Text1"></div>
+		 	<div id="Period_Text2"></div>
+		 	
+		 	<!-- Needed for the period markers showing periodicity -->
+		 	<!-- use following for debug on canvas placement style="border:1px solid #FF0000;" to see the canvas in red -->
+			<canvas id="periodicityIndicator">
 	 			Your Browser does not support canvas tag, you are missing graph capability
 	 		</canvas>
 	 	</div>
-	 	<div class="Period_Tone First_Period"></div>
-	 	<div class="Period_Tone Second_Period"></div>
-	 	<div class="Period_Tone Third_Period"></div>
-	 	<div class="Period_Tone Fourth_Period"></div>
-	 	<div id="Period_Text1"></div>
-	 	<div id="Period_Text2"></div>
-	 	
-	 	<!-- Needed for the period markers showing periodicity -->
-	 	<!-- use following for debug on canvas placement style="border:1px solid #FF0000;" to see the canvas in red -->
-		<canvas id="periodicityIndicator">
- 			Your Browser does not support canvas tag, you are missing graph capability
- 		</canvas>
- 	</div>
-</div>
+	</div>
 {% endblock %}	
         
 {% block unique_js_block %}

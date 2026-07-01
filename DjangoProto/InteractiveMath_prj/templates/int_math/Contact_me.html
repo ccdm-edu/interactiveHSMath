@@ -1,5 +1,30 @@
-{% extends 'int_math/basePage.html' %} {% load static %}
-<!--  another difference from django 2 to 3.1 -->
+<!--
+ * ============================================================================
+ * COMPONENT: Django HTML 
+ * FILE:      Contact_me.html
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Allows users to contact website owner using smtp with email encoded in ENV variables.
+ * Bot checking via recaptcha and honeypot.  Monitors use of recaptcha to ensure we stay 
+ * in "free" tier.
+ * 
+ * DEPENDENCIES:
+ * - Styles:   see section head_block also section head in file basePage.html
+ * - Scripts:  see section unique_js_block or head_block also section head in file basePage.html
+ * - Backend:  Django HTML, Static files served over cloud service such as Cloudflare
+ * 
+ * ARCHITECTURE NOTES:
+ * This HTML page depends on basePage.html. 
+ * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
+ *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+ -->
+ {% extends 'int_math/basePage.html' %} 
+{% load static %}
 
 {%block title_block %} 
 	{{ page_tab_header }} 
@@ -69,7 +94,6 @@
 			All other site pages should work fine.</p>
 	{% endif %}
 	
-	<!-- consider using <select> <option> dropdown form for "topic" error, suggestion etc -->
 	<br>
 	<br>
 {% endblock %} 

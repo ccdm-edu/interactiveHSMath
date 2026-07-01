@@ -1,6 +1,32 @@
+<!--
+ * ============================================================================
+ * COMPONENT: Django HTML 
+ * FILE:      index.html
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Landing page explains what is here and how to use it.
+ * Built to run framework-free using light shims.
+ * 
+ * DEPENDENCIES:
+ * - Styles:   see section head_block also section head in file basePage.html
+ * - Scripts:  see section unique_js_block or head_block also section head in file basePage.html
+ * - Backend:  Django HTML, Static files served over cloud service such as Cloudflare
+ * 
+ * ARCHITECTURE NOTES:
+ * - Automated demos (autodemo) consist of mp3 of teens explaining math and timed JS
+ * 	that executes the spoken actions as a demonstration on using the page.
+ * This HTML page depends on basePage.html. 
+ * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
+ *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+ -->
 {% extends 'int_math/basePage.html' %}
 
-{% load static %} <!--  another difference from django 2 to 3.1 -->
+{% load static %} 
 
 {%block title_block %}
 	{{ page_tab_header }}

@@ -8,7 +8,7 @@ Description: The website code is generic, a config file is needed to point to pr
             Load all this up once since it is not anticipated to change often
 Author: C De Meyer (and Gemini AI)
 Date: 5/4/2026
-Version: 1.0.0
+Version:  (see Git)
 """
 import json
 import logging
