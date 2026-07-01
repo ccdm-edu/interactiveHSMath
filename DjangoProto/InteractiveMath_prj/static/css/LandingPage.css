@@ -1,4 +1,16 @@
-/****************Landing page***************************/
+/*
+ * ============================================================================
+ * COMPONENT: Client side CSS style sheet
+ * FILE:    LandingPage.css  
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Handle layout of index.html.
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+*/
 /* make parts of header red, parts black, just like the logo */
 span#homePageHeader {
 	color: red;

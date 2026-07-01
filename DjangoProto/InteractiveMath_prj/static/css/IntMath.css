@@ -1,5 +1,19 @@
-/*********************** This is the style sheet for the entire website and all common items ************************/ 
-/****************All pages, layout grid replacement***************************/ 
+/*
+ * ============================================================================
+ * COMPONENT: Client side CSS style sheet
+ * FILE:      IntMath.css
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * This file styles all the website pages, containing common elements.  There is 
+ * replacement for Bootstrap grid/menu architecture, handling subtopics on left side, 
+ * legal notices, advanced topics, automated demos, spinners and video resizing.
+ * 
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+*/
 /* Replaces Bootstrap's grid architecture natively */ 
 .site-layout { 
   display: grid; 

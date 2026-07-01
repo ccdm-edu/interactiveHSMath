@@ -1,6 +1,18 @@
-/***********************
-This is the style sheet for MusicNotesTrig.html
-************************/
+/*
+ * ============================================================================
+ * COMPONENT: Client side CSS style sheet
+ * FILE:      MusicNotesTrig.css
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Handle layout of html page with same base filename 
+ * (i.e. test1.css styles for test1.html)
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+*/
+
 /* create global var for this html */
 :root{
 	--LEFT_EDGE_CONTROLS: 130px;

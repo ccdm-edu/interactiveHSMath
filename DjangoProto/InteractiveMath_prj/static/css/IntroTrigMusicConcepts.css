@@ -1,6 +1,19 @@
-/***********************
-This is the style sheet for IntroTrigMusicConcepts.html
-************************/
+/*
+ * ============================================================================
+ * COMPONENT: Client side CSS style sheet
+ * FILE:     IntroTrigMusicConcepts 
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Handle layout of html page with same base filename 
+ * (i.e. test1.css styles for test1.html).  Mostly videos with interactive 
+ * component allowing user to measure frequencies in the videos.
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+*/
+
 /* create global var for this html */
 :root{
 	--WIDTH_GIF: 520px;

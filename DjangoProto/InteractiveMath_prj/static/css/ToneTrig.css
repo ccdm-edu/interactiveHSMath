@@ -1,7 +1,18 @@
+/*
+ * ============================================================================
+ * COMPONENT: Client side CSS style sheet
+ * FILE:      ToneTrig.css
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Handle layout of html page with same base filename 
+ * (i.e. test1.css styles for test1.html)
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+*/
 
-/***********************
-This is the style sheet for ToneTrig.html
-************************/
 /* create global var for this html */
 :root{
 	--UPPER_HEADER_LEFT_LOC: 130px;

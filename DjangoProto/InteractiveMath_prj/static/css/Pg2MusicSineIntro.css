@@ -1,6 +1,18 @@
-/********************************
-Style sheet (.css) for the musical intro to sine wave page MusicSinIntro.html
-*********************************/
+/*
+ * ============================================================================
+ * COMPONENT: Client side CSS style sheet
+ * FILE:     Pg2MusicSineIntro.css 
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Handle layout of html page with same base filename 
+ * (i.e. test1.css styles for test1.html)
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+*/
+
 /* create global var for this css which will be pulled in by associated js */
 :root{
 	--HIGHEST_Y: 115px;

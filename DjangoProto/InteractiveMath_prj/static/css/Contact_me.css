@@ -1,6 +1,17 @@
-/***********************
-This is the style sheet for Contact_me.html
-************************/
+/*
+ * ============================================================================
+ * COMPONENT: Client side CSS style sheet
+ * FILE:   Contact_me.css   
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Handle layout of html page with same base filename 
+ * (i.e. test1.css styles for test1.html)
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+*/
 :root{
 	--POSITION_RESPONSE_BAD: -200px;
 	--POSITION_RESPONSE_OK: -150px;

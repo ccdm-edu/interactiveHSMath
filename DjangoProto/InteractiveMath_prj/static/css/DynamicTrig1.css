@@ -1,6 +1,17 @@
-/*********************** 
-This is the style sheet for the DynamicTrig1.html page
-************************/
+/*
+ * ============================================================================
+ * COMPONENT: Client side CSS style sheet
+ * FILE:      DynamicTrig1.css
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Handle layout of html page with same base filename 
+ * (i.e. test1.css styles for test1.html)
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+*/
 /* create global var for this html */
 :root{
 	--CANVAS_TOP: 0px;
