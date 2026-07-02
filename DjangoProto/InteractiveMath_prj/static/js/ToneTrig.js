@@ -1,3 +1,27 @@
+/* ============================================================================
+ * COMPONENT: Client side Javascript
+ * FILE:      ToneTrig.js
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Handle user interaction of page with corresponding name (i.e. test1.js handles user
+ * interaction for test1.html which is styled by test1.css).  This code allows users to 
+ * create sine waves changing the frequency, amplitude and phase and to see the new
+ * equation, new plot and hear the new waveform.  Frequencies from 100 Hz to 10kHz are used.
+ * 
+ * DEPENDENCIES:
+ * SCRIPT_AUTO_DEMO is the script sent to autodemo.js to execute the automated demo of
+ * how the page works as a tutorial to user.
+ * - All static files, such as this js, are served over cloud service such as Cloudflare
+ * 
+ * ARCHITECTURE NOTES:
+ * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
+ *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+ */
 'use strict'
 
 // Replacing $(function() { ... }) with native standard DOMContentLoaded

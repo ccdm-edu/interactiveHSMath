@@ -2,6 +2,28 @@
  * Written by Gemini AI, a "sugar" sweetener to bridge between jquery format which i really like and
  * getting rid of jquery bloated library
  */
+/* ============================================================================
+ * COMPONENT: Client side Javascript
+ * FILE:      jq-shorthand.js
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * This is a "sugar" sweetner to bridge between jquery format (which I wish to preserve) and getting
+ * rid of the bloated jquery library.  It also acts as a set of "macros" to lift the minimal Bootstrap
+ * functionality that I use so that I don't need to keep that library around as well.  It is loaded
+ * into every client file
+ * 
+ * DEPENDENCIES:
+ * - All static files, such as this js, are served over cloud service such as Cloudflare
+ * 
+ * ARCHITECTURE NOTES:
+ * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
+ *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     Gemini AI
+ * ============================================================================
+ */
 
 const $ = (selector, context = document) => {
 	// Prevent execution if the selector is not a valid string

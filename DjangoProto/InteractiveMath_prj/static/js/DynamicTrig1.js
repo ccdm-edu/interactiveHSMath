@@ -1,3 +1,31 @@
+/* ============================================================================
+ * COMPONENT: Client side Javascript
+ * FILE:      DynamicTrig1.js
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Handle user interaction of page with corresponding name (i.e. test1.js handles user
+ * interaction for test1.html which is styled by test1.css). 
+ * This code manages a unit circle and a user that clicks points around it.  The time
+ * it takes the user to go around the circle is measured and the resulting frequency
+ * created is plotted.  The user is encouraged to click fewer points, thus going faster,
+ * to create higher frequencies (within the Shannon sampling theorem limits).  
+ * 
+ * DEPENDENCIES:
+ * SCRIPT_AUTO_DEMO is the script sent to autodemo.js to execute the automated demo of
+ * how the page works as a tutorial to user.
+ * - All static files, such as this js, are served over cloud service such as Cloudflare
+ * 
+ * ARCHITECTURE NOTES:
+ *
+ * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
+ *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+ */
+
 'use strict'
 
 // Native DOMContentLoaded replaces $(function() { ... })

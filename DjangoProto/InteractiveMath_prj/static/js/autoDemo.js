@@ -1,7 +1,28 @@
-//**** This javascript implements an automated demo on each page. It takes in a set of segments and executes
-//**** each segment of audio/click activity/annotations to make the material on each page more understandable.
-//**** It is the "instructional" part of each page
-// [Commentary preserved from original code for structure]
+/* ============================================================================
+ * COMPONENT: Client side Javascript
+ * FILE:      autoDemo.js
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Handle user interaction of page basepage.html for automated demo, which is styled by IntMath.css
+ * Automated demo has several segments, typically, and is voiced by a mp3 file. 
+ * Each page wanting an autodemo creates a script with the element, the action, when it should
+ * occur etc.  This file executes that script so the actions sync up with users voice.
+ * It explains how to use the page and is not interactive,  in that once user launches demo via
+ * green go button, it executes to completion.
+ * 
+ * DEPENDENCIES:
+ * - Backend:  Django HTML, Static files served over cloud service such as Cloudflare
+ * 
+ * ARCHITECTURE NOTES:
+ *
+ * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
+ *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+ */
 'use strict'
 
 class AutoDemo {

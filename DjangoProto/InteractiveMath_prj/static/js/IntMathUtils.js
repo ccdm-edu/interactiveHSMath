@@ -1,3 +1,24 @@
+/* ============================================================================
+ * COMPONENT: Client side Javascript
+ * FILE:      IntMathUtils.js
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Handle utiilities for all website functions.  Making vertical fractions, deciding if
+ * yellow dot was selected, drawing unit circle, drawing sine/cos axis, drawing arrows. 
+ * 
+ * DEPENDENCIES:
+ * - All static files, such as this js, are served over cloud service such as Cloudflare
+ * 
+ * ARCHITECTURE NOTES:
+ *
+ * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
+ *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+ */
 'use strict'
 
 //** Make a fraction teens may be familiar with looking at with a numerator, a line underneath

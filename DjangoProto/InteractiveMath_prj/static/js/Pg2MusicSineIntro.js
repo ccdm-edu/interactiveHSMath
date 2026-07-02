@@ -1,3 +1,30 @@
+/* ============================================================================
+ * COMPONENT: Client side Javascript
+ * FILE:      Pg2MusicSineIntro.js
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Handle user interaction of page with corresponding name (i.e. test1.js handles user
+ * interaction for test1.html which is styled by test1.css).  This page introduces the
+ * concept of sine waves as a musical instrument (without all the higher harmonics of a real
+ * instrument) that can play the C major scale notes.  The resultant equations are ploted
+ * and produced mathematically and played on the users speaker.  The user can verify intuitively
+ * that a sine wave is a (albiet poor) musical instrument by playing some simple tunes
+ * with sine waves.
+ * 
+ * DEPENDENCIES:
+ * SCRIPT_AUTO_DEMO is the script sent to autodemo.js to execute the automated demo of
+ * how the page works as a tutorial to user.
+ * - All static files, such as this js, are served over cloud service such as Cloudflare
+ * 
+ * ARCHITECTURE NOTES:
+ * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
+ *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+ */
 'use strict'
 
 // Replacing $(function() { ... }) with native standard DOMContentLoaded

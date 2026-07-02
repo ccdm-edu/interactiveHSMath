@@ -1,3 +1,29 @@
+/* ============================================================================
+ * COMPONENT: Client side Javascript
+ * FILE:      DynamicTrig2.js
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Handle user interaction of page with corresponding name (i.e. test1.js handles user
+ * interaction for test1.html which is styled by test1.css).  
+ * 
+ * DEPENDENCIES:
+ * Here we keep track of time but this code samples the unit circle faster and slower with min
+ * frequency of 0.1 Hz and max of 2 Hz.  The idea here is for user to observe and prove
+ * to themselves that theta=2*pi*freq*time.  The frequencies created are plotted to right
+ * SCRIPT_AUTO_DEMO is the script sent to autodemo.js to execute the automated demo of
+ * how the page works as a tutorial to user.
+ * - All static files, such as this js, are served over cloud service such as Cloudflare
+ * 
+ * ARCHITECTURE NOTES:
+ *
+ * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
+ *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+ */
 'use strict'
 
 // Native DOMContentLoaded wrapper replaces legacy jQuery selection layers

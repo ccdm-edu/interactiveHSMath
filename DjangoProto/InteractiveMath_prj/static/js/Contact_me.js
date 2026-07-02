@@ -1,3 +1,28 @@
+/* ============================================================================
+ * COMPONENT: Client side Javascript
+ * FILE:    Contact_me.js  
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * Handle user interaction of page with corresponding name (i.e. test1.js handles user
+ * interaction for test1.html which is styled by test1.css).  
+ * Looks at user form, verifies, indicates errors.  Checks that user is a human and
+ *  This file only does the recaptcha request and sends off to server, along with
+ * user input data for evaluation and bot detection at server.  If all successful, an 
+ * email with info will be sent to webmaster.
+ * 
+ * DEPENDENCIES:
+ * - All static files, such as this js, are served over cloud service such as Cloudflare
+ * 
+ * ARCHITECTURE NOTES:
+ *
+ * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
+ *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+ */
 'use strict'
 
 // Replacing $(function() { ... }) with native standard DOMContentLoaded

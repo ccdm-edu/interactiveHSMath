@@ -1,3 +1,26 @@
+/* ============================================================================
+ * COMPONENT: Client side Javascript
+ * FILE:      LandingPage.js
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * This file handles the user interaction with index.html.  The automated demo 
+ * introduces the site.  One can choose newbie or expert mode, the former gives alot more
+ * help.   
+ * 
+ * DEPENDENCIES:
+ * SCRIPT_AUTO_DEMO is the script sent to autodemo.js to execute the automated demo of
+ * how the page works as a tutorial to user.
+ * - All static files, such as this js, are served over cloud service such as Cloudflare
+ * 
+ * ARCHITECTURE NOTES:
+ * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
+ *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+ */
 'use strict'
 
 // Replacing $(function() { ... }) with native standard DOMContentLoaded

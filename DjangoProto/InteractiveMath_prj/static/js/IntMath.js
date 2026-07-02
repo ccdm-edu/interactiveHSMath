@@ -1,4 +1,27 @@
-'use strict' //JQuery, dont do this script until document DOM objects are loaded and ready // THIS js file covers all that is common to whole site 
+/* ============================================================================
+ * COMPONENT: Client side Javascript
+ * FILE:      IntMath.js
+ * ============================================================================
+ * 
+ * DESCRIPTION:
+ * This file handles the activity of all that is common to all pages.  For example,
+ * highlighting left menu when on that page, cookie indication, advanced popup window
+ * drag/drop ability.
+ * 
+ * DEPENDENCIES:
+ * - All static files, such as this js, are served over cloud service such as Cloudflare
+ * 
+ * ARCHITECTURE NOTES:
+ *
+ * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
+ *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ * 
+ * FIRST PRODUCTION VERSION: 2026-06-07
+ * AUTHOR:     C. DeMeyer (with Gemini AI assist)
+ * ============================================================================
+ */
+
+'use strict' //JQuery, dont do this script until document DOM objects are loaded and ready  
 document.addEventListener('DOMContentLoaded', () => {
 	//***************
 	// Make the highlighted page for left menu match what is active
@@ -215,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	// =========================================================================
-	// 2. DRAG AND DROP HANDLER FOR NATIVE DIALOG
+	// 2. DRAG AND DROP HANDLER FOR NATIVE DIALOG window Advanced popup
 	// =========================================================================
 	if (myDialog) {
 		let startX = 0, startY = 0;
