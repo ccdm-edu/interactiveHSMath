@@ -28,7 +28,6 @@
 
 'use strict'
 
-// Native DOMContentLoaded replaces $(function() { ... })
 document.addEventListener('DOMContentLoaded', () => {
 
 	// Hide frequency advice
@@ -69,16 +68,109 @@ document.addEventListener('DOMContentLoaded', () => {
 	if (!ctxUnitCircle) {
 		console.error('Cannot obtain Sin/Cos unit circle context');
 	}
+	
+	const FIRST_USER_BOX_POP_HELP = "1. Click the yellow dot with red arrow labeled Start Here.  Then follow the red arrows as they appear. GO FAST!";
+	const SECOND_USER_BOX_POP_HELP = "2. Do it again, but this time skip half the dots.  The red arrows will lead you.  GO FAST!";	
+	const THIRD_USER_BOX_POP_HELP = "3. Another try, but this time skip most of the dots.  The red arrows will lead you.  GO FAST!";
+	const FOURTH_USER_BOX_POP_HELP = "4. Final try.  The red arrows will lead you.  GO FAST!";
+	const FIFTH_USER_BOX_POP_HELP = "5. On your own.  Click start and at least one other point before end point";
+	
+	// When user first enters page, they need to know what dots to hit to create desired
+	// effect, slow frequency that increases through these arrows that prompt the user
+	// Each set represents one of the dots, starting at 0/360 phase, next set is 30 degrees, etc
+	// the elements of the set tell the arrow drawing function where to put the lines
+	const ARROW_HELPERS = [
+	// 0:  0 degrees
+	{	tip1: [345, 338],
+		tip2: [338, 345],
+		point: [338,338],
+		end: [350,350]
+	},
+	// 1:  30 degrees
+	{	tip1: [328, 264],
+		tip2: [322, 258],
+		point: [322,264],
+		end: [335,255]
+	},
+	// 2:  60 degrees
+	{	tip1: [282, 216],
+		tip2: [276, 210],
+		point: [276,216],
+		end: [285,205]
+	},
+	// 3:  90 degrees
+	{	tip1: [225,202],
+		tip2: [218,195],
+		point: [219,201],
+		end: [228,192]
+	},
+	// 4:  120 degrees
+	{	tip1: [136,218],
+		tip2: [145,209],
+		point: [144,217],
+		end: [134,204]
+	},
+	// 5:  150 degrees
+	{	tip1: [87,266],
+		tip2: [92,255],
+		point: [97,263],
+		end: [81,253]
+	},
+	// 6:  180 degrees
+	{	tip1: [84,315],
+		tip2: [78,321],
+		point: [84,322],
+		end: [72,310]
+	},
+	// 7:  210 degrees
+	{	tip1: [90,391],
+		tip2: [95,401],
+		point: [98,394],
+		end: [84,403]
+	},
+	// 8:  240 degrees
+	{	tip1: [137,440],
+		tip2: [146,449],
+		point: [145,441],
+		end: [135,452]
+	},
+	// 9:  270 degrees
+	{	tip1: [197,455],
+		tip2: [203,461],
+		point: [202,455],
+		end: [193,467]
+	},
+	// 10:  300 degrees
+	{	tip1: [272,449],
+		tip2: [283,442],
+		point: [276,441],
+		end: [287,453]
+	},	
+	// 11:  330 degrees
+	{	tip1: [323,403],
+		tip2: [328,389],
+		point: [322,394],
+		end: [336,403]
+	},	
+	 ];
+	const POINT_TO_TIME = 
+	{	tip1: [101, 47],
+		tip2: [115, 47],
+		point: [110,39],
+		end: [101,88]
+	};
 
-	// Constants & Help Texts
-	const ANGLE_PER_PT_RAD = Math.PI / 6;
-	const TOTAL_NUM_DOTS = 12;
-	const CIRC_RAD = 100; // Assuming value from config
-	const DOT_RADIUS = 5; // Assuming value from config
+	let numFreqGenSoFar = 0;
+	const ANGLE_PER_PT_RAD = Math.PI/6;
+	const TOTAL_NUM_DOTS = 2.0 * Math.PI/ANGLE_PER_PT_RAD;
+	let ptsClickedOnCircle = 0;  // when user starts clicking, help changes			
 	const CIRC_X0 = 210;
 	const CIRC_Y0 = 330;
-
-	// Draw Unit Circle and Interaction Dots
+	const HALF_AXIS = CIRC_RAD + AXIS_OVERLAP;
+	drawTrigCircle(ctxUnitCircle, CIRC_X0, CIRC_Y0, HALF_AXIS);
+	
+	// Draw Unit Circle and Interaction Dots. Angle in rad
+	let littleDotCenter = [];
 	if (ctxUnitCircle) {
 		// Draw Background
 		ctxUnitCircle.beginPath();
@@ -91,12 +183,13 @@ document.addEventListener('DOMContentLoaded', () => {
 			let curr_angle = pt * ANGLE_PER_PT_RAD;
 			let x = CIRC_X0 + Math.round(CIRC_RAD * Math.cos(curr_angle));
 			let y = CIRC_Y0 - Math.round(CIRC_RAD * Math.sin(curr_angle));
-
+			littleDotCenter.push({x: x, y: y});
 			ctxUnitCircle.beginPath();
 			ctxUnitCircle.arc(x, y, DOT_RADIUS, 0, 2 * Math.PI, true);
 			ctxUnitCircle.fillStyle = 'yellow';
 			ctxUnitCircle.fill();
 			ctxUnitCircle.stroke();
+			ctxUnitCircle.closePath();
 		}
 	}
 
@@ -126,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const NUM_MAJOR_TICK = 6; // EXPIRATION_TIME_SEC/5 where EXPIRATION_TIME_SEC is 30
 
 	// Draw initial bare plots
+	let sineAxisBkgd = null; 
 	if (ctxFreqPlot) {
 		drawSineAxis(ctxFreqPlot, UPPER_X_ORIGIN, UPPER_Y_ORIGIN, 30, PIX_PER_MINOR_TICK, NUM_MAJOR_TICK);
 		drawSineAxis(ctxFreqPlot, LOWER_X_ORIGIN, LOWER_Y_ORIGIN, 3, PIX_PER_MINOR_TICK, NUM_MAJOR_TICK);
@@ -185,6 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	//********************************************************
 	const SHOW_FREQ_COLOR = "DarkOrchid";
 	const NEXT_PT_COLOR = "red";
+	const NEXT_PT_TXT = "Click Here";
 	const BEGIN_TEXT = "Start Here";
 	const BEGIN_END_TEXT = "Start/End";
 	const TIMER_LOC_X = 110;
@@ -412,8 +507,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	//******************************************************** 
 	//*** user clicks a yellow dot 
 	//********************************************************
-	//*** user clicks a yellow dot 
-	//********************************************************
 	const ANGLE_PER_PT_DEG = ANGLE_PER_PT_RAD * 180 / Math.PI;
 	const RADIUS_VECTOR_COLOR = "green";
 
@@ -428,14 +521,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			if (e instanceof CustomEvent) {
 				pos = { x: e.detail.xVal, y: e.detail.yVal };
-			} else {
-				pos = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-			}
+				} else if (e instanceof PointerEvent) {
+					// user clicked on the circle
+					pos = {
+					  x: e.clientX - rect.left,
+					  y: e.clientY - rect.top
+					};	
+				} 
+			else if (e instanceof MouseEvent) {
+				// DELETE THIS CODE when Safari and Firefox fix their bug (over 2 yrs old) referred to here
+				// https://stackoverflow.com/questions/70626381/why-chrome-emits-pointerevents-and-firefox-mouseevents-and-which-type-definition
+				pos = {
+				  x: e.clientX - rect.left,
+				  y: e.clientY - rect.top
+				};			
+			} else { console.error('ERROR:  unexpected event: ' + e);}
+			
 			Object.freeze(pos);
 			let ind = 0;
-
 			littleDotCenter.forEach(dot => {
-				if (isInside(pos, dot, 5)) { // Assuming DOT_RADIUS = 5
+				if (isInside(pos, dot, DOT_RADIUS)) { 
 					if (timerStarted) {
 						if (ind > lastIndexClicked) {
 							accumPhase = roundFP(accumPhase + (ind - lastIndexClicked) * ANGLE_PER_PT_DEG, 1);
@@ -444,7 +549,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 							if (ctxUnitCircle) {
 								ctxUnitCircle.beginPath();
-								ctxUnitCircle.moveTo(210, 330);
+								ctxUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
 								ctxUnitCircle.lineTo(dot.x, dot.y);
 								ctxUnitCircle.strokeStyle = RADIUS_VECTOR_COLOR;
 								ctxUnitCircle.fillStyle = RADIUS_VECTOR_COLOR;
@@ -494,7 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 							if (ctxUnitCircle) {
 								ctxUnitCircle.beginPath();
-								ctxUnitCircle.moveTo(210, 330);
+								ctxUnitCircle.moveTo(CIRC_X0, CIRC_Y0);
 								ctxUnitCircle.lineTo(dot.x, dot.y);
 								ctxUnitCircle.strokeStyle = RADIUS_VECTOR_COLOR;
 								ctxUnitCircle.fillStyle = RADIUS_VECTOR_COLOR;
@@ -962,7 +1067,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	let $startAutoDemoBtn = $('#startAutoDemo');
 	if ($startAutoDemoBtn) {
-		$startAutoDemoBtn.on('click', function(event) {
+		$startAutoDemoBtn.on('click', function() {
 			// clear out any previous user activity 
 			prepHelpForUser();
 			// prep the controls for user to interact with auto demo 
