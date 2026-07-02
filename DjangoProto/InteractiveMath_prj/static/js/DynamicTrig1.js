@@ -75,6 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	const FOURTH_USER_BOX_POP_HELP = "4. Final try.  The red arrows will lead you.  GO FAST!";
 	const FIFTH_USER_BOX_POP_HELP = "5. On your own.  Click start and at least one other point before end point";
 	
+	const EXPIRATION_TIME_SEC = 30
+	
 	// When user first enters page, they need to know what dots to hit to create desired
 	// effect, slow frequency that increases through these arrows that prompt the user
 	// Each set represents one of the dots, starting at 0/360 phase, next set is 30 degrees, etc
@@ -211,12 +213,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	const PIX_PER_MINOR_TICK = 13;
-	const MAX_AMP_AXIS = 110; // CIRC_RAD + 10 assuming CIRC_RAD is 100
+	const MAX_AMP_AXIS = CIRC_RAD + 10;
 	const UPPER_Y_ORIGIN = 180;
 	const UPPER_X_ORIGIN = 60;
 	const LOWER_Y_ORIGIN = 500;
 	const LOWER_X_ORIGIN = 60;
-	const NUM_MAJOR_TICK = 6; // EXPIRATION_TIME_SEC/5 where EXPIRATION_TIME_SEC is 30
+	const NUM_MAJOR_TICK = EXPIRATION_TIME_SEC/5; 
 
 	// Draw initial bare plots
 	let sineAxisBkgd = null; 
@@ -282,6 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const NEXT_PT_TXT = "Click Here";
 	const BEGIN_TEXT = "Start Here";
 	const BEGIN_END_TEXT = "Start/End";
+	const END_TEXT = "End Here";
 	const TIMER_LOC_X = 110;
 	const TIMER_LOC_Y = 20;
 
@@ -563,31 +566,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
 							if (numFreqGenSoFar == 0) {
 								if ($startOverBtn) $startOverBtn.style.visibility = "visible";
-								if (ptsClickedOnCircle >= 12 && ctxUnitCircle) {
-									new Arrow(ctxUnitCircle, ARROW_HELPERS, NEXT_PT_COLOR, END_TEXT, 2).draw();
+								if (ptsClickedOnCircle >= TOTAL_NUM_DOTS && ctxUnitCircle) {
+									new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR, END_TEXT, 2).draw();
 								} else if (ctxUnitCircle) {
 									new Arrow(ctxUnitCircle, ARROW_HELPERS[ptsClickedOnCircle], NEXT_PT_COLOR, NEXT_PT_TXT, 2).draw();
 								}
 							} else if (numFreqGenSoFar == 1) {
-								if (2 * ptsClickedOnCircle >= 12 && ctxUnitCircle) {
-									new Arrow(ctxUnitCircle, ARROW_HELPERS, NEXT_PT_COLOR, END_TEXT, 2).draw();
+								if (2 * ptsClickedOnCircle >= TOTAL_NUM_DOTS && ctxUnitCircle) {
+									new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR, END_TEXT, 2).draw();
 								} else if (ctxUnitCircle) {
 									new Arrow(ctxUnitCircle, ARROW_HELPERS[2 * ptsClickedOnCircle], NEXT_PT_COLOR, NEXT_PT_TXT, 2).draw();
 								}
 							} else if (numFreqGenSoFar == 2) {
-								if (3 * ptsClickedOnCircle >= 12 && ctxUnitCircle) {
-									new Arrow(ctxUnitCircle, ARROW_HELPERS, NEXT_PT_COLOR, END_TEXT, 2).draw();
+								if (3 * ptsClickedOnCircle >= TOTAL_NUM_DOTS && ctxUnitCircle) {
+									new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR, END_TEXT, 2).draw();
 								} else if (ctxUnitCircle) {
 									new Arrow(ctxUnitCircle, ARROW_HELPERS[3 * ptsClickedOnCircle], NEXT_PT_COLOR, NEXT_PT_TXT, 2).draw();
 								}
 							} else if (numFreqGenSoFar == 3) {
-								if (4 * ptsClickedOnCircle >= 12 && ctxUnitCircle) {
-									new Arrow(ctxUnitCircle, ARROW_HELPERS, NEXT_PT_COLOR, END_TEXT, 2).draw();
+								if (4 * ptsClickedOnCircle >= TOTAL_NUM_DOTS && ctxUnitCircle) {
+									new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR, END_TEXT, 2).draw();
 								} else if (ctxUnitCircle) {
 									new Arrow(ctxUnitCircle, ARROW_HELPERS[4 * ptsClickedOnCircle], NEXT_PT_COLOR, NEXT_PT_TXT, 2).draw();
 								}
 							} else if (ctxUnitCircle) {
-								new Arrow(ctxUnitCircle, ARROW_HELPERS, NEXT_PT_COLOR, BEGIN_END_TEXT, 2).draw();
+								new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR, BEGIN_END_TEXT, 2).draw();
 							}
 						} else if (ind == 0 && lastIndexClicked != 0) {
 							accumPhase = 360;
@@ -608,7 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
 								ctxUnitCircle.closePath();
 							}
 							updateContextSensHelp(numFreqGenSoFar);
-						}
+						}  // end of if ind
 					} else {
 						if (0 == ind) {
 							if (!timerStarted) {
@@ -630,10 +633,10 @@ document.addEventListener('DOMContentLoaded', () => {
 							} else if (numFreqGenSoFar == 3) {
 								if (ctxUnitCircle) new Arrow(ctxUnitCircle, ARROW_HELPERS[4 * ptsClickedOnCircle], NEXT_PT_COLOR, NEXT_PT_TXT, 2).draw();
 							} else if (ctxUnitCircle) {
-								new Arrow(ctxUnitCircle, ARROW_HELPERS, NEXT_PT_COLOR, BEGIN_END_TEXT, 2).draw();
+								new Arrow(ctxUnitCircle, ARROW_HELPERS[0], NEXT_PT_COLOR, BEGIN_END_TEXT, 2).draw();
 							}
 						}
-					}
+					} // end of if timer started
 				}
 				ind = ind + 1;
 			});
