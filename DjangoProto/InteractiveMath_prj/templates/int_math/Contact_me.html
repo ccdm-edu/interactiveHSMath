@@ -48,24 +48,20 @@
 				{% csrf_token %}
 		
 				<!-- Render only the fields you want the user to see -->
-				<p>{{ form.name.label_tag }} {{ form.name }} {{ form.name.errors
-					}}</p>
-				<p>{{ form.email.label_tag }} {{ form.email }} {{
-					form.email.errors }}</p>
-				<p>{{ form.subject.label_tag }} {{ form.subject }} {{
-					form.subject.errors }}</p>
-				<p>{{ form.message.label_tag }} {{ form.message }} {{
-					form.message.errors }}</p>
-				<p>{{ form.clickwrap_accept }} {{ form.clickwrap_accept.label_tag
-					}} {{ form.clickwrap_accept.errors }}</p>
+				<p>{{ form.name.label_tag }} {{ form.name }} {{ form.name.errors}}</p>
+				<p>{{ form.email.label_tag }} {{ form.email }} {{form.email.errors }}</p>
+				<p>{{ form.subject.label_tag }} {{ form.subject }} {{form.subject.errors }}</p>
+				<p>{{ form.message.label_tag }} {{ form.message }} {{form.message.errors }}</p>
+				<p>{{ form.clickwrap_accept }} {{ form.clickwrap_accept.label_tag}} {{ form.clickwrap_accept.errors }}</p>
 		
 				<!-- Use a hidden div for fields the user should NEVER see -->
-				<div style="display: none !important; visibility: hidden;">{{
-					form.pooh_food_test }} {{ form.g_recaptcha_response }}</div>
+				<div style="display: none !important; visibility: hidden;">
+					{{form.pooh_food_test }} {{ form.g_recaptcha_response }}
+				</div>
 		
 				<p id="ContactCompliance">
-					There is no guarantee of a personal or timely response. {{
-					basePage.CompanyName }} reserves the right to save all information
+					There is no guarantee of a personal or timely response. {{basePage.CompanyName }} 
+					reserves the right to save all information
 					you provide. Contact submissions are protected by Google reCaptcha
 					V3. By contacting us, you acknowledge you are over 13 years old and
 					agree to the <a href="{% url 'int_math:TermsOfUse' %}">Terms Of
@@ -73,15 +69,19 @@
 					as well as any Google terms/privacy. <b>Click box to accept the
 						terms and continue</b>.
 				</p>
-				<br> {% if botTestDone %} {% if botTestPassed %}
-				<p id="notABot">Thank you for taking the time to contact us. Your
-					message was successfully transmitted.</p>
-				{% else %}
-				<p id="urABot">Sorry, your message was not transmitted. Perhaps
-					you had "new line" character in your input. You can go to home page
-					and come back and try again.</p>
-				{% endif %} {% else %} <input type="submit" value="Submit"> {%
-				endif %}
+				<br> 
+				{% if botTestDone %} 
+					{% if botTestPassed %}
+						<p id="notABot">Thank you for taking the time to contact us. Your
+						message was successfully transmitted.</p>
+					{% else %}
+						<p id="urABot">Sorry, your message was not transmitted. Perhaps
+						you had "new line" character in your input. You can go to home page
+						and come back and try again.</p>
+					{% endif %} 
+				{% else %} 
+					<input type="submit" value="Submit"> 
+				{%endif %}
 		
 			</form>
 		</div>
@@ -101,9 +101,11 @@
 {% block unique_js_block %}
 	<!-- Custom JS for this page -->
 	<script nonce="{{ CSP_NONCE }}">
-				// Dont need advanced topic link popup or autodemo stuff
-				$('a[href="#AdvancedTopics"]').css('display', 'none');
-				$('#TrigPageTop').css('display', 'none');
-		</script>
+			// Dont need advanced topic link popup or autodemo stuff
+			const advancedLink = document.querySelector('a[href="#AdvancedTopics"]');
+			if (advancedLink) advancedLink.style.display = 'none';
+			const trigPageTop = document.getElementById('TrigPageTop');
+			if (trigPageTop) trigPageTop.style.display = 'none';
+	</script>
 	<script src="{{ ContactJS }}" crossorigin="anonymous"></script>
 {% endblock %}

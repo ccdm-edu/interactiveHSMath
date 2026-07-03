@@ -501,7 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	try {
 		window.AudioContext = window.AudioContext || window.webkitAudioContext;
 		context = new AudioContext();
-	} catch (e) { alert("Web Audio API not supported"); }
+	} catch (e) { alert("Web Audio API not supported, you won't be able to hear tones or musical notes"); }
 
 	function changeMP3Volume(mute = false) {
 		let ampVal = mute ? 0 : ($('#music-amp').val() || 3);
@@ -543,8 +543,17 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	// Initialize sliders
-	let DEFAULT_VOL = 3;
-	$("#tone-amp, #music-amp").val(DEFAULT_VOL).trigger('change');
+	const DEFAULT_VOL = 3;
+	document.querySelectorAll("#tone-amp, #music-amp").forEach(input => {
+	    input.value = DEFAULT_VOL;
+	    input.dispatchEvent(new Event('change')); 
+	});
+	setToneAmp();
+	const toneLabel = document.getElementById("currToneVolLabel");
+	if (toneLabel) toneLabel.textContent = DEFAULT_VOL;
+	const musicLabel = document.getElementById("currMusicVolLabel");
+	if (musicLabel) musicLabel.textContent = DEFAULT_VOL;
+
 	// Update advanced topics native dialog query nodes cleanly (Avoiding Bootstrap container nesting)
 	let todo_tab_element = "#tab011 > p";
 	let expln_tab_element = "#tab021 > p";
@@ -698,6 +707,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Immediate execution here 
 	//*********************************** 
 	// Setup Chart.js context via framework-free DOM lookups
+	let ctxLong;
 	let chartCanvas = document.getElementById("sine_plotsLong");
 	if (chartCanvas) {
 		ctxLong = chartCanvas.getContext('2d');
