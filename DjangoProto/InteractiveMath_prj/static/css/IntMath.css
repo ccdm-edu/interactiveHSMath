@@ -384,19 +384,45 @@ ul {
   padding-left: 0;
   margin: 0;
 }
+/* Ensure the parent or the menu positions correctly */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
 
-.dropdown-menu { 
-  display: none; 
-  position: absolute; 
-  top: 100%; 
-  left: 0; 
-  background: #fff; 
-  border: 1px solid #ccc; 
-  list-style: none; 
-  padding: 8px 0; 
-  min-width: 160px; 
-  z-index: 1000; 
-} 
+/* Hide the dropdown menu by default */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 5px 0;
+  min-width: 160px;
+}
+
+/* Optional standard styling for items inside your menu */
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+/* Make the dropdown visible ONLY when the 'show' class is applied */
+.dropdown-menu.show {
+  display: block;
+}
 
 .dropdown-menu .dropdown-item { 
   display: block; 
@@ -408,6 +434,17 @@ ul {
 .dropdown-menu .dropdown-item:hover { 
   background: #f1f1f1; 
 } 
+
+/* Fix for dropdown elements placed inside table cells */
+td:has(.dropdown) {
+  position: relative;
+}
+
+/* Ensure the button doesn't inherit structural table quirks */
+.dropdown-toggle {
+  position: relative;
+  z-index: 2;
+}
 
 .nav-item.dropdown:hover > .dropdown-menu { 
   display: block; 

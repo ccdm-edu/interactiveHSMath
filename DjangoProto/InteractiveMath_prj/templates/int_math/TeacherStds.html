@@ -212,13 +212,16 @@
 
 {% block unique_js_block %}
 	<script nonce="{{ CSP_NONCE }}">
-			//Dont want a next/back button on this page so kill it here	
-    		$("#GoToNextPage").css('display', 'none');
-    		$("#GoToPreviousPage").css('display', 'none');
-			// Dont need advanced topic link popup
-			$('a[href="#AdvancedTopics"]').css('display', 'none');
-			// Dont need autodemo icon
-			$('#TrigPageTop').css('display', 'none');
+			
+			// Dont need advanced topic link popup or autodemo stuff or go to next or previous pages
+			const advancedLink = document.querySelector('a[href="#AdvancedTopics"]');
+			if (advancedLink) advancedLink.style.display = 'none';
+			const trigPageTop = document.getElementById('TrigPageTop');
+			if (trigPageTop) trigPageTop.style.display = 'none';
+			const goPrevButton = document.getElementById('GoToPreviousPage');
+			if (goPrevButton) goPrevButton.style.display = 'none';
+			const goNextButton = document.getElementById("GoToNextPage");
+			if (goNextButton) goNextButton.style.display = 'none';	
 	</script>
                     	   
 {% endblock %}

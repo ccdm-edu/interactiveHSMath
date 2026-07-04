@@ -55,6 +55,20 @@ document.addEventListener('DOMContentLoaded', () => {
 		if ($startDemo) $startDemo.classList.add('newbieMode');
 	}
 
+	const volNoteOnEl = document.querySelector(".allowNotePlay .VolOn");
+	const volNoteOffEl = document.querySelector(".allowNotePlay .VolOff");
+	const volToneOnEl = document.querySelector(".toneStartButton .VolOn");
+	const volToneOffEl = document.querySelector(".toneStartButton .VolOff");
+
+	// Guard clause: Exit safely if the elements aren't present on this specific page
+	if (!volNoteOnEl || !volNoteOffEl || !volToneOnEl || !volToneOffEl) return;
+
+	// Extend them using js-shorthand.js library helpers
+	const $noteVolOn = extendElement(volNoteOnEl);
+	const $noteVolOff = extendElement(volNoteOffEl);
+	const $toneVolOn = extendElement(volToneOnEl);
+	const $toneVolOff = extendElement(volToneOffEl);
+	
 	// Frequency constants for Bflat tracking definitions
 	const C5_FREQ = 466.16;
 	const C4_FREQ = 233.08;
@@ -532,12 +546,16 @@ document.addEventListener('DOMContentLoaded', () => {
 		let db = -20 + 20.0 * Math.log10($("#tone-amp").val());
 
 		if (!ToneIsOnNow) {
+			//Its off, but we will turn tone on
 			osc = new Tone.Oscillator({ frequency: currFreq, volume: db, type: "sine" }).toDestination().start();
-			$('.toneStartButton .VolOn, .toneStartButton .VolOff').toggleClass('hidden');
+			$toneVolOn.show();
+			$toneVolOff.hide();
 			ToneIsOnNow = true;
 		} else {
+			//Its on but we will stop tone
 			osc.stop();
-			$('.toneStartButton .VolOff, .toneStartButton .VolOn').toggleClass('hidden');
+			$toneVolOn.hide();
+			$toneVolOff.show();
 			ToneIsOnNow = false;
 		}
 	});
@@ -571,20 +589,15 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 
 		if (currTuneState === UNSELECTED) {
+			// should never happen
 			console.error('SW Bug, html does not match JSON config file');
 			updatePlotsUserAides();
-
 			let $activity = $("#musicalActivity");
 			if ($activity) $activity.innerHTML = DEFAULT_TITLE;
-
-			let $noteVolOn = $(".allowNotePlay .VolOn");
-			let $noteVolOff = $(".allowNotePlay .VolOff");
-			if ($noteVolOn) $noteVolOn.addClass("hidden");
-			if ($noteVolOff) $noteVolOff.addClass("hidden");
-
+			$noteVolOn.hide();
+			$noteVolOff.hide();
 			let $noteLabel = $("#currMusicNoteLabel");
 			if ($noteLabel) $noteLabel.innerHTML = "";
-
 			throw new Error("SW bug, html does not match JSON config file");
 		}
 
@@ -648,19 +661,46 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Helper to prepToPlayNote function 
 	function updateUIAfterLoad() {
 		updatePlotsUserAides();
-		let $volOff = $(".allowNotePlay .VolOff");
-		if ($volOff) $volOff.removeClass('hidden');
+		$noteVolOn.hide();
+		$noteVolOff.show();
 	}
 
 	// User selects an instrument from your dropdown flyout components natively
-	let instrumentButtons = document.querySelectorAll('#InstrumentSel .dropdown-menu button');
+	// Core dropdown toggle functionality	
+	const dropdownContainer = document.getElementById('InstrumentSel');
+	if (!dropdownContainer) return; 
+
+	// 1. Direct native scoping ensures we get the exact elements inside this container
+	const toggleElement = dropdownContainer.querySelector('.dropdown-toggle');
+	const menuElement = dropdownContainer.querySelector('.dropdown-menu');
+
+	// 2. Extend them individually using your library
+	const $toggleBtn = extendElement(toggleElement);
+	const $dropdownMenu = extendElement(menuElement);
+	
+	// 3. Toggle visibility on button click
+	$toggleBtn.on('click', (event) => {
+		event.stopPropagation();
+		$dropdownMenu.toggleClass('show');
+	});
+
+	// 4. Handle item selection
+	let instrumentButtons = dropdownContainer.querySelectorAll('.dropdown-item');
 	instrumentButtons.forEach(btn => {
 		let $btn = extendElement(btn);
+		
 		$btn.on('click', function() {
-			// Safely access element string values natively via properties instead of jQuery queries
-			prepToPlayNote(btn.value);
+			$toggleBtn.html($btn.html());
+			$dropdownMenu.removeClass('show');
+			prepToPlayNote($btn.val());
 		});
 	});
+
+	// 5. Global listener to close when clicking outside
+	document.addEventListener('click', () => {
+		$dropdownMenu.removeClass('show');
+	});
+	
 
 	//*********************************** 
 	// User instigated callback events User selects PLAY INSTRUMENT they have selected 
@@ -682,23 +722,21 @@ document.addEventListener('DOMContentLoaded', () => {
 					changeMP3Volume();
 
 					sourceNote.start(0);
+					
 					noteIsOnNow = true;
-
-					let $vOn = $(".allowNotePlay .VolOn");
-					let $vOff = $(".allowNotePlay .VolOff");
-					if ($vOn) $vOn.toggleClass('hidden');
-					if ($vOff) $vOff.toggleClass('hidden');
+					$noteVolOn.show();
+					$noteVolOff.hide();
 				} else {
 					sourceNote.stop(0);
 					noteIsOnNow = false;
+					$noteVolOn.hide();
+					$noteVolOff.show();
 				}
 
 				sourceNote.onended = () => {
 					noteIsOnNow = false;
-					let $vOn = $(".allowNotePlay .VolOn");
-					let $vOff = $(".allowNotePlay .VolOff");
-					if ($vOn) $vOn.toggleClass('hidden');
-					if ($vOff) $vOff.toggleClass('hidden');
+					$noteVolOn.hide();
+					$noteVolOff.show();
 				};
 			}
 		});
@@ -1228,10 +1266,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		noteIsOnNow = false;
 
 		// default is no instrument selected, then no volume on/off button
-		let $allowPlayOn = $(".allowNotePlay .VolOn");
-		let $allowPlayOff = $(".allowNotePlay .VolOff");
-		if ($allowPlayOn) $allowPlayOn.addClass('hidden');
-		if ($allowPlayOff) $allowPlayOff.addClass('hidden');
+		$noteVolOn.hide();
+		$noteVolOff.show();
 
 		// turn off tone
 		if (osc && typeof osc.stop === 'function') {
@@ -1241,10 +1277,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		// go back to original html defaults
-		let $toneStartOn = $(".toneStartButton .VolOn");
-		let $toneStartOff = $(".toneStartButton .VolOff");
-		if ($toneStartOn) $toneStartOn.addClass('hidden');
-		if ($toneStartOff) $toneStartOff.removeClass('hidden');
+		$toneVolOn.hide();
+		$toneVolOff.show();
 		ToneIsOnNow = false;
 	}
 

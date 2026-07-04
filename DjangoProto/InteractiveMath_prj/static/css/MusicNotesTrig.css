@@ -146,6 +146,7 @@ input[type="range"] {
 	margin-left: auto;  /* center it up */
 	margin-right: auto;
 }
+
 .VolOff, .VolOn{
   position: absolute;
   top: 0;

@@ -41,12 +41,24 @@
 
 {% block unique_js_block %}
 	<script nonce="{{ CSP_NONCE }}">			
-			// Dont need advanced topic link popup
-			$('a[href="#AdvancedTopics"]').css('display', 'none');
-			// Dont need autodemo icon
-			$('#TrigPageTop').css('display', 'none');
-			$("#GoToPreviousPage").css('display', 'none');
-		    $("#GoToNextPage").wrap('<a href="../Privacy"></a>');
+		    
+			// Dont need advanced topic link popup or autodemo stuff
+			const advancedLink = document.querySelector('a[href="#AdvancedTopics"]');
+			if (advancedLink) advancedLink.style.display = 'none';
+			const trigPageTop = document.getElementById('TrigPageTop');
+			if (trigPageTop) trigPageTop.style.display = 'none';
+			const goPrevButton = document.getElementById('GoToPreviousPage');
+			if (goPrevButton) goPrevButton.style.display = 'none';
+			
+			const element = document.getElementById("GoToNextPage");
+			if (element) {
+			    const wrapper = document.createElement("a");
+			    wrapper.href = "../Privacy";
+			    element.parentNode.insertBefore(wrapper, element);
+			    wrapper.appendChild(element);
+			}
+			
+			
 	</script>
  
 {% endblock %}

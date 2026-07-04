@@ -40,12 +40,22 @@
 
 {% block unique_js_block %}
     <script nonce="{{ CSP_NONCE }}">			
-			// Dont need advanced topic link popup
-			$('a[href="#AdvancedTopics"]').css('display', 'none');
-			// Dont need autodemo icon
-			$('#TrigPageTop').css('display', 'none');
-    		$("#GoToNextPage").css('display', 'none');
-    	    $("#GoToPreviousPage").wrap('<a href="../TermsOfUse"></a>');
+			// Dont need advanced topic link popup or autodemo stuff
+			const advancedLink = document.querySelector('a[href="#AdvancedTopics"]');
+			if (advancedLink) advancedLink.style.display = 'none';
+			const trigPageTop = document.getElementById('TrigPageTop');
+			if (trigPageTop) trigPageTop.style.display = 'none';
+			const goNextButton = document.getElementById('GoToNextPage');
+			if (goNextButton) goNextButton.style.display = 'none';
+			
+			const element = document.getElementById("GoToPreviousPage");
+			if (element) {
+			    const wrapper = document.createElement("a");
+			    wrapper.href = "../TermsOfUse";
+			    element.parentNode.insertBefore(wrapper, element);
+			    wrapper.appendChild(element);
+			}
+
 	</script>				   
 
 {% endblock %}

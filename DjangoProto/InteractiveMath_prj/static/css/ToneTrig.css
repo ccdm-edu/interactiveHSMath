@@ -68,14 +68,14 @@
 	position: relative; 
 	height:250px; 
 	width:800px; 
-	top:120px;
+	top:180px;
 }
 /* arrange the expansion lines between the two graphs for max understandability */
 /* See https://www.chartjs.org/docs/latest/configuration/responsive.html#important-note for */
 /* how to do sizing on canvases that contain chart.js,  timeExpand does not have chart.js */
 #timeExpand{
 	 position: relative; 
-	 top: 75px;
+	 top: 150px;
 	 height:100px; 
 	 width:800px;
 }
@@ -84,7 +84,7 @@
 	position: relative; 
 	height:200px; 
 	width:800px; 
-	top:30px;
+	top:140px;
 	
 }
 
