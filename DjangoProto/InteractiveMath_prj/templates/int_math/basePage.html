@@ -66,9 +66,9 @@
 	{% endblock %}
 	
 	<!--  style blocks dont like comments in the middle -->
-	<!--  THIS MAKES THE RECAPTCHA LOGO ON ALL PAGES -->
+	<!--  THIS MAKES THE RECAPTCHA LOGO ON ALL PAGES 7/8/26 change to recaptcha.net as recommended by google to avoid csp error-->
 	<script nonce="{{ CSP_NONCE }}"
-		src='https://www.google.com/recaptcha/api.js?render={{ basePage.recaptchaPublicKey }}'></script>
+		src='https://recaptcha.net/recaptcha/api.js?render={{ basePage.recaptchaPublicKey }}'></script>
 
 </head>
 

@@ -177,6 +177,7 @@ CONTENT_SECURITY_POLICY = {
             SELF,
             "data:",
             "https://www.google.com",
+            "https://recaptcha.net",
             "https://www.gstatic.com",
             CLOUD_URL_BINARY,
             "https://www.youtube.com",

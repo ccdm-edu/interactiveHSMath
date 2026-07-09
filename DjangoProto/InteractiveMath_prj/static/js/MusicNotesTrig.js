@@ -111,6 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	let ampLongCurrNote = [];
 	const NUM_PTS_PLOT_LONG = 1000;
 	const DURATION_LONG_PLOT_MS = 10;
+	//sample period in sec
+	// yes, these are ridiculously high rates, didn't want to have ANY sampling artifacts in plots...
 	const samplePeriodLong = DURATION_LONG_PLOT_MS / (1000 * NUM_PTS_PLOT_LONG);
 
 	function fillInArrays() {
@@ -498,41 +500,70 @@ document.addEventListener('DOMContentLoaded', () => {
 		getGraphArray() {
 			let graphArray = [];
 			let currIndxMp3 = 0;
+			// want to illustrate that sine wave at pitch freq is the periodicity of musical note waveform
+			// To enhance visualization, phase up the buffer so that we "start" at zero crossing of steepest ascent/descent
+			// we will then feed this "new" buffer into the sample rate converter for plotting
 			this.findStartPhase(); // Aligns data to zero-crossing
-
+			
+			// using nearest neighbor approximation for arbitrary sample rate conversion of MP3 rate to graph rate
 			for (let i = 0; i <= NUM_PTS_PLOT_LONG; i++) {
 				let tG = samplePeriodLong * i;
 				let tM = currIndxMp3 * this.samplePeriodMp3;
 				if ((tG - tM) > (tM + this.samplePeriodMp3 - tG)) currIndxMp3++;
 				graphArray[i] = this.mp3Data[currIndxMp3];
 			}
+			// compare expected with actual graph sample rate/ mp3 file sample rate
+			let approxSampRatio = NUM_PTS_PLOT_LONG/currIndxMp3;
+			let actualSampRatio = this.samplePeriodMp3/samplePeriodLong;
+			console.log("Calculated (Sample rate of Graph)/(sample Rate of Mp3) as " + approxSampRatio);
+			console.log("We expected Fsg/Fsmp3 = " + actualSampRatio + " Difference is " + (approxSampRatio - actualSampRatio));
+
 			return graphArray;
 		}
 	}
 
 	// Global Event Listeners & Audio Context Management
-	let sourceNote, context;
-	try {
-		window.AudioContext = window.AudioContext || window.webkitAudioContext;
-		context = new AudioContext();
-	} catch (e) { alert("Web Audio API not supported, you won't be able to hear tones or musical notes"); }
+	let sourceNote=null
+	let context 
+	let gainMusicNode=null;
+//	try {
+//		//DELETE ME window.AudioContext = window.AudioContext || window.webkitAudioContext;
+//		//context = new AudioContext()
+//		
+//		// Point 'context' directly to the Tone.js underlying native context
+//    	context = Tone.getContext().rawContext; 
+//		gainMusicNode = context.createGain();
+//		//DELETE ME gainMusicNode.connect(context.destination);
+//		// Connect your gain node into Tone.js's master output engine
+//    	gainMusicNode.connect(Tone.getDestination().input); 
+//	} catch (e) { alert("Audio initialization for MP3 music notes failed"); }
 
 	function changeMP3Volume(mute = false) {
+		//for MP3, will use max volume setting to give factor of 2 (3db) increase.
+		//middle setting is no amplification and zero setting is mute
+		// https://stackoverflow.com/questions/70480176/webaudio-api-change-volume-for-one-of-sources
+		// createGain can be used to mute as well
 		let ampVal = mute ? 0 : ($('#music-amp').val() || 3);
-		let gainMusicNode = context.createGain(); //
-		gainMusicNode.gain.value = ampVal * 2 / 10; // 3dB scale
-		if (sourceNote) {
-			sourceNote.disconnect(0); //
-			sourceNote.connect(gainMusicNode).connect(context.destination); //
-		}
+		
+//		// change volume without "pops"
+//		gainMusicNode.gain.setValueAtTime(ampVal * 2 / 10, context.currentTime); // 3dB scale.  Need to connect the '10' with html max value
+//		if (sourceNote) {
+//	        // Route your source note through the global volume control
+//	        sourceNote.connect(gainMusicNode); 
+//		}
+
+	    let volumeDb = Tone.gainToDb(ampVal * 2 / 10);
+	    // Only adjust the active sourceNote volume node, leaving other oscillators alone
+	    if (sourceNote && sourceNote.volume) {
+	        sourceNote.volume.value = volumeDb;
+	    }		
 	}
 
 	// UI Event Handlers (Change volume/start-stop)
-	$('#music-amp').on('change', () => {
+	function setMusicAmp(){
 		$("#currMusicVolLabel").text($('#music-amp').val());
 		changeMP3Volume();
-	});
-
+	}
 	function setToneAmp() {
 		let val = $("#tone-amp").val();
 		$("#currToneVolLabel").text(val);
@@ -540,9 +571,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	$('#tone-amp').on('change', setToneAmp);
+	$('#music-amp').on('change', setMusicAmp);
 
 	$('.toneStartButton').on('click', function() {
 		if (typeof ToneIsOnNow == "undefined") ToneIsOnNow = false;
+		// convert amplitude to what tone.js calls decibels.  In tone.js, -40 dB is very quiet
+		// and 0 dB is plenty loud enough.  I know this isn't the music industry definition (decibel SPL where 0 dB
+		// is the quietest sound one can hear and 100 dB will cause hearing damage) so I will say Amplitude = 1
+		// is min audible and amplitude 40 dB higher (40 = 20log(A1/A0) or A1=100 if A0 = 1) is max we want to put out
 		let db = -20 + 20.0 * Math.log10($("#tone-amp").val());
 
 		if (!ToneIsOnNow) {
@@ -553,7 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			ToneIsOnNow = true;
 		} else {
 			//Its on but we will stop tone
-			osc.stop();
+			osc.toDestination().stop();
 			$toneVolOn.hide();
 			$toneVolOff.show();
 			ToneIsOnNow = false;
@@ -625,26 +661,25 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		try {
-			// 1. Get the URL (Signed or Local) 
+			// Get the URL (Signed or Local) 
 			const response = await fetch('/int_math/getDynamicFilename/?fileName=MusicNotes/' + tuneFilenameURL[currTuneState]);
 			if (!response.ok) throw new Error(`Config fetch failed: ${response.status}`);
 
 			const data = await response.json();
 			const musicianNoteMp3URL = data.url;
 
-			// 2. Fetch the actual MP3 binary data stream
+			// Fetch the actual MP3 binary data stream
 			const mp3Response = await fetch(musicianNoteMp3URL);
 			if (!mp3Response.ok) throw new Error(`MP3 fetch failed: ${mp3Response.status}`);
 			const arrayBuffer = await mp3Response.arrayBuffer();
 
-			// 3. Decode Audio natively using Promise threads
-			const buffer = await context.decodeAudioData(arrayBuffer);
-
-			// 4. Process and Cache values natively
-			tuneBuffer[currTuneState] = context.createBuffer(1, buffer.length, buffer.sampleRate);
-			tuneBuffer[currTuneState].copyFromChannel(tuneBuffer[currTuneState].getChannelData(0), 0);
-
-			noteFilePoint[currTuneState] = new InstrumentNote(buffer, currTuneState, tuneFundamentalFreq[currTuneState]);
+	        // DECODE VIA TONE.JS CONTEXT:
+	        // This decodes the arrayBuffer natively using Tone's active background thread
+	        const decodedBuffer = await Tone.getContext().decodeAudioData(arrayBuffer);
+			tuneBuffer[currTuneState] = decodedBuffer;
+		
+			// save the raw buffer in cache, since easier to deal with
+			noteFilePoint[currTuneState] = new InstrumentNote(decodedBuffer, currTuneState, tuneFundamentalFreq[currTuneState]);
 			tuneGraphLong[currTuneState] = noteFilePoint[currTuneState].getGraphArray();
 
 			if (!prepOnly) {
@@ -707,7 +742,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	//*********************************** 
 	let $playNoteBtn = $('.allowNotePlay');
 	if ($playNoteBtn) {
-		$playNoteBtn.on('click', function() {
+		$playNoteBtn.on('click', async function() {
 			if (typeof noteIsOnNow == "undefined") {
 				noteIsOnNow = false;
 			}
@@ -716,29 +751,43 @@ document.addEventListener('DOMContentLoaded', () => {
 				let prob = tuneBuffer == null ? " Whole tune buffer is null" : " The tune buffer for state " + currTuneState + " is null";
 				console.error("Timing error, file transfer and decode not complete." + prob);
 			} else {
-				if (noteIsOnNow === false) {
-					sourceNote = context.createBufferSource();
+				if (!noteIsOnNow) {
+							
+					// 1. Ensure the master audio context is awake
+				    Tone.start(); 
+				
+				    // 2. Calculate the volume setting from your HTML input
+				    let ampVal = ($('#music-amp').val() || 3);
+				    
+				    // 3. Convert your 0-10 slider math into a clean Tone.js Decibel unit
+				    // Tone.gainToDb(1) is 0dB (unaltered). Tone.gainToDb(0) is -Infinity (silent).
+				    let volumeDb = Tone.gainToDb(ampVal * 2 / 10); 			
+
+				    sourceNote = new Tone.BufferSource({
+				        playbackRate: 1,
+				        loop: false,
+				        volume: volumeDb,
+				    });
+				    // BYPASS CONSTRUCTOR bug in Tone.js: Assign the native browser AudioBuffer directly 
+					// using Tone's low-level hardware assignment. This skips the type-checking error.
 					sourceNote.buffer = tuneBuffer[currTuneState];
-					changeMP3Volume();
 
-					sourceNote.start(0);
-					
-					noteIsOnNow = true;
-					$noteVolOn.show();
-					$noteVolOff.hide();
-				} else {
-					sourceNote.stop(0);
-					noteIsOnNow = false;
-					$noteVolOn.hide();
-					$noteVolOff.show();
-				}
+				    // 5. Connect the source through Tone's volume system to the speakers and start it
+				    sourceNote.toDestination();
 
-				sourceNote.onended = () => {
-					noteIsOnNow = false;
-					$noteVolOn.hide();
-					$noteVolOff.show();
-				};
-			}
+				    sourceNote.start();
+				    noteIsOnNow = true;
+				    $noteVolOn.show();
+				    $noteVolOff.hide();
+				
+				    // 6. Handle the automatic cleanup when the MP3 finishes
+				    sourceNote.onended = () => {
+				        noteIsOnNow = false;
+				        $noteVolOn.hide();
+				        $noteVolOff.show();
+				    };
+    			};
+    		};
 		});
 	}
 	//*********************************** 
@@ -1184,27 +1233,47 @@ document.addEventListener('DOMContentLoaded', () => {
 			// this, on user click of start here button, we create the WebAudio that will be used in the demo (using trumpet). We will create the tone
 			// WebAudio object when user hits play. Both events take time, want to spread that out as much as possible
 			// MP3 in response to CustomEvent. On other pages with AutoDemo that don't play extra MP3 (other than voice that explains), this value is not set and its ok
-			// to just define it here.
-			if (undefined === sourceNote) {
-				// this means user hasn't played with music notes so far and autodemo will not play music notes until we initialize
-				// sourceNote before the CustomEvent happens in AutoDemo
-				// prep the SourceNote as required by iOS for Autodemo mp3 play
-				prepToPlayNote("Trumpet", true).then(
-					(onResolved) => {
-						console.log(onResolved); // did we need to read from scratch or did we already have it?
-						// async function prepToPlayNote returns promise, need to wait till its done
-						sourceNote = context.createBufferSource();
-						sourceNote.buffer = tuneBuffer[currTuneState];
-						// yes I shouldn't have to turn on the sound, but iOS requires this in order to run autodemo with musicians mp3
-						changeMP3Volume(true); // mute the sound
-						sourceNote.start(0); // turn on fast
-						sourceNote.stop(0); // turn off fast, no one should notice
-					},
-					(onRejected) => {
-						console.error("Failure instantiating sourceNote WebAudio element. " + onRejected);
-					}
-				);
+			// to just define it here.  
+
+			if (typeof noteIsOnNow == "undefined") { 
+			    noteIsOnNow = false; 
 			}
+			
+			// 1. Instantly unlock the iOS audio context
+			Tone.start().then(() => {
+			    console.log("Tone.js Audio Context securely unlocked for iOS AutoDemo.");
+			    
+			    // 2. ZERO-BLIP FIX: Create a tiny, completely empty 1-sample silent buffer manually
+			    // There are no audio waves here, so it is physically impossible to make a sound or blip.
+			    let nativeContext = Tone.getContext().rawContext;
+			    let completelySilentBuffer = nativeContext.createBuffer(1, 1, nativeContext.sampleRate);
+			    
+			    // 3. Create the player node and feed it the custom empty buffer
+			    let silentWarmup = new Tone.BufferSource();
+			    silentWarmup.buffer = completelySilentBuffer;
+			    
+			    // 4. Hard mute the gain node just to be absolutely certain
+			    if (silentWarmup.volume && silentWarmup.volume.gain) {
+			        silentWarmup.volume.gain.value = 0;
+			    }
+			    
+			    // 5. Connect and fire the warmup to satisfy the iOS hardware lock
+			    silentWarmup.toDestination();
+			    silentWarmup.start();
+			    silentWarmup.stop("+0.05");
+			});
+			
+			// 6. Pre-load your Trumpet cache completely separately for the demo!
+			// This breaks the race condition since the player above doesn't depend on this download.
+			if (tuneBuffer == null || tuneBuffer[currTuneState] == null) {
+			    prepToPlayNote("Trumpet", true).then(
+			        (onResolved) => { console.log("AutoDemo asset cached for later use: " + onResolved); },
+			        (onRejected) => { console.error("Failure caching asset: " + onRejected); }
+			    );
+			}
+
+			
+			
 		});
 	}
 
