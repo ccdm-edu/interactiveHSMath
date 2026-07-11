@@ -319,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		options: TOP_CHART,
 	});
 	//***********************************
-	// user interacts with the trumpet notes
+	// user interacts with the C major scale notes
 	//***********************************
 	// Radius of whole note is 10px, this gives a little slop. Users said 20 wasn't quite enough, especially for
 	// touch screen. Can't go any larger else notes will overlap.
@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 					// we want a blip between notes as user "plays a simple song",
 					if (osc && typeof osc.stop === 'function') {
-						osc.stop();
+						osc.toDestination().stop();
 					} else if (osc && osc.toDestination) {
 						try { osc.toDestination().stop(); } catch (err) { }
 					}
@@ -398,7 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						if (volumeOn) {
 							// play only if volume is on, we know note is selected
 							if (osc && typeof osc.start === 'function') {
-								osc.start();
+								osc.toDestination().start();
 							} else if (osc && osc.toDestination) {
 								try { osc.toDestination().start(); } catch (err) { }
 							}
@@ -437,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	// set the default initial value to low value 
-	let DEFAULT_VOL = 20; // as set in html for element 
+	let DEFAULT_VOL = 10; // as set in html for element 
 	let $noteVolInput = $("#noteVol");
 	if ($noteVolInput) $noteVolInput.value = DEFAULT_VOL;
 
@@ -570,65 +570,78 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	//***********************************
-	// user selects a song and code puts up notes to hit on staff
+	// user selects a song and code puts up notes to hit in box
 	//***********************************
-	let $song1Btn = $("#Song1");
-	if ($song1Btn) {
-		$song1Btn.on('click', function() {
-			// Twinkle Twinkle little star, how I wonder where you are 
-			let $notesToPlay = $('#notesToPlay');
-			let $notesToPlayLabel = $('#notesToPlayLabel');
-			let $trumpetersNotes = $("#trumpetersNotes");
+	
+	// User selects an instrument from dropdown flyout components natively
+	// Core dropdown toggle functionality	
+	const dropdownContainer = document.getElementById('userSelectsSongButton');
+	if (!dropdownContainer) return; 
 
-			if ($notesToPlay) {
-				$notesToPlay.textContent = "C4,C4,G4,G4,A4,A4,G4 - F4,F4,E4,E4,D4,D4,C4";
-				$notesToPlay.style.height = '20px';
-				$notesToPlay.style.display = 'block';
+	// 1. Direct native scoping ensures we get the exact elements inside this container
+	const toggleElement = dropdownContainer.querySelector('.dropdown-toggle');
+	const menuElement = dropdownContainer.querySelector('.dropdown-menu');
+
+	// 2. Extend them individually using your library
+	const $toggleBtn = extendElement(toggleElement);
+	const $dropdownMenu = extendElement(menuElement);
+	
+	// 3. Toggle visibility on button click
+	$toggleBtn.on('click', (event) => {
+		event.stopPropagation();
+		$dropdownMenu.toggleClass('show');
+	});
+
+	// 4. Handle item selection
+	let songButtons = dropdownContainer.querySelectorAll('.dropdown-item');
+	let notesToPlay = document.getElementById('notesToPlay');
+	let notesToPlayLabel = document.getElementById('notesToPlayLabel');
+	songButtons.forEach(btn => {
+		let $btn = extendElement(btn);
+		$btn.on('click', function() {
+			$dropdownMenu.removeClass('show');
+			switch($btn.val()) {
+				case "Song1": 
+					// Twinkle Twinkle little star, how I wonder where you are
+			        if (notesToPlay) {
+			            notesToPlay.textContent = "C4,C4,G4,G4,A4,A4,G4 - F4,F4,E4,E4,D4,D4,C4";
+			            notesToPlay.style.height = '20px';
+			            notesToPlay.style.display = 'block';
+			        }
+			        if (notesToPlayLabel) {
+			            notesToPlayLabel.textContent = "Notes For Twinkle Twinkle tune:";
+			        }
+			        break;
+	        	case "Song2":
+					// Happy Birthday to you, Happy Birthday to you, Happy birthday dear 		
+					if (notesToPlay) {
+						notesToPlay.textContent = "C4,C4,D4,C4,F4,E4 - C4,C4,D4,C4,G4,F4 - C4,C4,C5,A4,F4,E4,D4";
+						notesToPlay.style.height = '40px';
+						notesToPlay.style.display = 'block';
+					}
+					if (notesToPlayLabel) notesToPlayLabel.textContent = "Notes For Happy Birthday tune:";
+					break;
+				case "Song3":
+					// Jingle Bells Jingle Bells, Jingle all the way 		
+					if (notesToPlay) {
+						notesToPlay.textContent = "E4,E4,E4,E4,E4,E4,E4,G4,C4,D4,E4";
+						notesToPlay.style.height = '20px';
+						notesToPlay.style.display = 'block';
+					}
+					if (notesToPlayLabel) notesToPlayLabel.textContent = "Notes For Jingle Bells tune:";
+					break;
+				default:
+					console.log("Coding error in song dropdown menu");
+					break;
 			}
-			if ($notesToPlayLabel) $notesToPlayLabel.textContent = "Notes For Twinkle Twinkle tune:";
-			// make the notes come out of trumpet to get the users attention at this point 
-			if ($trumpetersNotes) $trumpetersNotes.style.visibility = 'visible';
 		});
-	}
+	});
 
-	let $song2Btn = $("#Song2");
-	if ($song2Btn) {
-		$song2Btn.on('click', function() {
-			// Happy Birthday to you, Happy Birthday to you, Happy birthday dear 
-			let $notesToPlay = $('#notesToPlay');
-			let $notesToPlayLabel = $('#notesToPlayLabel');
-			let $trumpetersNotes = $("#trumpetersNotes");
-
-			if ($notesToPlay) {
-				$notesToPlay.textContent = "C4,C4,D4,C4,F4,E4 - C4,C4,D4,C4,G4,F4 - C4,C4,C5,A4,F4,E4,D4";
-				$notesToPlay.style.height = '40px';
-				$notesToPlay.style.display = 'block';
-			}
-			if ($notesToPlayLabel) $notesToPlayLabel.textContent = "Notes For Happy Birthday tune:";
-			// make the notes come out of trumpet to get the users attention at this point 
-			if ($trumpetersNotes) $trumpetersNotes.style.visibility = 'visible';
-		});
-	}
-
-	let $song3Btn = $("#Song3");
-	if ($song3Btn) {
-		$song3Btn.on('click', function() {
-			// Jingle Bells Jingle Bells, Jingle all the way 
-			let $notesToPlay = $('#notesToPlay');
-			let $notesToPlayLabel = $('#notesToPlayLabel');
-			let $trumpetersNotes = $("#trumpetersNotes");
-
-			if ($notesToPlay) {
-				$notesToPlay.textContent = "E4,E4,E4,E4,E4,E4,E4,G4,C4,D4,E4";
-				$notesToPlay.style.height = '20px';
-				$notesToPlay.style.display = 'block';
-			}
-			if ($notesToPlayLabel) $notesToPlayLabel.textContent = "Notes For Jingle Bells tune:";
-			// make the notes come out of trumpet to get the users attention at this point 
-			if ($trumpetersNotes) $trumpetersNotes.style.visibility = 'visible';
-		});
-	}
-
+	// 5. Global listener to close when clicking outside
+	document.addEventListener('click', () => {
+		$dropdownMenu.removeClass('show');
+	});
+	
 	// since this is on template and dont need it here... 
 	let advTopicLinks = document.querySelectorAll('a[href="#AdvancedTopics"]');
 	advTopicLinks.forEach(el => el.style.display = 'none');

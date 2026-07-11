@@ -544,13 +544,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		// https://stackoverflow.com/questions/70480176/webaudio-api-change-volume-for-one-of-sources
 		// createGain can be used to mute as well
 		let ampVal = mute ? 0 : ($('#music-amp').val() || 3);
-		
-//		// change volume without "pops"
-//		gainMusicNode.gain.setValueAtTime(ampVal * 2 / 10, context.currentTime); // 3dB scale.  Need to connect the '10' with html max value
-//		if (sourceNote) {
-//	        // Route your source note through the global volume control
-//	        sourceNote.connect(gainMusicNode); 
-//		}
 
 	    let volumeDb = Tone.gainToDb(ampVal * 2 / 10);
 	    // Only adjust the active sourceNote volume node, leaving other oscillators alone

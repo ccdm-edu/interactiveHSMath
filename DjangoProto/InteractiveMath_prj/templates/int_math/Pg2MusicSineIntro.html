@@ -101,25 +101,25 @@
 			<p id="FreqOfNoteVal"> </p>
 			<label id="noteVolLabel">Volume:  </label>
 			<p id="noteVolValue"></p>
-			<input id="noteVol" type="range" step="1" value="20" min="1" max="100" title="Turn on your speaker">
+			<input id="noteVol" type="range" step="1" value="10" min="1" max="100" title="Turn on your speaker">
 			<input type="button" id="ResetPage" value="Reset" title="Reset page">
 			<div class="VolOnOff">
     			<img class="VolOff" src="{{ VolumeOffSVG }}" alt="Volume is currently off" title="turn on speaker and click to hear note">
-    			<img class="VolOn" style="display: none;" src="{{ VolumeOnSVG }}" alt="Volume is currently on" title="turn on speaker and click to hear note">
+    			<img class="VolOn hidden"  src="{{ VolumeOnSVG }}" alt="Volume is currently on" title="turn on speaker and click to hear note">
 			</div>						
 
 			<p id="notesToPlayLabel" title="Play these notes in order"></p>
 			<p id="notesToPlay"></p>
 			
 			<!-- Configured custom CSS flyout targeting instead of old Bootstrap structural layout buttons -->
-			<div class="dropdown">
-				<button class="btn-cyan" type="button" id="dropdownMenuSong" title="Notes for you to play on the scales above">
+			<div class="dropdown" id="userSelectsSongButton">
+				<button class="btn-cyan dropdown-toggle" type="button" id="dropdownMenuSong" data-bs-toggle="dropdown" aria-expanded="false">
 				    Try a Song
 				</button>
-				<div class="dropdown-menu">
-				    <button class="dropdown-item" type="button" id="Song1">Twinkle Twinkle</button>
-				    <button class="dropdown-item" type="button" id="Song2">Happy Birthday</button>
-				    <button class="dropdown-item" type="button" id="Song3">Jingle Bells</button>
+				<div class="dropdown-menu" id="songSelections" aria-labelledby="dropdownMenuSong">
+				    <button class="dropdown-item" type="button" value="Song1">Twinkle Twinkle</button>
+				    <button class="dropdown-item" type="button" value="Song2">Happy Birthday</button>
+				    <button class="dropdown-item" type="button" value="Song3">Jingle Bells</button>
 				</div>
 	        </div>
 			<canvas id="PitchGraph" width="600" height="250">
