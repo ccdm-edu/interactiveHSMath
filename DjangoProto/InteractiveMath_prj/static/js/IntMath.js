@@ -78,12 +78,15 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Make the highlighted page for upper menu bar match what is active
 	//***************
 	// on upper menu bar, where its topics, not the subtopics over in list to left, we want selected items to appear different
+	// Store the collection of links so we can reuse it.  We save the chosen link and when page refreshes, the currTopIndex is retrieved and that
+	// menu item is highlighted
+	const topBarLinks = $$('#upperNavbarCollapse > ul.navbar-nav > li.nav-item > a.nav-link');
 	$$('#upperNavbarCollapse > ul.navbar-nav > li.nav-item > a.nav-link').each(function(el) {
 		el.on('click', function() {
-			el.style.fontWeight = 'bold'; // can't change font on any DOM element since when new page loads, it will be crushed by reloading of subtopics.html
+			el.style.fontWeight = 'bold'; // highlight new menu selection
+			el.style.color = "#000080";  // Color goes to dark blue
 			// save "this" and when page loads, reset it to active
-			const parentLi = el.parentElement;
-			const index = Array.from(parentLi.parentElement.children).indexOf(parentLi);
+			const index = topBarLinks.indexOf(el);
 			sessionStorage.setItem("activeTopBarIndex", index);
 			// clear out obsolete topic, in case there is one, we want to go to first element of the subtopics
 			sessionStorage.removeItem("activePage");
@@ -98,13 +101,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	// recall whats active and change appearance
 	let currTopIndex = sessionStorage.getItem("activeTopBarIndex");
 	if (currTopIndex !== null) {
-		let topLinks = $$('#upperNavbarCollapse > ul.navbar-nav > li.nav-item > a');
-		let $currTopItem = topLinks[parseInt(currTopIndex)];
-		if ($currTopItem) {
-			$currTopItem.style.fontWeight = 'bold';
+		const activeLink = topBarLinks[parseInt(currTopIndex, 10)];
+		if (activeLink) {
+			activeLink.style.fontWeight = 'bold';
+			activeLink.style.color = "#000080";  // Color goes to dark blue
 		}
 	}
 
+	//***************
 	// ALLOW COOKIE SELECTION by user
 	// allow user to change cookie selection for all pages and, eventually, save users cookie selection only if they choose yes
 	// Right now, we don't use cookies. Save in localStorage so its avail between pages and not sent back to server.

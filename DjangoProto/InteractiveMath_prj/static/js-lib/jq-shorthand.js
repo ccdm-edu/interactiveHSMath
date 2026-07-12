@@ -25,6 +25,7 @@
  * ============================================================================
  */
 
+//Find a single element with a given identifier and attach all the shorthand jquery methods to it via extendElement.
 const $ = (selector, context = document) => {
 	// Prevent execution if the selector is not a valid string
 	if (typeof selector !== 'string') {
@@ -36,7 +37,11 @@ const $ = (selector, context = document) => {
 	return el ? extendElement(el) : null;
 };
 
-
+//Find ALL the elements matching an identifier, attach jquery methods to each element via extendElement
+//then convert all the elements of the resulting NodeList to an Array allowing the each() method with a specified
+//callback function with parameters el and index(array index) operating on each element.
+//Operates only on Array of extendElement DOM elements.  Loops through every element, does not stop early
+//Example: $$('.classname').each(...)
 const $$ = (selector, context = document) => {
 	const elements = Array.from(context.querySelectorAll(selector));
 	elements.forEach(extendElement);
@@ -47,7 +52,17 @@ const $$ = (selector, context = document) => {
 	return elements;
 };
 
-// Global Object Loops ($.each)
+// Global Object Loops ($.each).  Can operate on NodeList, standard array, native objects (which means key value pairs, unlike elements.each)
+//Example: $.each(myArray, ...) or $.each(myObject, ...)
+//const user = { name: "Alice", age: 30, role: "Admin" };
+//$.each(user, function(key, value) {
+//    console.log(`${key}: ${value}`); // Logs "name: Alice", etc.
+//});
+//Unlike elements.each, this can break early, here is an example:
+//$.each(numbers, function(index, value) {
+//    if (value > 25) return false; // This acts like a 'break' statement!
+//    console.log(value); // Only prints 10 and 20
+//});
 $.each = (collection, callback) => {
 	if (Array.isArray(collection) || collection.length !== undefined) {
 		for (let i = 0; i < collection.length; i++) {
@@ -86,7 +101,7 @@ $.ajax = async (options = {}) => {
 	}
 };
 
-// Element Extension Factory
+// Element Extension Factory to give a DOM element all the JQuery shorthand methods
 function extendElement(el) {
 	if (el._sugarized) return el;
 
