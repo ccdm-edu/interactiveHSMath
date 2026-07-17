@@ -26,53 +26,32 @@ document.addEventListener('DOMContentLoaded', () => {
 	//***************
 	// Make the highlighted page for left menu match what is active
 	//***************
-	function isSamePage(url1, url2) {
-		//this is a kloodge, need to use one style of URL, currently use some hardcoded values from populate*.py (relative URLs) and
-		//Django has a different absolute style from urls.py
-		//One way two urls can match, the letters after last slash match indicating same page--I realize
-		//that in general, this is bad practice but site is so small right now, all pages at one common level
-		let url1_split = url1.split('/');
-		let url2_split = url2.split('/');
-		let url1_page = url1_split[url1_split.length - 1];
-		if (url1_page === '') {
-			//url1 ended in a slash and so last char after slash is null, take before last slash
-			url1_page = url1_split[url1_split.length - 2];
-		}
-		let url2_page = url2_split[url2_split.length - 1];
-		if (url2_page === '') {
-			//url1 ended in a slash and so last char after slash is null, take before last slash
-			url2_page = url2_split[url2_split.length - 2];
-		}
-		return url1_page === url2_page;
-	}
+    let currentPathLeftMenu = window.location.pathname;
+    // sometimes Django keeps final slash, eliminate it
+    if (currentPathLeftMenu.endsWith('/') && currentPathLeftMenu.length > 1) {
+        currentPathLeftMenu = currentPathLeftMenu.slice(0, -1);
+    }
+	// Target ONLY .nav-link elements that live inside the left menu container
+	const navLinksLeftMenu = document.querySelectorAll('.flex-column .nav-link');
 
-	// -- when user uses either back or next button at the bottom of a page, subpages to left should change to reflect whats active
-	function changeHighlightedLeftMenu(buttonSelPage) {
-		// get rid of the old "active" page, there may not be anything stored under sessionStorage yet so just search and remove
-		// buttonSelPage may not be in the same URL form as the anchor for li.nav-item--find its equivalent
-		console.log("current URL is " + window.location.href);
-		let equivURL = "";
-		// Updated layout targets to reflect framework-free navigation structure
-		$$('ul.nav.flex-column > li.nav-item > a').each(function(el) {
-			if (el.classList.contains('active')) {
-				el.removeClass('active');
-				console.log("removed active from list item " + el.text());
-			}
-			if (isSamePage(el.attr('href'), buttonSelPage)) {
-				equivURL = el.attr('href');
-			}
-		});
-		if (equivURL != "") {
-			let searchItem = 'ul.nav.flex-column > li.nav-item > a[href="' + equivURL + '"]';
-			let $currActiveListItemATag = $(searchItem);
-			if ($currActiveListItemATag) {
-				$currActiveListItemATag.addClass('active');
-			}
-		} else {
-			console.log('Cannot find desired URL in left menu list. Desired = ' + buttonSelPage);
-		}
-	}
-
+	// First pass: Clean out any old active designations
+	navLinksLeftMenu.forEach(link => {
+		link.classList.remove('active-tab');
+	});
+	
+    navLinksLeftMenu.forEach(link => {
+        let linkPath = new URL(link.href, window.location.origin).pathname;
+        // Remove any trailing slash from the link path as well
+        if (linkPath.endsWith('/') && linkPath.length > 1) {
+            linkPath = linkPath.slice(0, -1);
+        }
+        console.log('link path is ' + linkPath + ' and current path is ' + currentPathLeftMenu);
+        
+        if (currentPathLeftMenu === linkPath) {
+            // Change 'active' to 'active-tab' to match your CSS style exactly
+            link.classList.add('active-tab'); 
+        }
+    });
 	//***************
 	// Make the highlighted page for upper menu bar match what is active
 	//***************

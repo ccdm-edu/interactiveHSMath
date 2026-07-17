@@ -336,7 +336,7 @@ div#tooltip:hover .tooltiptext {
     gap: 16px; 
   } 
 } 
-/*upper tab highlight what user is "on" */
+/*upper tab and side bar highlight what user is "on" */
 .nav-link.active-tab, .dropdown-item.active-tab {
   font-weight: bold !important;
   color: #000080 !important;   /*dark blue*/
