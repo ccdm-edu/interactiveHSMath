@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		return url1_page === url2_page;
 	}
 
-	// -- when user uses either back or next button within a topic, subpages to left should reflect whats active
+	// -- when user uses either back or next button at the bottom of a page, subpages to left should change to reflect whats active
 	function changeHighlightedLeftMenu(buttonSelPage) {
 		// get rid of the old "active" page, there may not be anything stored under sessionStorage yet so just search and remove
 		// buttonSelPage may not be in the same URL form as the anchor for li.nav-item--find its equivalent
@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		});
 		if (equivURL != "") {
-			sessionStorage.setItem("activePage", equivURL);
 			let searchItem = 'ul.nav.flex-column > li.nav-item > a[href="' + equivURL + '"]';
 			let $currActiveListItemATag = $(searchItem);
 			if ($currActiveListItemATag) {
@@ -77,37 +76,51 @@ document.addEventListener('DOMContentLoaded', () => {
 	//***************
 	// Make the highlighted page for upper menu bar match what is active
 	//***************
-	// on upper menu bar, where its topics, not the subtopics over in list to left, we want selected items to appear different
-	// Store the collection of links so we can reuse it.  We save the chosen link and when page refreshes, the currTopIndex is retrieved and that
-	// menu item is highlighted
-	const topBarLinks = $$('#upperNavbarCollapse > ul.navbar-nav > li.nav-item > a.nav-link');
-	$$('#upperNavbarCollapse > ul.navbar-nav > li.nav-item > a.nav-link').each(function(el) {
-		el.on('click', function() {
-			el.style.fontWeight = 'bold'; // highlight new menu selection
-			el.style.color = "#000080";  // Color goes to dark blue
-			// save "this" and when page loads, reset it to active
-			const index = topBarLinks.indexOf(el);
-			sessionStorage.setItem("activeTopBarIndex", index);
-			// clear out obsolete topic, in case there is one, we want to go to first element of the subtopics
-			sessionStorage.removeItem("activePage");
-		});
+	// glean the subsite location url
+	const currentPath = window.location.pathname;
+
+	// 1. Target all navigation elements inside your navbar container
+	const navContainer = document.getElementById('upperNavbarCollapse');
+	if (!navContainer) return; // Safety check
+
+	const navLinks = navContainer.querySelectorAll('a');
+
+	// 2. First pass: Clean out any old active designations
+	navLinks.forEach(link => {
+		link.classList.remove('active-tab');
 	});
 
-	// when we change pages, ensure the correct left menu item is highlighted, no matter how we got there
-	let currentPageURL = window.location.href;
-	changeHighlightedLeftMenu(currentPageURL);
+	// 3. Second pass: Find the match and highlight
+	navLinks.forEach(link => {
+		// Native .pathname safely parses the href string into a clean path
+		const linkPath = link.pathname;
 
-	// now that a new page has loaded, highlight which top menu item we are on
-	// recall whats active and change appearance
-	let currTopIndex = sessionStorage.getItem("activeTopBarIndex");
-	if (currTopIndex !== null) {
-		const activeLink = topBarLinks[parseInt(currTopIndex, 10)];
-		if (activeLink) {
-			activeLink.style.fontWeight = 'bold';
-			activeLink.style.color = "#000080";  // Color goes to dark blue
+		// Ignore placeholder links like href="#"
+		if (link.getAttribute('href') !== '#' && linkPath === currentPath) {
+			link.classList.add('active-tab');
+
+			// 4. Trace upward to find any parent menu containers
+			// This highlights 'Trig' when you are inside 'Trig Functions' -> 'Intro to concepts'
+			// and keeps going upward till top is hit for any deeply nested lists
+			let parentLi = link.closest('li');
+			while (parentLi && navContainer.contains(parentLi)) {
+				// ':scope > a' strictly finds the <a> that belongs directly to THIS <li>,
+				// ignoring any <a> tags inside deeper nested submenus.
+				const parentLink = parentLi.querySelector(':scope > a');
+
+				if (parentLink && parentLink !== link) {
+					parentLink.classList.add('active-tab');
+				}
+
+				// Climb safely out of the current <li> to the next outer <li> level
+				if (parentLi.parentElement) {
+					parentLi = parentLi.parentElement.closest('li');
+				} else {
+					break;
+				}
+			}
 		}
-	}
-
+	});
 	//***************
 	// ALLOW COOKIE SELECTION by user
 	// allow user to change cookie selection for all pages and, eventually, save users cookie selection only if they choose yes

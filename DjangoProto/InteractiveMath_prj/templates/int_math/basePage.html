@@ -127,8 +127,18 @@
 				<ul class="navbar-nav right-nav">
 					<li class="nav-item"><a class="nav-link"
 						href="{% url 'int_math:acknowledgements' %}">Thanks</a></li>
-					<li class="nav-item"><a class="nav-link"
-						href="{% url 'int_math:TermsOfUse' %}">Legal</a></li>
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button">Legal</a>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item"
+								href="{% url 'int_math:TermsOfUse' %}">Terms Of Use</a>
+							</li>
+							<li><a class="dropdown-item"
+								href="{% url 'int_math:Privacy' %}">Privacy Policy</a>
+							</li>
+						</ul>
+					</li>
 					<li class="nav-item"><a class="nav-link"
 						href="{% url 'int_math:Contact_me' %}">Contact</a></li>
 					<li class="nav-item"><a class="nav-link"

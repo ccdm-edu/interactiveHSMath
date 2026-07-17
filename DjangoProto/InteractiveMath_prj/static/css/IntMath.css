@@ -195,6 +195,15 @@ a:hover {
   width: 100%; 
 } 
 
+p.AdvTopic_Expln { 
+  display: none !important; 
+} 
+
+p.AdvTopic_ToDo { 
+  display: none !important; 
+} 
+/* end of modal pages*/ 
+/***************************button layout alternative to bootstrap**********************/
 /* Vanilla alternative to Bootstrap's close cross button layout icon shape */ 
 button.close.dialog-close-trigger { 
   background: none; 
@@ -218,15 +227,6 @@ button.close.dialog-close-trigger:focus-visible {
   outline: none !important; 
   box-shadow: none !important; 
 } 
-
-p.AdvTopic_Expln { 
-  display: none !important; 
-} 
-
-p.AdvTopic_ToDo { 
-  display: none !important; 
-} 
-/* end of modal pages*/ 
 
 /****************All pages, tool tips***************************/ 
 /*this tooltip stuff didn't work if i only used class=, I had to up the specificity to id */ 
@@ -336,6 +336,11 @@ div#tooltip:hover .tooltiptext {
     gap: 16px; 
   } 
 } 
+/*upper tab highlight what user is "on" */
+.nav-link.active-tab, .dropdown-item.active-tab {
+  font-weight: bold !important;
+  color: #000080 !important;   /*dark blue*/
+}
 
 /******************pull in the "good" part of bootstrap--which is otherwise gone from all code *********/ 
 /* Framework-Free Dropdown and Submenu Flyouts */ 
@@ -392,6 +397,7 @@ ul {
 
 /* Hide the dropdown menu by default */
 .dropdown-menu {
+  list-style-type: none; /* Removes the bullets entirely */
   display: none;
   position: absolute;
   top: 100%;
@@ -400,8 +406,10 @@ ul {
   background-color: #fff;
   border: 1px solid #ccc;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  padding: 5px 0;
+  padding: 0;
+  margin: 0;
   min-width: 160px;
+  border-radius: 6px; /* A clean, modern default for rounded corners */
 }
 
 /* Optional standard styling for items inside your menu */
@@ -413,6 +421,7 @@ ul {
   background: none;
   border: none;
   cursor: pointer;
+  border-radius: 6px; /* A clean, modern default for rounded corners */
 }
 
 .dropdown-item:hover {
@@ -423,12 +432,18 @@ ul {
 .dropdown-menu.show {
   display: block;
 }
-
+.dropdown-menu li {
+    display: block;
+    width: 100%;          /* Forces the list item to snap to the menu width */
+}
 .dropdown-menu .dropdown-item { 
   display: block; 
   padding: 6px 16px; 
   color: #333; 
   text-decoration: none; 
+  width: 100%;          /* Snaps the link to the list item's width */
+  box-sizing: border-box; /* Forces padding to stay INSIDE the width calculations */
+  white-space: nowrap;    /* Prevents long text from wrapping unexpectedly */
 } 
 
 .dropdown-menu .dropdown-item:hover { 
@@ -464,6 +479,7 @@ td:has(.dropdown) {
   list-style: none; 
   padding: 8px 0; 
   min-width: 220px; 
+  border-radius: 6px; /* A clean, modern default for rounded corners */
 } 
 
 .has-submenu:hover > .submenu { 
