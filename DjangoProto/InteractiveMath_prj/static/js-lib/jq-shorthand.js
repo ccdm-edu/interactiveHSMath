@@ -49,6 +49,11 @@ const $$ = (selector, context = document) => {
 		elements.forEach((el, index) => callback.call(el, el, index));
 		return elements;
 	};
+	// Pass down the hide command to every element inside the array automatically so now you can do
+	// Ex.  $$('a[href="#AdvancedTopics"], #TrigPageTop, #GoToNextPage, #GoToPreviousPage').hide();
+    elements.hide = () => { elements.forEach(el => el.hide()); return elements; };
+    elements.show = () => { elements.forEach(el => el.show()); return elements; };
+
 	return elements;
 };
 

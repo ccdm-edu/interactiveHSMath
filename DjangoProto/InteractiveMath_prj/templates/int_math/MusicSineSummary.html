@@ -71,12 +71,19 @@
 		feather.replace();
 	</script>
 	<script nonce="{{ CSP_NONCE }}">	
-		// Don't need autodemo icon - Native Vanilla JS replacement
-		let trigPageTop = document.getElementById('TrigPageTop');
-		if (trigPageTop) {
-			trigPageTop.style.display = 'none';
-		}
+		// add event listener, although not needed at end of doc, just to ensure safety if ever this moves elsewhere
+		document.addEventListener('DOMContentLoaded', () => {
+		    // Clean up UI elements not needed for this page
+		    $$('a[href="#AdvancedTopics"], #TrigPageTop, #GoToNextPage').hide();
+		    // Fix up button for this page (no need for js file)
+		    let $prevBtn = document.getElementById("GoToPreviousPage");
+			if ($prevBtn) {
+				let wrapper = document.createElement('a');
+				wrapper.href = "../MusicNotesTrig";
+				$prevBtn.parentNode.insertBefore(wrapper, $prevBtn);
+				wrapper.appendChild($prevBtn);
+			}
+		})
 	</script>
-	<!-- Framework-Free Asset Scripts for this Page -->
-    <script src="{{ TrigSummaryJS }}" crossorigin="anonymous"></script>	
+
 {% endblock %}

@@ -51,7 +51,7 @@
 {% block unique_js_block %}
 	<script nonce="{{ CSP_NONCE }}">
 	    // Clean up UI elements not needed for this page
-	    $('a[href="#AdvancedTopics"], #TrigPageTop, #GoToNextPage, #GoToPreviousPage').hide();
+	    $$('a[href="#AdvancedTopics"], #TrigPageTop, #GoToNextPage, #GoToPreviousPage').hide();
 	</script>
 {% endblock %}
 
