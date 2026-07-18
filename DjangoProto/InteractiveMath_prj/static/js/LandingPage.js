@@ -43,12 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		if ($newbieRadio) $newbieRadio.checked = true; // put them in newbie mode
 	}
 
-	// Dont want a next button on this page so kill it here
-	let $nextBtn = $("#GoToNextPage");
-	let $prevBtn = $("#GoToPreviousPage");
-	if ($nextBtn) $nextBtn.style.display = 'none';
-	if ($prevBtn) $prevBtn.style.display = 'none';
-
 	// legal precedent states that on the home page, browserwrap must be in upper left of home page to be "more" valid */
 
 	//********************************************************

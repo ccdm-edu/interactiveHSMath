@@ -28,12 +28,6 @@
 // Replacing $(function() { ... }) with native standard DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
 
-	// No buttons needed here - hide navigation via native style parameters
-	let $nextBtn = $("#GoToNextPage");
-	let $prevBtn = $("#GoToPreviousPage");
-	if ($nextBtn) $nextBtn.style.display = 'none';
-	if ($prevBtn) $prevBtn.style.display = 'none';
-
 	// Hide the inputs we don't want users trying to access (reCAPTCHA v3 and honeypots)
 	let $recapResponse = $('#id_g_recaptcha_response');
 	let $poohFoodTest = $('#id_pooh_food_test');

@@ -153,11 +153,8 @@
 	<script src="{{ basePage.AutoDemoJS }}" crossorigin="anonymous"></script>	
 	<script src="{{ LandPageJS }}" crossorigin="anonymous"></script>
 	<script nonce="{{ CSP_NONCE }}">
-		// No advanced topics link on intro page - Native Vanilla JS mutation
-		let advTopicsLink = document.querySelector('a[href="#AdvancedTopics"]');
-		if (advTopicsLink) {
-			advTopicsLink.style.visibility = 'hidden';
-		}
+	    // Clean up UI elements not needed for this page
+	    $$('a[href="#AdvancedTopics"], #GoToNextPage, #GoToPreviousPage').hide();
 	</script>
 {% endblock %}
 

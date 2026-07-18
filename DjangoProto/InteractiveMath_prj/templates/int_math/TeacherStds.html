@@ -211,17 +211,9 @@
 {% endblock %}
 
 {% block unique_js_block %}
-	<script nonce="{{ CSP_NONCE }}">
-			
-			// Dont need advanced topic link popup or autodemo stuff or go to next or previous pages
-			const advancedLink = document.querySelector('a[href="#AdvancedTopics"]');
-			if (advancedLink) advancedLink.style.display = 'none';
-			const trigPageTop = document.getElementById('TrigPageTop');
-			if (trigPageTop) trigPageTop.style.display = 'none';
-			const goPrevButton = document.getElementById('GoToPreviousPage');
-			if (goPrevButton) goPrevButton.style.display = 'none';
-			const goNextButton = document.getElementById("GoToNextPage");
-			if (goNextButton) goNextButton.style.display = 'none';	
+	<script nonce="{{ CSP_NONCE }}">	
+		// Clean up UI elements not needed for this page
+		$$('a[href="#AdvancedTopics"], #TrigPageTop, #GoToNextPage, #GoToPreviousPage').hide();
 	</script>
                     	   
 {% endblock %}
