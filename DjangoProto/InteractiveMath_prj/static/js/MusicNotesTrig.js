@@ -853,7 +853,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	//*********************************** 
 	async function loadAudioConfig() {
 		try {
-			const response = await fetch('/int_math/GetMarchingBandTuningNoteAudioConfig/');
+			const response = await fetch('/GetMarchingBandTuningNoteAudioConfig/');
 			if (!response.ok) throw new Error(`HTTP status: ${response.status}`);
 
 			const data = await response.json();

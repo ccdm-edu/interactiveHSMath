@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (linkPath.endsWith('/') && linkPath.length > 1) {
             linkPath = linkPath.slice(0, -1);
         }
-        console.log('link path is ' + linkPath + ' and current path is ' + currentPathLeftMenu);
         
         if (currentPathLeftMenu === linkPath) {
             // Change 'active' to 'active-tab' to match your CSS style exactly
