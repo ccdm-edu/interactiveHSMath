@@ -12,7 +12,7 @@ pillow==12.2.0
 pyproject_hooks==1.2.0
 python-dotenv==1.2.2
 requests==2.33.1
-setuptools==82.0.1
+setuptools==83.0.0
 sqlparse==0.5.5
 tokenize_rt==6.2.0
 tzdata==2026.2
