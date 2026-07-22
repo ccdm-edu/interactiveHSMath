@@ -4,7 +4,7 @@
  */
 /* ============================================================================
  * COMPONENT: Client side Javascript
- * FILE:      jq-shorthand.js
+ * FILE:      jqBS-shorthand.js
  * ============================================================================
  * 
  * DESCRIPTION:
@@ -18,10 +18,10 @@
  * 
  * ARCHITECTURE NOTES:
  * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
- *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ *    the parts of those libraries we need but uses native HTML/JS:  jqBS-shorthand.js
  * 
  * FIRST PRODUCTION VERSION: 2026-06-07
- * AUTHOR:     Gemini AI
+ * AUTHOR:     Gemini AI, comments added by CDeMeyer
  * ============================================================================
  */
 
@@ -115,7 +115,17 @@ function extendElement(el) {
 		events.split(' ').forEach(event => el.addEventListener(event, callback, options));
 		return el;
 	};
-	el.click = (callback) => el.on('click', callback);
+	const nativeClick = el.click; // Store reference to native click
+	el.click = (callback) => {
+	    if (typeof callback === 'function') {
+	        return el.on('click', callback); // Act as a listener
+	    }
+	    // If no callback is passed, execute the native click routine
+	    if (typeof nativeClick === 'function') {
+	        nativeClick.call(el);
+	    }
+	    return el;
+	};
 	el.change = (callback) => el.on('change', callback);
 	el.submit = (callback) => el.on('submit', callback);
 
@@ -174,3 +184,63 @@ function extendElement(el) {
 	el._sugarized = true;
 	return el;
 }
+
+//*******************Replacing Bootstrap**************************************************/
+//In automated demos, Bootstrap listens and operates on events that are fired.  Need to manually
+//add that capability here
+// Dropdown menu appear/disappear as user clicks on element then clicks anywhere else
+// Global Dropdown Handler: Replaces Bootstrap behavior completely
+document.addEventListener('click', (event) => {
+    const clickedToggle = event.target.closest('.dropdown-toggle');
+    
+    // CASE 1: User or automation clicked a dropdown toggle
+    if (clickedToggle) {
+        if (clickedToggle.getAttribute('href') === '#') {
+            event.preventDefault();
+        }
+
+        const currentMenu = clickedToggle.nextElementSibling;
+        if (currentMenu && currentMenu.classList.contains('dropdown-menu')) {
+            const isOpen = currentMenu.classList.contains('show');
+
+            // Close siblings at the same level, but DO NOT close parents
+            const activeMenus = document.querySelectorAll('.dropdown-menu.show');
+            activeMenus.forEach(openMenu => {
+                if (openMenu !== currentMenu && !openMenu.contains(currentMenu)) {
+                    openMenu.classList.remove('show');
+                }
+            });
+
+            // Toggle the target menu visibility
+            if (isOpen) {
+                // If closing this menu, also close any nested children inside it
+                currentMenu.classList.remove('show');
+                currentMenu.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
+            } else {
+                currentMenu.classList.add('show');
+            }
+        }
+        return; 
+    }
+
+    // CASE 2: Cleanup click caught somewhere else on the page
+    // If the click did not hit an active open menu tree, close EVERYTHING globally
+    if (!event.target.closest('.dropdown-menu')) {
+        document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
+            openMenu.classList.remove('show');
+        });
+        return;
+    }
+
+    // CASE 3: Clicked a regular item INSIDE a menu (Human choosing an option)
+    // When clicking a link that isn't a toggle, roll up the whole system
+    const clickedLink = event.target.closest('a:not(.dropdown-toggle)');
+    if (clickedLink) {
+        document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
+            openMenu.classList.remove('show');
+        });
+    }
+});
+
+
+

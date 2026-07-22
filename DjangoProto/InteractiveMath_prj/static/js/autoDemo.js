@@ -17,7 +17,7 @@
  * ARCHITECTURE NOTES:
  *
  * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
- *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ *    the parts of those libraries we need but uses native HTML/JS:  jqBS-shorthand.js
  * 
  * FIRST PRODUCTION VERSION: 2026-06-07
  * AUTHOR:     C. DeMeyer (with Gemini AI assist)
@@ -136,7 +136,7 @@ class AutoDemo {
 		let audioURLKey = segmentParams.filenameURL;
 		let thisObj = this;
 
-		const response = await fetch('/int_math/getDynamicFilename/?fileKey=' + audioURLKey);
+		const response = await fetch('/getDynamicFilename/?fileKey=' + audioURLKey);
 		if (response.ok) {
 			const data = await response.json();
 			const audioURL = data.url;
@@ -227,10 +227,10 @@ class AutoDemo {
 	// fake cursor to DOM element and allow focus on that element. 
 	actOnElement(param) {
 		// pull out the special demo cursor icon and place on proper location 
-		let $demoCursor = $('#demoCursorID');
-		if ($demoCursor) $demoCursor.style.display = "block";
+		let demoCursor = $('#demoCursorID');
+		if (demoCursor) demoCursor.style.display = "block";
 
-		let targetEl = document.querySelector(param.element);
+		let targetEl = $(param.element);
 		if (!targetEl) return;
 
 		// Native bounding box tracking offsets replacement
@@ -245,16 +245,16 @@ class AutoDemo {
 		let topPos = locEl.top + param.offset.y;
 
 		// since we turn on/off the cursor for now, no smooth transition for now... 
-		if ($demoCursor) {
-			$demoCursor.style.left = leftPos + 'px';
-			$demoCursor.style.top = topPos + 'px';
+		if (demoCursor) {
+			demoCursor.style.left = leftPos + 'px';
+			demoCursor.style.top = topPos + 'px';
 		}
 
 		if ("focus" == param.action) {
 			// focus shows off what it looks like when user clicks on input element 
 			targetEl.focus();
 		} else if ("click" == param.action) {
-			// click 
+			// Invokes fixed click routine (triggers real clicks)
 			targetEl.click();
 		}
 		// else its do nothing or unimplemented 
@@ -284,8 +284,8 @@ class AutoDemo {
 	// remove the big fake cursor 
 	removeActOnElement(param = null) {
 		// get rid of demo cursor ID 
-		let $demoCursor = $('#demoCursorID');
-		if ($demoCursor) $demoCursor.style.display = "none";
+		let demoCursor = $('#demoCursorID');
+		if (demoCursor) demoCursor.style.display = "none";
 
 		// remove focus on element, will do nothing if not in focus 
 		if (null !== param) {

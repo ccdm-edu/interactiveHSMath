@@ -18,7 +18,7 @@
  * - Advanced Topic is a popup that user can move around that suggests activities
  *      and explains things that are more advanced or applied engineering 
  * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
- *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ *    the parts of those libraries we need but uses native HTML/JS:  jqBS-shorthand.js
  * 
  * FIRST PRODUCTION VERSION: 2026-06-07
  * AUTHOR:     C. DeMeyer (with Gemini AI assist)
@@ -87,7 +87,7 @@
 						href="{% url 'int_math:index' %}">Home</a></li>
 
 					<li class="nav-item dropdown mathy"><a
-						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						class="nav-link dropdown-toggle navbarDropdown" href="#" id="link-trig-menu"
 						role="button">Trig</a>
 						<ul class="dropdown-menu">
 							<li class="has-submenu"><a class="dropdown-toggle"
@@ -128,7 +128,7 @@
 					<li class="nav-item"><a class="nav-link"
 						href="{% url 'int_math:acknowledgements' %}">Thanks</a></li>
 					<li class="nav-item dropdown"><a
-						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						class="nav-link dropdown-toggle navbarDropdown" href="#"
 						role="button">Legal</a>
 						<ul class="dropdown-menu">
 							<li><a class="dropdown-item"
@@ -297,7 +297,7 @@
 
 			<!-- custom JS for all pages of site, IntMathUtils used by all js. To reduce server calls, the following are inlined-->
 			<!-- Note, the inlined js files will 'appear' to be an error in eclipse. They are fine -->
-			<script nonce="{{ CSP_NONCE }}">{% inline_asset 'js-lib/jq-shorthand.js' %}</script>
+			<script nonce="{{ CSP_NONCE }}">{% inline_asset 'js-lib/jqBS-shorthand.js' %}</script>
 			<script nonce="{{ CSP_NONCE }}">{% inline_asset 'js/IntMath.js' %}</script>
 			<script nonce="{{ CSP_NONCE }}">{% inline_asset 'js/IntMathUtils.js' %}</script>
 

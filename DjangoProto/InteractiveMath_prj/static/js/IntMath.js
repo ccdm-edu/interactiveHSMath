@@ -14,7 +14,7 @@
  * ARCHITECTURE NOTES:
  *
  * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
- *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ *    the parts of those libraries we need but uses native HTML/JS:  jqBS-shorthand.js
  * 
  * FIRST PRODUCTION VERSION: 2026-06-07
  * AUTHOR:     C. DeMeyer (with Gemini AI assist)
@@ -273,4 +273,48 @@ document.addEventListener('DOMContentLoaded', () => {
 		let $advModalClose = $("#advModalClose");
 		if ($advModalClose) $advModalClose.attr("title", "Click to close");
 	}
+	
+	//******************************************Handle menu/submenu 'show' on click*********************/
+	// 1. Primary Toggles: Top-level dropdown links ("Trig", "Legal")
+    $$('.nav-item.dropdown > .dropdown-toggle').each(function(btn) {
+        btn.click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const currentMenu = btn.parent().find('.dropdown-menu');
+            
+            // Close all other primary menus and nested submenus first
+            $$('.dropdown-menu, .submenu').each(function(menu) {
+                if (menu !== currentMenu) menu.removeClass('show');
+            });
+            
+            // Toggle the clicked menu
+            if (currentMenu) currentMenu.toggleClass('show');
+        });
+    });
+
+    // 2. Nested Toggles: Deep submenus ("Trig Functions")
+    $$('.has-submenu > .dropdown-toggle').each(function(subBtn) {
+        subBtn.click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const currentSubmenu = subBtn.parent().find('.submenu');
+            
+            // Close any sibling submenus on this layer
+            $$('.submenu').each(function(sub) {
+                if (sub !== currentSubmenu) sub.removeClass('show');
+            });
+            
+            // Toggle the nested level submenu box
+            if (currentSubmenu) currentSubmenu.toggleClass('show');
+        });
+    });
+
+    // 3. Global Click-Away: Close everything if user clicks the background body
+    document.addEventListener('click', function() {
+        $$('.dropdown-menu, .submenu').each(function(menu) {
+            menu.removeClass('show');
+        });
+    });
 });

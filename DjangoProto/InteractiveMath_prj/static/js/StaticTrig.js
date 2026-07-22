@@ -16,7 +16,7 @@
  * 
  * ARCHITECTURE NOTES:
  * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
- *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ *    the parts of those libraries we need but uses native HTML/JS:  jqBS-shorthand.js
  * 
  * FIRST PRODUCTION VERSION: 2026-06-07
  * AUTHOR:     C. DeMeyer (with Gemini AI assist)

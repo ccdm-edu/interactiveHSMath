@@ -342,40 +342,6 @@ div#tooltip:hover .tooltiptext {
   color: #000080 !important;   /*dark blue*/
 }
 
-/******************pull in the "good" part of bootstrap--which is otherwise gone from all code *********/ 
-/* Framework-Free Dropdown and Submenu Flyouts */ 
-/* Styling targets for the Native Expire Modal Window */ 
-dialog#expiremodal { 
-  border: none; 
-  background: transparent; 
-  padding: 0; 
-  position: fixed; 
-  top: 20%; 
-  margin: auto; 
-  z-index: 1060; 
-} 
-
-dialog#expiremodal .modal-content { 
-  background-color: #fff; 
-  border: 3px solid #dc3545; /* Crimson/Red warning indicator border */ 
-  border-radius: 6px; 
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
-  display: flex; 
-  flex-direction: column; 
-  padding: 15px; 
-  max-width: 450px; 
-} 
-
-dialog#expiremodal button.dialog-close-trigger { 
-  background-color: #28a745; /* Custom solid green replacement for btn-success */ 
-  color: white; 
-  border: none; 
-  padding: 8px 16px; 
-  border-radius: 4px; 
-  cursor: pointer; 
-  font-weight: bold; 
-} 
-
 .nav-item.dropdown { 
   position: relative; 
 } 
@@ -459,10 +425,6 @@ td:has(.dropdown) {
 .dropdown-toggle {
   position: relative;
   z-index: 2;
-}
-
-.nav-item.dropdown:hover > .dropdown-menu { 
-  display: block; 
 } 
 
 .has-submenu { 
@@ -481,10 +443,44 @@ td:has(.dropdown) {
   min-width: 220px; 
   border-radius: 6px; /* A clean, modern default for rounded corners */
 } 
-
-.has-submenu:hover > .submenu { 
-  display: block; 
+/* used to create a "click to show" submenu" */
+.submenu.show {
+    display: block;
+}
+ 
+/******************expired time modal popup*************************************/
+/* Styling targets for the Native Expire Modal Window */ 
+dialog#expiremodal { 
+  border: none; 
+  background: transparent; 
+  padding: 0; 
+  position: fixed; 
+  top: 20%; 
+  margin: auto; 
+  z-index: 1060; 
 } 
+
+dialog#expiremodal .modal-content { 
+  background-color: #fff; 
+  border: 3px solid #dc3545; /* Crimson/Red warning indicator border */ 
+  border-radius: 6px; 
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+  display: flex; 
+  flex-direction: column; 
+  padding: 15px; 
+  max-width: 450px; 
+} 
+
+dialog#expiremodal button.dialog-close-trigger { 
+  background-color: #28a745; /* Custom solid green replacement for btn-success */ 
+  color: white; 
+  border: none; 
+  padding: 8px 16px; 
+  border-radius: 4px; 
+  cursor: pointer; 
+  font-weight: bold; 
+} 
+/****************************************************************************************/
 
 /* Control Button Groups (Play / Stop Alignment Utility) */ 
 .control-btn-group { 
@@ -681,7 +677,7 @@ td:has(.dropdown) {
   pointer-events: none; /* Allows clicks to pass through to the canvas */ 
   z-index: 10000; 
   display: none; /* Hidden until demo starts */ 
-  transition: transform 0.3s ease-in-out; /* Smooth movement between points */ 
+  transition: transform 0.3s ease-in-out; /* Smooth movement between points */
 } 
 
 /* a spinner animation to show server is busy getting the file */ 

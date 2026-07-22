@@ -15,7 +15,7 @@
  * 
  * ARCHITECTURE NOTES:
  * There is no jquery or bootstrap dependency, we do use a "sugar" file that has 
- *    the parts of those libraries we need but uses native HTML/JS:  jq-shorthand.js
+ *    the parts of those libraries we need but uses native HTML/JS:  jqBS-shorthand.js
  * 
  * FIRST PRODUCTION VERSION: 2026-06-07
  * AUTHOR:     C. DeMeyer (with Gemini AI assist)
@@ -111,22 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
 							segmentActivity: "ACT_ON_ELEMENT",
 							segmentParams:
 							{
-								element: '#navbarDropdown',
+								element: '#link-trig-menu',
 								action: "click",
 								// positive values for offset x and y move the cursor "southwest", so neg x is south east
 								offset: { x: 0, y: 25 },
 								waitTimeMillisec: 12000
 							}  // this is wait before you go on to next item
-						},
-						// get rid of big red cursor but leave up the drop down menu
-						{
-							segmentActivity: "REMOVE_ACT_ON_ELEMENT",
-							segmentParams:
-							{
-								element: '#navbarDropdown',
-								action: "focus",
-								waitTimeMillisec: 3000
-							}
 						},
 						// we can't actually go to those pages else we loose this page and the autodemo stops
 						// point to first dropdown menu (which for now is just Trig)
@@ -134,21 +124,11 @@ document.addEventListener('DOMContentLoaded', () => {
 							segmentActivity: "ACT_ON_ELEMENT",
 							segmentParams:
 							{
-								element: '#TrigFuncTopic.dropdown-toggle',  //dropdown-item',
+								element: '#TrigFuncTopic',  //dropdown-item',
 								action: "click",
 								offset: { x: 0, y: 19 },
 								waitTimeMillisec: 7000
 							}  // this is wait before you go on to next item
-						},
-						// remove red arrow only
-						{
-							segmentActivity: "REMOVE_ACT_ON_ELEMENT",
-							segmentParams:
-							{
-								element: '#TrigFuncTopic.dropdown-toggle',
-								action: "",
-								waitTimeMillisec: 1000
-							}
 						},
 						// "fake out" select of first menu item
 						{
@@ -171,12 +151,12 @@ document.addEventListener('DOMContentLoaded', () => {
 								waitTimeMillisec: 1000
 							}
 						},
-						// remove drop down menu
+						// remove drop down menu and all children
 						{
 							segmentActivity: "REMOVE_ACT_ON_ELEMENT",
 							segmentParams:
 							{
-								element: '#TrigFuncTopic.dropdown-toggle',
+								element: '#link-trig-menu',
 								action: "click",
 								waitTimeMillisec: 1000
 							}
@@ -302,16 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						},
 						// get rid of big red cursor but leave up the drop down menu
 						//***********END FAKE SUBLIST***************** 		
-						// remove drop down menu
-						{
-							segmentActivity: "REMOVE_ACT_ON_ELEMENT",
-							segmentParams:
-							{
-								element: '#navbarDropdown',
-								action: "",
-								waitTimeMillisec: 5000
-							}
-						},
+
 
 					]
 			}
@@ -364,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
 							segmentActivity: "ACT_ON_ELEMENT",
 							segmentParams:
 							{
-								element: '#navbarDropdown',
+								element: '',
 								action: "click",
 								// positive values for offset x and y move the cursor "southwest", so neg x is south east
 								offset: { x: 0, y: 25 },
@@ -376,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
 							segmentActivity: "REMOVE_ACT_ON_ELEMENT",
 							segmentParams:
 							{
-								element: '#navbarDropdown',
+								element: '',
 								action: "focus",
 								waitTimeMillisec: 3000
 							}
