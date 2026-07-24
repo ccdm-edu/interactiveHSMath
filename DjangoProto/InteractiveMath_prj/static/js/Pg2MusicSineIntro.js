@@ -31,6 +31,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
 	// Helper function to handle wrapping nodes natively
+	// WrapNode purpose: It dynamically injects a new structural parent element around an existing element to 
+	//change how that element behaves visually or structurally on the page.  It allows a page to change via js.
 	const wrapNode = (el, wrapperType) => {
 		let wrapper = document.createElement(wrapperType);
 		el.parentNode.insertBefore(wrapper, el);
@@ -51,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	let listSelectors = [
 		"#initialInstrMusicTrigIntro",
 		"#dropdownMenuSong",
-		"#trumpetersNotes"
 	];
 
 	if (newbieMode && (newbieMode.toLowerCase() === "true")) {

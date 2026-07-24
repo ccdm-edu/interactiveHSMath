@@ -218,6 +218,18 @@ document.addEventListener('click', (event) => {
                 currentMenu.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
             } else {
                 currentMenu.classList.add('show');
+		        // Explicitly forces the menu down below the button's exact height
+		        // Bootstrap used to do this with a html attribute, need to explicitely do it here.
+
+				// first, ensure the wrapping dropdown container acts as the anchor point
+				const parentDropdown = clickedToggle.closest('.dropdown');
+				if (parentDropdown) {
+				  parentDropdown.style.position = 'relative';
+				}
+		        currentMenu.style.position = 'absolute';
+		        currentMenu.style.top = `${clickedToggle.offsetHeight}px`;
+		        currentMenu.style.left = '0';
+		        currentMenu.style.zIndex = '1000'; // Forces it to render over other content, not under
             }
         }
         return; 
@@ -234,8 +246,14 @@ document.addEventListener('click', (event) => {
 
     // CASE 3: Clicked a regular item INSIDE a menu (Human choosing an option)
     // When clicking a link that isn't a toggle, roll up the whole system
-    const clickedLink = event.target.closest('a:not(.dropdown-toggle)');
+    // Expanded selector to catch buttons (.dropdown-item) alongside standard anchor links
+    const clickedItem = event.target.closest('a:not(.dropdown-toggle), .dropdown-item:not(.dropdown-toggle)');
     if (clickedLink) {
+		// If the clicked item has a value (like songs), handle it or dispatch it here
+	    if (clickedItem.hasAttribute('value')) {
+	      const selectedValue = clickedItem.getAttribute('value');
+	      console.log(`Selected Value: ${selectedValue}`);
+		}
         document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
             openMenu.classList.remove('show');
         });

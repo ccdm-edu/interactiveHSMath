@@ -113,15 +113,17 @@
 			
 			<!-- Configured custom CSS flyout targeting instead of old Bootstrap structural layout buttons -->
 			<div class="dropdown" id="userSelectsSongButton">
-				<button class="btn-cyan dropdown-toggle" type="button" id="dropdownMenuSong" data-bs-toggle="dropdown" aria-expanded="false">
+				  <button class="dropdown-toggle" type="button" id="dropdownMenuSong">
 				    Try a Song
-				</button>
-				<div class="dropdown-menu" id="songSelections" aria-labelledby="dropdownMenuSong">
-				    <button class="dropdown-item" type="button" value="Song1">Twinkle Twinkle</button>
-				    <button class="dropdown-item" type="button" value="Song2">Happy Birthday</button>
-				    <button class="dropdown-item" type="button" value="Song3">Jingle Bells</button>
-				</div>
-	        </div>
+				  </button>
+				  <!-- No .show class by default-->
+				  <div class="dropdown-menu" id="songSelections">
+					    <button class="dropdown-item" type="button" value="Song1">Twinkle Twinkle</button>
+					    <button class="dropdown-item" type="button" value="Song2">Happy Birthday</button>
+					    <button class="dropdown-item" type="button" value="Song3">Jingle Bells</button>
+				  </div>
+			</div>
+
 			<canvas id="PitchGraph" width="600" height="250">
 				Your Browser does not support canvas tag, you are missing graph capability
 			</canvas>

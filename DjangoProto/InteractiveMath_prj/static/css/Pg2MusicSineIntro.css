@@ -276,6 +276,15 @@
 	left: var(--VOLUME_LEFT_MARGIN);
 	z-index: 10;	
 }
+/* tune selection button and menu */
+
+/* Button takes up the full layout width */
+.btn-cyan.dropdown-toggle {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
 #notesToPlayLabel{
 	position: absolute;
 	left: 150px;
@@ -299,13 +308,13 @@
 #dropdownMenuSong.newbieMode{
 	position: absolute;
 	left: 0px;
-	top: 40px;
+	top: 40px; 
 	font-size: 15px;
 	font-weight: bold;
 	color: black;
-	background-color: gold;
+	background-color: gold;  
 	z-index: 10;
-}
+} 
 /* if expert, draw attention to songs to play */
 #dropdownMenuSong.expertMode{
 	position: absolute;
@@ -336,9 +345,6 @@
 /*******************************************************/
 
 /*****************Auto demo controls on****************************/
-#autoDemo{
-/*	top: 60px;  */
-}
 	
 #MusicIntroBlock {
 	/* define space for rest of page makes footer float to bottom */

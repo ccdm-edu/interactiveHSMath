@@ -359,6 +359,7 @@ ul {
 .dropdown {
   position: relative;
   display: inline-block;
+  width: fit-content; /* will fit the text */
 }
 
 /* Hide the dropdown menu by default */
@@ -398,6 +399,7 @@ ul {
 .dropdown-menu.show {
   display: block;
 }
+
 .dropdown-menu li {
     display: block;
     width: 100%;          /* Forces the list item to snap to the menu width */

@@ -29,6 +29,9 @@
 document.addEventListener('DOMContentLoaded', () => {
 
 	// Framework-free DOM helper replaces legacy jQuery .wrap() utilities
+	// Helper function to handle wrapping nodes natively
+	// WrapNode purpose: It dynamically injects a new structural parent element around an existing element to 
+	//change how that element behaves visually or structurally on the page.  It allows a page to change via js.
 	const wrapNode = (el, wrapperType) => {
 		let wrapper = document.createElement(wrapperType);
 		el.parentNode.insertBefore(wrapper, el);
@@ -928,17 +931,7 @@ document.addEventListener('DOMContentLoaded', () => {
 							waitTimeMillisec: 3000
 						}  // this is wait before you go on to next item
 					},
-					// get rid of drop down menu cursor
-					{
-						segmentActivity: "REMOVE_ACT_ON_ELEMENT",
-						segmentParams:
-						{
-							element: '#InstrumentTypeSel',
-							action: "nothing",
-							offset: { x: 20, y: 20 },
-							waitTimeMillisec: 1000
-						}
-					},
+
 					//*****************************
 					// show we will click on trumpet from drop down menu
 					{
@@ -963,24 +956,13 @@ document.addEventListener('DOMContentLoaded', () => {
 							waitTimeMillisec: 50
 						}  // this is wait before you go on to next item
 					},
-					// get rid of focus cursors
-					{
-						segmentActivity: "REMOVE_ACT_ON_ELEMENT",
-						segmentParams:
-						{
-							element: '#InstrumentSelections  button[value="Trumpet"]',
-							action: "nothing",
-							offset: { x: 20, y: 20 },
-							waitTimeMillisec: 50
-						}  // this is wait before you go on to next item
-					},
 					// get rid of click cursor
 					{
 						segmentActivity: "REMOVE_ACT_ON_ELEMENT",
 						segmentParams:
 						{
 							element: '#InstrumentSelections button[value="Trumpet"]',
-							action: "nothing",
+							action: "click",
 							offset: { x: 20, y: 20 },
 							waitTimeMillisec: 59000
 						}  // this is wait before you go on to next item
