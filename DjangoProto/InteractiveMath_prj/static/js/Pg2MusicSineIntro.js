@@ -776,18 +776,8 @@ document.addEventListener('DOMContentLoaded', () => {
 							action: "click",
 							// positive values for offset x and y move the cursor "southwest"
 							offset: { x: 15, y: 20 },
-							waitTimeMillisec: 1000
+							waitTimeMillisec: 7000
 						}  // this is wait before you go on to next item
-					},
-					{
-						segmentActivity: "REMOVE_ACT_ON_ELEMENT",
-						segmentParams:
-						{
-							element: '#dropdownMenuSong',
-							action: "nothing",
-							// positive values for offset x and y move the cursor "southwest"
-							waitTimeMillisec: 5000
-						}
 					},
 
 					// select desired song
@@ -795,20 +785,31 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentActivity: "ACT_ON_ELEMENT",
 						segmentParams:
 						{
-							element: '#Song1',
+							element: '#songSelections button[value="Song1"]',
 							action: "focus",  // linger a bit here so user sees what to do
 							// positive values for offset x and y move the cursor "southwest"
 							offset: { x: 15, y: 20 },
-							waitTimeMillisec: 2000
+							waitTimeMillisec: 3000
+						}  // this is wait before you go on to next item
+					},
+					{
+						segmentActivity: "ACT_ON_ELEMENT",
+						segmentParams:
+						{
+							element: '#songSelections button[value="Song1"]',
+							action: "click",  // linger a bit here so user sees what to do
+							// positive values for offset x and y move the cursor "southwest"
+							offset: { x: 15, y: 20 },
+							waitTimeMillisec: 500
 						}  // this is wait before you go on to next item
 					},
 					{
 						segmentActivity: "REMOVE_ACT_ON_ELEMENT",
 						segmentParams:
 						{
-							element: '#Song1',
+							element: '#songSelections button[value="Song1"]',
 							action: "click",
-							waitTimeMillisec: 1000
+							waitTimeMillisec: 500
 						}
 					},
 

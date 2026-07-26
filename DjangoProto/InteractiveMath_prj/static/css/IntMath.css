@@ -359,7 +359,6 @@ ul {
 .dropdown {
   position: relative;
   display: inline-block;
-  width: fit-content; /* will fit the text */
 }
 
 /* Hide the dropdown menu by default */

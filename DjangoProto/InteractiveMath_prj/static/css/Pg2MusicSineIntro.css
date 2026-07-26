@@ -19,7 +19,7 @@
 	--LOWEST_X: 200px;
 	--DELTA_Y: 10px;  /* half a note */
 	--DELTA_X: 80px;
-	--OFF_TO_SIDE_X: 40px;
+	--OFF_TO_SIDE_X: 30px;
 	--OFF_TO_SIDE_Y: 10px;
 	--HEADER_LOC: 0 px; 
 	--VOLUME_LEFT_MARGIN: 500px;
@@ -142,6 +142,7 @@
 }
 .letterToNote{
 	position: absolute;
+	margin: 10px 0px;  /* top and bottom get 10, left right get 0*/
 	font-size: 20px;
 	font-weight: bold;
 }
@@ -152,7 +153,7 @@
 #LowCNotation{
 	position: absolute;
 	font-size: 15px;
-	top:  calc(var(--HIGHEST_Y) + var(--OFF_TO_SIDE_Y) + 20px);  /* off to side and a little below*/ 
+	top:  calc(var(--HIGHEST_Y) + var(--OFF_TO_SIDE_Y) + 15px);  /* off to side and a little below*/ 
 	left: calc( var(--LOWEST_X) + var(--OFF_TO_SIDE_X));	
 }
 #DNote{
@@ -205,7 +206,7 @@
 }
 #noteSelectVal{
 	position: absolute;
-	left: 95px;
+	left: 45px;
 	top: 0px;
 	font-size: 15px;
 }
@@ -218,7 +219,7 @@
 }
 #FreqOfNoteVal{
 	position: absolute;
-	left: 270px; 
+	left: 180px; 
 	top: 0px;
 	font-size: 15px;
 }
@@ -276,15 +277,20 @@
 	left: var(--VOLUME_LEFT_MARGIN);
 	z-index: 10;	
 }
-/* tune selection button and menu */
-
-/* Button takes up the full layout width */
-.btn-cyan.dropdown-toggle {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px;
+/* **************** tune selection button and menu *****************/
+#userSelectsSongButton {  /*parent to button and dropdown menu */
+  width: 80px; 
+  height: 60px; 
 }
-
+#dropdownMenuSong {    /* User song select button*/
+  box-sizing: border-box;
+  border-radius: 6px;
+  height: auto;
+  bottom: 0px;  /* put at bottom so dropdown menu goes just below it */
+}
+#userSelectsSongButton .dropdown-menu {   /* the song selections */
+  width: 100%; /* matches parent width */
+}
 #notesToPlayLabel{
 	position: absolute;
 	left: 150px;
@@ -308,7 +314,6 @@
 #dropdownMenuSong.newbieMode{
 	position: absolute;
 	left: 0px;
-	top: 40px; 
 	font-size: 15px;
 	font-weight: bold;
 	color: black;
@@ -319,7 +324,6 @@
 #dropdownMenuSong.expertMode{
 	position: absolute;
 	left: 0px;
-	top: 40px;
 	font-size: 15px;
 	font-weight: bold;
 	color: black;

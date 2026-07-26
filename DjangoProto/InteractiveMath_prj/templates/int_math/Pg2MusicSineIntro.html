@@ -95,21 +95,24 @@
 		</div>
 		
 		<div id="SinusoidGraph">
-			<label id="noteSelect">Note Played: </label>
-			<p id="noteSelectVal"> </p>
-			<label id="FreqOfNote">Frequency (Hz):  </label>
-			<p id="FreqOfNoteVal"> </p>
-			<label id="noteVolLabel">Volume:  </label>
-			<p id="noteVolValue"></p>
-			<input id="noteVol" type="range" step="1" value="10" min="1" max="100" title="Turn on your speaker">
-			<input type="button" id="ResetPage" value="Reset" title="Reset page">
-			<div class="VolOnOff">
-    			<img class="VolOff" src="{{ VolumeOffSVG }}" alt="Volume is currently off" title="turn on speaker and click to hear note">
-    			<img class="VolOn hidden"  src="{{ VolumeOnSVG }}" alt="Volume is currently on" title="turn on speaker and click to hear note">
-			</div>						
-
-			<p id="notesToPlayLabel" title="Play these notes in order"></p>
-			<p id="notesToPlay"></p>
+		  	<!-- Group the absolute elements so they don't break the outer layout flow -->
+  			<div class="stats-overlay" style="position: relative; min-height: 30px;">
+				<label id="noteSelect">Note Played: </label>
+				<p id="noteSelectVal"> </p>
+				<label id="FreqOfNote">Frequency (Hz):  </label>
+				<p id="FreqOfNoteVal"> </p>
+				<label id="noteVolLabel">Volume:  </label>
+				<p id="noteVolValue"></p>
+				<input id="noteVol" type="range" step="1" value="10" min="1" max="100" title="Turn on your speaker">
+				<input type="button" id="ResetPage" value="Reset" title="Reset page">
+				<div class="VolOnOff">
+	    			<img class="VolOff" src="{{ VolumeOffSVG }}" alt="Volume is currently off" title="turn on speaker and click to hear note">
+	    			<img class="VolOn hidden"  src="{{ VolumeOnSVG }}" alt="Volume is currently on" title="turn on speaker and click to hear note">
+				</div>						
+	
+				<p id="notesToPlayLabel" title="Play these notes in order"></p>
+				<p id="notesToPlay"></p>
+			</div>
 			
 			<!-- Configured custom CSS flyout targeting instead of old Bootstrap structural layout buttons -->
 			<div class="dropdown" id="userSelectsSongButton">

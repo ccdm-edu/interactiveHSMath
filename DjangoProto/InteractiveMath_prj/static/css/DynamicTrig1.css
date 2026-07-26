@@ -16,6 +16,7 @@
 :root{
 	--CANVAS_TOP: 0px;
 	--GRAPH_LABEL_TOP: 15px;
+	--OFFSET_VALUES: 15px;
 }
 /***************************/
 /* put a label up and an expln/to do selector input box */
@@ -59,7 +60,7 @@
 #timeVal_DT1{
 	position: absolute;
 	left: 100px;
-	top: calc(var(--CANVAS_TOP) + 30px);	
+	top: calc(var(--CANVAS_TOP) + var(--OFFSET_VALUES));	
 }
 #thetaLabel_DT1 {
 	position: absolute;
@@ -69,7 +70,7 @@
 #theta_DT1 {
 	position: absolute;
 	left: 200px;
-	top: calc(var(--CANVAS_TOP) + 30px);
+	top: calc(var(--CANVAS_TOP) + var(--OFFSET_VALUES));
 }
 #LastFrequenciesLabel_DT1{
 	position: absolute;
@@ -80,20 +81,20 @@
 #LastFrequencies_DT1{
 	position: absolute;
 	left: 300px;
-	top: calc(var(--CANVAS_TOP) + 30px);
+	top: calc(var(--CANVAS_TOP) + var(--OFFSET_VALUES));
 	white-space: nowrap; /*prevent small screen rearrangement*/
 }
 #UserNotices_DT1{
 	position: absolute;
 	left: 0px;
-	top: calc(var(--CANVAS_TOP) + 100px);
+	top: calc(var(--CANVAS_TOP) + 90px);
 	white-space: nowrap; /*prevent small screen rearrangement*/
 }
 #ExplnFreqMark{
 	position: absolute;
 	color: lime;
 	left: 0px;
-	top: calc(var(--CANVAS_TOP) + 120px);
+	top: calc(var(--CANVAS_TOP) + 110px);
 }
 
 /***************************/

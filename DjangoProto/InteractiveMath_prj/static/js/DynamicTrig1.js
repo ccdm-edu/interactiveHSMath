@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	{	tip1: [101, 47],
 		tip2: [115, 47],
 		point: [110,39],
-		end: [101,88]
+		end: [101,80]
 	};
 
 	let numFreqGenSoFar = 0;
@@ -292,15 +292,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	function showUserPeriod(latestPeriod) {
 		if (!ctxUnitCircle || !ctxFreqPlot) return;
+		// draw circle (with line and arrow) around the current time
 		ctxUnitCircle.beginPath();
 		ctxUnitCircle.lineWidth = 2.0;
 		ctxUnitCircle.strokeStyle = SHOW_FREQ_COLOR;
 		ctxUnitCircle.arc(TIMER_LOC_X, TIMER_LOC_Y, 18, 0, Math.PI * 2, true);
 		ctxUnitCircle.stroke();
-
 		new Arrow(ctxUnitCircle, POINT_TO_TIME, SHOW_FREQ_COLOR, "", 2).draw();
+		
+		// draw circle (with line and arrow) around the period time on the graph (either upper or lower)
 		let arrow_to_graph_time;
-
 		if (latestPeriod > 3) {
 			let xcoord = Math.round(UPPER_X_ORIGIN + latestPeriod * PIX_PER_MINOR_TICK);
 			ctxFreqPlot.beginPath();
@@ -308,11 +309,12 @@ document.addEventListener('DOMContentLoaded', () => {
 			ctxFreqPlot.strokeStyle = SHOW_FREQ_COLOR;
 			ctxFreqPlot.arc(xcoord, UPPER_Y_ORIGIN, 15, 0, Math.PI * 2, true);
 			ctxFreqPlot.stroke();
+			//set up the arrow to point to period circle
 			arrow_to_graph_time = {
 				tip1: [xcoord - 20, UPPER_Y_ORIGIN + 5],
 				tip2: [xcoord - 20, UPPER_Y_ORIGIN + 25],
 				point: [xcoord - 15, UPPER_Y_ORIGIN + 15],
-				end: [TIMER_LOC_X, TIMER_LOC_Y]
+				end: [0,200]
 			};
 		} else {
 			let xcoord = Math.round(LOWER_X_ORIGIN + 10 * latestPeriod * PIX_PER_MINOR_TICK);
@@ -321,16 +323,17 @@ document.addEventListener('DOMContentLoaded', () => {
 			ctxFreqPlot.strokeStyle = SHOW_FREQ_COLOR;
 			ctxFreqPlot.arc(xcoord, LOWER_Y_ORIGIN, 15, 0, Math.PI * 2, true);
 			ctxFreqPlot.stroke();
-			// FIX: Supplied the missing arrow trailing end coordinates
+			// setup the arrow to point to period circle
 			arrow_to_graph_time = {
 				tip1: [xcoord - 15, LOWER_Y_ORIGIN - 25],
 				tip2: [xcoord - 23, LOWER_Y_ORIGIN - 12],
 				point: [xcoord - 15, LOWER_Y_ORIGIN - 15],
-				end: [TIMER_LOC_X, TIMER_LOC_Y]
+				end: [0,200]
 			};
 		}
 
 		new Arrow(ctxFreqPlot, arrow_to_graph_time, SHOW_FREQ_COLOR, "", 2).draw();
+		// put things back to default colors
 		ctxUnitCircle.strokeStyle = "black";
 		ctxFreqPlot.strokeStyle = "black";
 	}

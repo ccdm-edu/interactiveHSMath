@@ -775,9 +775,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	//**************************************************************************** 
 	// User has interacted with autoDemo controls 
 	//**************************************************************************** 
-	let $segNumSelect = $('#segNum');
-	let currSeg = $segNumSelect ? parseInt($segNumSelect.value) : 1;
-
 	// User has selected play 
 	let $playSegmentBtn = $('#playSegment');
 	if ($playSegmentBtn) {
@@ -810,7 +807,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	if ($segNumSelect) {
 		$segNumSelect.on('change', function() {
-			currSeg = parseInt($segNumSelect.value);
+			let $segNumSelect = $('#segNum');
+			currSeg = $segNumSelect ? parseInt($segNumSelect.value) : 0;
 			demo.setCurrSeg(currSeg);
 
 			// remove the class so the animation will work on next page, cant do this until animation completes 

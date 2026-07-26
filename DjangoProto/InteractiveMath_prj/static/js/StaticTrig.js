@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// =========================================================================
 	// KATEX v0.17.0 INITIALIZATION
 	// =========================================================================
-	// Wipes out old MathJax logic and sets up KaTeX auto-rendering cleanly in jQuery
+	// Wipes out old MathJax logic and sets up KaTeX auto-rendering cleanly in "jqBS-shorthand"
 	renderMathInElement(document.body, {
 		delimiters: [
 			{ left: '$$', right: '$$', display: true },

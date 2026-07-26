@@ -80,6 +80,10 @@ class AutoDemo {
 		let $segName = $('#segName');
 		if ($segName) $segName.innerHTML = '<b>' + newLabel + '</b>';
 	}
+	
+	getCurrSeg() {
+		return this.currSeg;
+	}
 
 	stopThisSegment(killTheAutoDemoCtlBox = true) {
 		this.userStopRequest = true;
