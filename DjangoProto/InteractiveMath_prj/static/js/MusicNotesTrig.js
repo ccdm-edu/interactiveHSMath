@@ -72,6 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	const $toneVolOn = extendElement(volToneOnEl);
 	const $toneVolOff = extendElement(volToneOffEl);
 	
+	// initial setting is tone vol on and no vol icon for musical instrument before instrument chosen
+	$toneVolOn.hide();
+	$toneVolOff.show();
+	$noteVolOn.hide();
+	$noteVolOff.hide();
+	
 	// Frequency constants for Bflat tracking definitions
 	const C5_FREQ = 466.16;
 	const C4_FREQ = 233.08;

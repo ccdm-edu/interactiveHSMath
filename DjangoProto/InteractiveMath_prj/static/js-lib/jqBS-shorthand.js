@@ -174,7 +174,7 @@ function extendElement(el) {
 	el.append = (content) => { if (typeof content === 'string') { el.insertAdjacentHTML('beforeend', content); } else { el.appendChild(content); } return el; };
 	el.prepend = (content) => { if (typeof content === 'string') { el.insertAdjacentHTML('afterbegin', content); } else { el.insertBefore(content, el.firstChild); } return el; };
 	el.hide = () => { el.style.display = 'none'; return el; };
-	el.show = () => { el.style.display = ''; return el; };
+	el.show = () => { el.style.display = ''; return el; }; // return the element to its default styling
 	el.toggleDisplay = () => { el.style.display = el.style.display === 'none' ? '' : 'none'; return el; };
 
 	// Traversal

@@ -267,9 +267,7 @@
 .VolOn{
 	background-color: lightpink;
 }
-.hidden {
-  display: none; /* or opacity: 0; */
-}
+
 #ResetPage{
 	position: absolute;
 	width: 50px;

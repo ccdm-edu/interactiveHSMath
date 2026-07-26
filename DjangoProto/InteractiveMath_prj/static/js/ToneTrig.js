@@ -93,6 +93,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	let ToneIsOnNow = false; // for synthesized tone, both musical note and tone can play additively.
 	let osc = (typeof Tone !== 'undefined') ? new Tone.Oscillator() : { type: "sine" };
+	
+	const volToneOnEl = document.querySelector(".toneStartButton .VolOn");
+	const volToneOffEl = document.querySelector(".toneStartButton .VolOff");
+	// Guard clause: Exit safely if the elements aren't present on this specific page
+	if (!volToneOnEl || !volToneOffEl) return;
+	// Extend them using jsBS-shorthand.js library helpers
+	const $toneVolOn = extendElement(volToneOnEl);
+	const $toneVolOff = extendElement(volToneOffEl);
+	// initial setting is tone vol on and no vol icon for musical instrument before instrument chosen
+	$toneVolOn.hide();
+	$toneVolOff.show();
+
 
 	// used for plotting
 	let timeMsLong = [];
@@ -271,9 +283,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			let currentAmpVal = $currAmp ? parseFloat($currAmp.value) : 1;
 			let tonejs_dB = -40 + 20.0 * Math.log10(currentAmpVal);
 
-			let $volOn = document.querySelector('.toneStartButton .VolOn');
-			let $volOff = document.querySelector('.toneStartButton .VolOff');
-
 			if (ToneIsOnNow == false) {
 				// currently false, clicked by user and about to be true 
 				let currentFreqVal = $currFreq ? parseFloat($currFreq.value) : 440;
@@ -287,8 +296,8 @@ document.addEventListener('DOMContentLoaded', () => {
 				});
 				osc.toDestination().start();
 
-				if ($volOn) $volOn.classList.toggle('hidden');
-				if ($volOff) $volOff.classList.toggle('hidden');
+				$toneVolOn.show();
+				$toneVolOff.hide();
 				ToneIsOnNow = true;
 			} else {
 				if (osc && osc.toDestination) {
@@ -297,8 +306,8 @@ document.addEventListener('DOMContentLoaded', () => {
 					osc.stop();
 				}
 
-				if ($volOn) $volOn.classList.toggle('hidden');
-				if ($volOff) $volOff.classList.toggle('hidden');
+				$toneVolOn.hide();
+				$toneVolOff.show();
 				ToneIsOnNow = false;
 			}
 		});
@@ -435,10 +444,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		// go back to original html defaults 
-		let $volOn = document.querySelector('.toneStartButton .VolOn');
-		let $volOff = document.querySelector('.toneStartButton .VolOff');
-		if ($volOn) $volOn.classList.add('hidden');
-		if ($volOff) $volOff.classList.remove('hidden');
+		$toneVolOn.hide();
+		$toneVolOff.show();
 
 		// on power up, draw the expansion lines between graphs 
 		DrawExpansionLinesBtwnGraphs();

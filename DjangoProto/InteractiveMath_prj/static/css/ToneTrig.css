@@ -59,9 +59,7 @@
 .VolOn{
 	background-color: lightpink;
 }
-.hidden {
-  display: none; /* or opacity: 0; */
-}
+
 /*****************************************************************/
 /* arrange location of upper plot */
 #wrap_sin_plotsLong {

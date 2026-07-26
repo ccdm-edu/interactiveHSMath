@@ -160,9 +160,7 @@ input[type="range"] {
 .VolOn{
 	background-color: lightpink;
 }
-.hidden {
-  display: none; /* or opacity: 0; */
-}
+
 /**********************define space for footer to float at bottom***************/
 #SineCosBlock {
 	/* define space for rest of page makes footer float to bottom */

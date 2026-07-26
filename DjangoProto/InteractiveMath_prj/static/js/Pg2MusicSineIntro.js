@@ -54,6 +54,19 @@ document.addEventListener('DOMContentLoaded', () => {
 		"#initialInstrMusicTrigIntro",
 		"#dropdownMenuSong",
 	];
+	
+	const volToneOnEl = document.querySelector(".VolOnOff .VolOn");
+	const volToneOffEl = document.querySelector(".VolOnOff .VolOff");
+	// Guard clause: Exit safely if the elements aren't present on this specific page
+	if (!volToneOnEl || !volToneOffEl) return;
+	// Extend them using jsBS-shorthand.js library helpers
+	const $toneVolOn = extendElement(volToneOnEl);
+	const $toneVolOff = extendElement(volToneOffEl);
+	// initial setting is tone vol on and no vol icon for musical instrument before instrument chosen
+	$toneVolOn.hide();
+	$toneVolOff.show();
+	let toneIsOnNow = false;
+
 
 	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
 		// emphasize the auto demo as first place
@@ -350,11 +363,9 @@ document.addEventListener('DOMContentLoaded', () => {
 			let cntr = 0;
 
 			// if user clicks a note, the sound must come on and icons must match
-			let $volOffIcon = $(".VolOnOff .VolOff");
-			let $volOnIcon = $(".VolOnOff .VolOn");
-			if ($volOffIcon) $volOffIcon.addClass('hidden');
-			if ($volOnIcon) $volOnIcon.removeClass('hidden');
-			volumeOn = true;
+			$toneVolOn.show();
+			$toneVolOff.hide();
+			toneIsOnNow = true;
 
 			CmajorNotes.forEach(note => {
 				// not sure yet which dot the user clicked on, must search all
@@ -396,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 					setTimeout(function() {
 						// put a blip in the note change
-						if (volumeOn) {
+						if (toneIsOnNow) {
 							// play only if volume is on, we know note is selected
 							if (osc && typeof osc.start === 'function') {
 								osc.toDestination().start();
@@ -456,20 +467,16 @@ document.addEventListener('DOMContentLoaded', () => {
 	//***********************************
 	// user turns on and off sound
 	//***********************************
-	let $volOnIndicator = $('.VolOnOff .VolOn');
-	let volumeOn = ($volOnIndicator && !$volOnIndicator.classList.contains('hidden')) ? true : false;
 
 	// Handle user button interaction 
 	let $volOnOffContainer = $('.VolOnOff');
 	if ($volOnOffContainer) {
-		$volOnOffContainer.on('click', function(event) {
+		$volOnOffContainer.on('click', function() {
 			// if sound is on, button will say TURN_SOUND_OFF and vice versa 
-			let $onInd = $('.VolOnOff .VolOn');
-			volumeOn = ($onInd && !$onInd.classList.contains('hidden')) ? true : false;
 
 			if (null != selectedNote) {
-				// user has selected note, let volume be on/off 
-				if (volumeOn) {
+				// user has selected note, let volume icon be to turn it off
+				if (toneIsOnNow) {
 					// sound is on, we turn it off, leave sliders alone 
 					if (osc && osc.toDestination) {
 						try { osc.toDestination().stop(); } catch (e) { }
@@ -478,11 +485,9 @@ document.addEventListener('DOMContentLoaded', () => {
 					}
 
 					// here we change color/text on button 
-					let $vOn = $('.VolOnOff .VolOn');
-					let $vOff = $('.VolOnOff .VolOff');
-					if ($vOn) $vOn.toggleClass('hidden');
-					if ($vOff) $vOff.toggleClass('hidden');
-					volumeOn = false;
+					$toneVolOn.toggleDisplay();
+					$toneVolOff.toggleDisplay();
+					toneIsOnNow = false;
 				} else {
 					// turn on tone 
 					if (osc && osc.toDestination) {
@@ -492,11 +497,9 @@ document.addEventListener('DOMContentLoaded', () => {
 					}
 
 					// here we change color/text on button 
-					let $vOn = $('.VolOnOff .VolOn');
-					let $vOff = $('.VolOnOff .VolOff');
-					if ($vOn) $vOn.toggleClass('hidden');
-					if ($vOff) $vOff.toggleClass('hidden');
-					volumeOn = true;
+					$toneVolOn.toggleDisplay();
+					$toneVolOff.toggleDisplay();
+					toneIsOnNow = true;
 				}
 			} else {
 				// user has not selected a note yet, since cursor over volume button, tell them to select a note 
@@ -539,13 +542,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		selectedNote = null; // dont want to play any notes since notes deselected 
 		// set up volume icon as it is when first enter page, volume on but no sound since no note selected 
-		volumeOn = true;
+		toneIsOnNow = true;
 
 		// go back to original html defaults 
-		let $vOn = $(".VolOnOff .VolOn");
-		let $vOff = $(".VolOnOff .VolOff");
-		if ($vOn) $vOn.addClass('hidden');
-		if ($vOff) $vOff.removeClass('hidden');
+		$toneVolOn.hide();
+		$toneVolOff.show();
+		
 
 		// set the volume value to the default we start on the page (so its not too loud in case user has played with it before autodemo) 
 		let $noteVol = $("#noteVol");
