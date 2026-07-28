@@ -703,41 +703,16 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	// User selects an instrument from your dropdown flyout components natively
-	// Core dropdown toggle functionality	
-	const dropdownContainer = document.getElementById('InstrumentSel');
-	if (!dropdownContainer) return; 
-
-	// 1. Direct native scoping ensures we get the exact elements inside this container
-	const toggleElement = dropdownContainer.querySelector('.dropdown-toggle');
-	const menuElement = dropdownContainer.querySelector('.dropdown-menu');
-
-	// 2. Extend them individually using your library
-	const $toggleBtn = extendElement(toggleElement);
-	const $dropdownMenu = extendElement(menuElement);
-	
-	// 3. Toggle visibility on button click
-	$toggleBtn.on('click', (event) => {
-		event.stopPropagation();
-		$dropdownMenu.toggleClass('show');
-	});
-
-	// 4. Handle item selection
-	let instrumentButtons = dropdownContainer.querySelectorAll('.dropdown-item');
-	instrumentButtons.forEach(btn => {
-		let $btn = extendElement(btn);
-		
-		$btn.on('click', function() {
-			$toggleBtn.html($btn.html());
-			$dropdownMenu.removeClass('show');
-			prepToPlayNote($btn.val());
-		});
-	});
-
-	// 5. Global listener to close when clicking outside
-	document.addEventListener('click', () => {
-		$dropdownMenu.removeClass('show');
-	});
-	
+	// Core dropdown toggle functionality is in jqBS-shorthand.js which fires
+	// custom event that is caught here	
+	const instrumentSel = document.getElementById('InstrumentSel');
+	if (instrumentSel) {
+	  // Listen for the custom event dispatched by your master script
+	  instrumentSel.addEventListener('dropdownSelect', (event) => {
+	    // Play the note based on the chosen value
+	    prepToPlayNote(event.detail.value);
+	  });
+	}
 
 	//*********************************** 
 	// User instigated callback events User selects PLAY INSTRUMENT they have selected 
@@ -750,6 +725,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 
 			if (tuneBuffer == null || tuneBuffer[currTuneState] == null) {
+				//Should never happen, decode and copy should finish before we get here with normal user (non robot)
 				let prob = tuneBuffer == null ? " Whole tune buffer is null" : " The tune buffer for state " + currTuneState + " is null";
 				console.error("Timing error, file transfer and decode not complete." + prob);
 			} else {
@@ -782,13 +758,18 @@ document.addEventListener('DOMContentLoaded', () => {
 				    $noteVolOn.show();
 				    $noteVolOff.hide();
 				
-				    // 6. Handle the automatic cleanup when the MP3 finishes
-				    sourceNote.onended = () => {
-				        noteIsOnNow = false;
-				        $noteVolOn.hide();
-				        $noteVolOff.show();
-				    };
-    			};
+    			} else {
+					// someone is tired of listening to our lovely note
+					sourceNote.stop(0); 
+					noteIsOnNow = false;
+					//this will next hit sourceNote.onended and toggle the icons
+				};
+				// Handle the automatic cleanup when the MP3 finishes
+				sourceNote.onended = () => {
+			        noteIsOnNow = false;
+			        $noteVolOn.hide();
+			        $noteVolOff.show();
+				};
     		};
 		});
 	}

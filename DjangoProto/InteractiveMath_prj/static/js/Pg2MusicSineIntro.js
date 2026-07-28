@@ -576,46 +576,29 @@ document.addEventListener('DOMContentLoaded', () => {
 	// user selects a song and code puts up notes to hit in box
 	//***********************************
 	
-	// User selects an instrument from dropdown flyout components natively
-	// Core dropdown toggle functionality	
-	const dropdownContainer = document.getElementById('userSelectsSongButton');
-	if (!dropdownContainer) return; 
+	// Target the actual dropdown container where the clicks happen
+	const songDropdown = document.getElementById('userSelectsSongButton');
+	const notesToPlay = document.getElementById('notesToPlay');
+	const notesToPlayLabel = document.getElementById('notesToPlayLabel');
 
-	// 1. Direct native scoping ensures we get the exact elements inside this container
-	const toggleElement = dropdownContainer.querySelector('.dropdown-toggle');
-	const menuElement = dropdownContainer.querySelector('.dropdown-menu');
+	if (songDropdown) {
+		// Listen for the custom event dispatched by your master script
+		songDropdown.addEventListener('dropdownSelect', (event) => {
 
-	// 2. Extend them individually using your library
-	const $toggleBtn = extendElement(toggleElement);
-	const $dropdownMenu = extendElement(menuElement);
-	
-	// 3. Toggle visibility on button click
-	$toggleBtn.on('click', (event) => {
-		event.stopPropagation();
-		$dropdownMenu.toggleClass('show');
-	});
-
-	// 4. Handle item selection
-	let songButtons = dropdownContainer.querySelectorAll('.dropdown-item');
-	let notesToPlay = document.getElementById('notesToPlay');
-	let notesToPlayLabel = document.getElementById('notesToPlayLabel');
-	songButtons.forEach(btn => {
-		let $btn = extendElement(btn);
-		$btn.on('click', function() {
-			$dropdownMenu.removeClass('show');
-			switch($btn.val()) {
-				case "Song1": 
+			// put up the notes for the user based on the selection
+			switch (event.detail.value) {
+				case "Song1":
 					// Twinkle Twinkle little star, how I wonder where you are
-			        if (notesToPlay) {
-			            notesToPlay.textContent = "C4,C4,G4,G4,A4,A4,G4 - F4,F4,E4,E4,D4,D4,C4";
-			            notesToPlay.style.height = '20px';
-			            notesToPlay.style.display = 'block';
-			        }
-			        if (notesToPlayLabel) {
-			            notesToPlayLabel.textContent = "Notes For Twinkle Twinkle tune:";
-			        }
-			        break;
-	        	case "Song2":
+					if (notesToPlay) {
+						notesToPlay.textContent = "C4,C4,G4,G4,A4,A4,G4 - F4,F4,E4,E4,D4,D4,C4";
+						notesToPlay.style.height = '20px';
+						notesToPlay.style.display = 'block';
+					}
+					if (notesToPlayLabel) {
+						notesToPlayLabel.textContent = "Notes For Twinkle Twinkle tune:";
+					}
+					break;
+				case "Song2":
 					// Happy Birthday to you, Happy Birthday to you, Happy birthday dear 		
 					if (notesToPlay) {
 						notesToPlay.textContent = "C4,C4,D4,C4,F4,E4 - C4,C4,D4,C4,G4,F4 - C4,C4,C5,A4,F4,E4,D4";
@@ -638,12 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					break;
 			}
 		});
-	});
-
-	// 5. Global listener to close when clicking outside
-	document.addEventListener('click', () => {
-		$dropdownMenu.removeClass('show');
-	});
+	}
 	
 	// since this is on template and dont need it here... 
 	let advTopicLinks = document.querySelectorAll('a[href="#AdvancedTopics"]');

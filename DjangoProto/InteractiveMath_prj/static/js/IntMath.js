@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					let $target021 = $("#tab021 > p", myDialog);
 					if ($target021) $target021.html(explnContent);
 				}
-				myDialog.show(); // Opened modelessly as requested for instructional design
+				myDialog.addClass('show'); // Opened modelessly as requested for instructional design
 			}
 		}
 	});
@@ -222,12 +222,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			let next_fs = "#" + $tab.attr('id') + "1";
 			$$("fieldset").each(function(fs) {
-				fs.classList.remove("show");
+				fs.classList.removeClass("show");
 			});
 
 			let $nextFs = $(next_fs);
 			if ($nextFs) {
-				$nextFs.addClass("show");
+				$nextFs.addClass('show');
 			}
 		}
 	});
@@ -311,10 +311,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 3. Global Click-Away: Close everything if user clicks the background body
-    document.addEventListener('click', function() {
-        $$('.dropdown-menu, .submenu').each(function(menu) {
-            menu.removeClass('show');
-        });
-    });
 });

@@ -248,12 +248,21 @@ document.addEventListener('click', (event) => {
     // When clicking a link that isn't a toggle, roll up the whole system
     // Expanded selector to catch buttons (.dropdown-item) alongside standard anchor links
     const clickedItem = event.target.closest('a:not(.dropdown-toggle), .dropdown-item:not(.dropdown-toggle)');
-    if (clickedLink) {
+    if (clickedItem) {
 		// If the clicked item has a value (like songs), handle it or dispatch it here
-	    if (clickedItem.hasAttribute('value')) {
-	      const selectedValue = clickedItem.getAttribute('value');
-	      console.log(`Selected Value: ${selectedValue}`);
-		}
+	    // Extract the selected value cleanly using standard DOM properties
+	    const itemValue = clickedItem.getAttribute('value') || clickedItem.value || '';
+	
+	    //Dispatch a custom event that bubbles up so a page custom listener can hear it
+	    const selectEvent = new CustomEvent('dropdownSelect', {
+	      bubbles: true,
+	      detail: { 
+	        clickedItem: clickedItem,
+	        value: itemValue 
+	      }
+	    });
+	    clickedItem.dispatchEvent(selectEvent);
+	    // roll up and hide all the menus
         document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
             openMenu.classList.remove('show');
         });
