@@ -187,6 +187,7 @@ CONTENT_SECURITY_POLICY = {
         "frame-ancestors": [SELF, "https://www.google.com"],
         "connect-src": [
             SELF,
+            "https://recaptcha.net",
             "https://www.google.com",
             "https://www.gstatic.com",
             "https://cdnjs.cloudflare.com",

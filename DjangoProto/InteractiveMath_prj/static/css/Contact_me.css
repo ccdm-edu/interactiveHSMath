@@ -13,8 +13,8 @@
  * ============================================================================
 */
 :root{
-	--POSITION_RESPONSE_BAD: -200px;
-	--POSITION_RESPONSE_OK: -150px;
+	--POSITION_RESPONSE_BAD: -300px;
+	--POSITION_RESPONSE_OK: -200px;
 }
 h1 {
 	text-align: center;
