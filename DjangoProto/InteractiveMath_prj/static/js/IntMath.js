@@ -23,6 +23,7 @@
 
 'use strict' //JQuery, dont do this script until document DOM objects are loaded and ready  
 document.addEventListener('DOMContentLoaded', () => {
+	
 	//***************
 	// Make the highlighted page for left menu match what is active
 	//***************

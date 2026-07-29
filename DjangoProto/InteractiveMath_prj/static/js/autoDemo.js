@@ -32,10 +32,8 @@ class AutoDemo {
 		this.helpAudio;
 		this.eventLoopPtrs = [];
 		this.userStopRequest = false;
-		this.MOVE_RIGHT_AUTODEMO_ACTIVE = 200;
-		this.MOVE_DOWN_AUTODEMO_ACTIVE = 65;
 	}
-
+	//------------------------------------------------------------------------------------
 	// Refactored to remove jQuery/Bootstrap, using custom '$' helper
 	prepDemoControls() {
 		let $startBtn = $("#startAutoDemo");
@@ -66,7 +64,7 @@ class AutoDemo {
 		let $stopBtn = $('#stopSegment');
 		if ($stopBtn) $stopBtn.disabled = true;
 	}
-
+	//------------------------------------------------------------------------------------
 	setCurrSeg(newCurrSeg) {
 		if (!isNaN(parseFloat(newCurrSeg)) && isFinite(newCurrSeg)) {
 			let temp = newCurrSeg - 1;
@@ -84,7 +82,7 @@ class AutoDemo {
 	getCurrSeg() {
 		return this.currSeg;
 	}
-
+	//------------------------------------------------------------------------------------
 	stopThisSegment(killTheAutoDemoCtlBox = true) {
 		this.userStopRequest = true;
 		this.eventLoopPtrs.forEach(timedEvent => clearTimeout(timedEvent));
@@ -107,7 +105,7 @@ class AutoDemo {
 			if ($clickCursor) $clickCursor.classList.remove('userHitPlay');
 		}
 	}
-
+	//------------------------------------------------------------------------------------
 	segmentOverCleanup() {
 		if (!this.userStopRequest) {
 			this.setCurrSeg(this.currSeg + 1 + 1);
@@ -126,7 +124,7 @@ class AutoDemo {
 		let $clickCursor = $('#clickHereCursor');
 		if ($clickCursor) $clickCursor.classList.remove('userHitPlay');
 	}
-
+	//------------------------------------------------------------------------------------
 	async playAudio(segmentParams) {
 		let context;
 		try {
@@ -172,7 +170,7 @@ class AutoDemo {
 			}
 		}
 	}
-
+	//------------------------------------------------------------------------------------
 	// make annotation on an element of the page. Cant just change border or add border, that changes the element itself and 
 	// can make an input element look like a label 
 	annotateElement(param, ind) {
@@ -227,8 +225,8 @@ class AutoDemo {
 			}
 		}
 	}
-
-	// fake cursor to DOM element and allow focus on that element. 
+	//------------------------------------------------------------------------------------
+	// fake cursor to DOM element and allow focus/click on that element. 
 	actOnElement(param) {
 		// pull out the special demo cursor icon and place on proper location 
 		let demoCursor = $('#demoCursorID');
@@ -263,28 +261,7 @@ class AutoDemo {
 		}
 		// else its do nothing or unimplemented 
 	}
-
-	// we can't create a click event on a link that will bring up a modal, need to show modal explicitely 
-	showModal(param) {
-		let currID = param.element;
-		let modalEl = document.getElementById(currID);
-
-		if (modalEl) { // item exists 
-			this.ModalWindow = modalEl; // save so we can hide it later 
-
-			// Framework-free replacement: utilizes native HTML5 dialog show methods cleanly
-			if (typeof modalEl.showModal === 'function') {
-				modalEl.showModal();
-			} else if (typeof modalEl.show === 'function') {
-				modalEl.show();
-			} else {
-				modalEl.style.display = 'block';
-			}
-		} else {
-			console.log('FAILURE in showModal, element #' + currID + ' was not found in the DOM.');
-		}
-	}
-
+	
 	// remove the big fake cursor 
 	removeActOnElement(param = null) {
 		// get rid of demo cursor ID 
@@ -305,39 +282,27 @@ class AutoDemo {
 			}
 		}
 	}
+	//------------------------------------------------------------------------------------
+	// we can't create a click event on a link that will bring up a modal, need to show modal explicitely 
+	showModal(param) {
+		let currID = param.element;
+		let modalEl = document.getElementById(currID);
 
-	changeValOnSliderElement(param = null) {
-		// The user is able to click on various points of slider and change value but have to fake it for demo 
-		// pull out the special demo cursor icon and place on proper location 
-		let $demoCursor = $('#demoCursorID');
-		if ($demoCursor) $demoCursor.style.display = "block";
+		if (modalEl) { // item exists 
+			this.ModalWindow = modalEl; // save so we can hide it later 
 
-		let targetEl = document.getElementById(param.element);
-		if (!targetEl) return;
-
-		let rect = targetEl.getBoundingClientRect();
-		let locEl = {
-			top: rect.top + window.scrollY,
-			left: rect.left + window.scrollX
-		};
-
-		let leftPos = locEl.left - param.offset.x;
-		let topPos = locEl.top + param.offset.y;
-
-		if ($demoCursor) {
-			$demoCursor.style.left = leftPos + 'px';
-			$demoCursor.style.top = topPos + 'px';
+			// Framework-free replacement: utilizes native HTML5 dialog show methods cleanly
+			if (typeof modalEl.showModal === 'function') {
+				modalEl.showModal();
+			} else if (typeof modalEl.show === 'function') {
+				modalEl.show();
+			} else {
+				modalEl.style.display = 'block';
+			}
+		} else {
+			console.log('FAILURE in showModal, element #' + currID + ' was not found in the DOM.');
 		}
-
-		// change the value on slider 
-		targetEl.value = param.value;
-
-		// now fire off an event to be detected onchange 
-		// Native syntax dispatch tracking wrapper replaces jQuery .trigger()
-		let changeEvent = new Event('change', { bubbles: true });
-		targetEl.dispatchEvent(changeEvent);
 	}
-
 	changeSubtopicsOnIntroPage(param = null) {
 		// idToGo is the text we want to replace temporarily for demo 
 		// NEED TO save the old stuff here and put it back when done 
@@ -378,10 +343,42 @@ class AutoDemo {
 		}
 	}
 
+	//------------------------------------------------------------------------------------
+	changeValOnSliderElement(param = null) {
+		// The user is able to click on various points of slider and change value but have to fake it for demo 
+		// pull out the special demo cursor icon and place on proper location 
+		let $demoCursor = $('#demoCursorID');
+		if ($demoCursor) $demoCursor.style.display = "block";
+
+		let targetEl = document.getElementById(param.element);
+		if (!targetEl) return;
+
+		let rect = targetEl.getBoundingClientRect();
+		let locEl = {
+			top: rect.top + window.scrollY,
+			left: rect.left + window.scrollX
+		};
+
+		let leftPos = locEl.left - param.offset.x;
+		let topPos = locEl.top + param.offset.y;
+
+		if ($demoCursor) {
+			$demoCursor.style.left = leftPos + 'px';
+			$demoCursor.style.top = topPos + 'px';
+		}
+
+		// change the value on slider 
+		targetEl.value = param.value;
+
+		// now fire off an event to be detected onchange 
+		// Native syntax dispatch tracking wrapper replaces jQuery .trigger()
+		let changeEvent = new Event('change', { bubbles: true });
+		targetEl.dispatchEvent(changeEvent);
+	}
+
 	//**************************************** 
 	// play specified segment of the script 
 	//****************************************
-
 
 	// So audio generally starts first and is longer than the cursor demo.  So we start audio, then wait segment.headStartForAudioMillisec
 	// and start the timed cursor demo	
@@ -478,6 +475,7 @@ class AutoDemo {
 		} // end of switch stmt
 		return [nextItemStartTime, anIndex];
 	}
+	//------------------------------------------------------------------------------------
 	startDemo() {
 		let currSeg = this.currSeg;
 		let $playBtn = $('#playSegment');
@@ -510,6 +508,9 @@ class AutoDemo {
 	}
 }
 
+//------------------------------------------------------------------------------------
+//                               Work with canvas
+//------------------------------------------------------------------------------------
 class AutoDemoWithCanvas extends AutoDemo {
 	constructor(multiSegScript, stringIDOfCanvas) {
 		super(multiSegScript);
@@ -533,7 +534,7 @@ class AutoDemoWithCanvas extends AutoDemo {
 		}
 		return { ctx: ctxDemoCanvas, width: demoCanvas ? demoCanvas.width : 0, height: demoCanvas ? demoCanvas.height : 0 };
 	}
-
+	//------------------------------------------------------------------------------------
 	drawAnnotation(segmentParams) {
 		let ctxDemoCanvas = this.getDemoCtx().ctx;
 		if (!ctxDemoCanvas) return;
@@ -543,7 +544,7 @@ class AutoDemoWithCanvas extends AutoDemo {
 		ctxDemoCanvas.arc(segmentParams.circleCenter.x, segmentParams.circleCenter.y, segmentParams.circleCenter.radius, 0, Math.PI * 2, true);
 		ctxDemoCanvas.stroke();
 	}
-
+	//------------------------------------------------------------------------------------
 	segmentOverCleanup() {
 		let ctxDemoCanvas = this.getDemoCtx();
 		if (ctxDemoCanvas.ctx) {
@@ -556,7 +557,7 @@ class AutoDemoWithCanvas extends AutoDemo {
 			canvasEl.style.zIndex = '-1';
 		}
 	}
-
+	//------------------------------------------------------------------------------------
 	moveCursorImgOnCanvas(segmentParams) {
 		let $demoCursor = $('#demoCursorID');
 		if ($demoCursor) $demoCursor.style.display = "block";
@@ -582,7 +583,7 @@ class AutoDemoWithCanvas extends AutoDemo {
 		const clickCanvasPt = new CustomEvent('click', { detail: { xVal: xyPt.x, yVal: xyPt.y }, bubbles: true });
 		segmentParams.canvas.dispatchEvent(clickCanvasPt);
 	}
-
+	//------------------------------------------------------------------------------------
 	doTheSegmentAction(activity, nextItemBeginTime, annotateInd) {
 		let temp;
 		let thisObj = this;

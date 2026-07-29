@@ -230,7 +230,7 @@ button.close.dialog-close-trigger:focus-visible {
 
 /****************All pages, tool tips***************************/ 
 /*this tooltip stuff didn't work if i only used class=, I had to up the specificity to id */ 
-div#tooltip:hover p { /* FIX: Scoped layout change explicitly to the tooltip div to prevent site-wide breakage */
+div#tooltip:hover p { /* Scoped layout change explicitly to the tooltip div to prevent site-wide breakage */
   display: block; 
 } 
 
@@ -261,7 +261,7 @@ div#tooltip:hover .tooltiptext {
 #sendServerLoc{ 
   display: none; 
 }
-/******************* All pages, framework-free navigation bar utilities ***********************/ 
+/******************* All pages, framework-free upper navigation bar utilities ***********************/ 
 /* Added native styles to replace missing Bootstrap top menu structural foundation classes */ 
 #topNavBarHeader { 
   position: fixed; 
@@ -355,6 +355,7 @@ ul {
   padding-left: 0;
   margin: 0;
 }
+/******************* All pages, dropdown menu styling that was part of Bootstrap ***********************/
 /* Ensure the parent or the menu positions correctly */
 .dropdown {
   position: relative;
@@ -481,7 +482,7 @@ dialog#expiremodal button.dialog-close-trigger {
   cursor: pointer; 
   font-weight: bold; 
 } 
-/****************************************************************************************/
+/*******************************Control button groups *********************************************************/
 
 /* Control Button Groups (Play / Stop Alignment Utility) */ 
 .control-btn-group { 
@@ -517,7 +518,7 @@ dialog#expiremodal button.dialog-close-trigger {
 .control-btn-group button:hover svg { 
   fill: #fff; 
 } 
-
+/***********************common buttons and volume on/off for all pages *********************************/
 .btn-cyan { 
   background-color: #17a2b8; 
   color: #fff; 
@@ -533,6 +534,20 @@ dialog#expiremodal button.dialog-close-trigger {
   border-color: #117a8b; 
   color: #fff;
 } 
+
+.VolOff, .VolOn{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.VolOff{
+	background-color: lightgreen;
+}
+.VolOn{
+	background-color: lightpink;
+}
 
 /********** all pages, arrange the header, the auto demo so they never collide but fit into each other *********/ 
 /* Home Page: Vertical Stack */ 
@@ -710,6 +725,7 @@ dialog#expiremodal button.dialog-close-trigger {
 /************all pages, header and tables should not "wrap" and break line, expand browser! user needs to know these are big pages with lots of things going on *****/ 
 h1, h2 { 
   white-space: nowrap; 
+  text-align: center;
 } 
 
 td { /* keep dynamicTrig2 table from collapsing if screen too small, user should expand screen--there is lots of good stuff to see */ 

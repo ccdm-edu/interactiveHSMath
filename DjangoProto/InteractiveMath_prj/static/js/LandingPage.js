@@ -44,9 +44,33 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	// legal precedent states that on the home page, browserwrap must be in upper left of home page to be "more" valid */
+		//**************************************************************************** 
+	// User has changed newbie/expert mode selection 
+	//**************************************************************************** 
+	// Framework-free event delegation loop maps directly onto your custom element factory structures
+	let radioButtons = document.querySelectorAll("#selectNewbieOrExpert input[name='helpLevel']");
+	radioButtons.forEach(radio => {
+		let $radio = extendElement(radio);
+		$radio.on('click', function(event) {
+			// Find the active chosen option state natively via quick runtime properties
+			let checkedRadio = document.querySelector('input[name="helpLevel"]:checked');
+			let currentModeValue = checkedRadio ? checkedRadio.value : "";
+
+			if (currentModeValue === "newbieMode") {
+				sessionStorage.setItem('UserIsNew', true);
+				console.log(' newbie mode');
+			} else if (currentModeValue === "expertMode") {
+				// go to expert mode 
+				console.log('expert mode');
+				sessionStorage.setItem('UserIsNew', false);
+			} else {
+				console.log('Coding error on selection of user proficiency level');
+			}
+		});
+	});
 
 	//********************************************************
-	// create a "script" for the auto-demo tutorial, by now, all variables should be set
+	// create an Auto Demo "script" for the auto-demo tutorial, by now, all variables should be set
 	// The script differs for mobile since we don't have a left menu but rather a "hamburger" menu to right
 	//********************************************************
 	const INTRO_FEATURES = [
@@ -511,29 +535,5 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	}
 
-	//**************************************************************************** 
-	// User has changed newbie/expert mode selection 
-	//**************************************************************************** 
-	// Framework-free event delegation loop maps directly onto your custom element factory structures
-	let radioButtons = document.querySelectorAll("#selectNewbieOrExpert input[name='helpLevel']");
-	radioButtons.forEach(radio => {
-		let $radio = extendElement(radio);
-		$radio.on('click', function(event) {
-			// Find the active chosen option state natively via quick runtime properties
-			let checkedRadio = document.querySelector('input[name="helpLevel"]:checked');
-			let currentModeValue = checkedRadio ? checkedRadio.value : "";
-
-			if (currentModeValue === "newbieMode") {
-				sessionStorage.setItem('UserIsNew', true);
-				console.log(' newbie mode');
-			} else if (currentModeValue === "expertMode") {
-				// go to expert mode 
-				console.log('expert mode');
-				sessionStorage.setItem('UserIsNew', false);
-			} else {
-				console.log('Coding error on selection of user proficiency level');
-			}
-		});
-	});
 
 }); 

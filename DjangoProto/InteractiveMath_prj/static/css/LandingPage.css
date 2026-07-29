@@ -158,7 +158,7 @@ div.home_expln {
     flex-direction: column;   /* Stacks them on top of each other */
     justify-content: flex-start; /* Pushes both items to the very top */
     align-items: center;      /* or flex-start if you want them left-aligned */
-    height: 400px;            /* Your fixed height */
+    height: 400px;            /* fixed height */
     width: 100%;
     padding-top: 0;           /* Ensure no padding is pushing them down */
 }	

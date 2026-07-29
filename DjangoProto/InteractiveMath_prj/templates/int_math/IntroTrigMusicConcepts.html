@@ -113,8 +113,8 @@
 	    SinCosIntroLink: '{{ introToTrigVideo }}',
 	    SoundwavePitchIntroLink: '{{ introToSoundVideo }}'
 	  };
-	  document.querySelector('a[href="#AdvancedTopics"]')?.style.setProperty('display', 'none');
-	  document.getElementById('TrigPageTop')?.style.setProperty('display', 'none');
+	  // Clean up UI elements not needed for this page
+	  $$('a[href="#AdvancedTopics"], #TrigPageTop, #startAutoDemo, #autoDemoCtls').hide();
 	</script>
 	<script nonce="{{ CSP_NONCE }}" src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.2/feather.min.js" crossorigin="anonymous"></script>
 	<script nonce="{{ CSP_NONCE }}">feather.replace();</script>

@@ -74,7 +74,7 @@
 		// add event listener, although not needed at end of doc, just to ensure safety if ever this moves elsewhere
 		document.addEventListener('DOMContentLoaded', () => {
 		    // Clean up UI elements not needed for this page
-		    $$('a[href="#AdvancedTopics"], #TrigPageTop, #GoToNextPage').hide();
+		    $$('a[href="#AdvancedTopics"], #TrigPageTop, #GoToNextPage, #startAutoDemo, #autoDemoCtls').hide();
 		    // Fix up button for this page (no need for js file)
 		    let $prevBtn = document.getElementById("GoToPreviousPage");
 			if ($prevBtn) {

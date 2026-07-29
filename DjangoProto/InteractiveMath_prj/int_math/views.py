@@ -711,6 +711,7 @@ class Legal_Privacy(View):
 class ContactMe(View):
     @method_decorator(never_cache)
     def get(self, request):
+
         # 1. Cleaner Boolean parsing
         bot_passed = request.GET.get('botTestPassed') == "True"
         bot_done = request.GET.get('botTestPassed') is not None
@@ -752,7 +753,6 @@ class ContactMe(View):
                         numClientsDeniedPerMonth=F('numClientsDeniedPerMonth') + 1
                     )
                     allow_contact = False
-
         context_dict = {
             'page_tab_header': 'Contact Us',
             'topic': None,

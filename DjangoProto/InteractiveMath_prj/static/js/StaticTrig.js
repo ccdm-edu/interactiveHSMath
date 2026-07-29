@@ -40,20 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		throwOnError: false // Gracefully handles typos in TeX without breaking JS execution 
 	});
 
-	// Helper function to handle wrapping nodes natively
-	// WrapNode purpose: It dynamically injects a new structural parent element around an existing element to 
-	//change how that element behaves visually or structurally on the page.  It allows a page to change via js.
-	const wrapNode = (el, wrapperType) => {
-		let wrapper = document.createElement(wrapperType);
-		el.parentNode.insertBefore(wrapper, el);
-		wrapper.appendChild(el);
-		return wrapper;
-	};
-
 	// if Next button hit (in base template), set it up to go to intro page
 	let nextBtn = document.getElementById("GoToNextPage");
 	if (nextBtn) wrapNode(nextBtn, "a").href = "../DynamicTrig1";
-
 	let prevBtn = document.getElementById("GoToPreviousPage");
 	if (prevBtn) wrapNode(prevBtn, "a").href = "../MusicSineIntro";
 
@@ -514,7 +503,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			ctxExpandableUnitCircle.stroke();
 			ctxExpandableUnitCircle.fillText("y=f(" + THETA + ")=r" + MULT_DOT + "sin(" + THETA + ")", TRIG_X_ORIGIN - 130, SIN_Y_ORIGIN - MAX_AMP_AXIS);
 		}
-		//ctxExpandableUnitCircle.stroke(); 
 
 		// NOW we have the background image done.  As users click on a point and new stuff happens, we always come back to 
 		// this point, so we save it to go back to it when we want to start over
@@ -592,7 +580,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	}
 
-	//console.log(" width is " + circleDotsCanvas.width + " height is " + circleDotsCanvas.height); 
 	//*********************************** 
 	// This sets up the array for the animation. After user click yellow dot, this is called to fill the array which 
 	// is used every specified time interval to draw the sin/cos lines from the circle to the appropriate graph 
@@ -707,8 +694,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		delimiters: [{ left: '$', right: '$', display: false }],
 		throwOnError: false
 	});
-
-	let userHasStarted = false;
 
 	if (circleDotsCanvas) {
 		circleDotsCanvas.addEventListener('click', (e) => {

@@ -12,12 +12,7 @@
  * AUTHOR:     C. DeMeyer (with Gemini AI assist)
  * ============================================================================
 */
-#startAutoDemo{
-	display: none;
-};
-#autoDemoCtls {
-	display: none;
-}
+
 #MusicToneSummary {
 	width: 100%;             /* Fills the container width */
     height: 100%;            /* Fills the container height */

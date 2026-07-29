@@ -254,19 +254,6 @@
 	left: calc(var(--VOLUME_LEFT_MARGIN) + 80px);
 	z-index: 101;  /* this must be greater than tutorial canvas so user can always stop sound */
 }
-.VolOff, .VolOn{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-.VolOff{
-	background-color: lightgreen;
-}
-.VolOn{
-	background-color: lightpink;
-}
 
 #ResetPage{
 	position: absolute;

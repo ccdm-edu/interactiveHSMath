@@ -27,16 +27,6 @@
 // Replacing $(function() { ... }) with native standard DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
 
-	// Helper function to handle wrapping nodes natively
-	// WrapNode purpose: It dynamically injects a new structural parent element around an existing element to 
-	//change how that element behaves visually or structurally on the page.  It allows a page to change via js.
-	const wrapNode = (el, wrapperType) => {
-		let wrapper = document.createElement(wrapperType);
-		el.parentNode.insertBefore(wrapper, el);
-		wrapper.appendChild(el);
-		return wrapper;
-	};
-
 	// if Next button hit (in base template), set it up to go to intro page
 	let nextBtn = document.getElementById("GoToNextPage");
 	if (nextBtn) wrapNode(nextBtn, "a").href = "../MusicNotesTrig";

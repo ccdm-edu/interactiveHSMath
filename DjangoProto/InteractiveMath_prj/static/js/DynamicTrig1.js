@@ -34,17 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	let $explnFreq = document.getElementById('ExplnFreqMark');
 	if ($explnFreq) $explnFreq.style.visibility = "hidden";
 
-	// Helper function to handle wrapping nodes natively
-	// WrapNode purpose: It dynamically injects a new structural parent element around an existing element to 
-	//change how that element behaves visually or structurally on the page.  It allows a page to change via js.
-	const wrapNode = (el, wrapperType, wrapperClass) => {
-		let wrapper = document.createElement(wrapperType);
-		wrapper.className = wrapperClass;
-		el.parentNode.insertBefore(wrapper, el);
-		wrapper.appendChild(el);
-		return wrapper;
-	};
-
 	let nextBtn = document.getElementById("GoToNextPage");
 	if (nextBtn) wrapNode(nextBtn, "a", "").href = "../DynamicTrig2";
 

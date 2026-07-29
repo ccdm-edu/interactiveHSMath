@@ -32,18 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	// only execute if all is loaded
 	// if Next button hit (in base template), set it up to go to intro page
 	// Changing this button will also trigger in the IntMath.js which will change which page on index to left is active
-	// WrapNode purpose: It dynamically injects a new structural parent element around an existing element to 
-	//change how that element behaves visually or structurally on the page.
-	const wrapNode = (el, wrapperType) => {
-		let wrapper = document.createElement(wrapperType);
-		el.parentNode.insertBefore(wrapper, el);
-		wrapper.appendChild(el);
-		return wrapper;
-	};
-
 	let nextBtn = document.getElementById("GoToNextPage");
 	if (nextBtn) wrapNode(nextBtn, "a").href = "../MusicSineIntro";
-
 	let prevBtn = document.getElementById("GoToPreviousPage");
 	if (prevBtn) prevBtn.style.display = 'none';
 

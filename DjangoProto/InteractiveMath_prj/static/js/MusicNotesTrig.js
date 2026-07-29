@@ -28,17 +28,6 @@
 // Native DOMContentLoaded listener replaces legacy $(function() { ... })
 document.addEventListener('DOMContentLoaded', () => {
 
-	// Framework-free DOM helper replaces legacy jQuery .wrap() utilities
-	// Helper function to handle wrapping nodes natively
-	// WrapNode purpose: It dynamically injects a new structural parent element around an existing element to 
-	//change how that element behaves visually or structurally on the page.  It allows a page to change via js.
-	const wrapNode = (el, wrapperType) => {
-		let wrapper = document.createElement(wrapperType);
-		el.parentNode.insertBefore(wrapper, el);
-		wrapper.appendChild(el);
-		return wrapper;
-	};
-
 	let nextBtn = document.getElementById("GoToNextPage");
 	if (nextBtn) wrapNode(nextBtn, "a").href = "../MusicSineSummary";
 
@@ -535,17 +524,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	let sourceNote=null
 	let context 
 	let gainMusicNode=null;
-//	try {
-//		//DELETE ME window.AudioContext = window.AudioContext || window.webkitAudioContext;
-//		//context = new AudioContext()
-//		
-//		// Point 'context' directly to the Tone.js underlying native context
-//    	context = Tone.getContext().rawContext; 
-//		gainMusicNode = context.createGain();
-//		//DELETE ME gainMusicNode.connect(context.destination);
-//		// Connect your gain node into Tone.js's master output engine
-//    	gainMusicNode.connect(Tone.getDestination().input); 
-//	} catch (e) { alert("Audio initialization for MP3 music notes failed"); }
 
 	function changeMP3Volume(mute = false) {
 		//for MP3, will use max volume setting to give factor of 2 (3db) increase.

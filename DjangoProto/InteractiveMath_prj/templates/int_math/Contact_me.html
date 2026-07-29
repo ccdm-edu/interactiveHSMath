@@ -37,8 +37,8 @@
 {% block body_block %} 
 	{% if allowContactEmail %}
 		<!--  for robot checking, need to send public key, will be hidden -->
-		<div id="sendGRPublic" style="display: none !important;">{{
-			basePage.recaptchaPublicKey }}</div>
+		<div id="sendGRPublic" style="display: none !important;">
+			{{ basePage.recaptchaPublicKey }}</div>
 		<h1>Contact {{ basePage.CompanyName }}</h1>
 		<br>
 		<!-- dont save results of robot test so whole site is no cookie -->
@@ -55,7 +55,7 @@
 				<p>{{ form.clickwrap_accept }} {{ form.clickwrap_accept.label_tag}} {{ form.clickwrap_accept.errors }}</p>
 		
 				<!-- Use a hidden div for fields the user should NEVER see -->
-				<div style="display: none !important; visibility: hidden;">
+				<div class="field-container-verification">
 					{{form.pooh_food_test }} {{ form.g_recaptcha_response }}
 				</div>
 		

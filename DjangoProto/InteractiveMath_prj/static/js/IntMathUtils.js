@@ -21,6 +21,19 @@
  */
 'use strict'
 
+// Helper function to handle wrapping nodes natively, replaces jquery .wrap()
+// WrapNode purpose: It dynamically injects a new structural parent element around an existing element to 
+//change how that element behaves visually or structurally on the page.  It allows a page to change via js.
+//attach to window so all pages can use it
+window.wrapNode = (el, wrapperType, wrapperClass = "") => {
+	let wrapper = document.createElement(wrapperType);
+	if (wrapperClass) wrapper.className = wrapperClass;
+	el.parentNode.insertBefore(wrapper, el);
+	el.parentNode.replaceChild(wrapper, el); // Faster & cleaner DOM insertion
+	wrapper.appendChild(el);
+	return wrapper;
+};
+
 //** Make a fraction teens may be familiar with looking at with a numerator, a line underneath
 // and a denominator
 function vertical_fract(TwoDContext, x, y, num, denom) {
