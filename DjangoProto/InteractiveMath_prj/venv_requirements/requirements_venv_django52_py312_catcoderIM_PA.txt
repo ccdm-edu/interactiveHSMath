@@ -8,7 +8,7 @@ django-csp==4.0
 django-widget-tweaks==1.5.1
 idna==3.13
 packaging==26.2
-pillow==12.2.0
+pillow==12.3.0
 pyproject_hooks==1.2.0
 python-dotenv==1.2.2
 requests==2.33.1
