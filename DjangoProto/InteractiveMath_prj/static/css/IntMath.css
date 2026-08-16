@@ -105,28 +105,52 @@ a:hover {
   text-decoration: none; 
   color: #1565C0; /* darker blue */ 
 }
+#AdvancedTopics {
+  display: none; /* Let the element hide cleanly by default when closed */
+  position: fixed;
+  top: 10%;
+  /* Center using clean viewport width minus half the window size */
+  /* This provides a raw, true coordinate point that perfectly matches JS math */
+  left: calc(50vw - (var(--ADV_TOPIC_WINDOW_WIDTH) / 2));
+  margin: 0 !important;
+  padding: 0;
+  border: none;
+  background: transparent;
+  height: var(--ADV_TOPIC_WINDOW_HEIGHT);
+  width: var(--ADV_TOPIC_WINDOW_WIDTH);
+  z-index: 1050;
+}
 
-/* Core native <dialog> configuration */ 
-#AdvancedTopics { 
-  position: fixed; 
-  top: 10%; /* Changed left math definition to track absolute window viewport widths (vw) */ 
-  left: calc(50vw - (var(--ADV_TOPIC_WINDOW_WIDTH) / 2)); 
-  margin: 0; 
-  padding: 0; 
-  border: none; 
-  background: transparent; 
-  height: var(--ADV_TOPIC_WINDOW_HEIGHT); 
-  width: var(--ADV_TOPIC_WINDOW_WIDTH); 
-  z-index: 1050; 
-} 
+/* Native specification hook overrides default display rules cleanly on open */
+#AdvancedTopics[open] {
+    display: block !important; /* Force it visible ONLY when the native [open] attribute arrives */
+}
 
-#AdvancedTopics:not([open]) { 
-  display: none !important; 
-} 
+/* Active drag modifier removes browser layout matrix smoothly */
+#AdvancedTopics.is-dragged {
+  /* remove transform to stop jumping when click to drag */
+  top: auto;
+  left: auto;
+}
 
-#AdvancedTopics[open] { 
-  display: block !important; 
-} 
+/* Pure CSS Tab Typography Handling */
+#AdvancedTopics .modal-header > .tabs h6 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: normal;
+  color: #6c757d; /* Standard non-active framework color placeholder text */
+  transition: color 0.15s ease;
+}
+
+/*When tab parent becomes .active, update child typography cleanly */
+#AdvancedTopics .modal-header > .tabs.active {
+  border-bottom: 2px solid #007bff;
+}
+
+#AdvancedTopics .modal-header > .tabs.active h6 {
+  font-weight: bold;
+  color: #212529; /* Dark active text layout style */
+}
 
 #AdvancedTopics::backdrop { 
   background: transparent; 
@@ -140,25 +164,38 @@ a:hover {
   box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
   display: flex; 
   flex-direction: column; 
-  height: 100%; /* FIX: Stretch to seamlessly match parent dialog height limits */ 
-  width: 100%;  /* FIX: Stretch to seamlessly match parent dialog width limits */ 
-  touch-action: none; 
+  height: 100%; /* Stretch to seamlessly match parent dialog height limits */ 
+  width: 100%;  /* Stretch to seamlessly match parent dialog width limits */ 
+  box-sizing: border-box; /* Prevents content blowout over border limits */
+  touch-action: none;
 } 
 
-#AdvancedTopics .modal-header { 
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center; 
-  margin: 5px; 
-  padding: 0 15px; 
-} 
+#AdvancedTopics .modal-header {
+  display: flex;
+  justify-content: flex-start; 
+  align-items: center;
+  margin: 0;
+  padding: 10px 15px;
+  cursor: move; /* Changes cursor to indicate window dragging capability */
+  user-select: none;
+}
 
-#AdvancedTopics .modal-footer { 
-  display: flex; 
-  justify-content: flex-end; 
-  margin: 5px; 
-  padding: 10px 15px; 
-} 
+/*  Replaces Bootstrap's .modal-title configuration style */
+#AdvancedTopics .modal-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+#AdvancedTopics .modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0;
+  padding: 10px 15px;
+  background-color: #f8f9fa; /* Light cleanup tint */
+  border-top: 1px solid #dee2e6;
+}
 
 #AdvancedTopics .modal-body { 
   background-color: #F0FFFF; /* pale blue */ 
@@ -168,7 +205,10 @@ a:hover {
 } 
 
 #AdvancedTopics .modal-body > fieldset { 
-  display: none; 
+  display: none;
+  border: none;
+  margin: 0;
+  padding: 0;
 } 
 
 #AdvancedTopics .modal-body > fieldset.show { 
@@ -176,33 +216,74 @@ a:hover {
 } 
 
 #AdvancedTopics .modal-header > .tabs { 
-  margin: 5px 10px 0px 10px; 
-  padding-bottom: 5px; 
-  cursor: pointer; 
+  margin: 0 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 } 
+
+#AdvancedTopics .modal-header > .tabs h6 {
+  margin: 0;
+  font-size: 0.95rem;
+}
 
 #AdvancedTopics .modal-header > .tabs:hover { 
   border-bottom: 2px solid #7FFFD4; /* aqua green */ 
 } 
 
-#AdvancedTopics .modal-header > .tabs.active { 
-  border-bottom: 2px solid #2196F3; /* aqua blue */ 
-} 
+/* Replaces Bootstrap's .text-muted helper styling */
+#AdvancedTopics .text-muted {
+  color: #6c757d !important;
+}
+
+/*  Completely styles the custom close buttons without Bootstrap structural rules */
+#AdvancedTopics button.close {
+  background: transparent;
+  border: none;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  opacity: 0.5;
+  cursor: pointer;
+  margin-left: auto; /*Pushes close button perfectly to the far right edge of header */
+  padding: 0 5px;
+}
+
+#AdvancedTopics button.close:hover {
+  opacity: 0.8;
+}
+
+/* Completely styles your standard primary action button safely */
+#AdvancedTopics .btn-primary {
+  color: #fff;
+  background-color: #007bff;
+  border: 1px solid #007bff;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: 400;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+#AdvancedTopics .btn-primary:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
 
 #AdvancedTopics .line { 
   background-color: #CFD8DC; /* light grey */ 
   height: 1px; 
   width: 100%; 
 } 
-
-p.AdvTopic_Expln { 
+p.AdvTopic_Expln, p.AdvTopic_ToDo { 
   display: none !important; 
-} 
+}
 
-p.AdvTopic_ToDo { 
-  display: none !important; 
-} 
 /* end of modal pages*/ 
+
+
 /***************************button layout alternative to bootstrap**********************/
 /* Vanilla alternative to Bootstrap's close cross button layout icon shape */ 
 button.close.dialog-close-trigger { 

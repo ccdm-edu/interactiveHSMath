@@ -143,14 +143,13 @@ document.addEventListener('DOMContentLoaded', () => {
 			ifLocalStorageAvail(COOKIE_STAT_MSG, "set", "false"); // legally can store a cookie telling server "no cookies" Google already does cookies on this site
 		});
 	}
-
+	
 	//***********************************
 	// Advanced popup window that is draggable and has expln/todo stuff
 	// Advanced popup window that is draggable (Vanilla JS replacing jQuery UI & jQuery Touch)
-	// Avoid bootstrap which treats modals as interruptors to user behavior rather than instructional aids
-	// Advanced popup window that is draggable (Native HTML Dialog System)
-	const myDialog = document.getElementById('AdvancedTopics');
-
+	const myDialogEl = document.getElementById('AdvancedTopics');
+	const $myDialog = myDialogEl ? extendElement(myDialogEl) : null;
+	
 	// Native Hamburger Collapse Menu Event Listener
 	const toggler = document.querySelector(".navbar-toggler");
 	const collapseMenu = document.getElementById("upperNavbarCollapse");
@@ -159,121 +158,128 @@ document.addEventListener('DOMContentLoaded', () => {
 			collapseMenu.classList.toggle("show");
 		});
 	}
-
-	// Modeless Open Action: Allows background visibility while active
+	
+	/* =========================================================================
+	   1. UNIFIED DELEGATED CLICK LISTENER 
+	   ========================================================================= */
 	document.addEventListener('click', function(e) {
-		if (e.target.closest('#AdvancedTopicLink')) {
-			e.preventDefault();
-			if (myDialog) {
-				myDialog.style.left = '';
-				myDialog.style.top = '';
-				myDialog.style.margin = 'auto'; // FIX: Restores default browser layout center point upon open
-
-				const toDoContent = $(".AdvTopic_ToDo") ? $(".AdvTopic_ToDo").html() : null;
-				const explnContent = $(".AdvTopic_Expln") ? $(".AdvTopic_Expln").html() : null;
-
-				if (toDoContent) {
-					let $target011 = $("#tab011 > p", myDialog);
-					if ($target011) $target011.html(toDoContent);
-				}
-				if (explnContent) {
-					let $target021 = $("#tab021 > p", myDialog);
-					if ($target021) $target021.html(explnContent);
-				}
-				myDialog.addClass('show'); // Opened modelessly as requested for instructional design
-			}
+		const linkEl = e.target.closest('#AdvancedTopicLink');
+		if (!linkEl || !myDialogEl || !$myDialog) return;
+	
+		e.preventDefault(); // Stop native anchor hash jump behavior
+	
+		// Reset dragging tracking states cleanly
+		myDialogEl.classList.remove('is-dragged');
+		myDialogEl.style.left = '';
+		myDialogEl.style.top = '';
+	
+		// Safe local DOM Lookups (No ternary evaluation short-circuit bugs)
+		const toDoNode = $(".AdvTopic_ToDo");
+		const explnNode = $(".AdvTopic_Expln");
+		const toDoContent = toDoNode ? toDoNode.html() : null;
+		const explnContent = explnNode ? explnNode.html() : null;
+	
+		// Populate clean inner <div> element targets safely
+		if (toDoContent) {
+			let $target = $myDialog.find("#tab011 > div");
+			if ($target) $target.html(toDoContent);
+		}
+		if (explnContent) {
+			let $target = $myDialog.find("#tab021 > div");
+			if ($target) $target.html(explnContent);
+		}
+	
+		// Set layout tabs to active by default on launch
+		const innerPanel = myDialogEl.querySelector("#tab011");
+		if (innerPanel) innerPanel.classList.add("show");
+		
+		const innerTab = myDialogEl.querySelector("#tab01");
+		if (innerTab) innerTab.classList.add("active");
+	
+		// Trigger the dialog modally so it is promoted to the browser's top-layer z-index viewport pipeline
+		if (!myDialogEl.open) {
+			myDialogEl.showModal();
 		}
 	});
-
-	// Delegated handler: Intercepts clicks on your close buttons anywhere on the page
+	
+	// Delegated Close Handler
 	document.addEventListener('click', function(e) {
 		if (e.target.closest('.dialog-close-trigger')) {
 			e.preventDefault();
-			if (myDialog) {
-				myDialog.close();
+			if (myDialogEl && $myDialog) {
+				myDialogEl.close();
 			}
 		}
 	});
-
-	// Cleaned up Tab-Click Selector
+	
+	// Tab-Click Switcher Mechanics
 	document.addEventListener('click', function(e) {
 		const tabEl = e.target.closest('#AdvancedTopics .tabs');
-		if (tabEl) {
-			// Remove classes and clear inline borders natively on all tabs
-			$$(".tabs").each(function(tab) {
-				tab.removeClass("active");
-				tab.style.borderBottom = "none";
-				let h6 = tab.querySelector("h6");
-				if (h6) {
-					h6.style.fontWeight = "normal";
-					h6.style.color = "#6c757d"; // Native muted inline colors
-				}
-			});
-
-			// Style active selected tab natively
-			let $tab = extendElement(tabEl);
-			$tab.addClass("active");
-			$tab.style.borderBottom = "2px solid #007bff";
-
-			let activeH6 = $tab.querySelector("h6");
-			if (activeH6) {
-				activeH6.style.fontWeight = "bold";
-				activeH6.style.color = "#212529";
-			}
-
-			let next_fs = "#" + $tab.attr('id') + "1";
-			$$("fieldset").each(function(fs) {
-				fs.classList.removeClass("show");
-			});
-
-			let $nextFs = $(next_fs);
-			if ($nextFs) {
-				$nextFs.addClass('show');
-			}
+		if (!tabEl) return;
+	
+		// Clear active statuses natively across all layout tabs
+		$$("#AdvancedTopics .tabs").each(function() {
+			this.classList.remove("active");
+		});
+	
+		let $tab = extendElement(tabEl);
+		$tab.addClass("active");
+	
+		// Switch tab layout fields using fieldset trackers
+		$$("#AdvancedTopics fieldset").each(function() {
+			this.classList.remove("show");
+		});
+	
+		let $nextFs = $("#" + $tab.attr('id') + "1");
+		if ($nextFs) {
+			$nextFs.addClass('show');
 		}
 	});
-
-	// =========================================================================
-	// 2. DRAG AND DROP HANDLER FOR NATIVE DIALOG window Advanced popup
-	// =========================================================================
-	if (myDialog) {
+	
+	/* =========================================================================
+	   2. STREAMLINED DRAG AND DROP ENGINE
+	   ========================================================================= */
+	if (myDialogEl) {
 		let startX = 0, startY = 0;
 		let initialLeft = 0, initialTop = 0;
-
-		myDialog.addEventListener('pointerdown', function(e) {
+	
+		myDialogEl.addEventListener('pointerdown', function(e) {
+			// Ignore structural actions or selectable inputs
 			if (e.target.closest('button, input, select, textarea, .tabs, .close, .dialog-close-trigger')) return;
-			e.preventDefault(); // Clears out browser centering rules so inline tracking moves perfectly
-			myDialog.style.margin = '0';
-			const rect = myDialog.getBoundingClientRect();
-			initialLeft = rect.left;
-			initialTop = rect.top;
+	
+			// Explicitly switch the element from centering CSS to absolute pixel coordinates
+			initialLeft = myDialogEl.offsetLeft;
+			initialTop = myDialogEl.offsetTop;
+	
+			myDialogEl.style.left = initialLeft + 'px';
+			myDialogEl.style.top = initialTop + 'px';
+			myDialogEl.classList.add('is-dragged');
+	
 			startX = e.clientX;
 			startY = e.clientY;
-
+	
 			function drag(e) {
-				const deltaX = e.clientX - startX;
-				const deltaY = e.clientY - startY;
-				myDialog.style.left = (initialLeft + deltaX) + 'px';
-				myDialog.style.top = (initialTop + deltaY) + 'px';
+				myDialogEl.style.left = (initialLeft + (e.clientX - startX)) + 'px';
+				myDialogEl.style.top = (initialTop + (e.clientY - startY)) + 'px';
 			}
-
+	
 			function stopDragging() {
 				document.removeEventListener('pointermove', drag);
 				document.removeEventListener('pointerup', stopDragging);
 			}
-
+	
 			document.addEventListener('pointermove', drag);
 			document.addEventListener('pointerup', stopDragging);
 		});
-
-		// Initialize tooltips cleanly
-		// Modified framework target properties into stable standard HTML tooltips
+	
+		// Append layout accessibility tooltips cleanly using your custom shim attributes
 		let $advModal = $("#advModal");
 		if ($advModal) $advModal.attr("title", "Drag me around from anywhere inside the window.");
-
 		let $advModalClose = $("#advModalClose");
 		if ($advModalClose) $advModalClose.attr("title", "Click to close");
 	}
+	//*******End of Advanced Popup window handling ****************************
+
 	
 	//******************************************Handle menu/submenu 'show' on click*********************/
 	// 1. Primary Toggles: Top-level dropdown links ("Trig", "Legal")
