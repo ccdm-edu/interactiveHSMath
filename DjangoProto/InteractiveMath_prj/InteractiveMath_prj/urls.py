@@ -27,6 +27,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from django.views.generic.base import RedirectView
+from django.views.generic import TemplateView
 
 # A simple helper function to strip 'int_math/' out of incoming URLs
 def clean_old_url(*args, **kwargs):
@@ -45,6 +46,9 @@ urlpatterns = [
     
     path('', include('int_math.urls')), 
     path('admin/', admin.site.urls),
+    
+    path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
+    path("sitemap.xml", TemplateView.as_view(template_name="sitemap.xml", content_type="application/xml")),
     
 ]
 if settings.DEBUG:

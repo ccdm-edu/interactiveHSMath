@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- Main Homepage -->
+  <url>
+    <loc>https://interactablemath.org/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Page 1 Introduction and review -->
+  <url>
+    <loc>https://interactablemath.org/IntroTrigMusicConcepts/</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Page 2 Trig functions make music-->
+  <url>
+    <loc>https://interactablemath.org/MusicSineIntro/</loc>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Page 3 Sine Cosine angles animate to become sine(theta) and cos(theta)-->
+  <url>
+    <loc>https://interactablemath.org/StaticTrig/</loc>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Page 4 Sine meets time and we get frequency-->
+  <url>
+    <loc>https://interactablemath.org/DynamicTrig1/</loc>
+    <priority>0.8</priority>
+  </url>
+  
+    <!-- Page 5 Trig functions go faster -->
+  <url>
+    <loc>https://interactablemath.org/DynamicTrig2/</loc>
+    <priority>0.8</priority>
+  </url>
+  
+    <!-- Page 6 Trig functions become audible-->
+  <url>
+    <loc>https://interactablemath.org/ToneTrig/</loc>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Page 7 Trig functions as pitch frequency for musical notes -->
+  <url>
+    <loc>https://interactablemath.org/MusicNotesTrig/</loc>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Page 8 Summary of trig functions in music-->
+  <url>
+    <loc>https://interactablemath.org/MusicSineSummary/</loc>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Thank you page-->
+  <url>
+    <loc>https://interactablemath.org/acknowledgements/</loc>
+    <priority>0.2</priority>
+  </url>
+  
+  <!-- Legal  -->
+  <url>
+    <loc>https://interactablemath.org/TermsOfUse/</loc>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://interactablemath.org/Privacy/</loc>
+    <priority>0.2</priority>
+  </url>
+
+  <!-- Contact me  -->
+  <url>
+    <loc>https://interactablemath.org/Contact_me/</loc>
+    <priority>0.4</priority>
+  </url>
+  
+  <!-- Teacher standards mapped to this website -->
+  <url>
+    <loc>https://interactablemath.org/TeacherStds/</loc>
+    <priority>0.2</priority>
+  </url>
+
+</urlset>
