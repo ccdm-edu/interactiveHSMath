@@ -359,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
 							segmentActivity: "ACT_ON_ELEMENT",
 							segmentParams:
 							{
-								element: '',
+								element: '#link-trig-menu.nav-link.dropdown-toggle.navbarDropdown',
 								action: "click",
 								// positive values for offset x and y move the cursor "southwest", so neg x is south east
 								offset: { x: 0, y: 25 },
@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
 							segmentActivity: "REMOVE_ACT_ON_ELEMENT",
 							segmentParams:
 							{
-								element: '',
+								element: '#link-trig-menu.nav-link.dropdown-toggle.navbarDropdown',
 								action: "focus",
 								waitTimeMillisec: 3000
 							}

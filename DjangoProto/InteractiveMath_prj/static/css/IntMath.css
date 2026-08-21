@@ -43,6 +43,7 @@ p#headerForSubtopics {
 
 /*****************All pages, left section legal notices********************************/ 
 .sidebar { 
+  display: none;  /* default for mobile, larger screens will reset this value */
   box-sizing: border-box; /* FIX: Prevents padding from exploding the 240px grid slot */
   width: 100%; /* FIX: Scales fluidly to fill the 240px column definition */
   background-color: #f8f9fa; 
@@ -390,6 +391,26 @@ div#tooltip:hover .tooltiptext {
   color: rgba(0,0,0,0.7); 
 } 
 
+#hamburger-btn {
+	  background-color: #007bff; /* Primary theme color - change to match your site */
+	  color: #ffffff;            /* White icon color */
+	  border: none;
+	  font-size: 24px;
+	  border-radius: 6px;        /* Smooth rounded corners */
+	  cursor: pointer;
+	  display: block;
+	  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle depth shadow */
+	  transition: all 0.2s ease;  /* Smooth transition effect */
+}
+
+/* Brightens slightly and moves when hovered */
+#hamburger-btn:hover {
+	  background-color: #0056b3; 
+	  transform: translateY(-1px);
+	  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/*wider screens, e.g. laptops, desktops */
 @media (min-width: 768px) { 
    /* Turn the outer container into a flex row to separate left and right lists */
   #upperNavbarCollapse {
@@ -416,7 +437,17 @@ div#tooltip:hover .tooltiptext {
     flex-direction: row; 
     gap: 16px; 
   } 
+  #hamburger-btn {
+    display: none;
+  }
 } 
+/* narrow screens e.g. mobile */
+@media (max-width: 768px) {
+  #hamburger-btn {
+    display: block;
+  }
+}
+
 /*upper tab and side bar highlight what user is "on" */
 .nav-link.active-tab, .dropdown-item.active-tab {
   font-weight: bold !important;
