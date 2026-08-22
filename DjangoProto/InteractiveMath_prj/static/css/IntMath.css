@@ -255,24 +255,6 @@ a:hover {
   opacity: 0.8;
 }
 
-/* Completely styles your standard primary action button safely */
-#AdvancedTopics .btn-primary {
-  color: #fff;
-  background-color: #007bff;
-  border: 1px solid #007bff;
-  padding: 6px 12px;
-  font-size: 0.9rem;
-  font-weight: 400;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-#AdvancedTopics .btn-primary:hover {
-  background-color: #0069d9;
-  border-color: #0062cc;
-}
-
 #AdvancedTopics .line { 
   background-color: #CFD8DC; /* light grey */ 
   height: 1px; 
@@ -287,7 +269,8 @@ p.AdvTopic_Expln, p.AdvTopic_ToDo {
 
 /***************************button layout alternative to bootstrap**********************/
 /* Vanilla alternative to Bootstrap's close cross button layout icon shape */ 
-button.close.dialog-close-trigger { 
+/* FIX: Remove .dialog-close-trigger from the selector chain */
+button.close { 
   background: none; 
   border: none; 
   font-size: 28px; 
@@ -299,16 +282,15 @@ button.close.dialog-close-trigger {
   padding: 0; 
 } 
 
-button.close.dialog-close-trigger:hover { 
+button.close:hover { 
   opacity: 0.8; 
-} 
+}
 
-button.close.dialog-close-trigger:focus, 
-button.close.dialog-close-trigger:active, 
-button.close.dialog-close-trigger:focus-visible { 
-  outline: none !important; 
-  box-shadow: none !important; 
-} 
+button.close:focus-visible { 
+  /* Note: Avoid outline: none !important for accessibility */
+  outline: 2px solid #0066cc; 
+}
+
 
 /****************All pages, tool tips***************************/ 
 /*this tooltip stuff didn't work if i only used class=, I had to up the specificity to id */ 
@@ -631,21 +613,67 @@ dialog#expiremodal button.dialog-close-trigger {
   fill: #fff; 
 } 
 /***********************common buttons and volume on/off for all pages *********************************/
-.btn-cyan { 
-  background-color: #17a2b8; 
-  color: #fff; 
-  border: 1px solid #17a2b8; 
-  padding: 6px 12px; 
-  border-radius: 4px; 
-  cursor: pointer; 
-  font-weight: 500; 
-} 
+/* Base Button Styling */
+.btn {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
-.btn-cyan:hover { 
-  background-color: #138496; 
-  border-color: #117a8b; 
-  color: #fff;
-} 
+/* ****1**** Primary style */
+.btn-primary {
+  padding: 9px 18px;
+  font-size: 15px;
+  background-color: #00ffcc; /* Neon Teal */
+  color: #000000;
+  border: 2px solid #000000;
+  box-shadow: 0px 4px 0px rgba(0, 79, 122, 1); /* saturated blue green shadow */
+}
+.btn-primary:hover {   
+  transform: translateY(2px);;
+  box-shadow: 0px 2px 0px rgba(0, 79, 122, 1);
+}
+.btn-primary:active {
+  transform: translateY(4px);;
+  box-shadow: 0px 0px 0px rgba(0, 79, 122, 1);
+}
+/* ***2*** Secondary (Outline) style */
+.btn-secondary {
+  padding: 5px 10px;
+  font-size: 12px;
+  background-color: transparent;
+  color: #bf55ec; 
+  border: 1px solid #bf55ec;
+}
+.btn-secondary:hover {
+  background-color: #bf55ec; /* Fills in with purple */
+  color: #ffffff; /* Flips text to white */
+  box-shadow: 0 0 15px rgba(191, 85, 236, 0.6); /* Vibrant neon glow */
+  transform: translateY(-2px); /* Snappy lift effect */
+}
+
+/* 3. Tertiary (Text) style */
+.btn-tertiary {
+  padding: 8px 16px;
+  font-size: 14px;
+  background: none;
+  border: none;
+  color: #7a7a85; /* Muted gray text */
+}
+.btn-tertiary:hover {
+  color: #ff0055; /* Flashes bright hot pink on hover */
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Base style for the arrow span */
+.btn-arrow {
+  transition: transform 0.2s ease; /* Enables smooth movement */
+}
 
 .VolOff, .VolOn{
   position: absolute;

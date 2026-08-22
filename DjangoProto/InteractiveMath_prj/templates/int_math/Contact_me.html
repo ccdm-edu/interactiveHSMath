@@ -52,37 +52,45 @@
 				<p>{{ form.email.label_tag }} {{ form.email }} {{form.email.errors }}</p>
 				<p>{{ form.subject.label_tag }} {{ form.subject }} {{form.subject.errors }}</p>
 				<p>{{ form.message.label_tag }} {{ form.message }} {{form.message.errors }}</p>
-				<p>{{ form.clickwrap_accept }} {{ form.clickwrap_accept.label_tag}} {{ form.clickwrap_accept.errors }}</p>
+				<!-- line these up side by side within the top to bottom alignmnent -->
+				<div class="checkbox-row">
+				    {{ form.clickwrap_accept }} 
+				    {{ form.clickwrap_accept.label_tag }} 
+				    {{ form.clickwrap_accept.errors }}
+					<p id="ContactCompliance">
+						There is no guarantee of a personal or timely response. {{basePage.CompanyName }} 
+						reserves the right to save all information
+						you provide. Contact submissions are protected by Google reCaptcha
+						V3. By contacting us, you acknowledge you are over 13 years old and
+						agree to the <a href="{% url 'int_math:TermsOfUse' %}">Terms Of
+							Use </a> and <a href="{% url 'int_math:Privacy' %}">Privacy Policy</a>
+						as well as any Google terms/privacy. <b>Click box to accept the
+							terms and continue</b>.
+					</p>
+				</div>
 		
 				<!-- Use a hidden div for fields the user should NEVER see -->
 				<div class="field-container-verification">
-					{{form.pooh_food_test }} {{ form.g_recaptcha_response }}
+					{{form.pooh_food_test }} 
+					{{ form.g_recaptcha_response }}
 				</div>
 		
-				<p id="ContactCompliance">
-					There is no guarantee of a personal or timely response. {{basePage.CompanyName }} 
-					reserves the right to save all information
-					you provide. Contact submissions are protected by Google reCaptcha
-					V3. By contacting us, you acknowledge you are over 13 years old and
-					agree to the <a href="{% url 'int_math:TermsOfUse' %}">Terms Of
-						Use </a> and <a href="{% url 'int_math:Privacy' %}">Privacy Policy</a>
-					as well as any Google terms/privacy. <b>Click box to accept the
-						terms and continue</b>.
-				</p>
-				<br> 
-				{% if botTestDone %} 
-					{% if botTestPassed %}
-						<p id="notABot">Thank you for taking the time to contact us. Your
-						message was successfully transmitted.</p>
-					{% else %}
-						<p id="urABot">Sorry, your message was not transmitted. Perhaps
-						you had "new line" character in your input. You can go to home page
-						and come back and try again.</p>
-					{% endif %} 
-				{% else %} 
-					<input type="submit" value="Submit"> 
-				{%endif %}
-		
+				<div class="form-actions">
+					{% if botTestDone %} 
+						{% if botTestPassed %}
+							<p id="notABot">Thank you for taking the time to contact us. Your
+							message was successfully transmitted.</p>
+						{% else %}
+							<p id="urABot">Sorry, your message was not transmitted. Perhaps
+							you had "new line" character in your input. You can go to home page
+							and come back and try again.</p>
+						{% endif %} 
+					{% else %} 
+						<button type="submit" id="doContactUs" class="btn btn-primary">
+	  						Submit <span>🚀</span>
+						</button> 
+					{%endif %}
+	            </div>
 			</form>
 		</div>
 	{% else %}

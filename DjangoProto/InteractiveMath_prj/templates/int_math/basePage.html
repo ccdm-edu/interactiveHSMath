@@ -210,7 +210,7 @@
 				</div>
 				<div class="modal-footer">
 					<button id="advModalClose" type="button"
-						class="btn-primary dialog-close-trigger">I'm done</button>
+						class="btn btn-secondary dialog-close-trigger">I'm done</button>
 				</div>
 			</div>
 			</dialog>
@@ -275,7 +275,7 @@
 									</td>
 									<td align='right'>
 										<!-- Custom native class replacing btn-info (dark cyan color format) -->
-										<button type="button" class="btn-cyan" id='dismissAutoDemo'>I'm
+										<button type="button" class="btn btn-secondary dialog-close-trigger" id='dismissAutoDemo'>I'm
 											done</button>
 									</td>
 								</tr>
@@ -304,10 +304,8 @@
 			<!-- FOOTER -->
 			<div id="Site-footer">
 				<!-- Swapped Bootstrap classes for your native cyan layout buttons -->
-				<button type="button" class="btn-cyan" id="GoToPreviousPage"><
-					Back</button>
-				<button type="button" class="btn-cyan" id="GoToNextPage">Next
-					></button>
+				<button type="button" class="btn btn-secondary" id="GoToPreviousPage"><span class="btn-arrow">&larr;</span> Back</button>
+				<button type="button" class="btn btn-secondary" id="GoToNextPage">Next<span class="btn-arrow">&rarr;</span></button>
 				<br>
 				<p id="SiteInfo-links">
 					{% block artist_credit %} {% endblock %}
