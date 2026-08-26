@@ -104,7 +104,9 @@
 				<label id="noteVolLabel">Volume:  </label>
 				<p id="noteVolValue"></p>
 				<input id="noteVol" type="range" step="1" value="10" min="1" max="100" title="Turn on your speaker">
-				<input type="button" id="ResetPage" value="Reset" title="Reset page">
+				<button type="button" id="ResetPage" class="btn-utility">
+  					<span>⟲</span> Reset
+				</button>
 				<div class="VolOnOff">
 	    			<img class="VolOff" src="{{ VolumeOffSVG }}" alt="Volume is currently off" title="turn on speaker and click to hear note">
 	    			<img class="VolOn"  src="{{ VolumeOnSVG }}" alt="Volume is currently on" title="turn on speaker and click to hear note">

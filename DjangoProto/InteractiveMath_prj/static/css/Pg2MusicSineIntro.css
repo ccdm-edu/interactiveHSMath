@@ -22,7 +22,7 @@
 	--OFF_TO_SIDE_X: 30px;
 	--OFF_TO_SIDE_Y: 10px;
 	--HEADER_LOC: 0 px; 
-	--VOLUME_LEFT_MARGIN: 500px;
+	--VOLUME_LEFT_MARGIN: 450px;
 }
 
 #bigIntroSub{
@@ -251,13 +251,13 @@
 	height: 30px;
 	width: 30px;
 	top: 60px;
-	left: calc(var(--VOLUME_LEFT_MARGIN) + 80px);
+	left: calc(var(--VOLUME_LEFT_MARGIN) + 120px);
 	z-index: 101;  /* this must be greater than tutorial canvas so user can always stop sound */
 }
 
 #ResetPage{
 	position: absolute;
-	width: 50px;
+	width: 100px;
 	top: 60px;
 	left: var(--VOLUME_LEFT_MARGIN);
 	z-index: 10;	

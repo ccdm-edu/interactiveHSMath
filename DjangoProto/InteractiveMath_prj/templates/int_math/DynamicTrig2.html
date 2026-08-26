@@ -122,8 +122,13 @@
 			<label id="FreqLabel_DT2"><b>Frequency:</b></label><span class="currFreqVal_DT2 freqColor" id="currFreqValSlide_DT2">000</span> 
 			<!-- Removed Bootstrap specific dataset placement attributes; standard titles handle native tooltip fallbacks -->
 			<input id="FreqSlider_DT2" type="range" step="0.1" value="0.1" min="0.1" max="2" title="click on slider and use arrows for greater precision">
-			<input type="button" id="GoFreq_DT2" value="Start" title="Start and pause and restart">
-			<input type="button" id="Clear_DT2" value="Clear" title="Reset the page">			
+			<button type="button" id="GoFreq_DT2" class="btn-utility" title="Start and pause and restart">
+			    <span class="btn-icon">⚡</span> 
+  				<span class="btn-text">Start</span> 
+  			</button>
+			<button type="button" id="Clear_DT2" class="btn-utility" title="Reset the page">
+			    <span>⌫</span>Clear
+  			</button>			
 			<!-- Removed duplicate empty UserNotices_DT2 element block to ensure unique DOM id structure -->
 		</div>
 		

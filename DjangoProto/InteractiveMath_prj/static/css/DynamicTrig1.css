@@ -49,7 +49,6 @@
 	left: 0px;
 	top: calc(var(--CANVAS_TOP) + 70px);
 	z-index: 20;
-	background-color: pink;
 	visibility: hidden;
 }
 #time_DT1{

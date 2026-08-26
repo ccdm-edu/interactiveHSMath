@@ -47,10 +47,11 @@
 {% endblock %} 
 {% block body_block %}
 	<div id="DynamicTrig1Block">
-		<div id="CircleValues_DT1">
-			<input type="button" id="ClearOldFreq_DT1" value="Clear"
-				title="Stop clock.  Clear plots"> <label id="time_DT1"><strong>Time
-					(sec)</strong></label>
+		<div id="CircleValues_DT1"> 
+			<button type="button" id="ClearOldFreq_DT1" class="btn-utility" title="Stop clock, clear plots">
+  				<span>⌫</span> Clear
+			</button>
+			<label id="time_DT1"><strong>Time(sec)</strong></label>
 			<p id="timeVal_DT1"></p>
 			<label id="thetaLabel_DT1"><strong>&#920</strong></label>
 			<p id="theta_DT1">0 &#176</p>
@@ -64,8 +65,9 @@
 				frequency of the waveform is 1/T. Pull out your calculator and
 				confirm!
 			</p>
-			<input type="button" id="StartOver_DT1" value="Start Over"
-				title="Back to beginning on user help">
+			<button type="button" id="StartOver_DT1" class="btn-utility" title="Back to beginning on user help">
+  				<span>⏮️</span> Start Over
+			</button>
 		</div>
 	
 		<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->

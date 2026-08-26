@@ -59,8 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	const ANGLE_COLOR = 'green';
 	const ANGLE_PER_PT_RAD = Math.PI / 6;
 	const TOTAL_NUM_DOTS = 12.0;
-	const GO_BUTTON_TEXT = "Start";
-	const PAUSE_BUTTON_TEXT = "Pause";
 
 	// NOTE: We keep the sample rate around the circle less than 2 Hz because at 
 	// about 3 Hz to 30 Hz, flashing can potentially trigger photosensitive seizures. 
@@ -202,6 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	//************************************************* 
 	let DEFAULT_FREQ = 0.1; // as set in html for element 
 	let currFreq = DEFAULT_FREQ;
+	let $goBtn = $('#GoFreq_DT2');
 
 	function resetToDefaults() {
 		let $freqSlider = document.getElementById("FreqSlider_DT2");
@@ -222,10 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		clockIsRunning = false;
 
 		// set up button to go again 
-		let $goBtn = document.getElementById('GoFreq_DT2');
 		if ($goBtn) {
-			$goBtn.value = GO_BUTTON_TEXT;
-			// Safe boundary fallback protection for global helper color assets
 			$goBtn.style.backgroundColor = (typeof currentGreen !== 'undefined') ? currentGreen : 'green';
 		}
 
@@ -458,32 +454,29 @@ document.addEventListener('DOMContentLoaded', () => {
 	//*** User interaction 
 	//*********************************** 
 	let clockIsRunning = false;
+	$("#GoFreq_DT2").click(function() {
+		let $firstHelp = $('#FirstHelp_DT2');
+		if ($firstHelp) $firstHelp.style.visibility = "hidden";
+		let textEl = this.find(".btn-text");
+		let iconEl = this.find(".btn-icon");
 
-	let $goBtn = $('#GoFreq_DT2');
-	if ($goBtn) {
-		$goBtn.on('click', function() {
-			let $firstHelp = $('#FirstHelp_DT2');
-			if ($firstHelp) $firstHelp.style.visibility = "hidden";
-
-			// Native .value checking replaces jQuery helper lookups
-			if (GO_BUTTON_TEXT == $goBtn.value) {
-				drawOneSineSet(UPPER_X_ORIGIN, UPPER_Y_ORIGIN, MAX_TIME_SEC);
-				drawOneSineSet(LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPANDED_TIME);
-
-				$goBtn.value = PAUSE_BUTTON_TEXT;
-				$goBtn.style.backgroundColor = 'hsl(0,100%,80%)';
-
-				clockIsRunning = true;
-				startFreqSample(false);
-			} else {
-				if (startInterval) clearInterval(startInterval);
-				clockIsRunning = false;
-
-				$goBtn.value = GO_BUTTON_TEXT;
-				$goBtn.style.backgroundColor = currentGreen;
-			}
-		});
-	}
+		if (textEl.text() === "Start") {
+			// plot new freq sin graphs
+			drawOneSineSet(UPPER_X_ORIGIN, UPPER_Y_ORIGIN, MAX_TIME_SEC);
+			drawOneSineSet(LOWER_X_ORIGIN, LOWER_Y_ORIGIN, EXPANDED_TIME);
+			textEl.text("Pause");
+			iconEl.text("⏸️");
+			this.style.backgroundColor = 'hsl(0,100%,80%)';
+			clockIsRunning = true;
+			startFreqSample(false);
+		} else {
+			if (startInterval) clearInterval(startInterval);
+			clockIsRunning = false;
+			textEl.text("Start");
+			iconEl.text("⚡");
+			this.style.backgroundColor = currentGreen;
+		}
+	});
 
 	// allow other functions to clear for a restart 
 	function clearStartOver() {
@@ -793,7 +786,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			demo.stopThisSegment(); // may or may not be needed 
 		});
 	}
-
+	
+	let $segNumSelect = $("#segNum");
 	if ($segNumSelect) {
 		$segNumSelect.on('change', function() {
 			let $segNumSelect = $('#segNum');
