@@ -29,21 +29,15 @@
 // Native DOMContentLoaded wrapper replaces legacy jQuery selection layers
 document.addEventListener('DOMContentLoaded', () => {
 
-	let nextBtn = document.getElementById("GoToNextPage");
-	if (nextBtn) wrapNode(nextBtn, "a").href = "../ToneTrig";
-
-	let prevBtn = document.getElementById("GoToPreviousPage");
-	if (prevBtn) wrapNode(prevBtn, "a").href = "../DynamicTrig1";
+	$("#GoToNextPage")?.on('click', () => window.location.href = "../ToneTrig");
+	$("#GoToPreviousPage")?.on('click', () => window.location.href = "../DynamicTrig1");
 
 	// Handle User Layout Mode Configuration Setup
-	let newbieMode = sessionStorage.getItem('UserIsNew');
-	let startDemoBtn = document.getElementById("startAutoDemo");
-	let firstHelpBlock = document.getElementById('FirstHelp_DT2');
-
-	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
-		if (startDemoBtn) startDemoBtn.classList.add('newbieMode');
-	} else if (newbieMode && (newbieMode.toLowerCase() === 'false')) {
-		if (firstHelpBlock) firstHelpBlock.style.visibility = "visible";
+	const isNewbie = sessionStorage.getItem('UserIsNew')?.toLowerCase();
+	if (isNewbie === 'true') {
+		$('#startAutoDemo')?.addClass('newbieMode');
+	} else if (isNewbie === 'false') {
+		$('#FirstHelp_DT2')?.css('visibility', 'visible'); 
 	}
 
 	let ctxUnitCircle;
@@ -65,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Reference: https://epilepsysociety.org.uk/about-epilepsy/epileptic-seizures/seizure-triggers/photosensitive-epilepsy
 
 	// Setup Unit Circle Canvas Context Natively
-	let circleDotsCanvas = document.getElementById("AmpSinCosCircle_DT2");
+	let circleDotsCanvas = $("#AmpSinCosCircle_DT2");
 	if (circleDotsCanvas) {
 		ctxUnitCircle = circleDotsCanvas.getContext('2d');
 	} else {
@@ -128,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Setup Linear Time/Frequency Graphing Context Natively
 	let ctxFreqPlot;
-	let freqCanvas = document.getElementById("FreqChange_DT2");
+	let freqCanvas = $("#FreqChange_DT2");
 	if (freqCanvas) {
 		ctxFreqPlot = freqCanvas.getContext('2d');
 	} else {
@@ -145,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		drawSineAxis(ctxFreqPlot, LOWER_X_ORIGIN, LOWER_Y_ORIGIN, MAX_TIME_SEC / 5, PIX_PER_MINOR_TICK, 4);
 
 		// Sync input components through vanilla layout element mapping properties
-		let $freqSlider = document.getElementById("FreqSlider_DT2");
+		let $freqSlider = $("#FreqSlider_DT2");
 		let currFreq = $freqSlider ? $freqSlider.value : "1";
 
 		//There are several locations that must all be updated
@@ -153,8 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
     		el.textContent =  currFreq + " Hz"
 		});	
 
-		let $labelHi = document.getElementById("sinEqtnLabelHI_DT2");
-		let $labelLo = document.getElementById("sinEqtnLabelLO_DT2");
+		let $labelHi = $("#sinEqtnLabelHI_DT2");
+		let $labelLo = $("#sinEqtnLabelLO_DT2");
 		let labelString = "S=sin(2" + MULT_DOT + PI + MULT_DOT + "f" + MULT_DOT + "t)=sin(2" + MULT_DOT + PI + MULT_DOT + currFreq + MULT_DOT + "t)";
 		if ($labelHi) $labelHi.textContent = labelString;
 		if ($labelLo) $labelLo.textContent = labelString;
@@ -167,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function calcSine(j, phaseInRad = 0) {
-		let $freqSlider = document.getElementById("FreqSlider_DT2");
+		let $freqSlider = $("#FreqSlider_DT2");
 		let activeFreq = $freqSlider ? parseFloat($freqSlider.value) : 1.0;
 		return Math.round(100 * Math.sin(2 * Math.PI * j * activeFreq + phaseInRad));
 	}
@@ -175,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	function drawOneSineSet(x_orig, y_orig, maxTimePlot) {
 		if (!ctxFreqPlot) return;
 		ctxFreqPlot.strokeStyle = SINE_OUTLINE_COLOR;
-		let $freqSlider = document.getElementById("FreqSlider_DT2");
+		let $freqSlider = $("#FreqSlider_DT2");
 		let activeFreq = $freqSlider ? parseFloat($freqSlider.value) : 1.0;
 		let T = 1 / activeFreq;
 
@@ -203,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	let $goBtn = $('#GoFreq_DT2');
 
 	function resetToDefaults() {
-		let $freqSlider = document.getElementById("FreqSlider_DT2");
+		let $freqSlider = $("#FreqSlider_DT2");
 		if ($freqSlider) $freqSlider.value = DEFAULT_FREQ;
 
 		// get slider value and put it on the label as string 
@@ -233,28 +227,23 @@ document.addEventListener('DOMContentLoaded', () => {
 		startOverValues();
 
 		// clock is not running, need to manually clean up the table values 
-		let $timeLabels = document.querySelectorAll('.timeVal_DT2');
+		let $timeLabels = $$('.timeVal_DT2');
 		$timeLabels.forEach(el => el.textContent = "0 sec");
 
-		document.querySelectorAll(".ThetaUC_eqtn").forEach(el => {
+		$$(".ThetaUC_eqtn").forEach(el => {
     		el.textContent =  thetaSamp[0].thetaInRad;
 		});
 
-		let $obsAns = document.getElementById('observeAnswer');
-		let $expAns = document.getElementById('expectAnswer');
-		if ($obsAns) $obsAns.textContent = "2" + PI + "(0 + " + thetaSamp[0].num + "/12)";
-		if ($expAns) $expAns.textContent = "2" + PI + "(0 + 0/12)";
+		$('#observeAnswer')?.text(`2${PI}(0 + ${thetaSamp[0].num}/12)`);
+		$('#expectAnswer')?.text(`2${PI}(0 + 0/12)`);
 
 		//There are several locations that must all be updated
-		document.querySelectorAll(".N_eqtn").forEach(el => {
-    		el.textContent =  "0"
-		});
+		$$(".N_eqtn").forEach(el => { el.textContent =  "0" });
 
 		// get rid of any possible user notifications about the graphs, which are now irrelevant 
-		let $notices = document.getElementById('UserNotices_DT2');
-		let $subNotice = document.getElementById('SubSampleNotice_DT2');
-		if ($notices) $notices.textContent = "";
-		if ($subNotice) $subNotice.textContent = '';
+		$('#UserNotices_DT2')?.text("");
+		$('#SubSampleNotice_DT2')?.text("");
+
 	}
 
 	//************************************************* 
@@ -297,54 +286,34 @@ document.addEventListener('DOMContentLoaded', () => {
 			ind = ind % TOTAL_NUM_DOTS;
 
 			// update the user experience 
-			let $timeLabels = document.querySelectorAll('.timeVal_DT2');
-			$timeLabels.forEach(el => el.textContent = roundFP(timeInS, 1) + " sec");
+			$$('.timeVal_DT2').each(el => el.text(`${roundFP(timeInS, 1)} sec`));
 
-			document.querySelectorAll(".ThetaUC_eqtn").forEach(el => {
-	    		el.textContent =  thetaSamp[ind].thetaInRad;
-			});
+			$$(".ThetaUC_eqtn").each(el => el.text(thetaSamp[ind].thetaInRad));
 
-			let $obsAns = document.getElementById('observeAnswer');
-			if ($obsAns) $obsAns.textContent = "2" + PI + "(" + numCycles + " + " + thetaSamp[ind].num + "/12)";
+			$('#observeAnswer')?.text(`2${PI}(${numCycles} + ${thetaSamp[ind].num}/12)`);
 
 			// handle the right side of the equation, final line, need to turn the decimal value into fraction with same denom as left side 
 			let calcVal = currFreq * timeInS;
 			let intCalcVal = Math.floor(calcVal);
 			let fracNum = Math.round((calcVal - intCalcVal) * 12);
 
-			let $expAns = document.getElementById('expectAnswer');
-			if ($expAns) $expAns.textContent = "2" + PI + "(" + intCalcVal + " + " + fracNum + "/12)";
+			$('#expectAnswer')?.text(`2${PI}(${intCalcVal} + ${fracNum}/12)`);
 
 			phaseInRad += ANGLE_PER_PT_RAD;
 
 			if ((countTic % TOTAL_NUM_DOTS) == 0) {
 				numCycles = countTic / TOTAL_NUM_DOTS;
 				//There are several locations that must all be updated
-				document.querySelectorAll(".N_eqtn").forEach(el => {
-		    		el.textContent =  numCycles
-				});
+				$$(".N_eqtn").forEach(el => {el.textContent =  numCycles });
 			}
 
 			if (countTic == TOTAL_NUM_DOTS) {
 				// first cycle has completed, update labels and circle around T on appropriate graph only once 
 				phaseInRad = phaseInRad % TWO_PI_RAD;
 
-				let $periodText = document.getElementById('period_DT2');
-				if ($periodText) $periodText.textContent = roundFP(currPeriod, 3).toString();
-
-				let $notices = document.getElementById('UserNotices_DT2');
-				if ($notices) {
-					$notices.textContent = 'Period T = 1/f = 1/(' + currFreq + 'Hz) = ' + roundFP(currPeriod, 1) + ' sec as circled in purple on graphs';
-				}
-
-				let $subNotice = document.getElementById('SubSampleNotice_DT2');
-				if ($subNotice) {
-					if (currFreq >= MAX_FREQ_ALLPT) {
-						$subNotice.textContent = 'Samples removed from top plot to improve clarity';
-					} else {
-						$subNotice.textContent = '';
-					}
-				}
+				$('#period_DT2')?.text(roundFP(currPeriod, 3).toString());
+				$('#UserNotices_DT2')?.text(`Period T = 1/f = 1/(${currFreq}Hz) = ${roundFP(currPeriod, 1)} sec as circled in purple on graphs`);
+				$('#SubSampleNotice_DT2')?.text(currFreq >= MAX_FREQ_ALLPT ? 'Samples removed from top plot to improve clarity' : '');
 
 				// draw a circle on the period T on the graph to right 
 				if (ctxFreqPlot) {
@@ -489,28 +458,20 @@ document.addEventListener('DOMContentLoaded', () => {
 		startOverValues();
 
 		if (!clockIsRunning) {
-			let $timeLabels = document.querySelectorAll('.timeVal_DT2');
-			$timeLabels.forEach(el => el.textContent = "0 sec");
 
-			document.querySelectorAll(".ThetaUC_eqtn").forEach(el => {
-	    		el.textContent =  thetaSamp[0].thetaInRad;
-			});			
-
-			let $obsAns = document.getElementById('observeAnswer');
-			let $expAns = document.getElementById('expectAnswer');
-			if ($obsAns) $obsAns.textContent = "2" + PI + "(0 + " + thetaSamp[0].num + "/12)";
-			if ($expAns) $expAns.textContent = "2" + PI + "(0 + 0/12)";
+			$$('.timeVal_DT2').each(el => el.text("0 sec"));
+			$$(".ThetaUC_eqtn").each(el => el.text(thetaSamp[0].thetaInRad));
+		
+			$('#observeAnswer')?.text(`2${PI}(0 + ${thetaSamp[0].num}/12)`);
+			$('#expectAnswer')?.text(`2${PI}(0 + 0/12)`);
 
 			//There are several locations that must all be updated
-			document.querySelectorAll(".N_eqtn").forEach(el => {
-	    		el.textContent =  "0"
-			});
+			$$(".N_eqtn").each(el => el.text("0"));
 		}
 
-		let $notices = document.getElementById('UserNotices_DT2');
-		let $subNotice = document.getElementById('SubSampleNotice_DT2');
-		if ($notices) $notices.textContent = "";
-		if ($subNotice) $subNotice.textContent = '';
+		$('#UserNotices_DT2')?.text("");
+		$('#SubSampleNotice_DT2')?.text("");
+
 	}
 
 	let $clearBtn = $('#Clear_DT2');
@@ -542,18 +503,13 @@ document.addEventListener('DOMContentLoaded', () => {
 			let activeVal = $freqSlider.value;
 
 			//There are several locations that must all be updated
-			document.querySelectorAll(".currFreqVal_DT2").forEach(el => {
-	    		el.textContent =  activeVal + " Hz"
-			});
+			$$(".currFreqVal_DT2").each(el => el.text(`${activeVal} Hz`));
 
 			currFreq = parseFloat(activeVal);
 			clearStartOver();
 
-			let $labelHi = document.getElementById("sinEqtnLabelHI_DT2");
-			let $labelLo = document.getElementById("sinEqtnLabelLO_DT2");
-			let labelString = "S=sin(2" + MULT_DOT + PI + MULT_DOT + "f" + MULT_DOT + "t)=sin(2" + MULT_DOT + PI + MULT_DOT + currFreq + MULT_DOT + "t)";
-			if ($labelHi) $labelHi.textContent = labelString;
-			if ($labelLo) $labelLo.textContent = labelString;
+			const labelString = `S=sin(2${MULT_DOT}${PI}${MULT_DOT}f${MULT_DOT}t)=sin(2${MULT_DOT}${PI}${MULT_DOT}${currFreq}${MULT_DOT}t)`;
+			$$("#sinEqtnLabelHI_DT2, #sinEqtnLabelLO_DT2").each(el => el.text(labelString));
 
 			if (startInterval) clearInterval(startInterval);
 			if (clockIsRunning) {

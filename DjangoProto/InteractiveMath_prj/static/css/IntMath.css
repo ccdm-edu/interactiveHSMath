@@ -78,25 +78,26 @@ p#headerForSubtopics {
 
 #yesCookies { 
   background-color: green; 
-  border: none; 
+  border: 3px solid transparent; 
   color: white; 
   text-align: center; 
   padding: 4px 12px; 
   cursor: pointer; 
   border-radius: 4px; 
 } 
-
 #noCookies { 
   background-color: red; 
-  border: none; 
+  border: 3px solid transparent; 
   color: white; 
   text-align: center; 
   padding: 4px 12px; 
   cursor: pointer; 
   border-radius: 4px; 
 } 
-
-/******************* All pages, advanced topic native dialog window ***********************/ 
+#yesCookies:hover, #noCookies:hover{
+	border-color: black;
+}
+/******************* advanced topic native dialog window ***********************/ 
 :root { 
   --ADV_TOPIC_WINDOW_HEIGHT: 350px; 
   --ADV_TOPIC_WINDOW_WIDTH: 500px; 
@@ -265,61 +266,6 @@ p.AdvTopic_Expln, p.AdvTopic_ToDo {
 }
 
 /* end of modal pages*/ 
-
-
-/***************************button layout alternative to bootstrap**********************/
-/* Vanilla alternative to Bootstrap's close cross button layout icon shape */ 
-/* FIX: Remove .dialog-close-trigger from the selector chain */
-button.close { 
-  background: none; 
-  border: none; 
-  font-size: 28px; 
-  font-weight: bold; 
-  line-height: 1; 
-  color: #000; 
-  opacity: 0.5; 
-  cursor: pointer; 
-  padding: 0; 
-} 
-
-button.close:hover { 
-  opacity: 0.8; 
-}
-
-button.close:focus-visible { 
-  /* Note: Avoid outline: none !important for accessibility */
-  outline: 2px solid #0066cc; 
-}
-
-
-/****************All pages, tool tips***************************/ 
-/*this tooltip stuff didn't work if i only used class=, I had to up the specificity to id */ 
-div#tooltip:hover p { /* Scoped layout change explicitly to the tooltip div to prevent site-wide breakage */
-  display: block; 
-} 
-
-div#tooltip { 
-  position: relative; 
-  display: inline-block; 
-  border-bottom: 1px dotted black; 
-} 
-
-div#tooltip .tooltiptext { 
-  visibility: hidden; 
-  width: 120px; 
-  background-color: black; 
-  color: #fff; 
-  text-align: center; 
-  border-radius: 6px; 
-  padding: 5px 0; 
-  /* Position the tooltip */ 
-  position: absolute; 
-  z-index: 1; /* FIXED: Added missing trailing semicolon */ 
-} 
-
-div#tooltip:hover .tooltiptext { 
-  visibility: visible; 
-} 
 
 /* want to send back django variable but not have it visible, use different server params if local/test or remote server */ 
 #sendServerLoc{ 
@@ -576,9 +522,30 @@ dialog#expiremodal button.dialog-close-trigger {
   cursor: pointer; 
   font-weight: bold; 
 } 
-/*******************************Control button groups *********************************************************/
 
-/* Control Button Groups (Play / Stop Alignment Utility) */ 
+/***************************button layout alternative to bootstrap**********************/
+/* Vanilla alternative to Bootstrap's close cross button layout icon shape */ 
+button.close { 
+  background: none; 
+  border: none; 
+  font-size: 28px; 
+  font-weight: bold; 
+  line-height: 1; 
+  color: #000; 
+  opacity: 0.5; 
+  cursor: pointer; 
+  padding: 0; 
+} 
+
+button.close:hover { 
+  opacity: 0.8; 
+}
+
+button.close:focus-visible { 
+  /* Note: Avoid outline: none !important for accessibility */
+  outline: 2px solid #0066cc; 
+}
+/* ----------Control Button Groups (Play / Stop Alignment for AutoDemo)----------------- */ 
 .control-btn-group { 
   display: inline-flex; 
   vertical-align: middle; 
@@ -592,6 +559,8 @@ dialog#expiremodal button.dialog-close-trigger {
   display: flex; 
   align-items: center; 
   justify-content: center; 
+  /* smooth transitions in hover*/
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
 } 
 
 .control-btn-group button:first-child { 
@@ -605,13 +574,42 @@ dialog#expiremodal button.dialog-close-trigger {
   border-bottom-right-radius: 4px; 
 } 
 
-.control-btn-group button:hover { 
-  background-color: #6c757d; 
+#playSegment:hover { 
+  background-color: #39ff14;   /* hot green */
+  /* Combines a sharp green glow with a wider soft green blur */
+  box-shadow: 0 0 15px #39ff14, 0 0 30px rgba(57, 255, 20, 0.5);  
 } 
+#playSegment:hover svg { 
+  fill: #fff;
+  /* Gives the white icon an inner electric green glow */
+  filter: drop-shadow(0 0 5px #00ff66); 
+}
+#stopSegment:hover { 
+  background-color: #ff003c; /* hot laser red */
+  /* Creates an intense, high-energy red aura */
+  box-shadow: 0 0 15px #ff003c, 0 0 30px rgba(255, 0, 60, 0.6); 
+} 
+#stopSegment:hover svg { 
+  fill: #fff;
+  /* Gives the icon a heated, molten glow effect */
+  filter: drop-shadow(0 0 5px #ff3300); 
+}
 
-.control-btn-group button:hover svg { 
-  fill: #fff; 
-} 
+
+/****** used for background of volume off/on buttons with sounds ***************************/
+.VolOff, .VolOn{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.VolOff{
+	background-color: lightgreen;
+}
+.VolOn{
+	background-color: lightpink;
+}
 /***********************common buttons and volume on/off for all pages *********************************/
 /* Base Button Styling */
 .btn {
@@ -638,7 +636,7 @@ dialog#expiremodal button.dialog-close-trigger {
   box-shadow: 0px 2px 0px rgba(0, 79, 122, 1);
 }
 .btn-primary:active {
-  transform: translateY(4px);;
+  transform: translateY(4px);
   box-shadow: 0px 0px 0px rgba(0, 79, 122, 1);
 }
 /* ***2*** Secondary (Outline) style */
@@ -690,19 +688,6 @@ dialog#expiremodal button.dialog-close-trigger {
   transition: transform 0.2s ease; /* Enables smooth movement */
 }
 
-.VolOff, .VolOn{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-.VolOff{
-	background-color: lightgreen;
-}
-.VolOn{
-	background-color: lightpink;
-}
 
 /********** all pages, arrange the header, the auto demo so they never collide but fit into each other *********/ 
 /* Home Page: Vertical Stack */ 
@@ -783,11 +768,17 @@ dialog#expiremodal button.dialog-close-trigger {
 } 
 
 /* Ensure the internal SVG doesn't fight for space */ 
-#startAutoDemo.newbieMode svg { 
+#startAutoDemo svg { 
   display: block; 
   width: 100px; 
   height: auto; 
 } 
+/*let user know, this is an active button */
+#startAutoDemo:hover svg{
+  background: rgba(79, 70, 229, 0.12); 
+  transform: scale(1.15); 
+  box-shadow: 0 0 12px rgba(79, 70, 229, 0.25);
+}
 
 @keyframes autoDemo_newbieMode { 
   0% {transform: scale(1.0)} 

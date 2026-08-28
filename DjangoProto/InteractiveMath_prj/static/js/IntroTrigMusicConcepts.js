@@ -32,21 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	// only execute if all is loaded
 	// if Next button hit (in base template), set it up to go to intro page
 	// Changing this button will also trigger in the IntMath.js which will change which page on index to left is active
-	let nextBtn = document.getElementById("GoToNextPage");
-	if (nextBtn) wrapNode(nextBtn, "a").href = "../MusicSineIntro";
-	let prevBtn = document.getElementById("GoToPreviousPage");
-	if (prevBtn) prevBtn.style.display = 'none';
+	$("#GoToPreviousPage")?.hide();
+	$("#GoToNextPage")?.on('click', () => window.location.href = "../MusicSineIntro");
 
 	// on power up, hide all the review topics, they will assume proper location when the Triggy intro stuff goes away
-	let $userSelVid = $("#UserSelectionVideo");
-	let $vidContainer = $("#video-resizable-container");
-	let $introVid = $("#IntroConceptVideo");
-	let $introInter = $("#IntroMusicInteractive");
-
-	if ($userSelVid) $userSelVid.style.display = 'none';
-	if ($vidContainer) $vidContainer.style.display = 'none';
-	if ($introVid) $introVid.style.display = 'none';
-	if ($introInter) $introInter.style.display = 'none';
+	$$("#UserSelectionVideo, #video-resizable-container, #IntroConceptVideo, #IntroMusicInteractive").hide();
 
 	// array not a list of actual filenames, only pointers into config file in binaries repo to get actual mp4 filename
 	let VIDEO_EXPLN_FILENAMES = [];
@@ -87,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				$li.textContent = currText + ACTIVE_TOPIC;
 
 				// swap out the video with new one
-				let tutorialVideo = document.getElementById('IntroConceptVideo'); // temporary, till we move to video server like youtube
+				let tutorialVideo = $('#IntroConceptVideo'); 
 				if (tutorialVideo && VIDEO_EXPLN_FILENAMES[index]) {
 					tutorialVideo.src = VIDEO_EXPLN_FILENAMES[index];
 				}
@@ -98,21 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	// this is called when either Triggy stops the intro or user instigates it
 	function cleanOffPageAndReview() {
 		// Hide all current elements from the Triggy intro
-		let $initialExpln = $("#Initial_MCexplaining");
-		let $trigControls = $("#trigIntro-controls");
-		let $triggyText = $("#TriggyIntroText");
-		let $reviewBtn = $("#ReviewConcepts");
-
-		if ($initialExpln) $initialExpln.style.display = 'none';
-		if ($trigControls) $trigControls.style.display = 'none';
-		if ($triggyText) $triggyText.style.display = 'none';
-		if ($reviewBtn) $reviewBtn.style.display = 'none';
+		$$("#Initial_MCexplaining, #trigIntro-controls, #TriggyIntroText, #ReviewConcepts").hide();
 
 		// bring up all the new elements for review
-		if ($userSelVid) $userSelVid.style.display = 'block';
-		if ($vidContainer) $vidContainer.style.display = 'block';
-		if ($introVid) $introVid.style.display = 'block';
-		if ($introInter) $introInter.style.display = 'flex';
+		$$("#UserSelectionVideo, #video-resizable-container, #IntroConceptVideo").show();
+		if ($("#IntroMusicInteractive")) $("#IntroMusicInteractive").style.display = "flex";
 
 		makeVideoActive(0);
 	}
@@ -132,12 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	// intro speech is done, go to the review page.
-	let audioControlEl = document.getElementById("trigIntro-controls");
-	if (audioControlEl) {
-		audioControlEl.addEventListener('ended', function() {
-			cleanOffPageAndReview();
-		});
-	}
+	$("#trigIntro-controls")?.on('ended', cleanOffPageAndReview);
+
 
 	// user is in review concepts mode and has selected a new topic
 	let videoListItems = document.querySelectorAll('#VideoList > li');
@@ -158,13 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	// If the first few clicks are too erratic (std dev > 1/2 period). We will stop clock, zero everything out and put up warning.
 	function updateStatOutput() {
 		// update all the text output to the user so they know status...
-		let $freqPer = $('#IntroFreqPeriod');
-		let $freqHz = $('#IntroFreqHz');
-		let $freqBpm = $('#IntroFreqBPM');
+		$('#IntroFreqPeriod')?.text(avPer.toFixed(1));
+		$('#IntroFreqHz')?.text((1 / avPer).toFixed(1));
+		$('#IntroFreqBPM')?.text((60 / avPer).toFixed(1));
 
-		if ($freqPer) $freqPer.textContent = avPer.toFixed(1);
-		if ($freqHz) $freqHz.textContent = (1 / avPer).toFixed(1);
-		if ($freqBpm) $freqBpm.textContent = (60 / avPer).toFixed(1);
 	}
 
 	let currTime = 0; // accumulated time

@@ -28,22 +28,14 @@
 document.addEventListener('DOMContentLoaded', () => {
 
 	// if Next button hit (in base template), set it up to go to intro page
-	let nextBtn = document.getElementById("GoToNextPage");
-	if (nextBtn) wrapNode(nextBtn, "a").href = "../MusicNotesTrig";
-
-	let prevBtn = document.getElementById("GoToPreviousPage");
-	if (prevBtn) wrapNode(prevBtn, "a").href = "../DynamicTrig2";
+	$("#GoToNextPage")?.on('click', () => window.location.href = "../MusicNotesTrig");
+	$("#GoToPreviousPage")?.on('click', () => window.location.href = "../DynamicTrig2");
 
 	// user can only pick expert/newbie mode on the first home page
-	let newbieMode = sessionStorage.getItem('UserIsNew');
-	let startDemoBtn = document.getElementById("startAutoDemo");
-
-	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
-		// emphasize the auto demo as first place
-		if (startDemoBtn) startDemoBtn.classList.add('newbieMode');
-	} else {
-		// user somehow got here without going through landing page or deleted sessionStorage, put in newbie mode
-		if (startDemoBtn) startDemoBtn.classList.add('newbieMode');
+	const isNewbie = sessionStorage.getItem('UserIsNew')?.toLowerCase() !== 'false';
+	
+	if (isNewbie) {
+	  $('#startAutoDemo')?.addClass('newbieMode');
 	}
 
 	let ctxLong, ctxShort, ctxExpandTime;
@@ -53,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	//***********************************
 	// With the graphs drawn, prepare to draw explanatory lines between the charts
 	// https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
-	let expandTimeCanvas = document.getElementById("timeExpand");
+	let expandTimeCanvas = $("#timeExpand");
 	if (expandTimeCanvas) {
 		ctxExpandTime = expandTimeCanvas.getContext('2d');
 	} else {
@@ -61,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	// prepare to draw the 10ms plot at top
-	let plotsLongCanvas = document.getElementById("sine_plotsLong");
+	let plotsLongCanvas = $("#sine_plotsLong");
 	if (plotsLongCanvas) {
 		ctxLong = plotsLongCanvas.getContext('2d');
 	} else {
@@ -69,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	// prepare to draw the 1ms plot below the top 10 ms plot
-	let plotsShortCanvas = document.getElementById("sine_plotsShort");
+	let plotsShortCanvas = $("#sine_plotsShort");
 	if (plotsShortCanvas) {
 		ctxShort = plotsShortCanvas.getContext('2d');
 	} else {
@@ -77,20 +69,16 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	// implement the Tone sounding and chart tools
-	let $currFreq = document.getElementById("in-range-freq");
-	let $currAmp = document.getElementById("in-range-amp");
-	let $currPhase = document.getElementById("in-range-phase");
+	let $currFreq = $("#in-range-freq");
+	let $currAmp = $("#in-range-amp");
+	let $currPhase = $("#in-range-phase");
 
 	let ToneIsOnNow = false; // for synthesized tone, both musical note and tone can play additively.
 	let osc = (typeof Tone !== 'undefined') ? new Tone.Oscillator() : { type: "sine" };
 	
-	const volToneOnEl = document.querySelector(".toneStartButton .VolOn");
-	const volToneOffEl = document.querySelector(".toneStartButton .VolOff");
-	// Guard clause: Exit safely if the elements aren't present on this specific page
-	if (!volToneOnEl || !volToneOffEl) return;
-	// Extend them using jsBS-shorthand.js library helpers
-	const $toneVolOn = extendElement(volToneOnEl);
-	const $toneVolOff = extendElement(volToneOffEl);
+	const $toneVolOn = $(".toneStartButton .VolOn");
+	const $toneVolOff = $(".toneStartButton .VolOff");
+	if (!$toneVolOn || !$toneVolOff) return;
 	// initial setting is tone vol on and no vol icon for musical instrument before instrument chosen
 	$toneVolOn.hide();
 	$toneVolOff.show();
@@ -149,8 +137,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Native DOM input event handlers
 	function updateFreq() {
-		$currFreq = document.getElementById("in-range-freq");
-		let $freqLabel = document.getElementById("currFreqLabel");
+		$currFreq = $("#in-range-freq");
+		let $freqLabel = $("#currFreqLabel");
 		if ($freqLabel && $currFreq) $freqLabel.textContent = $currFreq.value;
 
 		if (ToneIsOnNow == true && osc && $currFreq) {
@@ -159,8 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function updatePhase() {
-		$currPhase = document.getElementById("in-range-phase");
-		let $phaseLabel = document.getElementById("currPhaseLabel");
+		$currPhase = $("#in-range-phase");
+		let $phaseLabel = $("#currPhaseLabel");
 		if ($phaseLabel && $currPhase) $phaseLabel.textContent = $currPhase.value;
 
 		if (ToneIsOnNow == true && osc && $currPhase) {
@@ -217,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				$freqMax.value = 10000;
 			}
 
-			let $currToneFreq = document.getElementById("in-range-freq");
+			let $currToneFreq = $("#in-range-freq");
 			if ($currToneFreq) {
 				// setting the max will cap out current freq, if it exceeds max down to new max 
 				$currToneFreq.setAttribute("max", $freqMax.value);
@@ -238,14 +226,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	let $ampSlider = $('#in-range-amp');
 	if ($ampSlider) {
 		$ampSlider.on('change', function() {
-			$currAmp = document.getElementById("in-range-amp");
-			let $ampLabel = document.getElementById("currAmpLabel");
-
-			if ($ampLabel && $currAmp) $ampLabel.textContent = $currAmp.value;
-
-			if (ToneIsOnNow == true && osc && $currAmp) {
-				let tonejs_dB = -40 + 20.0 * Math.log10(parseFloat($currAmp.value));
-				osc.volume.value = tonejs_dB; // if tone isn't on, don't have to change anything... 
+			$currAmp = $("#in-range-amp");
+			const ampVal = parseFloat($currAmp?.val() || 0);
+			$('#currAmpLabel')?.text(ampVal);
+			// ToneJS Volume Modification Loop
+			if (ToneIsOnNow && typeof osc !== 'undefined' && osc && $currAmp) {
+				const tonejs_dB = -40 + 20.0 * Math.log10(ampVal);
+				osc.volume.value = tonejs_dB;
 			}
 		});
 	}
@@ -308,7 +295,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	if ($toneChanges) {
 		$toneChanges.on('change', drawTone);
 	}
-
 
 	const CHART_OPTIONS = {
 		responsive: true,
@@ -392,38 +378,22 @@ document.addEventListener('DOMContentLoaded', () => {
 	//***********************************
 	function initializePage() {
 		// reset all values to default wake up values 
+		// Default Configuration Constants
 		const DEFAULT_MAX_FREQ = 2000;
-
-		let $freqMaxInput = document.getElementById("freqMax");
-		if ($freqMaxInput) $freqMaxInput.value = DEFAULT_MAX_FREQ;
-
-		let $rangeFreqInput = document.getElementById("in-range-freq");
-		if ($rangeFreqInput) $rangeFreqInput.setAttribute("max", DEFAULT_MAX_FREQ.toString());
-
-		const DEFAULT_FREQ = 1000; // as set in html for element 
-		if ($rangeFreqInput) $rangeFreqInput.value = DEFAULT_FREQ;
-
+		const DEFAULT_FREQ = 1000;
 		const DEFAULT_AMP = 10;
-		let $rangeAmpInput = document.getElementById("in-range-amp");
-		if ($rangeAmpInput) $rangeAmpInput.value = DEFAULT_AMP;
-
 		const DEFAULT_PHASE = 0;
-		let $rangePhaseInput = document.getElementById("in-range-phase");
-		if ($rangePhaseInput) $rangePhaseInput.value = DEFAULT_PHASE;
-
-		// Sync labels natively via textContent
-		let $freqLabel = document.getElementById("currFreqLabel");
-		let $ampLabel = document.getElementById("currAmpLabel");
-		let $phaseLabel = document.getElementById("currPhaseLabel");
-
-		if ($freqLabel && $rangeFreqInput) $freqLabel.textContent = $rangeFreqInput.value;
-		if ($ampLabel && $rangeAmpInput) $ampLabel.textContent = $rangeAmpInput.value;
-		if ($phaseLabel && $rangePhaseInput) $phaseLabel.textContent = $rangePhaseInput.value;
-
-		// Globally expose baseline tracker mappings for other scope scripts
-		$currFreq = $rangeFreqInput;
-		$currAmp = $rangeAmpInput;
-		$currPhase = $rangePhaseInput;
+		
+		// Apply Values to Input Controls
+		$('#freqMax')?.val(DEFAULT_MAX_FREQ);
+		$('#in-range-freq')?.attr('max', DEFAULT_MAX_FREQ).val(DEFAULT_FREQ);
+		$('#in-range-amp')?.val(DEFAULT_AMP);
+		$('#in-range-phase')?.val(DEFAULT_PHASE);
+		
+		// Sync Feedback Labels
+		$('#currFreqLabel')?.text($('#in-range-freq')?.val() || DEFAULT_FREQ);
+		$('#currAmpLabel')?.text($('#in-range-amp')?.val() || DEFAULT_AMP);
+		$('#currPhaseLabel')?.text($('#in-range-phase')?.val() || DEFAULT_PHASE);
 
 		// turn off tone initially 
 		ToneIsOnNow = false;

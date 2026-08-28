@@ -41,28 +41,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	// if Next button hit (in base template), set it up to go to intro page
-	let nextBtn = document.getElementById("GoToNextPage");
-	if (nextBtn) wrapNode(nextBtn, "a").href = "../DynamicTrig1";
-	let prevBtn = document.getElementById("GoToPreviousPage");
-	if (prevBtn) wrapNode(prevBtn, "a").href = "../MusicSineIntro";
+	$("#GoToNextPage")?.on('click', () => window.location.href = "../DynamicTrig1");
+	$("#GoToPreviousPage")?.on('click', () => window.location.href = "../MusicSineIntro");
 
 	// user can only pick expert/newbie mode on the first home page
-	let newbieMode = sessionStorage.getItem('UserIsNew');
-	let startDemoBtn = document.getElementById("startAutoDemo");
-	let firstHelpBlock = document.getElementById("FirstHelp_ST");
-
-	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
-		// emphasize the auto demo as first place
-		if (startDemoBtn) startDemoBtn.classList.add('newbieMode');
-		if (firstHelpBlock) firstHelpBlock.classList.add('newbieMode');
-	} else if (newbieMode && (newbieMode.toLowerCase() === 'false')) {
-		// remind user what to do
-		if (firstHelpBlock) firstHelpBlock.classList.add('expertMode');
-	} else {
-		// user somehow got here without going through landing page or deleted sessionStorage, put in newbie mode
-		if (startDemoBtn) startDemoBtn.classList.add('newbieMode');
-		if (firstHelpBlock) firstHelpBlock.classList.add('newbieMode');
-	}
+	const isNewbie = sessionStorage.getItem('UserIsNew')?.toLowerCase() !== 'false';
+	const targetClass = isNewbie ? 'newbieMode' : 'expertMode';
+	if (isNewbie) $('#startAutoDemo')?.addClass('newbieMode');
+	$('#FirstHelp_ST')?.addClass(targetClass);
 
 	let ctxExpandableUnitCircle;
 	let circleDotsCanvas = document.getElementById("AmpSinCosCircle"); // Framework-free native extraction replaces .get(0)
@@ -517,25 +503,22 @@ document.addEventListener('DOMContentLoaded', () => {
 	// User changes amplitude of unit circle 
 	//*********************************** 
 	// allow user to change the size of the unit circle to bring in idea of amplitude/volume to sine-cosine graphs 
-	let $ampCirc = document.getElementById('ampCirc');
+	let $ampCirc = $('#ampCirc');
 	if ($ampCirc) {
-		// 1. Apply the visual width directly to the select element 
+		// Apply the visual width directly to the select element 
 		$ampCirc.style.width = '80px';
 
-		// 2. Insert it cleanly into its target location wrapper to handle positioning 
-		let $ampLoc = document.getElementById('ampCircLocation');
-		if ($ampLoc) {
-			$ampLoc.appendChild($ampCirc);
-		}
+		// Insert it cleanly into its target location wrapper to handle positioning 
+		$('#ampCircLocation')?.append($ampCirc);
 
 		// Modern native fallback listener replaces legacy jQuery UI 'selectmenuchange' hooks
-		$ampCirc.addEventListener('change', function(event) {
+		$ampCirc?.on('change', function(event) {
 			let temp = event.target.value;
 			amp = Number(temp);
 
-			let $unitCircNotify = document.getElementById("unitCircNotify");
-			let $xyEqtnX = document.getElementById('xyEqtn_x');
-			let $xyEqtnY = document.getElementById('xyEqtn_y');
+			let $unitCircNotify = $("#unitCircNotify");
+			let $xyEqtnX = $('#xyEqtn_x');
+			let $xyEqtnY = $('#xyEqtn_y');
 
 			if (1.0 == amp) {
 				// no need to show mpy by 1 
@@ -555,7 +538,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			// Since we dynamically altered equations, tell KaTeX to re-render just this container box 
 			// assuming they live within an #equationContainer wrapper element to keep it highly efficient 
-			let $equationContainer = document.getElementById("equationContainer");
+			let $equationContainer = $("#equationContainer");
 			if ($equationContainer) {
 				renderMathInElement($equationContainer, {
 					delimiters: [{ left: '$', right: '$', display: false }],
@@ -568,14 +551,8 @@ document.addEventListener('DOMContentLoaded', () => {
 					throwOnError: false
 				});
 			}
-
 			// since amplitude changed, need to clear out old values for xy and theta 
-			let IDsToClear = ['xyExactValue', 'xyFilledIn', 'xyValueDecimal', 'theta'];
-			IDsToClear.forEach(id => {
-				let el = document.getElementById(id);
-				if (el) el.textContent = " ";
-			});
-
+			$$('#xyExactValue, #xyFilledIn, #xyValueDecimal, #theta').each(el => el.text(" "));
 			redrawNewAmp();
 		});
 	}
@@ -685,10 +662,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	// this code is used as user interacts with the yellow dots on main circle 
 	//*********************************** 
 	// Initialize the container math with KaTeX markup 
-	let $xyEqtnX = document.getElementById('xyEqtn_x');
-	let $xyEqtnY = document.getElementById('xyEqtn_y');
-	if ($xyEqtnX) $xyEqtnX.innerHTML = '$= (\\cos ' + THETA + ',$';
-	if ($xyEqtnY) $xyEqtnY.innerHTML = '$ \\sin ' + THETA + ')$';
+	$('#xyEqtn_x')?.html(`$= (\\cos ${THETA},$`);
+	$('#xyEqtn_y')?.html(`$ \\sin ${THETA})$`);
+
 
 	renderMathInElement(document.body, {
 		delimiters: [{ left: '$', right: '$', display: false }],
@@ -776,8 +752,8 @@ document.addEventListener('DOMContentLoaded', () => {
 					// ----------------------------------------------------------------- 
 					// UPGRADED DYNAMIC TEXT LABELS FOR KATEX RENDERING 
 					// ----------------------------------------------------------------- 
-					let $xyEqtnX = document.getElementById('xyEqtn_x');
-					let $xyEqtnY = document.getElementById('xyEqtn_y');
+					let $xyEqtnX = $('#xyEqtn_x');
+					let $xyEqtnY = $('#xyEqtn_y');
 
 					if (1.0 == amp) {
 						if ($xyEqtnX) $xyEqtnX.innerHTML = '$= (\\cos ' + THETA + ',$';
@@ -790,26 +766,20 @@ document.addEventListener('DOMContentLoaded', () => {
 					// Strip the embedded $ signs off dot.thetaRad to keep it structurally perfect inside a single LaTeX string 
 					let cleanThetaTex = dot.thetaRad.replace(/\$/g, '');
 
-					// Inject complete seamlessly bound LaTeX formulas using vanilla .innerHTML updates
-					let $xyFilledIn = document.getElementById('xyFilledIn');
-					if ($xyFilledIn) $xyFilledIn.innerHTML = "$= (" + ampStr + "\\cos " + cleanThetaTex + " , " + ampStr + "\\sin " + cleanThetaTex + ")$";
-
-					let $xyExactValue = document.getElementById('xyExactValue');
-					let $xyValueDecimal = document.getElementById('xyValueDecimal');
-					if ($xyExactValue) $xyExactValue.innerHTML = dot.xyExact;
-					if ($xyValueDecimal) $xyValueDecimal.innerHTML = dot.xyApproxDecimal;
-
-					let cleanThetaDegTex = dot.thetaDeg.replace(/\$/g, '');
-					let $thetaLabel = document.getElementById('theta');
-					if ($thetaLabel) $thetaLabel.innerHTML = "$" + cleanThetaTex + "\\text{ rad} = " + cleanThetaDegTex + "$";
-
-					// EXPLICIT SYNC KATEX TRIGGER: Re-renders formulas instantaneously 
-					let $equationContainer = document.getElementById("equationContainer");
-					if ($equationContainer) {
-						renderMathInElement($equationContainer, { delimiters: [{ left: '$', right: '$', display: false }], throwOnError: false });
-					} else {
-						renderMathInElement(document.body, { delimiters: [{ left: '$', right: '$', display: false }], throwOnError: false });
-					}
+					// Inject complete seamlessly bound LaTeX formulas using vanilla .innerHTML updates	
+					$('#xyFilledIn')?.html(`$= (${ampStr}\\cos ${cleanThetaTex} , ${ampStr}\\sin ${cleanThetaTex})$`);
+					$('#xyExactValue')?.html(dot.xyExact);
+					$('#xyValueDecimal')?.html(dot.xyApproxDecimal);
+					
+					const cleanThetaDegTex = dot.thetaDeg.replace(/\$/g, '');
+					$('#theta')?.html(`$${cleanThetaTex}\\text{ rad} = ${cleanThetaDegTex}$`);
+					
+					// EXPLICIT SYNC KATEX TRIGGER: Re-renders formulas instantaneously
+					const $equationContainer = $('#equationContainer');
+					renderMathInElement($equationContainer || document.body, { 
+					  delimiters: [{ left: '$', right: '$', display: false }], 
+					  throwOnError: false 
+					});
 
 					// snap a picture of what we have so we can go back to it during animation 
 					if (ctxExpandableUnitCircle && circleDotsCanvas) {
@@ -1009,7 +979,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// take the page back to beginning, before user changed things 
 	function resetStaticTrig() {
 		// force amplitude to unit circle for autodemo, even if already unit circle 
-		let $ampSelect = document.getElementById('ampCirc');
+		let $ampSelect = $('#ampCirc');
 		if ($ampSelect) {
 			$ampSelect.value = '1.0';
 			// Native framework-free fallback trigger architecture replaces jQuery .change()
@@ -1020,21 +990,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		amp = 1;
 		ampStr = ""; // used in xy values as multiply factor 
 
-		let $unitCircNotify = document.getElementById("unitCircNotify");
-		if ($unitCircNotify) $unitCircNotify.textContent = "Unit Circle";
-
+		$('#unitCircNotify')?.text("Unit Circle");
 		// UPGRADED TO KATEX: Force clean mathematical markup presentation upon reset 
-		let $xyEqtnX = document.getElementById('xyEqtn_x');
-		let $xyEqtnY = document.getElementById('xyEqtn_y');
-		if ($xyEqtnX) $xyEqtnX.innerHTML = '$= (\\cos ' + (typeof THETA !== 'undefined' ? THETA : "\u03B8") + ',$';
-		if ($xyEqtnY) $xyEqtnY.innerHTML = '$ \\sin ' + (typeof THETA !== 'undefined' ? THETA : "\u03B8") + ')$';
-
+		const activeTheta = typeof THETA !== 'undefined' ? THETA : "\u03B8";
+		$('#xyEqtn_x')?.html(`$= (\\cos ${activeTheta},$`);
+		$('#xyEqtn_y')?.html(`$ \\sin ${activeTheta})$`);
 		// Clear old values 
-		let IDsToClear = ['xyExactValue', 'xyFilledIn', 'xyValueDecimal', 'theta'];
-		IDsToClear.forEach(id => {
-			let el = document.getElementById(id);
-			if (el) el.textContent = " ";
-		});
+		$$('#xyExactValue, #xyFilledIn, #xyValueDecimal, #theta').each(el => el.text(" "));
 
 		// Compile the default reset equations using KaTeX immediately 
 		renderMathInElement(document.body, { delimiters: [{ left: '$', right: '$', display: false }], throwOnError: false });

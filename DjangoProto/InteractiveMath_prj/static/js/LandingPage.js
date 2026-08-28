@@ -26,47 +26,27 @@
 // Replacing $(function() { ... }) with native standard DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
 
-	// if the user has saved an old mode, resurrect it here
-	let newbieMode = sessionStorage.getItem('UserIsNew');
-	let $newbieRadio = document.getElementById("newbieMode");
-	let $expertRadio = document.getElementById("expertMode");
+	// 1. Resurrect saved user mode from session storage
+	const isNewbie = sessionStorage.getItem('UserIsNew')?.toLowerCase() !== 'false';
+	
+	// Sync session state and toggle the corresponding checked properties directly via .prop()
+	sessionStorage.setItem('UserIsNew', isNewbie);
+	$(isNewbie ? '#newbieMode' : '#expertMode')?.prop('checked', true);
 
-	if (!newbieMode) {
-		// first arrival to site, default newbie mode
-		if ($newbieRadio) $newbieRadio.checked = true; // put them in newbie mode
-		sessionStorage.setItem('UserIsNew', true); // if user never changes anything, they are classed as newbie
-	} else if (newbieMode.toLowerCase() === "false") {
-		if ($expertRadio) $expertRadio.checked = true; // put them in newbie mode
-	} else {
-		// user saved newbie mode or its their first arrival to site,
-		sessionStorage.setItem('UserIsNew', true); // if user never changes anything, they are classed as newbie
-		if ($newbieRadio) $newbieRadio.checked = true; // put them in newbie mode
-	}
 
 	// legal precedent states that on the home page, browserwrap must be in upper left of home page to be "more" valid */
 		//**************************************************************************** 
 	// User has changed newbie/expert mode selection 
-	//**************************************************************************** 
-	// Framework-free event delegation loop maps directly onto your custom element factory structures
-	let radioButtons = document.querySelectorAll("#selectNewbieOrExpert input[name='helpLevel']");
-	radioButtons.forEach(radio => {
-		let $radio = extendElement(radio);
-		$radio.on('click', function(event) {
-			// Find the active chosen option state natively via quick runtime properties
-			let checkedRadio = document.querySelector('input[name="helpLevel"]:checked');
-			let currentModeValue = checkedRadio ? checkedRadio.value : "";
-
-			if (currentModeValue === "newbieMode") {
-				sessionStorage.setItem('UserIsNew', true);
-				console.log(' newbie mode');
-			} else if (currentModeValue === "expertMode") {
-				// go to expert mode 
-				console.log('expert mode');
-				sessionStorage.setItem('UserIsNew', false);
-			} else {
-				console.log('Coding error on selection of user proficiency level');
-			}
-		});
+	$('#selectNewbieOrExpert')?.on('click', (event) => {
+	  const target = event.target;
+	  
+	  // Filter for input radio clicks inside the wrapper container
+	  if (target.matches("input[name='helpLevel']")) {
+	    const isNewbieSelection = target.value === 'newbieMode';
+	    
+	    sessionStorage.setItem('UserIsNew', isNewbieSelection);
+	    console.log(isNewbieSelection ? 'newbie mode' : 'expert mode');
+	  }
 	});
 
 	//********************************************************
@@ -102,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	];
 
 	// the intro to the site varies whether we have a hamburger menu (generally present on mobile) or not
-	let menuContainer = document.getElementById('upperNavbarCollapse');
+	let menuContainer = $('#upperNavbarCollapse');
 	// Native replacement for jQuery .is(":visible") by validating window style dimensions
 	let noHamburgerMenu = menuContainer && window.getComputedStyle(menuContainer).display !== 'none';
 	let SCRIPT_AUTO_DEMO;
@@ -479,61 +459,38 @@ document.addEventListener('DOMContentLoaded', () => {
 	// User has interacted with autoDemo controls 
 	//**************************************************************************** 
 	// User has selected play 
-	let $playSegmentBtn = $('#playSegment');
-	if ($playSegmentBtn) {
-		$playSegmentBtn.on('click', function() {
-			// this is only true for this pages demo... 
-			let $segNumSelect = $('#segNum');
-			let currSeg = $segNumSelect ? parseInt($segNumSelect.value) : 1;
+	$('#playSegment')?.on('click', () => {
+	  const currSeg = parseInt($('#segNum')?.val() || 1, 10);
+	
+	  if (currSeg === 1) {
+	    // Show links and force their display structure seamlessly
+	    $$('a[href="#AdvancedTopics"]').show().forEach(el => {
+	      el.style.display = 'inline-block';
+	      el.style.visibility = 'visible';
+	    });
+	  }
+	  
+	  demo.startDemo();
+	});
 
-			if (currSeg === 1) {
-				// only illustrative for the first segment on autodemo intro 
-				// Multiple matches handled natively via selector arrays to match sugar baseline rules
-				let targetLinks = document.querySelectorAll('a[href="#AdvancedTopics"]');
-				targetLinks.forEach(el => {
-					el.style.display = 'inline-block';
-					el.style.visibility = 'visible';
-				});
-			}
-			demo.startDemo();
-		});
-	}
+	$('#stopSegment')?.on('click', () => {
+	  demo.stopThisSegment(false);
+	  $$('a[href="#AdvancedTopics"]').hide();
+	});
 
-	let $stopSegmentBtn = $('#stopSegment');
-	if ($stopSegmentBtn) {
-		$stopSegmentBtn.on('click', function() {
-			demo.stopThisSegment(false); // we don't want to destroy controls box 
-			// get rid of adv topics link, was for demo only 
-			let targetLinks = document.querySelectorAll('a[href="#AdvancedTopics"]');
-			targetLinks.forEach(el => el.style.display = 'none');
-		});
-	}
+	$('#dismissAutoDemo')?.on('click', () => {
+	  demo.stopThisSegment();
+	  
+	  $$('a[href="#AdvancedTopics"]').hide();
+	  
+	  $('#LegalNotice_Consent')?.prop('style').removeProperty('top');
+	});
 
-	let $dismissAutoDemoBtn = $('#dismissAutoDemo');
-	if ($dismissAutoDemoBtn) {
-		$dismissAutoDemoBtn.on('click', function() {
-			// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen 
-			demo.stopThisSegment(); // may or may not be needed 
-			// get rid of adv topics link, was for demo only 
-			let targetLinks = document.querySelectorAll('a[href="#AdvancedTopics"]');
-			targetLinks.forEach(el => el.style.display = 'none');
-
-			let $legalNotice = $('#LegalNotice_Consent');
-			if ($legalNotice) $legalNotice.style.top = ''; // let it float back up where it belongs 
-		});
-	}
-
-	let $segNumSelect = $("#segNum");
-	if ($segNumSelect) {
-		$segNumSelect.on('change', function() {
-			let currSeg = parseInt($segNumSelect.value);
-			demo.setCurrSeg(currSeg);
-
-			// remove the class so the animation will work on next page, cant do this until animation completes 
-			let $clickHereCursor = $('#clickHereCursor');
-			if ($clickHereCursor) $clickHereCursor.classList.remove('userHitPlay');
-		});
-	}
-
+	$('#segNum')?.on('change', function() {
+	  const currSeg = parseInt(this.value, 10);
+	  demo.setCurrSeg(currSeg);
+	
+	  $('#clickHereCursor')?.removeClass('userHitPlay');
+	});
 
 }); 

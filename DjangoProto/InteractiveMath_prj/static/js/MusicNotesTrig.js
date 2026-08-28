@@ -28,44 +28,29 @@
 // Native DOMContentLoaded listener replaces legacy $(function() { ... })
 document.addEventListener('DOMContentLoaded', () => {
 
-	let nextBtn = document.getElementById("GoToNextPage");
-	if (nextBtn) wrapNode(nextBtn, "a").href = "../MusicSineSummary";
-
-	let prevBtn = document.getElementById("GoToPreviousPage");
-	if (prevBtn) wrapNode(prevBtn, "a").href = "../ToneTrig";
+	$("#GoToNextPage")?.on('click', () => window.location.href = "../MusicSineSummary");
+	$("#GoToPreviousPage")?.on('click', () => window.location.href = "../ToneTrig");
 
 	// Handle user layout state level mapping
-	let newbieMode = sessionStorage.getItem('UserIsNew');
-	let stopModal = true;
-	let $startDemo = $("#startAutoDemo");
 
-	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
-		if ($startDemo) $startDemo.classList.add('newbieMode');
-	} else if (newbieMode && (newbieMode.toLowerCase() === 'false')) {
-		stopModal = false;
-	} else {
-		if ($startDemo) $startDemo.classList.add('newbieMode');
-	}
-
-	const volNoteOnEl = document.querySelector(".allowNotePlay .VolOn");
-	const volNoteOffEl = document.querySelector(".allowNotePlay .VolOff");
-	const volToneOnEl = document.querySelector(".toneStartButton .VolOn");
-	const volToneOffEl = document.querySelector(".toneStartButton .VolOff");
-
-	// Guard clause: Exit safely if the elements aren't present on this specific page
-	if (!volNoteOnEl || !volNoteOffEl || !volToneOnEl || !volToneOffEl) return;
-
-	// Extend them using js-shorthand.js library helpers
-	const $noteVolOn = extendElement(volNoteOnEl);
-	const $noteVolOff = extendElement(volNoteOffEl);
-	const $toneVolOn = extendElement(volToneOnEl);
-	const $toneVolOff = extendElement(volToneOffEl);
+	const isNewbie = sessionStorage.getItem('UserIsNew')?.toLowerCase() !== 'false';
+	if (isNewbie) $('#startAutoDemo')?.addClass('newbieMode');
+	const stopModal = isNewbie;
 	
-	// initial setting is tone vol on and no vol icon for musical instrument before instrument chosen
+	const $noteVolOn = $(".allowNotePlay .VolOn");
+	const $noteVolOff = $(".allowNotePlay .VolOff");
+	const $toneVolOn = $(".toneStartButton .VolOn");
+	const $toneVolOff = $(".toneStartButton .VolOff");
+	
+	// Guard clause: Exit safely if any volume element is missing from the view
+	if (!$noteVolOn || !$noteVolOff || !$toneVolOn || !$toneVolOff) return;
+	
+	// Initialize layout states: Tone is active, musical instruments start fully muted
 	$toneVolOn.hide();
 	$toneVolOff.show();
 	$noteVolOn.hide();
 	$noteVolOff.hide();
+
 	
 	// Frequency constants for Bflat tracking definitions
 	const C5_FREQ = 466.16;
@@ -146,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	//*********************************** 
 	// Setup Path Drawing Context Natively
 	let ctxPeriod;
-	let expandTimeCanvas = document.getElementById("periodicityIndicator");
+	let expandTimeCanvas = $("#periodicityIndicator");
 	if (expandTimeCanvas) {
 		ctxPeriod = expandTimeCanvas.getContext('2d');
 	} else {
@@ -190,23 +175,21 @@ document.addEventListener('DOMContentLoaded', () => {
 			let $perTone = $('.Period_Tone');
 			if ($perTone) $perTone.style.width = DOUBLE_T + 'px';
 
-			let $firstP = $('.First_Period');
-			let $secondP = $('.Second_Period');
-			let $thirdP = $('.Third_Period');
-			let $fourthP = $('.Fourth_Period');
-
-			if ($firstP) $firstP.style.visibility = "visible";
-			if ($secondP) $secondP.style.visibility = "visible";
-			if ($thirdP) $thirdP.style.visibility = "hidden";
-			if ($fourthP) $fourthP.style.visibility = "hidden";
-
+			// Toggle block structural visibilities
+			$$('.First_Period, .Second_Period').each(el => el.prop('style').visibility = "visible");
+			$$('.Third_Period, .Fourth_Period').each(el => el.prop('style').visibility = "hidden");
+			
+			// Calculate and apply localized layout positioning coordinates
 			const NEW_PERIOD_BOX_LEFT = LEFT_EDGE_X + DOUBLE_T;
-			if ($secondP) $secondP.style.left = NEW_PERIOD_BOX_LEFT + 'px';
-
-			if ($perText1) $perText1.innerHTML = 'Period T <br>= 1/Frequency = 1/(233.08 Hz) = 4.29 ms';
-			if ($perText2) {
-				$perText2.style.left = (NEW_PERIOD_BOX_LEFT + SHORT_T) + 'px';
-				$perText2.innerHTML = 'T = 4.29 ms';
+			$('.Second_Period')?.prop('style').setProperty('left', `${NEW_PERIOD_BOX_LEFT}px`);
+			
+			// Sync dynamic label formula text templates
+			$(`#perText1`)?.html('Period T <br>= 1/Frequency = 1/(233.08 Hz) = 4.29 ms');
+			
+			const $p2 = $(`#perText2`);
+			if ($p2) {
+			  $p2.prop('style').setProperty('left', `${NEW_PERIOD_BOX_LEFT + SHORT_T}px`);
+			  $p2.html('T = 4.29 ms');
 			}
 
 			const SECOND_L_233_X = LEFT_X + 120 - 2;
@@ -250,28 +233,20 @@ document.addEventListener('DOMContentLoaded', () => {
 			if ($perTone) $perTone.style.width = SHORT_T + 'px';
 
 			// Need to show all 4 boxes of period natively
-			let $firstP = $('.First_Period');
-			let $secondP = $('.Second_Period');
-			let $thirdP = $('.Third_Period');
-			let $fourthP = $('.Fourth_Period');
-
-			if ($firstP) $firstP.style.visibility = "visible";
-			if ($secondP) $secondP.style.visibility = "visible";
-			if ($thirdP) $thirdP.style.visibility = "visible";
-			if ($fourthP) $fourthP.style.visibility = "visible";
-
-			// Move the second box over by the new width of longer period 
+			// Toggle block structural visibilities
+			$$('.First_Period, .Second_Period, .Third_Period, .Fourth_Period').each(el => el.prop('style').visibility = "visible");
+			
+			// Move the second box over by the new width of longer period const NEW_PERIOD_BOX_LEFT = LEFT_EDGE_X + SHORT_T;
 			const NEW_PERIOD_BOX_LEFT = LEFT_EDGE_X + SHORT_T;
-			if ($secondP) $secondP.style.left = NEW_PERIOD_BOX_LEFT + 'px';
-
-			// Change the period wording natively
-			let $perText1 = $('#Period_Text1');
-			let $perText2 = $('#Period_Text2');
-
-			if ($perText1) $perText1.innerHTML = 'Period T <br>= 1/Frequency<br><br>= 1/(466.16 Hz) <br>= 2.15 ms';
+			$('.Second_Period')?.prop('style').setProperty('left', `${NEW_PERIOD_BOX_LEFT}px`);
+			
+			// Change the period wording natively 
+			$('#Period_Text1')?.html('Period T <br>= 1/Frequency<br><br>= 1/(466.16 Hz) <br>= 2.15 ms');
+			
+			const $perText2 = $('#Period_Text2');
 			if ($perText2) {
-				$perText2.style.left = (NEW_PERIOD_BOX_LEFT + 40) + 'px';
-				$perText2.innerHTML = 'T = 2.15 ms';
+			  $perText2.prop('style').setProperty('left', `${NEW_PERIOD_BOX_LEFT + 40}px`);
+			  $perText2.html('T = 2.15 ms');
 			}
 
 			const SECOND_L_466_X = LEFT_X + 60 - 1;
@@ -486,7 +461,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			// we are already at zero phase. If interval is descending, need to move back by T/2.  Better to be early than
 			// late so when we get better precision on zero crossing, we will further perfect the starting point
 			let plotFirstPt = bestInterval.justB4CrossPt;
-			let riseFallState = (bestInterval.rising) ? "rising" : "falling";
 			if (!bestInterval.rising) {
 				plotFirstPt = bestInterval.justB4CrossPt + Math.trunc(this.POINTS_IN_NOTE_PERIOD / 2);
 			}
@@ -522,21 +496,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Global Event Listeners & Audio Context Management
 	let sourceNote=null
-	let context 
-	let gainMusicNode=null;
+	const mp3VolumeNode = new Tone.Volume(0).toDestination();
 
-	function changeMP3Volume(mute = false) {
-		//for MP3, will use max volume setting to give factor of 2 (3db) increase.
-		//middle setting is no amplification and zero setting is mute
-		// https://stackoverflow.com/questions/70480176/webaudio-api-change-volume-for-one-of-sources
-		// createGain can be used to mute as well
-		let ampVal = mute ? 0 : ($('#music-amp').val() || 3);
-
-	    let volumeDb = Tone.gainToDb(ampVal * 2 / 10);
-	    // Only adjust the active sourceNote volume node, leaving other oscillators alone
-	    if (sourceNote && sourceNote.volume) {
-	        sourceNote.volume.value = volumeDb;
-	    }		
+	function changeMP3Volume() {
+	    let val = parseFloat($("#music-amp").val());
+	    $("#currMusicVolLabel").text(val); 
+	
+	    if (val <= 0.0001) {
+	        mp3VolumeNode.mute = true; 
+	    } else {
+			mp3VolumeNode.mute = false; 
+	        // Match your exact oscillator decibel conversion formula
+	        let volumeDb = -20 + 20.0 * Math.log10(val);
+	        mp3VolumeNode.volume.value = volumeDb;
+	    }	
 	}
 
 	// UI Event Handlers (Change volume/start-stop)
@@ -578,9 +551,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Initialize sliders
 	const DEFAULT_VOL = 3;
-	document.querySelectorAll("#tone-amp, #music-amp").forEach(input => {
-	    input.value = DEFAULT_VOL;
-	    input.dispatchEvent(new Event('change')); 
+	$$("#tone-amp, #music-amp").each(function() {
+	  this.value = DEFAULT_VOL;
+	  this.dispatchEvent(new Event('change'));
 	});
 	setToneAmp();
 	const toneLabel = document.getElementById("currToneVolLabel");
@@ -683,13 +656,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	// User selects an instrument from your dropdown flyout components natively
 	// Core dropdown toggle functionality is in jqBS-shorthand.js which fires
 	// custom event that is caught here	
-	const instrumentSel = document.getElementById('InstrumentSel');
+	const instrumentSel = $('#InstrumentSel');
 	if (instrumentSel) {
-	  // Listen for the custom event dispatched by your master script
-	  instrumentSel.addEventListener('dropdownSelect', (event) => {
-	    // Play the note based on the chosen value
-	    prepToPlayNote(event.detail.value);
-	  });
+		// Listen for the custom event dispatched by your master script
+		instrumentSel.addEventListener('dropdownSelect', (event) => {
+			// Play the note based on the chosen value
+			prepToPlayNote(event.detail.value);
+		});
 	}
 
 	//*********************************** 
@@ -713,23 +686,20 @@ document.addEventListener('DOMContentLoaded', () => {
 				    Tone.start(); 
 				
 				    // 2. Calculate the volume setting from your HTML input
-				    let ampVal = ($('#music-amp').val() || 3);
-				    
-				    // 3. Convert your 0-10 slider math into a clean Tone.js Decibel unit
-				    // Tone.gainToDb(1) is 0dB (unaltered). Tone.gainToDb(0) is -Infinity (silent).
-				    let volumeDb = Tone.gainToDb(ampVal * 2 / 10); 			
-
+				    setMusicAmp();   // use default val
 				    sourceNote = new Tone.BufferSource({
 				        playbackRate: 1,
 				        loop: false,
-				        volume: volumeDb,
 				    });
+				    sourceNote.connect(mp3VolumeNode);  //for future gain changes
+				    mp3VolumeNode.toDestination(); 
+				    
 				    // BYPASS CONSTRUCTOR bug in Tone.js: Assign the native browser AudioBuffer directly 
 					// using Tone's low-level hardware assignment. This skips the type-checking error.
 					sourceNote.buffer = tuneBuffer[currTuneState];
 
 				    // 5. Connect the source through Tone's volume system to the speakers and start it
-				    sourceNote.toDestination();
+				    //sourceNote.toDestination();
 
 				    sourceNote.start();
 				    noteIsOnNow = true;
@@ -756,7 +726,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	//*********************************** 
 	// Setup Chart.js context via framework-free DOM lookups
 	let ctxLong;
-	let chartCanvas = document.getElementById("sine_plotsLong");
+	let chartCanvas = $("#sine_plotsLong");
 	if (chartCanvas) {
 		ctxLong = chartCanvas.getContext('2d');
 	} else {
@@ -856,7 +826,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	//*********************************** 
 	if ((!sessionStorage.adModal) && (!stopModal)) {
 		setTimeout(function() {
-			let adModalEl = document.getElementById('admodal');
+			let adModalEl = $('#admodal');
 			if (adModalEl) {
 				// Native HTML5 Dialog modal layout launch pattern replaces Bootstrap .modal() calls
 				if (typeof adModalEl.showModal === 'function') {

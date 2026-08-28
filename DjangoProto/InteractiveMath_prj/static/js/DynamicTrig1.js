@@ -31,25 +31,18 @@
 document.addEventListener('DOMContentLoaded', () => {
 
 	// Hide frequency advice
-	let $explnFreq = document.getElementById('ExplnFreqMark');
-	if ($explnFreq) $explnFreq.style.visibility = "hidden";
-
-	let nextBtn = document.getElementById("GoToNextPage");
-	if (nextBtn) wrapNode(nextBtn, "a", "").href = "../DynamicTrig2";
-
-	let prevBtn = document.getElementById("GoToPreviousPage");
-	if (prevBtn) wrapNode(prevBtn, "a", "").href = "../StaticTrig";
+    $('#ExplnFreqMark')?.css("visibility","hidden")
+	$("#GoToNextPage")?.on('click', () => window.location.href = "../DynamicTrig2");
+	$("#GoToPreviousPage")?.on('click', () => window.location.href = "../StaticTrig");
 
 	// Handle User Mode (Newbie/Expert)
-	let newbieMode = sessionStorage.getItem('UserIsNew');
-	let startDemo = document.getElementById("startAutoDemo");
-	let firstHelp = document.getElementById("FirstHelp_DT1");
+	const isNewbie = sessionStorage.getItem('UserIsNew')?.toLowerCase();
 
-	if (!newbieMode || newbieMode.toLowerCase() === "true") {
-		if (startDemo) startDemo.classList.add('newbieMode');
-		if (firstHelp) firstHelp.classList.add('newbieMode');
-	} else if (newbieMode.toLowerCase() === 'false') {
-		if (firstHelp) firstHelp.classList.add('expertMode');
+	if (!isNewbie || isNewbie === 'true') {
+		$('#startAutoDemo')?.addClass('newbieMode');
+		$('#FirstHelp_DT1')?.addClass('newbieMode');
+	} else if (isNewbie === 'false') {
+		$('#FirstHelp_DT1')?.addClass('expertMode');
 	}
 
 	// Setup Canvas
@@ -196,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// and good for higher freq
 	//********************************************************
 	// Set up the frequency canvas and acquire drawing context natively
-	let freqCanvas = document.getElementById("FreqChange_DT1");
+	let freqCanvas = $("#FreqChange_DT1");
 	let ctxFreqPlot = freqCanvas ? freqCanvas.getContext('2d') : null;
 
 	if (!ctxFreqPlot) {
@@ -435,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				stopTimerNow = false;
 
 				if (countTime / 10 == 30) {
-					let expireModalEl = document.getElementById('expiremodal');
+					let expireModalEl = $('#expiremodal');
 					if (expireModalEl) {
 						// Framework-free Native HTML5 Dialog Launch API replaces Bootstrap Modals
 						if (typeof expireModalEl.showModal === 'function') {
@@ -507,9 +500,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	const ANGLE_PER_PT_DEG = ANGLE_PER_PT_RAD * 180 / Math.PI;
 	const RADIUS_VECTOR_COLOR = "green";
 
-	let mainCircleEl = document.getElementById("AmpSinCosCircle_DT1");
-	if (mainCircleEl) {
-		mainCircleEl.addEventListener('click', (e) => {
+	let mainCircleEl = $("#AmpSinCosCircle_DT1");
+	(mainCircleEl)?.on('click', (e) => {
 			let $firstHelpText = $('#FirstHelp_DT1');
 			if ($firstHelpText) $firstHelpText.style.visibility = "hidden";
 
@@ -635,7 +627,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				ind = ind + 1;
 			});
 		});
-	}
+
 
 	//******************************************************** 
 	// this function used when user hits clear or start over 

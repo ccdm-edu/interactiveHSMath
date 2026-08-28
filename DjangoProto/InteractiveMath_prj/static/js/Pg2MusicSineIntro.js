@@ -31,70 +31,46 @@
 document.addEventListener('DOMContentLoaded', () => {
 
 	// if Next button hit (in base template), set it up to go to intro page
-	let nextBtn = document.getElementById("GoToNextPage");
-	if (nextBtn) wrapNode(nextBtn, "a").href = "../StaticTrig";
-	let prevBtn = document.getElementById("GoToPreviousPage");
-	if (prevBtn) wrapNode(prevBtn, "a").href = "../IntroTrigMusicConcepts";
+	// Configure Navigation Targets
+	$("#GoToNextPage")?.on('click', () => window.location.href = "../StaticTrig");
+	$("#GoToPreviousPage")?.on('click', () => window.location.href = "../IntroTrigMusicConcepts");
 
-	// user can only pick expert/newbie mode on the first home page
-	let newbieMode = sessionStorage.getItem('UserIsNew');
-	let startDemoBtn = document.getElementById("startAutoDemo");
-	let listSelectors = [
-		"#initialInstrMusicTrigIntro",
-		"#dropdownMenuSong",
-	];
 	
-	const volToneOnEl = document.querySelector(".VolOnOff .VolOn");
-	const volToneOffEl = document.querySelector(".VolOnOff .VolOff");
-	// Guard clause: Exit safely if the elements aren't present on this specific page
-	if (!volToneOnEl || !volToneOffEl) return;
-	// Extend them using jsBS-shorthand.js library helpers
-	const $toneVolOn = extendElement(volToneOnEl);
-	const $toneVolOff = extendElement(volToneOffEl);
-	// initial setting is tone vol on and no vol icon for musical instrument before instrument chosen
+	// Volume Controls Initialization
+	const $toneVolOn = $(".VolOnOff .VolOn");
+	const $toneVolOff = $(".VolOnOff .VolOff");
+	
+	// Guard Clause: Exit if volume selectors are missing from the current view
+	if (!$toneVolOn || !$toneVolOff) return;
+	
+	// Initialize state: Tone volume starts off, muted icon shows
 	$toneVolOn.hide();
 	$toneVolOff.show();
 	let toneIsOnNow = false;
 
+	
+	// Determine mode status (defaults to true if storage is missing or set to 'true')
+	const isNewbie = sessionStorage.getItem('UserIsNew')?.toLowerCase() !== 'false';
+	const targetClass = isNewbie ? 'newbieMode' : 'expertMode';
+	
+	// Batch apply the state class across the UI controls
+	if (isNewbie) $('#startAutoDemo')?.addClass('newbieMode');
+	
+	$$("#initialInstrMusicTrigIntro, #dropdownMenuSong").forEach(el => {
+	  el.addClass(targetClass);
+	});
 
-	if (newbieMode && (newbieMode.toLowerCase() === "true")) {
-		// emphasize the auto demo as first place
-		if (startDemoBtn) startDemoBtn.classList.add('newbieMode');
-		listSelectors.forEach(sel => {
-			let el = document.querySelector(sel);
-			if (el) el.classList.add('newbieMode');
-		});
-	} else if (newbieMode && (newbieMode.toLowerCase() === 'false')) {
-		// remind user what to do , expert mode
-		listSelectors.forEach(sel => {
-			let el = document.querySelector(sel);
-			if (el) el.classList.add('expertMode');
-		});
-	} else {
-		// user somehow got here without going through landing page or deleted sessionStorage, put in newbie mode
-		if (startDemoBtn) startDemoBtn.classList.add('newbieMode');
-		listSelectors.forEach(sel => {
-			let el = document.querySelector(sel);
-			if (el) el.classList.add('newbieMode');
-		});
-	}
-	let musicCanvas = document.getElementById("ClefWithNotes"); // foreground to detect user clicks
-	let bkgdMusicCanvas = document.getElementById("NotesFilledIn"); // background to color in the notes when clicked
+	// Helper to extract canvas 2D context safely with error tracking
+	const getCtx = (id, errorMsg) => {
+	  const canvas = $(id);
+	  if (!canvas) console.error(errorMsg);
+	  return canvas ? canvas.getContext('2d') : null;
+	};
+	
+	// Initialize drawing contexts for foreground and background music sheets
+	const ctxMusicCanvas = getCtx('#ClefWithNotes', 'Cannot obtain C major notes context, ctxMusicCanvas on Pg2MusicSinIntro.js');
+	const ctxBkgdMusicCanvas = getCtx('#NotesFilledIn', 'Cannot obtain C major background notes context, ctxBkgdMusicCanvas on Pg2MusicSinIntro.js');
 
-	// get ready to start drawing on this canvas, first get the context
-	let ctxMusicCanvas;
-	if (musicCanvas) {
-		ctxMusicCanvas = musicCanvas.getContext('2d');
-	} else {
-		console.error('Cannot obtain C major notes context, ctxMusicCanvas on Pg2MusicSinIntro.js');
-	}
-
-	let ctxBkgdMusicCanvas;
-	if (bkgdMusicCanvas) {
-		ctxBkgdMusicCanvas = bkgdMusicCanvas.getContext('2d');
-	} else {
-		console.error('Cannot obtain C major background notes context, ctxBkgdMusicCanvas on Pg2MusicSinIntro.js');
-	}
 
 	// put up the horizontal lines for notes
 	const LEFT_X = 20;
@@ -209,8 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		'GNote': 4, 'ANote': 5, 'BNote': 6, 'CNote': 7
 	};
 	Object.keys(idNotesMap).forEach(id => {
-		let el = document.getElementById(id);
-		if (el) el.textContent = CmajorNotes[idNotesMap[id]].notePlayed;
+		$(`#${id}`)?.text(CmajorNotes[idNotesMap[id]]?.notePlayed);
+
 	});
 
 	// set up for outputing a tone of proper freq
@@ -221,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// NOW we have the background image done. As users click on a point and new stuff happens, we always come back to
 	// this point, so we save it to go back to it when we want to start over
 	let bkgdPlotNotes;
+	let bkgdMusicCanvas = $("#NotesFilledIn");
 	if (ctxBkgdMusicCanvas && bkgdMusicCanvas) {
 		bkgdPlotNotes = ctxBkgdMusicCanvas.getImageData(0, 0, bkgdMusicCanvas.width, bkgdMusicCanvas.height);
 	}
@@ -261,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		sine_plot_100_1k.update();
 	};
 
-	let pitchGraphCanvas = document.getElementById("PitchGraph");
+	let pitchGraphCanvas = $("#PitchGraph");
 	let ctxPitchGraphCanvas;
 	if (pitchGraphCanvas) {
 		ctxPitchGraphCanvas = pitchGraphCanvas.getContext('2d');
@@ -329,8 +306,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	const NOTE_RADIUS = 30;
 	const COLOR_RADIUS = 8;
 	let selectedNote = null;
-
-	if (musicCanvas) {
+	let musicCanvas = $('#ClefWithNotes');
+	(musicCanvas)?.on('click', (e) => {
 		musicCanvas.addEventListener('click', (e) => {
 			// need to convert canvas coord into bitmap coord
 			let rect = musicCanvas.getBoundingClientRect();
@@ -419,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			let $verbalIntro = $("#verbalIntro");
 			if ($verbalIntro) $verbalIntro.style.visibility = 'visible';
 		});
-	}
+	});
 
 	//***********************************
 	// user adjusts volume, start out with default values
@@ -513,10 +490,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			ctxBkgdMusicCanvas.putImageData(bkgdPlotNotes, 0, 0);
 		}
 
-		let $noteSelectVal = $("#noteSelectVal");
-		let $freqOfNoteVal = $("#FreqOfNoteVal");
-		if ($noteSelectVal) $noteSelectVal.textContent = "";
-		if ($freqOfNoteVal) $freqOfNoteVal.textContent = "";
+		$("#noteSelectVal")?.text("");
+		$("#FreqOfNoteVal")?.text("");
 
 		// clear out graph and associated equation 
 		if (typeof sine_plot_100_1k !== 'undefined' && sine_plot_100_1k.options.plugins && sine_plot_100_1k.options.plugins.title) {
@@ -544,10 +519,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		setVolume();
 
 		// in case user was playing notes for a song, delete all that and put back to clear 
-		let $notesToPlay = $('#notesToPlay');
-		let $notesToPlayLabel = $('#notesToPlayLabel');
-		if ($notesToPlay) $notesToPlay.style.display = 'none';
-		if ($notesToPlayLabel) $notesToPlayLabel.textContent = "";
+		$('#notesToPlay')?.hide();
+		$('#notesToPlayLabel')?.text("");
 	}
 
 	//***********************************

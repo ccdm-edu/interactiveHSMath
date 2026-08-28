@@ -61,6 +61,7 @@
 	animation-delay: 1s;
 	visibility: hidden;
 }
+
 /*instructions come from behind staff, sit in middle for a few sec, then flow off page */
 @keyframes initMusicTrigInstr {
 	0%		{left: 0px; top: -30px; visibility: visible;}
@@ -267,12 +268,6 @@
   width: 80px; 
   height: 60px; 
 }
-#dropdownMenuSong {    /* User song select button*/
-  box-sizing: border-box;
-  border-radius: 6px;
-  height: auto;
-  bottom: 0px;  /* put at bottom so dropdown menu goes just below it */
-}
 #userSelectsSongButton .dropdown-menu {   /* the song selections */
   width: 100%; /* matches parent width */
 }
@@ -288,7 +283,7 @@
 	left: 150px;
 	top: 50px;
 	font-size: 12px;
-	width: 300px;
+	width: 260px;
 	height: 20px;
 	border-width: 1px;
 	border-style: solid;
@@ -296,6 +291,17 @@
 }
 /* Make the tune selector button cycle through pretty colors */
 /* if newbie, dont distract user from listening to full tutorial */
+#dropdownMenuSong {    /* User song select button*/
+  box-sizing: border-box;
+  border-radius: 6px;
+  height: auto;
+  bottom: 0px;  /* put at bottom so dropdown menu goes just below it */
+}
+#dropdownMenuSong:hover{
+  background-color: #ff7a00; /* orange color */
+  transform: scale(1.08);    /* makes the button pop/grow */
+  box-shadow: 0 6px 15px rgba(255, 122, 0, 0.4); /* adds a soft glow */
+}
 #dropdownMenuSong.newbieMode{
 	position: absolute;
 	left: 0px;
