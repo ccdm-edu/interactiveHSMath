@@ -39,8 +39,8 @@
 
 <!-- front and center text -->
 {% block mainHeaderText %}
-	<h1><span id="homePageHeader">{{ basePage.CompanyName }}</span></h1> 
-	<h2>High School Algebra 2, PreCalculus and Physics</h2>
+	<h1><span id="homePageHeader">Interactive and Real-World</span><br>
+	High School Algebra 2, PreCalculus and Physics</h1>
 {% endblock %}
 
  <!-- to side of autodemo -->					
@@ -76,30 +76,50 @@
 			{% if is_mobile %}
 				<br>
 				<span id="upgradeSchedule">
-				{%if upgradeNoticePresent %}
-					Site will be upgraded at {{ upgradeTime|time:"g:i A" }} EST until midnight on {{ upgradeDate|date:"l, F jS" }}.
-				{% endif %}
+					{%if upgradeNoticePresent %}
+						Site will be upgraded at {{ upgradeTime|time:"g:i A" }} EST until midnight on {{ upgradeDate|date:"l, F jS" }}.
+					{% endif %}
 				</span>
 				<span id="upgradingSiteNow">
-				{%if upgradeNow %}
-				<br>
-					This site is currently being upgraded until midnight tonight.  Some things may not work correctly during this time.
-				{% endif %}
+					{%if upgradeNow %}
+					<br>
+						This site is currently being upgraded until midnight tonight.
+					{% endif %}
 				</span>
-				<b> This math website interactively relates high school math and the real world.  Currently we are looking at trig functions in music.  
-				This site was designed for a larger screen.  On your mobile, you'll need to rotate to landscape mode
-				and adjust the screen frequently to see everything going on. </b>
+			    <p class="hero-pitch">
+			      Discover the hidden math behind reality—like how trigonometry formulas shape your favorite music and tune your instruments.
+			    </p>
+				<div class="instruction-card">
+					<!-- Header row combining the badge and the title text -->
+					<div class="instruction-header-row">
+						<span class="badge badge-action">📱 Action Required</span>
+						<h2 class="inline-title">To explore on this device:</h2>
+					</div>
+					<p class="instruction-text">
+						Please <strong>rotate your phone to landscape mode</strong>. You may
+						need to zoom or adjust the screen to capture all the moving
+						simulations at once.
+					</p>
+				</div>
+
+				<div class="instruction-card desktop-recommendation">
+				    <span class="badge badge-info">🖥️ Pro Tip
+				    </span>
+				    <p>
+				        For the ultimate workspace experience, view this site on a <strong>desktop, laptop, or tablet</strong>!
+				    </p>
+    			</div>
 				<br>
 			{% else %}
 				<!-- We can work with this platform -->
-				<noscript>
-					<!-- however, we must have javascript enabled, only client knows if this is true -->
-					<br>
-						Since this site is interactive, Javascript <span style="font-size: 1.5em;">MUST</span> be enabled to fully experience the site.
-						You do not have Javascript enabled in your browser. 
-					<br>
-				</noscript>
-				<p>
+				<div class="landing-content-wrapper">
+					<noscript>
+						<!-- however, we must have javascript enabled, only client knows if this is true -->
+						<br>
+							Since this site is interactive, Javascript <span style="font-size: 1.5em;">MUST</span> be enabled to fully experience the site.
+							You do not have Javascript enabled in your browser. 
+						<br>
+					</noscript>
 					{%if upgradeNoticePresent %}
 					<span id="upgradeSchedule">
 						<br>
@@ -115,20 +135,30 @@
 					</span>
 					{% endif %}
 						<br>
-						This math website is designed to connect the theories and equations in Algebra 2 and PreCalculus to the real world in a way that is <span id="blinkingColor">fun </span>and interactive.  
-						You will see how trig functions play into music and (eventually) imaginary numbers help your cell phone send your text messages. 
-						<br>
-						It looks best on a laptop/desktop/tablet/notebook. Your mobile is ok but its too small to see all the animations at once.  
-						<br>
-						This site will ALWAYS be FREE to learners, never a charge of any kind for ANY of the material.<br>
-						<br> Math is <b>literally</b> everywhere! <br>
-						Enjoy!
-				</p>
+						<p class="hero-text">
+							Trigonometry formulas are hiding in music, acting as the secret math used to set the pitch, add harmonic richness and tune your instrument. 
+							Dive into <span id="blinkingColor">fun</span> interactive simulations to experience these sound waves firsthand, and connect the math to the music by creating your own animations.
+						</p>
+						<div class="info-section">
+							<h2 class="device-badge">🖥️ Best on Larger Screens
+							</h2>
+							<p>This site is built for big exploration. While it works on mobile, we recommend a laptop, desktop, or tablet to experience all the animations at once.
+							</p>
+						</div>
+						<div class="info-section">
+							<h2 class="device-badge">🎁 100% Free Forever
+							</h2>
+							<p>Education should be accessible. This site will always be free to learners—no subscriptions, no hidden paywalls, and no charges for any material.
+							Just a donor page for this 501(c3)--coming soon.
+							</p>
+						</div>
+					</div>
 			{% endif %}		
 		</div>
 	</div> 
-	<br>
 	<br>	
+	<br>
+	
 	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place. -->
     <p class="AdvTopic_ToDo">TRY THIS: On complicated pages, a list of stuff to try out will be here.</p>

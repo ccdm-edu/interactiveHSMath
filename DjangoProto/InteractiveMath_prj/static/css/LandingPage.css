@@ -11,17 +11,70 @@
  * AUTHOR:     C. DeMeyer (with Gemini AI assist)
  * ============================================================================
 */
+div.home_expln {
+    position: absolute;
+    top: 0;           /* Snaps the text to the same top edge as the logo */
+    left: 10%;        /* Side margins only */
+    right: 10%;
+    margin: 0;        /* REMOVED: 10% top margin that caused the gap */
+    
+    z-index: 10;      /* Higher than the logo */
+    text-align: left;
+    font-weight: bold;
+    color: #000000;
+    font-size: 18px;
+    
+    opacity: 0.0;
+    animation: expln_fade_in 2s forwards 2s;  /* picture hits first then fades and words fade in */
+}
+@keyframes expln_fade_in{
+	 0%  {opacity: 0.0;}
+	 100%   {opacity: 1.0;}
+}
 /* make parts of header red, parts black, just like the logo */
 span#homePageHeader {
 	color: red;
 }
-.top-content {
-   padding: 10px; /* Buffer so text doesn't touch screen edges */
+/* Removes default massive heading margins and styles the badge */
+h2.device-badge {
+  font-size: 1.25rem; /* Adjust sizes to fit your design */
+  margin: 0 0 0.5rem 0; 
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #2d3748;
 }
-.top-content h2 {
-   white-space: normal;
-   overflow-wrap: break-word;
-   max-width: 100%;
+
+.info-section {
+  margin-top: 1.5rem;
+}
+
+.info-section p {
+  margin: 0;
+  color: #4a5568;
+  line-height: 1.5;
+}
+.hero-text {
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: #2d3748;
+  margin-top: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+@media (max-width: 768px) {
+  .hero-text {
+    font-size: 1.1rem;             /* Perfectly sized for phones */
+    line-height: 1.6;
+    margin-bottom: 2rem;           /* Tightens the vertical space */
+  }
+}
+/* Create a single parent container to hold all this text */
+.landing-content-wrapper {
+  max-width: 800px; /* Adjust this number to change the overall width */
+  margin: 0 auto;   /* Centers the entire text block on the page */
+  padding: 0 20px;  /* Prevents text from touching the edge of the screen */
 }
 /* blinking color changing word "fun" on landing page */
 span#blinkingColor {
@@ -54,6 +107,83 @@ span#blinkingColor {
 	 50%   {opacity: 1.0; transform: scale(1.2)}
 	 100%   {opacity: 0.05; transform: scale(0.8)}
 }
+/*******************if mobile user, need to send special message ********************/
+.instruction-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.instruction-card h2 {
+  font-size: 1.25rem;
+  margin: 12px 0 8px 0;
+  font-weight: 700;
+}
+
+.instruction-card p {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+  color: #4a5568;
+}
+/* Container that locks the badge and title on the same line */
+.instruction-header-row {
+  display: flex;
+  align-items: center; /* Centers items vertically relative to each other */
+  gap: 8px;            /* Tightly spaces the badge and the text */
+  margin-bottom: 6px;  /* Tightly spaces the header row from the paragraph below */
+}
+
+/* Makes the H2 smaller and prevents it from jumping to a new line */
+h2.inline-title {
+  display: inline;
+  font-size: 1.05rem;  /* Scaled down to match the badge height beautifully */
+  font-weight: 700;
+  margin: 0;           /* Eliminates default browser heading margins */
+  padding: 0;
+  color: #1a202c;
+}
+
+/* Ensures the paragraph sits closely underneath */
+.instruction-text {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;           /* Removes default paragraph top/bottom spacing */
+  color: #4a5568;
+}
+/* Styling the Badges */
+/* Base badge formatting remains crisp and compact */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  white-space: nowrap; /* Prevents the badge text from wrapping into two lines */
+}
+
+.badge-action {
+  background-color: #fffaf0;
+  color: #dd6b20;
+  border: 1px solid #feebc8;
+}
+
+.badge-info {
+  background-color: #ebf8ff; /* Soft tech blue background */
+  color: #2b6cb0;
+  border: 1px solid #bee3f8;
+}
+
+/* Secondary Desktop Suggestion Box styling adjustments */
+.desktop-recommendation p {
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
+/*******************************upgrade info ***********************/
 /* put the home page verbiage over the logo, invisible at first then fades in after logo "burst" 
    the top is implicitly 0 so that the words would lay on top of logo*/
 #upgradeSchedule {
@@ -61,26 +191,6 @@ span#blinkingColor {
 }
 #upgradingSiteNow {
 	color: red;
-}
-div.home_expln {
-    position: absolute;
-    top: 0;           /* Snaps the text to the same top edge as the logo */
-    left: 10%;        /* Side margins only */
-    right: 10%;
-    margin: 0;        /* REMOVED: 10% top margin that caused the gap */
-    
-    z-index: 10;      /* Higher than the logo */
-    text-align: left;
-    font-weight: bold;
-    color: #000000;
-    font-size: 18px;
-    
-    opacity: 0.0;
-    animation: expln_fade_in 2s forwards 2s;
-}
-@keyframes expln_fade_in{
-	 0%  {opacity: 0.0;}
-	 100%   {opacity: 1.0;}
 }
 /*****************Auto demo controls on****************************/
 /* this image comes from basePage and is place before index.html so need absolute positioning */
