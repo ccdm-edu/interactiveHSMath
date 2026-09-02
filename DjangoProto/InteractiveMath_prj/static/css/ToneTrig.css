@@ -19,13 +19,6 @@
 }
 
 /*****************************************************************/
-/* this is a header of current activity*/
-#musicalActivity {
-	font-weight: bold;
-	font-size: 32px;
-	}
-
-/*****************************************************************/
 /* This is the controls for tone generation */
 /* do NOT put a space between number and word "px" */
 #menuExplnTones {

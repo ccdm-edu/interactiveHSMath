@@ -25,15 +25,6 @@
 	--LABEL_X_VAL3: 350px;
 }
 
-
-/***************************/
-/* put a label up and an expln/to do selector input box */
-#headerAndCtl_ST {
-	position: relative;
-	font-weight: bold;
-	font-size: 32px;
-} 
-
 /************Params that define circle***************/
 /* arrange all the parms that feed into or get info out of circle */
 #CircleValues {

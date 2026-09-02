@@ -17,16 +17,7 @@
 	--GRAPH_LABEL_TOP: 20px;
 	--GRAPH_LABEL_BOTTOM: 340px;
 }
-/***************************/
-/* put a label up and an expln/to do selector input box */
-/* text header of page activity*/
-#HeaderTrig_DT2 {
-	position: relative;
-	width: auto;
-	font-weight: bold;
-	font-size: 32px;
-	resize: none
-}
+
 #Control_DT2 {
 	position: relative;
 	width: auto;

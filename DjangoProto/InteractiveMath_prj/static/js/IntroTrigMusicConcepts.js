@@ -53,7 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	function makeVideoActive(currVideoIndex) {
 		activeVideoIndex = currVideoIndex;
-		// need to make size of page bigger so buttons/footers float to correct place at bottom
+		// need to make size of page bigger so buttons/footers float to correct place at bottom, since 
+		// we are moving introducing page with Triggy to showing intro videos.
 		let $videoIntroSection = $("#TrigMusicVideoIntro");
 		if ($videoIntroSection) $videoIntroSection.style.height = '650px';
 

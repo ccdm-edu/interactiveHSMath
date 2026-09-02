@@ -40,20 +40,20 @@
 	{{ artistCredit }} 
 {% endblock %}
 
+{% block supportMaterial %}
+{% endblock %}
+
 {% block body_block %}
 	<div id="MusicVideoSummaryBlock">
-		<h1>Sine and Cosine Make Music</h1>
-		<h2>Summary</h2>
-
+		<h1 style="text-align: center;">Sine and Cosine Make Music</h1>
+		<h2 style="text-align: center;">Summary</h2>
 		<div id="video-resizable-container">
-		    <iframe id="MusicToneSummary" src="{{ musicSummaryVideo }}" title="YouTube video player" 
-		        frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-		        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-		    </iframe>
-		</div>	
-		
-		<br>
-		<br>	
+			<iframe id="MusicToneSummary" src="{{ musicSummaryVideo }}"
+				title="YouTube video player" frameborder="0"
+				allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+				referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+			</iframe>
+		</div>
 	</div>
 {% endblock %}	
 

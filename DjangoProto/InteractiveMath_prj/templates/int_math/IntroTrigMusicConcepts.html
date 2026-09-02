@@ -38,7 +38,7 @@
 
 {% block body_block %}
 	<div id="TrigMusicVideoIntro">
-		<h1>Intro to Trig and Music Concepts</h1>
+		<h1 style="text-align: center;">Intro to Trig and Music Concepts</h1>
 		<img id="Initial_MCexplaining" src="{{ cartoonIntroGIF }}" alt="Character introducing terms and concepts">
 		<audio controls id="trigIntro-controls"> 
 			<source src="{{ trigReviewIntroAudio }}"> 
@@ -96,12 +96,14 @@
 		</div>
 		
 		<div id="UserSelectionVideo">
-			<h2><u>Click on a topic below to select video...</u></h2>
-			<ul id="VideoList">
-				<li id="FreqPerIntro" title="Click to select">Frequency and Period</li>
-				<li id="SineCosIntro" title="Click to select">Sine and Cosine</li>
-				<li id="SoundwavePitchIntro" title="Click to select">Soundwaves and Pitch Tones</li>
-			</ul>
+			<h2>
+				<u>Click on a topic below to select video...</u>
+				<ul id="VideoList">
+					<li id="FreqPerIntro" title="Click to select">Frequency and Period</li>
+					<li id="SineCosIntro" title="Click to select">Sine and Cosine</li>
+					<li id="SoundwavePitchIntro" title="Click to select">Soundwaves and Pitch Tones</li>
+				</ul>
+			</h2>
 		</div>
 	</div>
 {% endblock %}

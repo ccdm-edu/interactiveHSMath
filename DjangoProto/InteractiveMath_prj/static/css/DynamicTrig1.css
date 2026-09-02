@@ -18,15 +18,6 @@
 	--GRAPH_LABEL_TOP: 15px;
 	--OFFSET_VALUES: 15px;
 }
-/***************************/
-/* put a label up and an expln/to do selector input box */
-#headerAndCtl_DT1{
-	position: relative;
-	width: auto;
-	font-weight: bold;
-	font-size: 32px;
-	resize: none
-}
         
 /************Params that describe and control activity***************/
 

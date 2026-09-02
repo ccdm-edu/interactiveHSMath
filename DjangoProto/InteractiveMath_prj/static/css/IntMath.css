@@ -97,6 +97,42 @@ p#headerForSubtopics {
 #yesCookies:hover, #noCookies:hover{
 	border-color: black;
 }
+/***************** top headers *******************************/
+#TrigMusicVideoIntro h1,
+#TrigPageSideBySide #side-content h1,
+#MusicVideoSummaryBlock h1 {
+  /* Font Choice */
+  font-family: 'DM Sans', system-ui, sans-serif;
+  
+  /* Sizing (Responsive using clamp) */
+  font-size: clamp(2rem, 5vw, 2.75rem); 
+  font-weight: 700;
+  line-height: 1.2;
+  
+  /* Styling & Polish */
+  letter-spacing: -0.02em; /* Tightens modern geometric fonts slightly */
+  color: #1e293b; /* Deep slate instead of harsh pure black */
+  text-align: left;
+}
+#TrigPageSideBySide #side-content h2,
+#MusicVideoSummaryBlock h2{
+  /* Keep the exact same font stack for consistency */
+  font-family: 'DM Sans', system-ui, sans-serif;
+  
+  /* Sizing: Noticeably smaller than h1, but still bold */
+  font-size: clamp(1.4rem, 3vw, 1.75rem); 
+  font-weight: 600; /* Slightly lighter weight than h1's 700 */
+  line-height: 1.3;
+  
+  /* Layout Spacing: Crucial for math pages */
+  margin-top: 2rem;    /* Pushes away from the content above it */
+  margin-bottom: 0.75rem; /* Sits comfortably close to the text below it */
+  
+  /* Styling */
+  color: #475569; /* A slightly lighter slate/gray than your h1 */
+  letter-spacing: -0.01em;
+}
+
 /******************* advanced topic native dialog window ***********************/ 
 :root { 
   --ADV_TOPIC_WINDOW_HEIGHT: 350px; 
@@ -710,7 +746,7 @@ button.close:focus-visible {
   width: 100%; 
   gap: 40px; /* Space between them */ 
 } 
-
+/* for inner pages, no need for question box of home page*/
 #TrigPageSideBySide.horizontal-layout:not(.home-page) { 
   display: flex !important; 
   flex-direction: row; /* Force horizontal alignment */ 

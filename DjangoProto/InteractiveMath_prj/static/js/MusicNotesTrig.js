@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		["C5", C5_NOTE], ["C4", C4_NOTE], ["B4flat", BFLAT4_NOTE]
 	]);
 
-	const DEFAULT_TITLE = "Musical Notes <br>and Underlying Trig";
+	const DEFAULT_TITLE = "Musical Notes and Underlying Trig";
 	let $musicalActivity = $("#musicalActivity");
 	if ($musicalActivity) $musicalActivity.innerHTML = DEFAULT_TITLE;
 

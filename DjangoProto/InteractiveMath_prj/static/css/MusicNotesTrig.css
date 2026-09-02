@@ -31,13 +31,6 @@
 input[type="range"] {
   width:80px;
 }
-/*****************************************************************/
-/* this is a header of current activity*/
-#musicalActivity {
-	resize: none;
-	font-weight: bold;
-	font-size: 32px;
-	}
 
 /*****************************************************************/
 /* do NOT put a space between number and word "px" */
