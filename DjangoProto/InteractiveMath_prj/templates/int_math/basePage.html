@@ -90,38 +90,70 @@
 						class="nav-link dropdown-toggle navbarDropdown" href="#" id="link-trig-menu"
 						role="button">Trig</a>
 						<ul class="dropdown-menu">
-							<li class="has-submenu"><a class="dropdown-toggle"
-								id="TrigFuncTopic" href="#">Trig Functions</a>
+							<li class="has-submenu"><a class="dropdown-toggle dropdown-item" id="TrigFuncTopic" href="#">
+            					<span class="track-number"></span> <!-- Empty spacer keeps text column straight -->
+            					<span class="track-icon">🎵</span>
+            					<span class="track-name">Trig Functions</span>
+            					<span class="submenu-arrow">▸</span>
+        						</a>
 								<ul class="submenu">
 									<li><a class="dropdown-item"
-										href="{% url 'int_math:IntroTrigMusicConcepts' %}">1.
-											Intro to concepts</a></li>
+										href="{% url 'int_math:IntroTrigMusicConcepts' %}"> 
+										<span class="track-number">1.</span> 
+										<span class="track-icon">🧠</span>
+										<span class="track-name">Intro to concepts</span> 
+									</a></li>
 									<li><a class="dropdown-item"
-										href="{% url 'int_math:MusicSineIntro' %}">2. Trig
-											functions make music</a></li>
+										href="{% url 'int_math:MusicSineIntro' %}"> 
+										<span class="track-number">2.</span> 
+										<span class="track-icon">🎹</span>
+										<span class="track-name">Trig functions make music</span> 
+									</a></li>
 									<li><a class="dropdown-item"
-										href="{% url 'int_math:StaticTrig' %}">3. Sine cosine
-											angles</a></li>
+										href="{% url 'int_math:StaticTrig' %}"> 
+										<span class="track-number">3.</span> 
+										<span class="track-icon">📐</span>
+										<span class="track-name">Sine cosine angles</span> 
+									</a></li>
 									<li><a class="dropdown-item"
-										href="{% url 'int_math:DynamicTrig1' %}">4. Sine meets
-											time</a></li>
+										href="{% url 'int_math:DynamicTrig1' %}"> 
+										<span class="track-number">4.</span>
+										<span class="track-icon">⏳</span>
+										<span class="track-name">Sine meets time</span> 
+									</a></li>
 									<li><a class="dropdown-item"
-										href="{% url 'int_math:DynamicTrig2' %}">5. Sine goes
-											faster</a></li>
+										href="{% url 'int_math:DynamicTrig2' %}"> 
+										<span class="track-number">5.</span> 
+										<span class="track-icon">⚡</span>
+										<span class="track-name">Sine goes faster</span> 
+									</a></li>
 									<li><a class="dropdown-item"
-										href="{% url 'int_math:ToneTrig' %}">6. Trig tones become
-											audible</a></li>
+										href="{% url 'int_math:ToneTrig' %}"> 
+										<span class="track-number">6.</span> 
+										<span class="track-icon">🔊</span>
+										<span class="track-name">Trig tones become audible</span> 
+									</a></li>
 									<li><a class="dropdown-item"
-										href="{% url 'int_math:MusicNotesTrig' %}">7. Trig tones
-											within musical notes</a></li>
+										href="{% url 'int_math:MusicNotesTrig' %}"> 
+										<span class="track-number">7.</span> 
+										<span class="track-icon">🎶</span>
+										<span class="track-name">Trig tones within musical notes</span> 
+									</a></li>
 									<li><a class="dropdown-item"
-										href="{% url 'int_math:MusicSineSummary' %}">8. Summary of
-											trig in music</a></li>
-								</ul></li>
-							<li><a class="dropdown-item"
-								href="{% url 'int_math:TrigID' %}">Trig Identities</a></li>
-						</ul></li>
-
+										href="{% url 'int_math:MusicSineSummary' %}"> 
+										<span class="track-number">8.</span> 
+										<span class="track-icon">🏆</span>
+										<span class="track-name">Summary of trig in music</span> 
+									</a></li>
+								</ul>
+							</li> <!--  the submenu must live inside Trig Function list -->
+							<li><a class="dropdown-item" href="{% url 'int_math:TrigID' %}">
+            					<span class="track-number"></span> <!-- Empty spacer keeps text column straight -->
+            					<span class="track-icon">🧬</span> 
+            					<span class="track-name">Trig Identities</span>
+       						</a></li>
+						</ul>
+					</li>
 				</ul>
 				<!-- Pushed to the right naturally via Flexbox space-between -->
 				<ul class="navbar-nav right-nav">
