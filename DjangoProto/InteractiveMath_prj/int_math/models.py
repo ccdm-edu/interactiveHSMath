@@ -37,6 +37,12 @@ class Subtopic(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='subtopics')
     title = models.CharField(max_length=Topic.MAX_LENGTH)
     url = models.URLField(help_text="Need http/s prefix, best to cut and paste from a website")
+    icon = models.CharField(
+        max_length=10, 
+        blank=True, 
+        null=True, 
+        help_text="Paste a single emoji icon here (e.g., 🎹, 📐, ⚡)"
+    )
 
     def __str__(self):
         # Good practice: include the parent topic in the string representation

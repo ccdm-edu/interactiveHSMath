@@ -138,10 +138,14 @@ p#headerForSubtopics {
   --ADV_TOPIC_WINDOW_HEIGHT: 350px; 
   --ADV_TOPIC_WINDOW_WIDTH: 500px; 
 } 
-/* handles hotlinks but especially the Advanced popup link */
-a:hover { 
-  text-decoration: none; 
-  color: #1565C0; /* darker blue */ 
+/* Handles all hotlinks but especially the Advanced popup link */
+/* Added the :not() clause to protect math navigation elements from turning blue */
+a:hover:not(.dropdown-item):not(.nav-link) { 
+  /* teal underline and a bit of word "pop" on hover */
+  text-decoration: none;
+  color: #00acc1; /* A slightly deeper, readable teal for text */
+  border-bottom: 2px solid #00E5FF; /* Your popping dropdown cyan */
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.4); /* Subtle glow */
 }
 #AdvancedTopics {
   display: none; /* Let the element hide cleanly by default when closed */
@@ -324,7 +328,10 @@ p.AdvTopic_Expln, p.AdvTopic_ToDo {
   z-index: 1030; 
   box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
 } 
-
+#headerForSubtopics {
+  margin: 0; /* Prevents paragraph margins from pushing the nav down */
+  padding: 0;
+}  
 .navbar-collapse { 
   display: none; 
   width: 100%; 
@@ -352,7 +359,11 @@ p.AdvTopic_Expln, p.AdvTopic_ToDo {
 
 .nav-link { 
   text-decoration: none; 
-  color: rgba(0,0,0,0.7); 
+  color: rgba(0,0,0,0.7);
+  display: flex !important;
+  align-items: flex-start !important; /* Changed from 'center' to keep icons aligned with the first line of text */
+  gap: 12px;
+  width: 100%; /* Forces the item to take up the full sidebar width */  
 } 
 
 #hamburger-btn {
@@ -511,14 +522,14 @@ td:has(.dropdown) {
 .submenu li a { 
   display: flex; 
   align-items: center;
-  gap: 12px; 
+  gap: 2px; 
   width: 100%;          
   box-sizing: border-box; 
   white-space: nowrap;    
   background: none;
   border: none;
   cursor: pointer;
-  padding: 6px 8px 6px 12px; /* Balanced alignment cushion values */
+  padding: 4px 8px 4px 4px; /* Top, right, bottom, left */
   color: #2d3748; 
   text-decoration: none; 
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -549,7 +560,13 @@ td:has(.dropdown) {
 
 .track-name {
   flex-grow: 1;
-  max-width: 100%;
+  max-width: 100%;  
+  display: block;		
+  white-space: normal;      /* Allows natural browser text wrapping */
+  word-wrap: break-word;    /* Breaks long words if they exceed boundaries */
+  /* Let the sidebar container define the width naturally */
+  flex: 1;   
+ 
 }
 
 /* Hide padding fields if metadata data elements are missing */
@@ -580,10 +597,11 @@ td:has(.dropdown) {
    4. HOVER STATES & TRANSITIONS
    ========================================================================== */
 
-/* Global row highlight animations */
+/* Global row highlight animations and left sidebar*/
 .dropdown-menu .dropdown-item:hover,
 .dropdown-menu li a:hover,
-.submenu li a:hover { 
+.submenu li a:hover,
+.nav.flex-column .nav-link.dropdown-item:hover { 
   background-color: #00E5FF; 
   background-image: none;    
   color: #1a1a1a;             
@@ -593,9 +611,12 @@ td:has(.dropdown) {
   box-shadow: 0 4px 12px rgba(0, 229, 255, 0.35);
 }
 
-/* Keep the arrow visual state readable during background conversions */
-.dropdown-item:hover .submenu-arrow {
-  color: #1a1a1a;
+/* Explicitly force internal text spans to obey the parent dark text color */
+.dropdown-menu .dropdown-item:hover span,
+.dropdown-menu li a:hover span,
+.submenu li a:hover span,
+.nav.flex-column .nav-link.dropdown-item:hover span {
+  color: #1a1a1a !important;
 }
 
 /******************expired time modal popup*************************************/

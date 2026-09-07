@@ -17,25 +17,33 @@
  * ============================================================================
  -->
 
-<ul class="nav flex-column"> 
-  {% if subtopics %} 
-    <!-- Wrap the heading text inside an li wrapper to keep HTML valid -->
+<ul class="nav flex-column">
+  {% if subtopics %}
+    <!-- Sidebar Header matching your established structure -->
     <li class="nav-header-item" style="list-style: none;">
-      <p id="headerForSubtopics"> Subtopics </p> 
+      <p id="headerForSubtopics">Subtopics</p>
     </li>
-    
-    {% for s in subtopics %} 
-      <li class="nav-item"> 
-        <a class="nav-link" href={{ s.url }}> 
-          <span data-feather="music"></span>{{ s.title }} 
-        </a> 
-      </li> 
-    {% endfor %} 
-    
-  {% else %} 
-    <!-- Move the div wrapper INSIDE the li element, or apply the ID to the li -->
+
+    <!-- Loop through dynamic subtopics, mirroring the submenu styling -->
+    {% for s in subtopics %}
+      <li class="nav-item">
+        <a class="nav-link dropdown-item" href="{{ s.url }}">
+          <!-- Automatically increments numbers (1., 2., 3., etc.) -->
+          <span class="track-number">{{ forloop.counter }}.</span>
+          
+          <!-- Dynamic icon fallback: checks for a model property, otherwise defaults to music emoji -->
+          <span class="track-icon">{% if s.icon %}{{ s.icon }}{% else %}🎵{% endif %}</span>
+          
+          <!-- Dynamic text title -->
+          <span class="track-name">{{ s.title }}</span>
+        </a>
+      </li>
+    {% endfor %}
+
+  {% else %}
+    <!-- Fallback if no subtopics exist -->
     <li class="nav-item" id="NoSubtopicAvail" style="list-style: none !important;">
       Select a subject from menu along top right and will get subtopics here.
     </li>
-  {% endif %} 
+  {% endif %}
 </ul>

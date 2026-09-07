@@ -20,14 +20,14 @@ def populate():
     #first we will create the subtopics for each topic. For trig, we land on the Origin page but then URL constructed relative
     # to that page so need .. to get to pages on same level
     trig_subtopics = [
-        {'title': '1. Intro to concepts', 'url':'../IntroTrigMusicConcepts'},
-        {'title': '2. Trig functions make music', 'url':'../MusicSineIntro'},
-        {'title': '3. Sine cosine angles', 'url':'../StaticTrig'},
-        {'title':'4. Sine meets time', 'url':'../DynamicTrig1'},
-        {'title':'5. Sine goes faster', 'url':'../DynamicTrig2'},
-        {'title': '6. Trig tones become audible', 'url':'../ToneTrig'},
-        {'title': '7. Trig tones within musical notes', 'url':'../MusicNotesTrig'},
-        {'title': '8. Summary of trig in music', 'url':'../MusicSineSummary'}]
+        {'title': 'Intro to concepts', 'url':'../IntroTrigMusicConcepts', 'icon':'🧠'},
+        {'title': 'Trig functions make music', 'url':'../MusicSineIntro', 'icon':'🎹'},
+        {'title': 'Sine cosine angles', 'url':'../StaticTrig', 'icon':'📐'},
+        {'title':'Sine meets time', 'url':'../DynamicTrig1', 'icon':'⏳'},
+        {'title':'Sine goes faster', 'url':'../DynamicTrig2', 'icon':'⚡'},
+        {'title': 'Trig tones become audible', 'url':'../ToneTrig', 'icon':'🔊'},
+        {'title': 'Trig tones within musical notes', 'url':'../MusicNotesTrig', 'icon':'🎶'},
+        {'title': 'Summary of trig in music', 'url':'../MusicSineSummary', 'icon':'🏆'}]
     
     trigIdent_subtopics = [
         {'title': 'Trig identities explained', 'url':'../TrigIdentity'},
@@ -58,7 +58,9 @@ def populate():
     for top, top_data in topics.items():
         c = add_top(top)
         for p in top_data[0]['topic']:
-            add_subtop(c,p['title'],p['url'])
+            # Use .get('icon', None) so it safely falls back if a topic doesn't have an icon key
+            icon_val = p.get('icon', None)
+            add_subtop(c,p['title'],p['url'],icon_val)
     
     #check results at build
     for t in Topic.objects.all():
@@ -83,8 +85,10 @@ def populate():
 
     
             
-def add_subtop(topic, title, url):
-    s = Subtopic.objects.get_or_create(topic=topic, title=title, url=url)[0]
+def add_subtop(topic, title, url, icon):
+    s = Subtopic.objects.get_or_create(topic=topic, title=title, url=url, defaults={'icon': icon})[0]
+    if s.icon != icon:
+        s.icon = icon
     s.save()
     return s
 
