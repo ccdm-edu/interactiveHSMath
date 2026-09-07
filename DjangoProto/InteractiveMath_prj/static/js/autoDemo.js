@@ -311,22 +311,19 @@ class AutoDemo {
 
 		this.oldText = $container.innerHTML;
 		// get rid of old text and put up the new fake subtopics 
-		// I dont know why I cant use the data feather here with music note like I did in subtopics.html but 
-		// this is the "real" location of the icon from the browser 
-		let musicNote = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-music"><path d="M9 17H5a2 2 0 0 0-2 2 2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm12-2h-4a2 2 0 0 0-2 2 2 2 0 0 0 2 2h2a2 2 0 0 0 2-2z"></path><polyline points="9 17 9 5 21 3 21 15"></polyline></svg>';
 		let fakeSubtopics = '<ul class="nav flex-column">' +
 			'<p id="headerForSubtopics"> Subtopics </p>' +
 			'<li class="nav-item">' +
-			'<a class="nav-link" id="firstFakePage">' + musicNote + '1. Introduction' + '</a>' +
+			'<a class="nav-link" id="firstFakePage">' + '1. Introduction' + '</a>' +
 			'</li>' +
 			'<li class="nav-item">' +
-			'<a class="nav-link" id="secondFakePage">' + musicNote + "2. HEEEELP! I'm lost" + '</a>' +
+			'<a class="nav-link" id="secondFakePage">' + "2. HEEEELP! I'm lost" + '</a>' +
 			'</li>' +
 			'<li class="nav-item">' +
-			'<a class="nav-link" id="thirdFakePage">' + musicNote + "3. Hey, I'm getting this" + '</a>' +
+			'<a class="nav-link" id="thirdFakePage">' + "3. Hey, I'm getting this" + '</a>' +
 			'</li>' +
 			'<li class="nav-item">' +
-			'<a class="nav-link" id="fourthFakePage">' + musicNote + '4. Summary' + '</a>' +
+			'<a class="nav-link" id="fourthFakePage">' + '4. Summary' + '</a>' +
 			'</li>' +
 			'</ul>';
 
