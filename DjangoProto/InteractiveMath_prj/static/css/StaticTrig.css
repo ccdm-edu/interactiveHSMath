@@ -16,10 +16,10 @@
 /* create global var for this html */
 :root{
 	--LABEL_Y_VAL: 0px; 
-	--VALUE_Y_1: 30px; 
-	--VALUE_Y_2: 60px; 
-	--VALUE_Y_3: 90px; 
-	--VALUE_Y_4: 130px; 
+	--VALUE_Y_1: 10px; 
+	--VALUE_Y_2: 40px; 
+	--VALUE_Y_3: 70px; 
+	--VALUE_Y_4: 110px; 
 	--LABEL_X_VAL1: 50px;
 	--LABEL_X_VAL2: 170px;
 	--LABEL_X_VAL3: 350px;
@@ -40,13 +40,13 @@
 #ampCircLocation {
 	position: absolute;
 	left: var(--LABEL_X_VAL1);
-	top: var(--VALUE_Y_1);
+	top: 30px;
 	z-index: 9;
 }
 #unitCircNotify{
 	position: absolute;
 	left: var(--LABEL_X_VAL1);
-	top: 65px;
+	top: 40px;
 }
 #xyValueLabel {
 	position: absolute;
@@ -61,7 +61,7 @@
 }
 #xyEqtn_y {
 	position: absolute;
-	left: calc(var(--LABEL_X_VAL2) + 65px);
+	left: calc(var(--LABEL_X_VAL2) + 80px);
 	top: var(--VALUE_Y_1);
 	color: red;
 }

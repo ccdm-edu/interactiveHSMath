@@ -147,6 +147,10 @@ a:hover:not(.dropdown-item):not(.nav-link) {
   border-bottom: 2px solid #00E5FF; /* Your popping dropdown cyan */
   text-shadow: 0 0 8px rgba(0, 229, 255, 0.4); /* Subtle glow */
 }
+#AdvancedTopicLink {
+	display: inline-block; /* Allows vertical margins to work on an anchor <a>*/
+	margin-bottom: 10px;  /* give some breathing room to the top link */
+}
 #AdvancedTopics {
   display: none; /* Let the element hide cleanly by default when closed */
   position: fixed;
