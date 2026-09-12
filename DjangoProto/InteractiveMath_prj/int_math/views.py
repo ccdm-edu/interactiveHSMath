@@ -114,7 +114,6 @@ def getBaseContextEntry(request):
     baseKVcontext = {'CompanyName': companyName, 
                      'GoogleAnalID': g_analyticsID, 
                      'recaptchaPublicKey':settings.RECAP_PUBLIC_KEY,
-                     'FavIco': getFullFileURL('NonPublicImages/favicon.ico', False, request),
                      'AutoDemoJS': getFullFileURL('js/autoDemo.js', True, request),
                      }
     

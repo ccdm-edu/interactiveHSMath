@@ -37,8 +37,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="">
 	<meta name="author" content="C. De Meyer">
-	<!-- yes the icon is hardcoded, easier than adding it to all the django variables for all pages.  Only hurts test proto -->
-	<link rel="icon" href="{{ basePage.FavIco }}">
+	<!-- favicon.ico is served from github pages via redirect for production and locally for prototype  -->
+	<link rel="icon" href="/favicon.ico">
 	<title>
 		{{ basePage.CompanyName }} - 
 		{% block title_block%}

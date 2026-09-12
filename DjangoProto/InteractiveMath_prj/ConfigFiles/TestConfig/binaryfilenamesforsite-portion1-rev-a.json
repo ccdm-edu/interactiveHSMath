@@ -13,7 +13,6 @@
 	"DynamicTrig2Seg0": "AudioExpln/AudioTest.mp3",
 	"DynamicTrig2Seg1": "AudioExpln/AudioTest.mp3",
 	"DynamicTrig2Seg2": "AudioExpln/AudioTest.mp3",
-	"FavICON": "none",
 	"IntroToFrequencyVideo_html": "../../../static/static_binaries/VideoExpln/TestMP4file.mp4",
 	"IntroToFrequencyVideo": "../../../static/static_binaries/VideoExpln/TestMP4file.mp4",
 	"IntroToTrigVideo":  "../../../static/static_binaries/VideoExpln/TestMP4file.mp4", 
