@@ -170,6 +170,7 @@ CONTENT_SECURITY_POLICY = {
             "https://*.ytimg.com",
             "https://*.google.com",
             "data:",
+            "https://interactablemathinc.github.io",
             CLOUD_URL_BINARY,
             CLOUD_URL_CODE,
         ],

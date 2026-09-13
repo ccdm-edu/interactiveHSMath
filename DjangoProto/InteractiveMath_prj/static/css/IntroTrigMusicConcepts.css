@@ -85,20 +85,34 @@
     pointer-events: auto; 
 }
 #UserSelectionVideo{
-	position: relative;
-	top: calc(var(--SPACE_TO_SQUEEZE_OUT) - 10px);
-	white-space: nowrap; 
+  display: flex;
+  flex-direction: column;   /* Stacks the heading text and the list vertically */
+  align-items: center;      /* Centers both items horizontally on the page */
+  text-align: center;       /* Centers the text within the title and list lines */
+}
+#UserSelectionVideo h2 {
+	margin: 10px 0 0 0; /* top right bottom left (CW)*/
 }
 #VideoList > li.active{
 	color: pink;
 }
+/* Target just the "◀ Current Topic" text to push it away from the title */
+#VideoList li .topic-badge {
+    margin-left: 35px;         /* FORCES the physical offset separation you want */
+    font-size: 18px;           /* Scales the arrow text perfectly */
+    display: inline-block;     /* Allows the margin rule to activate properly */
+    font-weight: normal;       /* Optional: keeps arrow clean if title is bold */
+}
 /* the list of videos user can choose from */
 #VideoList {
-	/* need to move this up so as to not let user get lost in white space */
-	position: absolute;
-	top: 35px;
-	font-size: 25px;
-	text-align: left;
+  list-style-position: inside; /* Pulls the bullet points inside the text boundary so they center with the words */
+  padding: 0;                  /* Removes the browser's default left-hand padding on lists */
+  margin-top: 15px;            /* Adds a clean space below the underlined title */
+}
+#VideoList li {
+  font-size: 24px;
+  cursor: pointer;             /* Changes the mouse cursor to a pointer finger to match your "Click to select" title */
+  margin: 0px;
 }
 /***************************measuring frequency user controls **************************/
 /* set of input/output controls for user interaction with freq measuring */
@@ -107,13 +121,21 @@
 	position: relative;
 	top: var(--SPACE_TO_SQUEEZE_OUT);  
 	/* set up internal elements as flex */
-	flex-direction: row;
-	justify-content: flex-start; 
+	display: flex;
+	flex-direction: row;  /* side by side*/
+	align-items: flex-start;   /* align at top edge */
+	justify-content: center; 
 	white-space: nowrap; 
 }
 /* for each item in the flex box */
-.IntroMusicFreqControl {
-	margin: 10px;
+.IntroMusicFreqControl p{
+	margin-right: 16px;
+	margin-bottom: 10px;
+}
+.freq-table {
+	margin-top: 16px;
+	width: 600px;
+	border-collapse: collapse; /* This removes the gaps between cells */
 }
 #TimeHeader{
 	font-size:20px; 
@@ -152,6 +174,9 @@
 #IntroFreqHz{
 	border-left:2px solid green;
 	border-bottom:2px solid green;
+}
+#HzText {
+	border-left:2px solid green;
 }
 #IntroFreqBPM{
 	border-right:2px solid green;

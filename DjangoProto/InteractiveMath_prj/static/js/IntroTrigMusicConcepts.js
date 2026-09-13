@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		];
 	}
 
-	const ACTIVE_TOPIC = " <-- Current Topic";
+	const ACTIVE_TOPIC = "◀ Current Topic";
 	let activeVideoIndex = 0; // automatically make first video active
 
 	function makeVideoActive(currVideoIndex) {
@@ -66,19 +66,26 @@ document.addEventListener('DOMContentLoaded', () => {
 			if ($li.classList.contains('active')) {
 				$li.removeClass('active');
 				// go back to default color (css does that) and remove extra text
-				let currText = $li.textContent;
-				currText = currText.replace(ACTIVE_TOPIC, '');
-				$li.textContent = currText;
-			}
+       			// Find and completely remove the old arrow span if it exists
+       		    let oldBadge = $li.querySelector('.topic-badge');
+                if (oldBadge) {
+                	oldBadge.remove();
+                }
+            }
 
 			if (index === activeVideoIndex) {
 				$li.addClass('active');
 				// change text of new active topic
-				let currText = $li.textContent;
-				$li.textContent = currText + ACTIVE_TOPIC;
+				// Create an isolated HTML container for the arrow text
+				let badge = document.createElement('span');
+				badge.className = 'topic-badge';
+				badge.textContent = ACTIVE_TOPIC;
 
-				// swap out the video with new one
-				let tutorialVideo = $('#IntroConceptVideo'); 
+				// Append it neatly right next to the title text
+				$li.appendChild(badge);
+
+				// Swap out the video with new one
+				let tutorialVideo = $('#IntroConceptVideo');
 				if (tutorialVideo && VIDEO_EXPLN_FILENAMES[index]) {
 					tutorialVideo.src = VIDEO_EXPLN_FILENAMES[index];
 				}
