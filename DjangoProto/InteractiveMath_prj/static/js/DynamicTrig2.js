@@ -195,6 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	let DEFAULT_FREQ = 0.1; // as set in html for element 
 	let currFreq = DEFAULT_FREQ;
 	let $goBtn = $('#GoFreq_DT2');
+	$('#SubSampleNotice_DT2')?.css("display","none")
 
 	function resetToDefaults() {
 		let $freqSlider = $("#FreqSlider_DT2");
@@ -242,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		// get rid of any possible user notifications about the graphs, which are now irrelevant 
 		$('#UserNotices_DT2')?.text("");
-		$('#SubSampleNotice_DT2')?.text("");
+		$('#SubSampleNotice_DT2')?.css("display","none")
 
 	}
 
@@ -313,8 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 				$('#period_DT2')?.text(roundFP(currPeriod, 3).toString());
 				$('#UserNotices_DT2')?.text(`Period T = 1/f = 1/(${currFreq}Hz) = ${roundFP(currPeriod, 1)} sec as circled in purple on graphs`);
-				$('#SubSampleNotice_DT2')?.text(currFreq >= MAX_FREQ_ALLPT ? 'Samples removed from top plot to improve clarity' : '');
-
+				(currFreq >= MAX_FREQ_ALLPT)?$('#SubSampleNotice_DT2').css("display","block"):$('#SubSampleNotice_DT2').css("display","none")
 				// draw a circle on the period T on the graph to right 
 				if (ctxFreqPlot) {
 					if (currPeriod > EXPANDED_TIME) {
@@ -470,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		$('#UserNotices_DT2')?.text("");
-		$('#SubSampleNotice_DT2')?.text("");
+		$('#SubSampleNotice_DT2')?.css("display","none")
 
 	}
 

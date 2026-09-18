@@ -39,12 +39,12 @@ def populate():
         {'title':'Imag Num topic 3', 'url':'#ImagNumTopic3'}]
     
     people_subtopics = [
-        {'title': 'Thank You!', 'url': '../acknowledgements'},
+        {'title': 'Thank You!', 'url': '../acknowledgements', 'icon': '❤️'},
         ]
     
     legal_subtopics = [
-        {'title': 'Terms Of Use', 'url': '../TermsOfUse'},
-        {'title': 'Privacy Policy', 'url': '../Privacy'},
+        {'title': 'Terms Of Use', 'url': '../TermsOfUse', 'icon':'📜'},
+        {'title': 'Privacy Policy', 'url': '../Privacy', 'icon':'🔒'},
         ]
     
     topics = {'TrigFunct': [{'topic': trig_subtopics}],

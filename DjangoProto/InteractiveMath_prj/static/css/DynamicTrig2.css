@@ -14,8 +14,8 @@
 */
 :root{
 	--GRAPH_CANVAS_TOP: -350px;  /* so it overlays on the right*/
-	--GRAPH_LABEL_TOP: 20px;
-	--GRAPH_LABEL_BOTTOM: 340px;
+	--GRAPH_LABEL_TOP: 10px;
+	--GRAPH_LABEL_BOTTOM: 330px;
 }
 
 #Control_DT2 {
@@ -25,12 +25,14 @@
 }
 .EqtnTable_DT2{
 	position: absolute;
+    width: max-content; 
+    /* Prevent cells from wrapping text onto multiple lines */
+    white-space: nowrap; 
+    /* Standard table resets */
+    border-collapse: collapse; 
 }
 .Eqtn_DT2{
 	font-size: 25px;
-}
-.Eqtn2_DT2{
-	font-size: 15px;
 }
 .N_color{
 	color: red;
@@ -45,7 +47,8 @@
 	color: DarkOrchid;	
 }
 .InsertedVal {
-	border: 1px dotted;
+	font-size: 18px;
+	border: 1px dotted blue;
 }
 
 /************Params that describe and control activity***************/
@@ -96,7 +99,7 @@
 #UserNotices_DT2{
 	position: absolute;
 	left: 300px;
-	top: 50px;
+	top: 40px;
 	color: DarkOrchid;
 	white-space: nowrap;
 }
@@ -131,7 +134,7 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 /* if freq too high, tell user we are removing samples for clarity, place between the graphs */
 #SubSampleNotice_DT2{
 	position: absolute;
-	top: 270px;
+	top: -70px;
 	left: 850px; 
 	width: 250px;
 	color: DarkOrchid;

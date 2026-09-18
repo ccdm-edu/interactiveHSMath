@@ -15,7 +15,7 @@
 /* create global var for this html */
 :root{
 	--CANVAS_TOP: 0px;
-	--GRAPH_LABEL_TOP: 15px;
+	--GRAPH_LABEL_TOP: 0px;
 	--OFFSET_VALUES: 15px;
 }
         
@@ -82,7 +82,7 @@
 }
 #ExplnFreqMark{
 	position: absolute;
-	color: lime;
+	color: DarkOrchid;
 	left: 0px;
 	top: calc(var(--CANVAS_TOP) + 110px);
 }

@@ -140,10 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	},	
 	 ];
 	const POINT_TO_TIME = 
-	{	tip1: [101, 47],
+	{	tip1: [133, 45],
 		tip2: [115, 47],
-		point: [110,39],
-		end: [101,80]
+		point: [120,35],
+		end: [140,90]
 	};
 
 	let numFreqGenSoFar = 0;
@@ -655,6 +655,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		let $timeVal = $('#timeVal_DT1');
 		if ($timeVal) $timeVal.textContent = '0';
+		
+		$('#ExplnFreqMark')?.css("visibility","hidden")
 
 		let $theta = $('#theta_DT1');
 		if ($theta) $theta.textContent = '0' + '\u00B0';
