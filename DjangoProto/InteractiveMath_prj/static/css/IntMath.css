@@ -570,7 +570,6 @@ td:has(.dropdown) {
   word-wrap: break-word;    /* Breaks long words if they exceed boundaries */
   /* Let the sidebar container define the width naturally */
   flex: 1;   
- 
 }
 
 /* Hide padding fields if metadata data elements are missing */

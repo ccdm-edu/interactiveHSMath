@@ -50,6 +50,14 @@
 	font-size: 15px;
 	font-weight: bold;
 	z-index: 15;  /* want this behind clef, in front of music */
+	
+	/* Perfect horizontal & vertical alignment */
+	display: flex;
+	flex-direction: column;  /* keep list vertically arranged */
+	justify-content: center; /* Centers horizontally */
+	align-items: center;     /* Centers vertically */
+	text-align: center;      /* Keeps multi-line text centered */
+		
 	/* animate this so it moves, hovers then moves on out */
 	animation-name: initMusicTrigInstr;
 	animation-duration: 6s;
@@ -60,11 +68,11 @@
 
 /*instructions come from behind staff, sit in middle for a few sec, then flow off page */
 @keyframes initMusicTrigInstr {
-	0%		{left: 0px; top: -30px; visibility: visible;}
-	15%		{left: 300px; top: -30px;}
+	0%		{left: 0px; top: -50px; visibility: visible;}
+	15%		{left: 300px; top: -50px;}
 	/* here we hold for awhile */
-	80%     {left: 300px; top: -30px;}
-	100%	{left: 1200px; top: -30px; visibility: hidden;} /* go off page and die */
+	80%     {left: 300px; top: -50px;}
+	100%	{left: 1200px; top: -50px; visibility: hidden;} /* go off page and die */
 }
 
 #colorfulClef{
@@ -331,6 +339,18 @@
 	90%		{background-color: mediumorchid;}
 	100%	{background-color: red;}
 }
+/* Clean layout override for the song selection menu */
+#songSelections.dropdown-menu {
+  width: max-content !important;
+  min-width: max-content !important;
+}
+
+#songSelections.dropdown-menu .dropdown-item {
+  width: auto !important;        /* Prevents the 100% width layout loop */
+  white-space: nowrap !important; /* Strictly prevents text wrapping */
+  display: flex;                  /* Matches your original item layout */
+}
+
 /*******************************************************/
 /* image indicator that will start an audio introduction of this math section */
 /*******************************************************/
