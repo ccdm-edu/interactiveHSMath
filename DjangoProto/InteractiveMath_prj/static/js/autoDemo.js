@@ -51,6 +51,9 @@ class AutoDemo {
 		if (this.fullScript.length > 1) {
 			let $segNum = $('#segNum');
 			if ($segNum) {
+				// Reset to just the first option so duplicates aren't appended
+        		$segNum.innerHTML = '<option value="1">1</option>'; 
+
 				for (var i = 1; i < this.fullScript.length; i++) {
 					let newVal = (i + 1).toString();
 					let newOption = document.createElement('option');
@@ -67,7 +70,7 @@ class AutoDemo {
 	//------------------------------------------------------------------------------------
 	setCurrSeg(newCurrSeg) {
 		if (!isNaN(parseFloat(newCurrSeg)) && isFinite(newCurrSeg)) {
-			let temp = newCurrSeg - 1;
+			let temp = newCurrSeg - 1;  /*array indexes from 0, currSeg starts at 1 */
 			if ((temp >= 0) && (temp <= (this.fullScript.length - 1))) {
 				this.currSeg = temp;
 				let $segNumInput = $('#segNum');

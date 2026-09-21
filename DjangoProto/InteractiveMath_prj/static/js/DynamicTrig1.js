@@ -1104,8 +1104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	if ($segNumSelect) {
 		$segNumSelect.on('change', function() {
 			// Native element .value retrieval handles the conversion smoothly
-			let currSeg = parseInt($segNumSelect.value);
-			demo.setCurrSeg(currSeg);
+			demo.setCurrSeg(parseInt($segNumSelect.value));
 
 			// remove the class so the animation will work on next page, cant do this until animation completes 
 			let $clickHereCursor = $('#clickHereCursor');

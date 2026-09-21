@@ -552,7 +552,29 @@ document.addEventListener('DOMContentLoaded', () => {
 						{
 							element: '#GoFreq_DT2',
 							action: "nothing",
-							waitTimeMillisec: 5000
+							waitTimeMillisec: 51000
+						}
+					},
+					//Near end, turn off the increment
+					{
+						segmentActivity: "ACT_ON_ELEMENT",
+						segmentParams:
+						{
+							element: '#GoFreq_DT2',
+							action: "click",
+							// positive values for offset x and y move the cursor "southwest"
+							offset: { x: 15, y: 20 },
+							waitTimeMillisec: 1000
+						}  // this is wait before you go on to next item
+					},
+					// remove cursor on go/stop button
+					{
+						segmentActivity: "REMOVE_ACT_ON_ELEMENT",
+						segmentParams:
+						{
+							element: '#GoFreq_DT2',
+							action: "nothing",
+							waitTimeMillisec: 3000
 						}
 					},
 				]
@@ -690,7 +712,29 @@ document.addEventListener('DOMContentLoaded', () => {
 						{
 							element: '#FreqSlider_DT2',
 							action: "nothing",
-							waitTimeMillisec: 12000
+							waitTimeMillisec: 22000
+						}
+					},
+					//At end, turn off the increment
+					{
+						segmentActivity: "ACT_ON_ELEMENT",
+						segmentParams:
+						{
+							element: '#GoFreq_DT2',
+							action: "click",
+							// positive values for offset x and y move the cursor "southwest"
+							offset: { x: 15, y: 20 },
+							waitTimeMillisec: 1000
+						}  // this is wait before you go on to next item
+					},
+					// remove cursor on go/stop button
+					{
+						segmentActivity: "REMOVE_ACT_ON_ELEMENT",
+						segmentParams:
+						{
+							element: '#GoFreq_DT2',
+							action: "nothing",
+							waitTimeMillisec: 3000
 						}
 					},
 				]
@@ -746,9 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	let $segNumSelect = $("#segNum");
 	if ($segNumSelect) {
 		$segNumSelect.on('change', function() {
-			let $segNumSelect = $('#segNum');
-			currSeg = $segNumSelect ? parseInt($segNumSelect.value) : 0;
-			demo.setCurrSeg(currSeg);
+			demo.setCurrSeg(parseInt($segNumSelect.value));
 
 			// remove the class so the animation will work on next page, cant do this until animation completes 
 			let $clickHereCursor = $('#clickHereCursor');

@@ -114,6 +114,10 @@
   cursor: pointer;             /* Changes the mouse cursor to a pointer finger to match your "Click to select" title */
   margin: 0px;
 }
+/*we have to change button color because teen explanation audio calls out blue button */
+#UserMeasuresFrequency{
+  background-color: #00E5FF; /* electric blue*/
+}
 /***************************measuring frequency user controls **************************/
 /* set of input/output controls for user interaction with freq measuring */
 #IntroMusicInteractive {
