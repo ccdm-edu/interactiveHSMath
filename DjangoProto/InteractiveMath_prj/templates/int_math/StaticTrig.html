@@ -56,55 +56,54 @@
     
 {% block body_block %}
 
-	<div id="StaticTrigBlock">
-		<div id="CircleValues">	
-	    	<label id="ampCircLabel"><b>Amplitude (r)</b></label>
-	    	<div id="ampCircLocation">
-		    	<!-- Stripped old Bootstrap custom-select wrapper class -->
-		    	<select name="ampCirc" id="ampCirc">
-				    <option value="0.8">0.8</option>
-				    <option value="0.9">0.9</option>
-				    <option value="1.0" selected>1.0</option>
-		            <option value="1.1">1.1</option>
-		    	</select> 
-		    </div>
-		    <p id="unitCircNotify">Unit Circle</p> 
-		    
-		    <div id="equationContainer">
-				<label id="xyValueLabel"><b>(x,y)</b></label>
-				<p id="xyEqtn_x"></p><p id="xyEqtn_y"></p>
-				<p id="xyFilledIn"></p>
-				<!-- Transformed old data tooltips into stable standard cross-browser title tags -->
-				<p id="xyExactValue" title="Exact Value of (x,y)"></p>
-				<p id="xyValueDecimal" title="Decimal Approx of (x,y)"></p>
-				<label id="thetaLabel"><b>&#952</b></label>
-				<p id="theta">  </p>
-			</div>
-		</div>
-	
-		<div id="Canvas_STrig">
-			<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
-			<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas:  you must set bitmap for canvas in html, css only -->
-			<!-- Encapsulated width and height variables within proper structural string double quotes -->
-			<canvas id="AmpSinCosCircle" width="1050" height="650">
-					Your Browser does not support canvas tag, you are missing graph capability
-			</canvas>
-			<div class="quadIdentifiers">
-				<p id="quad1_ID">I</p>
-				<p id="quad2_ID">II</p>
-				<p id="quad3_ID">III</p>
-				<p id="quad4_ID">IV</p>
-			</div>	
-			
-			<div id="FirstHelp_ST">
-			<!--  will dynamically add elements here -->
-				<p> Start clicking yellow dots, which represent phase &#920 values</p>
-			</div>
-			<canvas id="funTutorial_ST" width="1050" height="650">   <!-- needed to move cursor around circle canvas -->
-				Your Browser does not support canvas tag, you are missing graph capability
-			</canvas>		
+	<div id="CircleValues">	
+    	<label id="ampCircLabel"><b>Amplitude (r)</b></label>
+    	<div id="ampCircLocation">
+	    	<!-- Stripped old Bootstrap custom-select wrapper class -->
+	    	<select name="ampCirc" id="ampCirc">
+			    <option value="0.8">0.8</option>
+			    <option value="0.9">0.9</option>
+			    <option value="1.0" selected>1.0</option>
+	            <option value="1.1">1.1</option>
+	    	</select> 
+	    </div>
+	    <p id="unitCircNotify">Unit Circle</p> 
+	    
+	    <div id="equationContainer">
+			<label id="xyValueLabel"><b>(x,y)</b></label>
+			<p id="xyEqtn_x"></p><p id="xyEqtn_y"></p>
+			<p id="xyFilledIn"></p>
+			<!-- Transformed old data tooltips into stable standard cross-browser title tags -->
+			<p id="xyExactValue" title="Exact Value of (x,y)"></p>
+			<p id="xyValueDecimal" title="Decimal Approx of (x,y)"></p>
+			<label id="thetaLabel"><b>&#952</b></label>
+			<p id="theta">  </p>
 		</div>
 	</div>
+
+	<div id="Canvas_STrig">
+		<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
+		<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas:  you must set bitmap for canvas in html, css only -->
+		<!-- Encapsulated width and height variables within proper structural string double quotes -->
+		<canvas id="AmpSinCosCircle" width="1050" height="650">
+				Your Browser does not support canvas tag, you are missing graph capability
+		</canvas>
+		<div class="quadIdentifiers">
+			<p id="quad1_ID">I</p>
+			<p id="quad2_ID">II</p>
+			<p id="quad3_ID">III</p>
+			<p id="quad4_ID">IV</p>
+		</div>	
+		
+		<div id="FirstHelp_ST">
+		<!--  will dynamically add elements here -->
+			<p> Start clicking yellow dots, which represent phase &#920 values</p>
+		</div>
+		<canvas id="funTutorial_ST" width="1050" height="650">   <!-- needed to move cursor around circle canvas -->
+			Your Browser does not support canvas tag, you are missing graph capability
+		</canvas>		
+	</div>
+
 
 	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  
@@ -181,7 +180,4 @@
 	<script src="{{ basePage.AutoDemoJS }}" crossorigin="anonymous"></script>	    
 	<script src="{{ StaticTrigJS }}" crossorigin="anonymous"></script>	 
 
-	<br><br>
-
-	
 {% endblock %}

@@ -88,12 +88,13 @@
 }
 
 /***************************/
-/* create canvas for expandable unit circle, position = relative lets the footer float to bottom for all parent elements.
-We use negative value for top since we want some overlap*/
+/* create canvas for expandable unit circle, using absolute position for children means parent cant calculate value
+means we mus set explicitely.  Need absolute posltion to allow overlap*/
 #UnitCircleAndGraphCanvas{
 	position: relative;
 	left: 0px;
 	top: var(--CANVAS_TOP);
+	height: 650px;  /*set to the tallest graph FreqChange_DT1 which sits side by side with AmpSinCosCircle_DT1 */
 }
 #AmpSinCosCircle_DT1{
 	 position: absolute;
@@ -177,9 +178,3 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	 padding-right: 0 px;
 	 z-index: -1;
 }
-
-/**********************define space for footer to float at bottom***************/
-#DynamicTrig1Block {
-	/* define space for rest of page makes footer float to bottom */
-	height: 580px;
-}	

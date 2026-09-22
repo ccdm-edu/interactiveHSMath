@@ -17,7 +17,6 @@
 
 #AcknowledgementsBlock {
 	display: grid;
-	/* FIXED: added var() wrapper for the variable */
 	grid-template-columns: repeat(var(--NUM_COL), 1fr);
 	grid-gap: 20px;
 	grid-auto-rows: auto;

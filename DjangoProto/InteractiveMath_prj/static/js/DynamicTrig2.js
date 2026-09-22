@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	if (isNewbie === 'true') {
 		$('#startAutoDemo')?.addClass('newbieMode');
 	} else if (isNewbie === 'false') {
-		$('#FirstHelp_DT2')?.css('visibility', 'visible'); 
+		$('#FirstHelp_DT2')?.hide(); 
 	}
 
 	let ctxUnitCircle;

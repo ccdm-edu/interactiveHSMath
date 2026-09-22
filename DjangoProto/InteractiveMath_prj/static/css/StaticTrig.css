@@ -99,10 +99,12 @@
 }
 
 /************Holds the circle drawings and help and animation***************/
-/* create canvas for expandable unit circle, position = relative lets the footer float to bottom for all parent elements.
-We use negative value for top since we want some overlap*/
-#Canvas_STrig{
-	 position:relative; 
+/* create canvas for expandable unit circle, objects overlay so need position absolute, but this means need to give parent
+size of children since it can no longer compute on its own*/
+#Canvas_STrig {
+	position: relative;
+	width: 1050px; /* Matches HTML width of canvas*/
+	height: 650px; /* Force the parent to take up space in document flow */
 }
 #AmpSinCosCircle{
 	 position:absolute; 
@@ -177,8 +179,3 @@ We use negative value for top since we want some overlap*/
 	 padding-right: 0 px;
 	 z-index: -1;
 }
-/**********************define space for footer to float at bottom***************/
-#StaticTrigBlock {
-	/* define space for rest of page makes footer float to bottom */
-	height: 520px;
-}	

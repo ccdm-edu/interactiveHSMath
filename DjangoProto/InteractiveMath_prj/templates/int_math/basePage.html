@@ -320,8 +320,28 @@
 					</div>
 				</div>
 			</div>
-			{% block body_block %} 
-			{% endblock %}
+			<!-- want this code to grow and shrink together -->
+			<div class="base-page-wrapper">
+				<div class="main-content">
+					{% block body_block %} 
+					{% endblock %}
+				</div>
+	
+				<!-- FOOTER -->
+				<div class="Site-footer">
+					<!-- Swapped Bootstrap classes for your native cyan layout buttons -->
+					<button type="button" class="btn btn-secondary" id="GoToPreviousPage"><span class="btn-arrow">&larr;</span> Back</button>
+					<button type="button" class="btn btn-secondary" id="GoToNextPage">Next<span class="btn-arrow">&rarr;</span></button>
+					<br>
+					<p id="SiteInfo-links">
+						{% block artist_credit %} {% endblock %}
+						<!-- legal precedent supports acceptance if links are capitalized, explained as links and underlined -->
+						<br> By continuing on this site, you agree to the following
+						two legal document links: <a href="{% url 'int_math:Privacy' %}"><u>PRIVACY</u></a>
+						&middot; <a href="{% url 'int_math:TermsOfUse' %}"><u>TERMS</u></a>
+					</p>
+				</div>
+			</div>
 
 			<!-- "macros" to allow jquery syntax without heavy jquery libraries -->
 			<!-- will appear to be an error in eclipse but its not -->
@@ -331,22 +351,6 @@
 			<script nonce="{{ CSP_NONCE }}">{% inline_asset 'js-lib/jqBS-shorthand.js' %}</script>
 			<script nonce="{{ CSP_NONCE }}">{% inline_asset 'js/IntMath.js' %}</script>
 			<script nonce="{{ CSP_NONCE }}">{% inline_asset 'js/IntMathUtils.js' %}</script>
-
-			<!-- FOOTER -->
-			<div id="Site-footer">
-				<!-- Swapped Bootstrap classes for your native cyan layout buttons -->
-				<button type="button" class="btn btn-secondary" id="GoToPreviousPage"><span class="btn-arrow">&larr;</span> Back</button>
-				<button type="button" class="btn btn-secondary" id="GoToNextPage">Next<span class="btn-arrow">&rarr;</span></button>
-				<br>
-				<p id="SiteInfo-links">
-					{% block artist_credit %} {% endblock %}
-					<!-- legal precedent supports acceptance if links are capitalized, explained as links and underlined -->
-					<br> By continuing on this site, you agree to the following
-					two legal document links: <a href="{% url 'int_math:Privacy' %}"><u>PRIVACY</u></a>
-					&middot; <a href="{% url 'int_math:TermsOfUse' %}"><u>TERMS</u></a>
-				</p>
-			</div>
-
 			{% block unique_js_block %} 
 			{% endblock %}
 		</main>

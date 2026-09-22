@@ -1047,12 +1047,19 @@ td { /* keep dynamicTrig2 table from collapsing if screen too small, user should
   pointer-events: none; 
 } 
 
-/************all pages, footer **************************/ 
-#Site-footer { 
-  position: relative; 
-  bottom: -100px; 
-  margin-left: auto; 
-  margin-right: auto; 
+/************all pages, sizing **************************/ 
+.base-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Takes up full screen height */
+}
+.main-content {
+  flex: 1; /* Expands to fill space, pushing footer down */
+}
+.Site-footer {
+  width: 100%;
+  padding: 20px 0;
+  margin-top: auto; /* Push to the bottom if content is short */
 }
 
 

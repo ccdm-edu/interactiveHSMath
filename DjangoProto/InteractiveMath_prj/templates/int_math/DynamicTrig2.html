@@ -49,109 +49,108 @@
 {% endblock %}
     
 {% block body_block %}
-	<div id="DynamicTrig2Block">
-		<div id="Control_DT2">
-			<table class="EqtnTable_DT2">
-				<tbody>
-					<tr class="Eqtn_DT2">
-						<td colspan="4" style="text-align: left;"><u>Observed Values</u></td>
-						<td colspan="3"></td>
-						<td colspan="3" style="text-align: left;"><u>Given Values</u></td>
-					</tr>
-					<tr class="Eqtn_DT2"> <!-- Master eqtn, using &nbsp for spaces to prevent resizing -->
-					    <td style="text-align: left;">(2&#960)&nbsp;&#8901</td>
-					    <td style="text-align: left;"><span class="N_color">N</span></td>
-					    <td style="text-align: left; width: 20px;"> + </td>
-					    <td style="text-align: left;"><span class="ThetaColor">&#952<sub>u</sub></span></td>
-					    <td>=</td>
-					    <td><b>&#920</b></td>
-					    <td>=</td>
-					    <td>(2&#960)&nbsp;&#8901</td>
-					    <td style="text-align: center;"><span class="freqColor">f &nbsp;&nbsp;&nbsp;&#160</span>&#8901</td>
-					    <td><span class="timeColor">t</span></td>
-					</tr>
-					<!-- set widths here so table won't jump around in size as values change -->
-					<tr class="Eqtn_DT2">  <!-- Master eqtn with values filled in -->
-						<td style="text-align: left;">(2&#960) &#8901</td>
-						<td style="text-align: left; width: 30px;"><span class="N_eqtn N_color">0</span></td>
-						<td style="text-align: left; width: 20px;"> + </td>
-						<td style="text-align: left; width: 120px;"><span class="ThetaUC_eqtn ThetaColor">0</span></td>
-						<td>=</td>
-					    <td><b>&#920</b></td>
-					    <td>=</td>
-					    <td>(2&#960)&nbsp;⋅&nbsp;(</td>
-					    <td style="text-align: left; width: 108px;"><span class="currFreqVal_DT2 freqColor">0.1&nbsp;Hz</span>)&nbsp;&#8901 </td>
-					    <!-- 120px allows 3 significant digits and one fractional i.e. 999.9 max -->
-					    <td style="text-align: left; width: 110px;">(<span class="timeVal_DT2 timeColor">0&nbsp;sec</span>)</td>
-					</tr>
-					<tr class="Eqtn2_DT2 InsertedVal">  <!-- Labels for the values on the page -->
-						<td colspan="2" style="text-align: right;" class="N_color">N(num cycles)</td>
-						<td> </td>
-						<td colspan="3" style="text-align: left;" class="ThetaColor">&#952<sub>u</sub> (unit circle angle)</td>
-						<td> </td>
-						<td></td>						
-					    <td style="text-align: left;" class="freqColor">Frequency</td>
-					    <td style="text-align: left;" class="timeColor">Time</td>
-					</tr>
-					<tr class="InsertedVal">                   <!--values on the page to be plugged into eqtns-->
-						<td colspan="2" style="text-align: center;"><span class="N_eqtn N_color">0</span></td>
-						<td> </td>
-						<td style="text-align: left;"><span class="ThetaUC_eqtn ThetaColor">0</span></td>
-						<td> </td>
-						<td> </td>
-						<td> </td>
-						<td></td>						
-					    <td style="text-align: left;"><span class="currFreqVal_DT2 freqColor">0</span></td>
-					    <td style="text-align: left;"><span class="timeVal_DT2 timeColor">0 sec</span></td>
-					</tr>
-					<tr class="Eqtn_DT2">  <!-- calculated values -->
-						<td colspan="4" style="text-align: right;" id="observeAnswer"></td>
-						<td>=</td>
-					    <td><b>&#920</b></td>
-					    <td>=</td>
-					    <td colspan="2" style="text-align: left;" id="expectAnswer"></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-
-		<div id="CircleValues_DT2">	
-			<p id="UserNotices_DT2"></p>
-			<label id="FreqLabel_DT2"><b>Frequency:</b></label><span class="currFreqVal_DT2 freqColor" id="currFreqValSlide_DT2">000</span> 
-			<!-- Removed Bootstrap specific dataset placement attributes; standard titles handle native tooltip fallbacks -->
-			<input id="FreqSlider_DT2" type="range" step="0.1" value="0.1" min="0.1" max="2" title="click on slider and use arrows for greater precision">
-			<button type="button" id="GoFreq_DT2" class="btn-utility" title="Start and pause and restart">
-			    <span class="btn-icon">⚡</span> 
-  				<span class="btn-text">Start</span> 
-  			</button>
-			<button type="button" id="Clear_DT2" class="btn-utility" title="Reset the page">
-			    <span>⌫</span>Clear
-  			</button>			
-			<!-- Removed duplicate empty UserNotices_DT2 element block to ensure unique DOM id structure -->
-		</div>
-		
-		<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
-		<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas: you must set bitmap for canvas in html, css only -->
-		<!-- sets element size, resulting in distortion -->
-		<div id="UnitCircleAndGraphCanvas_DT2">
-			<!-- Enclosed raw canvas attribute values within clean string quotes -->
-			<canvas id="AmpSinCosCircle_DT2" width="450" height="550">
-				Your Browser does not support canvas tag, you are missing graph capability
-			</canvas>
-			<!-- to add border to canvas, add this at end style="border:1px solid #000000;" -->
-			<p id="sinEqtnLabelHI_DT2">S=sin(2&#8901&#960&#8901f&#8901t)</p>  
-			<p id="sinEqtnLabelLO_DT2">S=sin(2&#8901&#960&#8901f&#8901t)</p> 
-			<p id="SubSampleNotice_DT2">Samples removed from top plot to improve clarity</p>
-			<canvas id="FreqChange_DT2" width="500" height="650">
-				Your Browser does not support canvas tag, you are missing graph capability
-			</canvas>			
-		</div>
-
-		<div id="FirstHelp_DT2">
-		<!-- will dynamically add elements here -->
-			<p> Select a frequency then hit Start button</p>
-		</div>
+	<div id="Control_DT2">
+		<table class="EqtnTable_DT2">
+			<tbody>
+				<tr class="Eqtn_DT2">
+					<td colspan="4" style="text-align: left;"><u>Observed Values</u></td>
+					<td colspan="3"></td>
+					<td colspan="3" style="text-align: left;"><u>Given Values</u></td>
+				</tr>
+				<tr class="Eqtn_DT2"> <!-- Master eqtn, using &nbsp for spaces to prevent resizing -->
+				    <td style="text-align: left;">(2&#960)&nbsp;&#8901</td>
+				    <td style="text-align: left;"><span class="N_color">N</span></td>
+				    <td style="text-align: left; width: 20px;"> + </td>
+				    <td style="text-align: left;"><span class="ThetaColor">&#952<sub>u</sub></span></td>
+				    <td>=</td>
+				    <td><b>&#920</b></td>
+				    <td>=</td>
+				    <td>(2&#960)&nbsp;&#8901</td>
+				    <td style="text-align: center;"><span class="freqColor">f &nbsp;&nbsp;&nbsp;&#160</span>&#8901</td>
+				    <td><span class="timeColor">t</span></td>
+				</tr>
+				<!-- set widths here so table won't jump around in size as values change -->
+				<tr class="Eqtn_DT2">  <!-- Master eqtn with values filled in -->
+					<td style="text-align: left;">(2&#960) &#8901</td>
+					<td style="text-align: left; width: 30px;"><span class="N_eqtn N_color">0</span></td>
+					<td style="text-align: left; width: 20px;"> + </td>
+					<td style="text-align: left; width: 120px;"><span class="ThetaUC_eqtn ThetaColor">0</span></td>
+					<td>=</td>
+				    <td><b>&#920</b></td>
+				    <td>=</td>
+				    <td>(2&#960)&nbsp;⋅&nbsp;(</td>
+				    <td style="text-align: left; width: 108px;"><span class="currFreqVal_DT2 freqColor">0.1&nbsp;Hz</span>)&nbsp;&#8901 </td>
+				    <!-- 120px allows 3 significant digits and one fractional i.e. 999.9 max -->
+				    <td style="text-align: left; width: 110px;">(<span class="timeVal_DT2 timeColor">0&nbsp;sec</span>)</td>
+				</tr>
+				<tr class="Eqtn2_DT2 InsertedVal">  <!-- Labels for the values on the page -->
+					<td colspan="2" style="text-align: right;" class="N_color">N(num cycles)</td>
+					<td> </td>
+					<td colspan="3" style="text-align: left;" class="ThetaColor">&#952<sub>u</sub> (unit circle angle)</td>
+					<td> </td>
+					<td></td>						
+				    <td style="text-align: left;" class="freqColor">Frequency</td>
+				    <td style="text-align: left;" class="timeColor">Time</td>
+				</tr>
+				<tr class="InsertedVal">                   <!--values on the page to be plugged into eqtns-->
+					<td colspan="2" style="text-align: center;"><span class="N_eqtn N_color">0</span></td>
+					<td> </td>
+					<td style="text-align: left;"><span class="ThetaUC_eqtn ThetaColor">0</span></td>
+					<td> </td>
+					<td> </td>
+					<td> </td>
+					<td></td>						
+				    <td style="text-align: left;"><span class="currFreqVal_DT2 freqColor">0</span></td>
+				    <td style="text-align: left;"><span class="timeVal_DT2 timeColor">0 sec</span></td>
+				</tr>
+				<tr class="Eqtn_DT2">  <!-- calculated values -->
+					<td colspan="4" style="text-align: right;" id="observeAnswer"></td>
+					<td>=</td>
+				    <td><b>&#920</b></td>
+				    <td>=</td>
+				    <td colspan="2" style="text-align: left;" id="expectAnswer"></td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
+
+	<div id="CircleValues_DT2">	
+		<p id="UserNotices_DT2"></p>
+		<label id="FreqLabel_DT2"><b>Frequency:</b></label><span class="currFreqVal_DT2 freqColor" id="currFreqValSlide_DT2">000</span> 
+		<!-- Removed Bootstrap specific dataset placement attributes; standard titles handle native tooltip fallbacks -->
+		<input id="FreqSlider_DT2" type="range" step="0.1" value="0.1" min="0.1" max="2" title="click on slider and use arrows for greater precision">
+		<button type="button" id="GoFreq_DT2" class="btn-utility" title="Start and pause and restart">
+		    <span class="btn-icon">⚡</span> 
+ 				<span class="btn-text">Start</span> 
+ 			</button>
+		<button type="button" id="Clear_DT2" class="btn-utility" title="Reset the page">
+		    <span>⌫</span>Clear
+ 			</button>			
+		<!-- Removed duplicate empty UserNotices_DT2 element block to ensure unique DOM id structure -->
+	</div>
+	
+	<!-- https://stackoverflow.com/questions/21179779/canvas-arc75-75-50-0-3-1415-true-draws-oval-instead-of-circle -->
+	<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas: you must set bitmap for canvas in html, css only -->
+	<!-- sets element size, resulting in distortion -->
+	<div id="UnitCircleAndGraphCanvas_DT2">
+		<!-- Enclosed raw canvas attribute values within clean string quotes -->
+		<canvas id="AmpSinCosCircle_DT2" width="450" height="550">
+			Your Browser does not support canvas tag, you are missing graph capability
+		</canvas>
+		<!-- to add border to canvas, add this at end style="border:1px solid #000000;" -->
+		<p id="sinEqtnLabelHI_DT2">S=sin(2&#8901&#960&#8901f&#8901t)</p>  
+		<p id="sinEqtnLabelLO_DT2">S=sin(2&#8901&#960&#8901f&#8901t)</p> 
+		<p id="SubSampleNotice_DT2">Samples removed from top plot to improve clarity</p>
+		<canvas id="FreqChange_DT2" width="500" height="650">
+			Your Browser does not support canvas tag, you are missing graph capability
+		</canvas>			
+	</div>
+
+	<div id="FirstHelp_DT2">
+	<!-- will dynamically add elements here -->
+		<p> Select a frequency then hit Start button</p>
+	</div>
+
 	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place. 
 	At the bottom it doesn't consume space from other elements but it does give search engines a clue what page is all about. -->

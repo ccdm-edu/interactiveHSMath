@@ -37,75 +37,75 @@
 {% block artist_credit %}{{ artistCredit }}{% endblock %}
 
 {% block body_block %}
-	<div id="TrigMusicVideoIntro">
-		<h1 style="text-align: center;">Intro to Trig and Music Concepts</h1>
-		<img id="Initial_MCexplaining" src="{{ cartoonIntroGIF }}" alt="Character introducing terms and concepts">
-		<audio controls id="trigIntro-controls"> 
-			<source src="{{ trigReviewIntroAudio }}"> 
-			Your browser does not support html5 audio.
-		</audio>
-		<div id="TriggyIntroText">
-			<!-- text comes from MusicIntroToTerms.docx which the synthetic voice speaks to user.  Best to put text here for SEO -->			
-			Hi, my name is Professor Triggy.  We are going to show how trig functions, namely sine and cosine, are used in music. 
-			We’ll start with me playing a tune you know with sine functions then you can do this yourself and try new tunes. 
-			Next, we will look at how these sine and cosine functions come out of your geometry and trigonometry class, then they 
-			start moving faster and faster until they get fast enough to be heard by your ears and become a pitch frequency.  
-			Finally, we will compare those trig functions to the recordings of real musicians playing various instruments.     
-			<br>
-			But first we have to review some basic terms.  When this audio is done, I will bring up several review topics or 
-			you can hit the Review button in the lower left below to get there faster.  Each of the topics will bring up a short 
-			video explanation and there will be stuff for you to do during the video.  I will start you on the first topic of 
-			frequency and period but you can choose as you like. Go through or skip topics as you please.    When you are done or 
-			if you already know these concepts, click the next page button on the lower left corner.  Have fun!					
-		</div>
-		<button type="button" class="btn btn-primary" id="ReviewConcepts">Review Concepts</button>
-		
-		<div id="video-resizable-container">
-		    <iframe id="IntroConceptVideo" src="{{ introToFreqVideo }}" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-		</div>
-		<div id="IntroMusicInteractive">
-			<section class="IntroMusicFreqControl">
-				<p><strong>Measure Repetition</strong></p>
-				<button type="button" id="UserMeasuresFrequency" class="btn btn-primary">Click Me</button>
-				<p id="informUserFreqQuality"></p>
-			</section>
-			<section class="IntroMusicFreqControl">
-				<table class="freq-table">  
-					<tbody>
-						<tr>
-							<td colspan="3" style="text-align: center;" id="TimeHeader"><b>Time (sec)</b></td>
-							<td colspan="2" style="text-align: center;" id="FreqHeader"><b>Frequency</b></td>
-						</tr>	
-						<tr>
-							<td style="text-align: center;" id="ElapsedText"> Elapsed </td>
-							<td style="text-align: center;" id="IntoPerText"> Into Period </td>
-							<td style="text-align: center;" id="PeriodText"> Period (average)</td>
-							<td style="text-align: center;" id="HzText"> Average (Hz)</td>
-							<td style="text-align: center;" id="BPMText"> Average (beats per min)</td>
-						</tr>
-						<tr>	
-							<td style="text-align: center;" id="IntroFreqTime"> 00.0 </td>
-							<td style="text-align: center;" id="IntroFreqTimeReset"> 00.0</td>
-							<td style="text-align: center;" id="IntroFreqPeriod"> 00.0</td>
-							<td style="text-align: center;" id="IntroFreqHz"> 00.0</td>
-							<td style="text-align: center;" id="IntroFreqBPM"> 00.0</td>						
-						</tr>
-					</tbody>
-				</table>
-			</section>
-		</div>
-		
-		<div id="UserSelectionVideo">
-			<h2>
-				<u>Click on a topic below to select video...</u>
-			</h2>
-			<ul id="VideoList">
-				<li id="FreqPerIntro" title="Click to select">Frequency and Period</li>
-				<li id="SineCosIntro" title="Click to select">Sine and Cosine</li>
-				<li id="SoundwavePitchIntro" title="Click to select">Soundwaves and Pitch Tones</li>
-			</ul>
-		</div>
+
+	<h1 style="text-align: center;">Intro to Trig and Music Concepts</h1>
+	<img id="Initial_MCexplaining" src="{{ cartoonIntroGIF }}" alt="Character introducing terms and concepts">
+	<audio controls id="trigIntro-controls"> 
+		<source src="{{ trigReviewIntroAudio }}"> 
+		Your browser does not support html5 audio.
+	</audio>
+	<div id="TriggyIntroText">
+		<!-- text comes from MusicIntroToTerms.docx which the synthetic voice speaks to user.  Best to put text here for SEO -->			
+		Hi, my name is Professor Triggy.  We are going to show how trig functions, namely sine and cosine, are used in music. 
+		We’ll start with me playing a tune you know with sine functions then you can do this yourself and try new tunes. 
+		Next, we will look at how these sine and cosine functions come out of your geometry and trigonometry class, then they 
+		start moving faster and faster until they get fast enough to be heard by your ears and become a pitch frequency.  
+		Finally, we will compare those trig functions to the recordings of real musicians playing various instruments.     
+		<br>
+		But first we have to review some basic terms.  When this audio is done, I will bring up several review topics or 
+		you can hit the Review button in the lower left below to get there faster.  Each of the topics will bring up a short 
+		video explanation and there will be stuff for you to do during the video.  I will start you on the first topic of 
+		frequency and period but you can choose as you like. Go through or skip topics as you please.    When you are done or 
+		if you already know these concepts, click the next page button on the lower left corner.  Have fun!					
 	</div>
+	<button type="button" class="btn btn-primary" id="ReviewConcepts">Review Concepts</button>
+
+	<div id="video-resizable-container">
+	    <iframe id="IntroConceptVideo" src="{{ introToFreqVideo }}" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+	</div>
+	<div id="IntroMusicInteractive">
+		<section class="IntroMusicFreqControl">
+			<p><strong>Measure Repetition</strong></p>
+			<button type="button" id="UserMeasuresFrequency" class="btn btn-primary">Click Me</button>
+			<p id="informUserFreqQuality"></p>
+		</section>
+		<section class="IntroMusicFreqControl">
+			<table class="freq-table">  
+				<tbody>
+					<tr>
+						<td colspan="3" style="text-align: center;" id="TimeHeader"><b>Time (sec)</b></td>
+						<td colspan="2" style="text-align: center;" id="FreqHeader"><b>Frequency</b></td>
+					</tr>	
+					<tr>
+						<td style="text-align: center;" id="ElapsedText"> Elapsed </td>
+						<td style="text-align: center;" id="IntoPerText"> Into Period </td>
+						<td style="text-align: center;" id="PeriodText"> Period (average)</td>
+						<td style="text-align: center;" id="HzText"> Average (Hz)</td>
+						<td style="text-align: center;" id="BPMText"> Average (beats per min)</td>
+					</tr>
+					<tr>	
+						<td style="text-align: center;" id="IntroFreqTime"> 00.0 </td>
+						<td style="text-align: center;" id="IntroFreqTimeReset"> 00.0</td>
+						<td style="text-align: center;" id="IntroFreqPeriod"> 00.0</td>
+						<td style="text-align: center;" id="IntroFreqHz"> 00.0</td>
+						<td style="text-align: center;" id="IntroFreqBPM"> 00.0</td>						
+					</tr>
+				</tbody>
+			</table>
+		</section>
+	</div>
+	
+	<div id="UserSelectionVideo">
+		<h2>
+			<u>Click on a topic below to select video...</u>
+		</h2>
+		<ul id="VideoList">
+			<li id="FreqPerIntro" title="Click to select">Frequency and Period</li>
+			<li id="SineCosIntro" title="Click to select">Sine and Cosine</li>
+			<li id="SoundwavePitchIntro" title="Click to select">Soundwaves and Pitch Tones</li>
+		</ul>
+	</div>
+
 {% endblock %}
 			
 {% block unique_js_block %}

@@ -350,14 +350,5 @@
   white-space: nowrap !important; /* Strictly prevents text wrapping */
   display: flex;                  /* Matches your original item layout */
 }
-
-/*******************************************************/
-/* image indicator that will start an audio introduction of this math section */
-/*******************************************************/
-
-/*****************Auto demo controls on****************************/
 	
-#MusicIntroBlock {
-	/* define space for rest of page makes footer float to bottom */
-	height: 550px;
-}	
+	
