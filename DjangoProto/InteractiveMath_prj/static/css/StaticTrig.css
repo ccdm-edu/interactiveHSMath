@@ -20,9 +20,9 @@
 	--VALUE_Y_2: 40px; 
 	--VALUE_Y_3: 70px; 
 	--VALUE_Y_4: 110px; 
-	--LABEL_X_VAL1: 50px;
-	--LABEL_X_VAL2: 170px;
-	--LABEL_X_VAL3: 350px;
+	--LABEL_X_VAL1: 20px;
+	--LABEL_X_VAL2: 160px;
+	--LABEL_X_VAL3: 370px;
 }
 
 /************Params that define circle***************/
@@ -37,6 +37,14 @@
 }
 /* because the canvas with unit circle and two plots takes up so much space and overlaps...*/
 /* need to ensure select box for amplitude is on top (max z) so users can input values, else up/down arrows and input not active, just visible*/
+#equationContainer{
+	font-size: 15px;
+}
+#equationContainer label,
+#ampCircLabel
+{
+	font-size: 20px;
+}
 #ampCircLocation {
 	position: absolute;
 	left: var(--LABEL_X_VAL1);
@@ -61,7 +69,7 @@
 }
 #xyEqtn_y {
 	position: absolute;
-	left: calc(var(--LABEL_X_VAL2) + 80px);
+	left: calc(var(--LABEL_X_VAL2) + 95px);
 	top: var(--VALUE_Y_1);
 	color: red;
 }

@@ -308,94 +308,91 @@ document.addEventListener('DOMContentLoaded', () => {
 	let selectedNote = null;
 	let musicCanvas = $('#ClefWithNotes');
 	(musicCanvas)?.on('click', (e) => {
-		musicCanvas.addEventListener('click', (e) => {
-			// need to convert canvas coord into bitmap coord
-			let rect = musicCanvas.getBoundingClientRect();
-			let pos;
-			if (e instanceof CustomEvent) {
-				// user is running automated demo
-				pos = { x: e.detail.xVal, y: e.detail.yVal }
-			} else if (e instanceof PointerEvent) {
-				// user clicked on the circle
-				pos = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-			} else if (e instanceof MouseEvent) {
-				// DELETE THIS CODE when Safari and Firefox fix their bug (over 2 yrs old) referred to here
-				// https://stackoverflow.com/questions/70626381/why-chrome-emits-pointerevents-and-firefox-mouseevents-and-which-type-definition
-				pos = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-			} else {
-				console.error('ERROR: unexpected event: ' + e);
-			}
-			Object.freeze(pos);
-			let cntr = 0;
+		// need to convert canvas coord into bitmap coord
+		let rect = musicCanvas.getBoundingClientRect();
+		let pos;
+		if (e instanceof CustomEvent) {
+			// user is running automated demo
+			pos = { x: e.detail.xVal, y: e.detail.yVal }
+		} else if (e instanceof PointerEvent || e instanceof MouseEvent) {
+			// user clicked on the circle
+			pos = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+			// because Safari and Firefox have bug (over 2 yrs old) referred t here
+			// https://stackoverflow.com/questions/70626381/why-chrome-emits-pointerevents-and-firefox-mouseevents-and-which-type-definition
+		} else {
+			console.error('ERROR: unexpected event: ' + e);
+		}
+		Object.freeze(pos);
+		let cntr = 0;
 
-			// if user clicks a note, the sound must come on and icons must match
-			$toneVolOn.show();
-			$toneVolOff.hide();
-			toneIsOnNow = true;
+		// if user clicks a note, the sound must come on and icons must match
+		$toneVolOn.show();
+		$toneVolOff.hide();
+		toneIsOnNow = true;
 
-			CmajorNotes.forEach(note => {
-				// not sure yet which dot the user clicked on, must search all
-				if (isInside(pos, note, NOTE_RADIUS)) {
-					// turn off colors of previously selected notes
-					// clear any old drawings before we put up the new stuff, take it back to the background image
-					if (ctxBkgdMusicCanvas && bkgdPlotNotes) {
-						ctxBkgdMusicCanvas.putImageData(bkgdPlotNotes, 0, 0);
+		CmajorNotes.forEach(note => {
+			// not sure yet which dot the user clicked on, must search all
+			if (isInside(pos, note, NOTE_RADIUS)) {
+				// turn off colors of previously selected notes
+				// clear any old drawings before we put up the new stuff, take it back to the background image
+				if (ctxBkgdMusicCanvas && bkgdPlotNotes) {
+					ctxBkgdMusicCanvas.putImageData(bkgdPlotNotes, 0, 0);
 
-						// turn note the new color on the bottommost layer of canvases
-						ctxBkgdMusicCanvas.beginPath();
-						ctxBkgdMusicCanvas.arc(note.x, note.y, COLOR_RADIUS, 0, 2 * Math.PI, true);
-						ctxBkgdMusicCanvas.fillStyle = note.noteColor;
-						ctxBkgdMusicCanvas.fill();
-						ctxBkgdMusicCanvas.stroke();
-						ctxBkgdMusicCanvas.closePath();
-					}
-
-					// put up the freq info and equation and play note
-					let $noteSelect = $("#noteSelectVal");
-					let $freqVal = $("#FreqOfNoteVal");
-					if ($noteSelect) $noteSelect.textContent = note.notePlayed;
-					if ($freqVal) $freqVal.textContent = note.freqHz + " Hz";
-
-					// we want a blip between notes as user "plays a simple song",
-					if (osc && typeof osc.stop === 'function') {
-						osc.toDestination().stop();
-					} else if (osc && osc.toDestination) {
-						try { osc.toDestination().stop(); } catch (err) { }
-					}
-
-					if (osc) {
-						if (osc.frequency) {
-							osc.frequency.value = note.freqHz;
-						} else {
-							osc.frequency = { value: note.freqHz };
-						}
-					}
-
-					setTimeout(function() {
-						// put a blip in the note change
-						if (toneIsOnNow) {
-							// play only if volume is on, we know note is selected
-							if (osc && typeof osc.start === 'function') {
-								osc.toDestination().start();
-							} else if (osc && osc.toDestination) {
-								try { osc.toDestination().start(); } catch (err) { }
-							}
-						}
-					}, 100);
-
-					selectedNote = note;
-
-					let $volOnOffBtn = $(".VolOnOff");
-					if ($volOnOffBtn) $volOnOffBtn.setAttribute("title", ""); // note is selected, no need to pester the user
-
-					drawTone();
+					// turn note the new color on the bottommost layer of canvases
+					ctxBkgdMusicCanvas.beginPath();
+					ctxBkgdMusicCanvas.arc(note.x, note.y, COLOR_RADIUS, 0, 2 * Math.PI, true);
+					ctxBkgdMusicCanvas.fillStyle = note.noteColor;
+					ctxBkgdMusicCanvas.fill();
+					ctxBkgdMusicCanvas.stroke();
+					ctxBkgdMusicCanvas.closePath();
 				}
-			});
 
-			// Now that user is getting into page, put up the audio intro "click me" verbiage
-			let $verbalIntro = $("#verbalIntro");
-			if ($verbalIntro) $verbalIntro.style.visibility = 'visible';
+				// put up the freq info and equation and play note
+				let $noteSelect = $("#noteSelectVal");
+				let $freqVal = $("#FreqOfNoteVal");
+				if ($noteSelect) $noteSelect.textContent = note.notePlayed;
+				if ($freqVal) $freqVal.textContent = note.freqHz + " Hz";
+
+				// we want a blip between notes as user "plays a simple song",
+				if (osc && typeof osc.stop === 'function') {
+					osc.toDestination().stop();
+				} else if (osc && osc.toDestination) {
+					try { osc.toDestination().stop(); } catch (err) { }
+				}
+
+				if (osc) {
+					if (osc.frequency) {
+						osc.frequency.value = note.freqHz;
+					} else {
+						osc.frequency = { value: note.freqHz };
+					}
+				}
+
+				setTimeout(function() {
+					// put a blip in the note change
+					if (toneIsOnNow) {
+						// play only if volume is on, we know note is selected
+						if (osc && typeof osc.start === 'function') {
+							osc.toDestination().start();
+						} else if (osc && osc.toDestination) {
+							try { osc.toDestination().start(); } catch (err) { }
+						}
+					}
+				}, 100);
+
+				selectedNote = note;
+
+				let $volOnOffBtn = $(".VolOnOff");
+				if ($volOnOffBtn) $volOnOffBtn.setAttribute("title", ""); // note is selected, no need to pester the user
+
+				drawTone();
+			}
 		});
+
+		// Now that user is getting into page, put up the audio intro "click me" verbiage
+		let $verbalIntro = $("#verbalIntro");
+		if ($verbalIntro) $verbalIntro.style.visibility = 'visible';
+
 	});
 
 	//***********************************
@@ -553,7 +550,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					// Twinkle Twinkle little star, how I wonder where you are
 					if (notesToPlay) {
 						notesToPlay.textContent = "C4,C4,G4,G4,A4,A4,G4 - F4,F4,E4,E4,D4,D4,C4";
-						notesToPlay.style.height = '20px';
+						notesToPlay.style.height = '15px';
 						notesToPlay.style.display = 'block';
 					}
 					if (notesToPlayLabel) {
@@ -564,7 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					// Happy Birthday to you, Happy Birthday to you, Happy birthday dear 		
 					if (notesToPlay) {
 						notesToPlay.textContent = "C4,C4,D4,C4,F4,E4 - C4,C4,D4,C4,G4,F4 - C4,C4,C5,A4,F4,E4,D4";
-						notesToPlay.style.height = '40px';
+						notesToPlay.style.height = '30px';
 						notesToPlay.style.display = 'block';
 					}
 					if (notesToPlayLabel) notesToPlayLabel.textContent = "Notes For Happy Birthday tune:";
@@ -573,7 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					// Jingle Bells Jingle Bells, Jingle all the way 		
 					if (notesToPlay) {
 						notesToPlay.textContent = "E4,E4,E4,E4,E4,E4,E4,G4,C4,D4,E4";
-						notesToPlay.style.height = '20px';
+						notesToPlay.style.height = '15px';
 						notesToPlay.style.display = 'block';
 					}
 					if (notesToPlayLabel) notesToPlayLabel.textContent = "Notes For Jingle Bells tune:";

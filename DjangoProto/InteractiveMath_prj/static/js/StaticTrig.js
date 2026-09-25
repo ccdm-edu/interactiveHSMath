@@ -476,18 +476,18 @@ document.addEventListener('DOMContentLoaded', () => {
 		ctxExpandableUnitCircle.font = '20px Arial';
 		if (1.0 == amp) {
 			// user is still using unit circle, get rid of the "r" so they won't get confused
-			ctxExpandableUnitCircle.fillText("x=f(" + THETA + ")=cos(" + THETA + ")", TRIG_X_ORIGIN - 110, COS_Y_ORIGIN - MAX_AMP_AXIS);
+			ctxExpandableUnitCircle.fillText("x=f(" + THETA + ")=cos(" + THETA + ")", TRIG_X_ORIGIN - 40, COS_Y_ORIGIN - MAX_AMP_AXIS);
 			ctxExpandableUnitCircle.stroke();
 			ctxExpandableUnitCircle.fillStyle = SINE_COLOR;
-			ctxExpandableUnitCircle.fillText("y=f(" + THETA + ")=sin(" + THETA + ")", TRIG_X_ORIGIN - 110, SIN_Y_ORIGIN - MAX_AMP_AXIS);
+			ctxExpandableUnitCircle.fillText("y=f(" + THETA + ")=sin(" + THETA + ")", TRIG_X_ORIGIN - 40, SIN_Y_ORIGIN - MAX_AMP_AXIS);
 			ctxExpandableUnitCircle.stroke();
 		} else {
 			// user has selected an "advanced" circle, show r values here
-			ctxExpandableUnitCircle.fillText("x=f(" + THETA + ")=r" + MULT_DOT + "cos(" + THETA + ")", TRIG_X_ORIGIN - 130, COS_Y_ORIGIN - MAX_AMP_AXIS);
+			ctxExpandableUnitCircle.fillText("x=f(" + THETA + ")=r" + MULT_DOT + "cos(" + THETA + ")", TRIG_X_ORIGIN - 60, COS_Y_ORIGIN - MAX_AMP_AXIS);
 			ctxExpandableUnitCircle.stroke();
 			ctxExpandableUnitCircle.fillStyle = SINE_COLOR;
 			ctxExpandableUnitCircle.stroke();
-			ctxExpandableUnitCircle.fillText("y=f(" + THETA + ")=r" + MULT_DOT + "sin(" + THETA + ")", TRIG_X_ORIGIN - 130, SIN_Y_ORIGIN - MAX_AMP_AXIS);
+			ctxExpandableUnitCircle.fillText("y=f(" + THETA + ")=r" + MULT_DOT + "sin(" + THETA + ")", TRIG_X_ORIGIN - 60, SIN_Y_ORIGIN - MAX_AMP_AXIS);
 		}
 
 		// NOW we have the background image done.  As users click on a point and new stuff happens, we always come back to 
