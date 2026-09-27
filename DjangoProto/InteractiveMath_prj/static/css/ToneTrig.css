@@ -30,7 +30,8 @@
     position: absolute;
     left: var(--UPPER_HEADER_LEFT_LOC);
 	display: inline-block; 
-	border: 1px solid black;
+	border: 1px solid blue;
+	border-radius: 4px;  /* slight rounding */
 }
 /* turn on/off note*/
 .toneStartButton{

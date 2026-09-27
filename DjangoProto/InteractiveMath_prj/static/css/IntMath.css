@@ -848,6 +848,7 @@ button.close:focus-visible {
   flex-direction: row; /* Force horizontal alignment */ 
   flex-wrap: nowrap; /* FORCES them to stay on one line */ 
   justify-content: flex-start; /* Shifts both to the left */ 
+  align-items: flex-start;
   padding-left: 20px; /* Your "small padding" on the left */ 
   width: 100%; 
 } 
@@ -870,17 +871,24 @@ button.close:focus-visible {
 
 /* Style for your Support Material (Question Box) */ 
 #side-content { 
-  flex: 0 0 500px; /* FIX: Synced flex basis to mirror exact layout width parameters */ 
+  flex: 0 0 500px; /* Synced flex basis to mirror exact layout width parameters */ 
+  min-width: 0; /* Forces the flex item to honor the 500px width limit */
   width: 500px; 
-  min-height: 120px; /* Ensure it has a footprint */ 
+  min-height: 90px; /* Ensure it has a footprint */ 
   display: block; 
   overflow: visible; 
 }
+#side-content h1 {
+  margin-top: 10px;      /* Removes the huge default top gap */
+  margin-bottom: 10px;   /* Removes the huge default bottom gap */
+  line-height: 1.2;   /* Tightens up space between words*/
+}
+
 /*************all pages, auto demo controls and starting image **********************/ 
 /* its there, but if the page wants it, must turn it on */ 
 #autoDemo { 
   position: relative; /* This "pins" the children to this container */ 
-  min-height: 130px; /* size needs to be calculable for flexbox */ 
+  min-height: 90px; /* size needs to be calculable for flexbox */ 
   min-width: 330px; /* box needs to be big enough for controls box when autodemo started */ 
   z-index: 500; /* needs to be max value to sit all this on top */ 
 } 
@@ -1005,7 +1013,11 @@ h1, h2 {
   white-space: nowrap; 
   text-align: center;
 } 
-
+/* headers on pages sometimes need to wrap words...*/
+#side-content h1 {
+  white-space: normal;       /* Overrides the global nowrap with higher specificity*/
+  overflow-wrap: break-word; /* Allows long words/URLs to break gracefully */
+}
 td { /* keep dynamicTrig2 table from collapsing if screen too small, user should expand screen--there is lots of good stuff to see */ 
   white-space: nowrap; 
 } 

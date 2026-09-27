@@ -72,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Radian index definitions for unit circle mappings
 	thetaSamp[0] = { num: 0, thetaInRad: "(2" + PI + ")" + MULT_DOT + "0/12", angleRadCCW: 0, moveX: EPSILON, moveY: -EPSILON };
-	// FIX: Resolved loose brace 'ang};' compile crash syntax typo
 	thetaSamp[1] = { num: 1, thetaInRad: "(2" + PI + ")" + MULT_DOT + "1/12", angleRadCCW: 11 * Math.PI / 6, moveX: EPSILON, moveY: 0 };
 	thetaSamp[2] = { num: 2, thetaInRad: "(2" + PI + ")" + MULT_DOT + "2/12", angleRadCCW: 5 * Math.PI / 3, moveX: EPSILON, moveY: 0 };
 	thetaSamp[3] = { num: 3, thetaInRad: "(2" + PI + ")" + MULT_DOT + "3/12", angleRadCCW: 3 * Math.PI / 2, moveX: EPSILON, moveY: -EPSILON };
@@ -85,7 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	thetaSamp[10] = { num: 10, thetaInRad: "(2" + PI + ")" + MULT_DOT + "10/12", angleRadCCW: Math.PI / 3, moveX: EPSILON, moveY: EPSILON };
 	thetaSamp[11] = { num: 11, thetaInRad: "(2" + PI + ")" + MULT_DOT + "11/12", angleRadCCW: Math.PI / 6, moveX: EPSILON, moveY: EPSILON };
 
-	const HALF_AXIS = 130; // Assuming CIRC_RAD = 100 + AXIS_OVERLAP = 30
+	const HALF_AXIS = 150; // Assuming CIRC_RAD = 100 + AXIS_OVERLAP = 30
+	const UNIT_CIRC = 120;
 	const CIRC_X0 = 210;
 	const CIRC_Y0 = 170;
 	
@@ -97,13 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		ctxUnitCircle.beginPath();
 		ctxUnitCircle.lineWidth = 1.0;
 		ctxUnitCircle.strokeStyle = "black";
-		ctxUnitCircle.arc(CIRC_X0, CIRC_Y0, 100, 0, Math.PI * 2, true);
+		ctxUnitCircle.arc(CIRC_X0, CIRC_Y0, UNIT_CIRC, 0, Math.PI * 2, true);
 		ctxUnitCircle.stroke();
 
 		for (let pt = 0; pt < TOTAL_NUM_DOTS; pt++) {
 			let curr_angle = pt * ANGLE_PER_PT_RAD;
-			let x = CIRC_X0 + Math.round(100 * Math.cos(curr_angle));
-			let y = CIRC_Y0 - Math.round(100 * Math.sin(curr_angle));
+			let x = CIRC_X0 + Math.round(UNIT_CIRC * Math.cos(curr_angle));
+			let y = CIRC_Y0 - Math.round(UNIT_CIRC * Math.sin(curr_angle));
 			sample.push({ x: x, y: y });
 
 			ctxUnitCircle.beginPath();
@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const LOWER_X_ORIGIN = 60;
 
 	if (ctxFreqPlot && freqCanvas) {
+		//draw the xy axis for top and bottom graphs
 		drawSineAxis(ctxFreqPlot, UPPER_X_ORIGIN, UPPER_Y_ORIGIN, MAX_TIME_SEC, PIX_PER_MINOR_TICK, 4);
 		drawSineAxis(ctxFreqPlot, LOWER_X_ORIGIN, LOWER_Y_ORIGIN, MAX_TIME_SEC / 5, PIX_PER_MINOR_TICK, 4);
 
@@ -163,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	function calcSine(j, phaseInRad = 0) {
 		let $freqSlider = $("#FreqSlider_DT2");
 		let activeFreq = $freqSlider ? parseFloat($freqSlider.value) : 1.0;
-		return Math.round(100 * Math.sin(2 * Math.PI * j * activeFreq + phaseInRad));
+		return Math.round(UNIT_CIRC * Math.sin(2 * Math.PI * j * activeFreq + phaseInRad));
 	}
 
 	function drawOneSineSet(x_orig, y_orig, maxTimePlot) {

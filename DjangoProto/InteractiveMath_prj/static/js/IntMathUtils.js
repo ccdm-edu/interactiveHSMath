@@ -89,13 +89,14 @@ function drawTrigCircle(ctxExpandableUnitCircle, x_center, y_center, halfAxis) {
 		ctxExpandableUnitCircle.stroke();
 	}
 	// label 0.5 and 1.0 on each x and y axis
-	ctxExpandableUnitCircle.font = '10px Arial';
+	ctxExpandableUnitCircle.font = 'bold 10px Arial';
+	ctxExpandableUnitCircle.fillStyle = 'red';
 	// y axis ticks
-	ctxExpandableUnitCircle.fillText("0.5", x_center + 5, y_center - 0.1 * 5 * CIRC_RAD + 3);
-	ctxExpandableUnitCircle.fillText("1.0", x_center + 5, y_center - 0.1 * 10 * CIRC_RAD + 3);
+	ctxExpandableUnitCircle.fillText("0.5", x_center + 8, y_center - 0.1 * 5 * CIRC_RAD + 3);
+	ctxExpandableUnitCircle.fillText("1.0", x_center + 8, y_center - 0.1 * 10 * CIRC_RAD + 3);
 	// x axis ticks
-	ctxExpandableUnitCircle.fillText("0.5", x_center + 0.1 * 5 * CIRC_RAD - 8, y_center + 13);
-	ctxExpandableUnitCircle.fillText("1.0", x_center + 0.1 * 10 * CIRC_RAD - 8, y_center + 13);
+	ctxExpandableUnitCircle.fillText("0.5", x_center + 0.1 * 5 * CIRC_RAD - 8, y_center + 15);
+	ctxExpandableUnitCircle.fillText("1.0", x_center + 0.1 * 10 * CIRC_RAD - 8, y_center + 15);
 
 	ctxExpandableUnitCircle.stroke();
 	ctxExpandableUnitCircle.closePath();
