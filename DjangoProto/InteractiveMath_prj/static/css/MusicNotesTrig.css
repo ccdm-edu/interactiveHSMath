@@ -67,6 +67,8 @@ input[type="range"] {
 /* this chunk includes graph and the canvas below that shows periodicity */
 #GraphPlusPeriodMarkers{
     position:relative;
+    /*cannot calc height on its own since all pieces are absolute */
+    height: calc(var(--HEIGHT_GRAPH) + var(--HEIGHT_PERIOD_EXPLN));
 }
 /* plot out the waveforms mp3 and tone */
 #sinePlotLongWrapper{

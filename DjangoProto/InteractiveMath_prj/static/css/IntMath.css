@@ -1011,7 +1011,7 @@ button.close:focus-visible {
 /************all pages, header and tables should not "wrap" and break line, expand browser! user needs to know these are big pages with lots of things going on *****/ 
 h1, h2 { 
   white-space: nowrap; 
-  text-align: center;
+  text-align: left;
 } 
 /* headers on pages sometimes need to wrap words...*/
 #side-content h1 {
