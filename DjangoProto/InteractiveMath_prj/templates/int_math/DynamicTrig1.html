@@ -101,23 +101,23 @@
 	
 	<!-- Tell user there is a timer counting their phase accumulation, they need to keep up -->
 	<dialog id="expiremodal">
-	<div class="modal-content">
-		<div class="modal-body">
-			<h1>Time Expired!</h1>
-			<p>
-				The purpose of this page is to accumulate 360&#176 phase within 30
-				seconds of time. The faster you do it, the higher the frequency of
-				the sine wave. Frequency = 1/T where T is how long it takes you to
-				make a complete 360&#176 turn around the circle. <br>
-				<b>We are going to start over. Follow the pop up box and go as
-					fast as you can</b>
-			</p>
+		<div class="modal-content">
+			<div class="modal-body">
+				<h1>Time Expired!</h1>
+				<p>
+					The purpose of this page is to accumulate 360&#176 phase within 30
+					seconds of time. The faster you do it, the higher the frequency of
+					the sine wave. Frequency = 1/T where T is how long it takes you to
+					make a complete 360&#176 turn around the circle. <br>
+					<b>We are going to start over. Follow the arrows and go as
+						fast as you can</b>
+				</p>
+			</div>
+			<div class="modal-footer">
+				<!-- Changed Bootstrap tracking dismiss triggers to a uniform custom class indicator -->
+				<button class="btn btn-secondary dialog-close-trigger" type="button">Got it!</button>
+			</div>
 		</div>
-		<div class="modal-footer">
-			<!-- Changed Bootstrap tracking dismiss triggers to a uniform custom class indicator -->
-			<button class="dialog-close-trigger" type="button">Got it!</button>
-		</div>
-	</div>
 	</dialog>
 	
 	<!-- Leave this text at the bottom to be consumed by JS and put in proper place.  

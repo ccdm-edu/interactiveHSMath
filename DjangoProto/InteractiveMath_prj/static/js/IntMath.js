@@ -201,16 +201,22 @@ document.addEventListener('DOMContentLoaded', () => {
 			myDialogEl.showModal();
 		}
 	});
+
 	
 	// Delegated Close Handler
 	document.addEventListener('click', function(e) {
 		if (e.target.closest('.dialog-close-trigger')) {
 			e.preventDefault();
-			if (myDialogEl && $myDialog) {
-				myDialogEl.close();
-			}
+	        // Dynamically find the parent <dialog> element of the clicked button
+	        // i.e. could be advanced topic window or expired time window on DT1 or...
+	        const activeDialog = e.target.closest('dialog');
+	        
+	        if (activeDialog) {
+	            activeDialog.close();
+	        }
 		}
 	});
+
 	
 	// Tab-Click Switcher Mechanics
 	document.addEventListener('click', function(e) {

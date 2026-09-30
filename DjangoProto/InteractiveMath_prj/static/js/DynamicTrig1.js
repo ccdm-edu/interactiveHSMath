@@ -392,8 +392,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		if ($userNotices) $userNotices.textContent = '';
 
 		startInterval = setInterval(function() {
-			let $clearBtn = $('#ClearOldFreq_DT1');
-			if ($clearBtn) $clearBtn.disabled = true;
 			countTime++;
 
 			let $timeVal = $('#timeVal_DT1');
@@ -413,8 +411,6 @@ document.addEventListener('DOMContentLoaded', () => {
 				timerStarted = false;
 				accumPhase = 0;
 				lastIndexClicked = 0;
-
-				if ($clearBtn) $clearBtn.disabled = false;
 				if ($theta) {
 					if (accumPhase == 360) {
 						$theta.textContent = "0\u00B0 or 360\u00B0";
@@ -486,7 +482,6 @@ document.addEventListener('DOMContentLoaded', () => {
 				}
 
 				lastFreq = currFreq;
-				if ($clearBtn) $clearBtn.disabled = false;
 				accumPhase = 0;
 				drawPlots();
 				showUserPeriod(countTime / 10);
