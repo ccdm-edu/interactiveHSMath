@@ -216,11 +216,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (startInterval) clearInterval(startInterval);
 		clockIsRunning = false;
 
-		// set up button to go again 
+		// set up button to "GO" state 
 		if ($goBtn) {
 			$goBtn.style.backgroundColor = (typeof currentGreen !== 'undefined') ? currentGreen : 'green';
-		}
-
+			$goBtn.find(".btn-text").text("Start");
+			$goBtn.find(".btn-icon").text("⚡");
+		}		
+			
 		// clear out the unit circle and graphs now that timer is stopped 
 		if (ctxUnitCircle && backgroundPlot) ctxUnitCircle.putImageData(backgroundPlot, 0, 0);
 		if (ctxFreqPlot && sineAxisBkgd) ctxFreqPlot.putImageData(sineAxisBkgd, 0, 0);
@@ -489,6 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	if ($goBtn) $goBtn.style.backgroundColor = currentGreen;
 
+	// give a blinky green to the Start button when clock is off to attract attention
 	setInterval(function() {
 		if (!clockIsRunning && $goBtn) {
 			$goBtn.style.backgroundColor = currentGreen;

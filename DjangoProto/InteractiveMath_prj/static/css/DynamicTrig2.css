@@ -103,7 +103,38 @@
 	color: DarkOrchid;
 	white-space: nowrap;
 }
-
+/* special effect for header */
+.speed-car {
+  display: inline-block;
+  font-family: 'Oswald', 'Arial Narrow', sans-serif; 
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #e60000;
+  text-shadow: 2px 2px 0px #000; 
+  letter-spacing: 2px; 
+  
+  /* Initial state */
+  transform: skewX(-15deg); 
+  
+  /* Runs the revving animation for 3 seconds, then holds the final frame */
+  animation: revving 2s forwards ease-in-out;
+}
+@keyframes revving {
+  0% { 
+    transform: skewX(-15deg) translate(0, 0); 
+  }
+  /* Rapid vibrating/revving for the first 95% of the time */
+  2%, 6%, 10%, 14%, 18%, 22%, 26%, 30%, 34%, 38%, 42%, 46%, 50%, 54%, 58%, 62%, 66%, 70%, 74%, 78%, 82%, 86%, 90%, 94% {
+    transform: skewX(-20deg) translate(2px, -1px);
+  }
+  4%, 8%, 12%, 16%, 20%, 24%, 28%, 32%, 36%, 40%, 44%, 48%, 52%, 56%, 60%, 64%, 68%, 72%, 76%, 80%, 84%, 88%, 92% {
+    transform: skewX(-15deg) translate(0, 0);
+  }
+  /* At 3 seconds, it permanently locks into the maximum speed slant */
+  100% { 
+    transform: skewX(-20deg) translate(3px, -1.5px); 
+  }
+}
 /***************************/
 /* create canvas for expandable unit circle, position = relative lets the footer float to bottom for all parent elements.
 We use negative value for top since we want some overlap*/
