@@ -304,7 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
 				xcos: Math.round((amp * CIRC_RAD) * Math.cos(5 * Math.PI / 6)),
 				ysin: Math.round((amp * CIRC_RAD) * Math.sin(5 * Math.PI / 6)),
 				angleRad: 7 * Math.PI / 6,
-				xyExact: "\begin{array}{l}\left(-\begin{array}{cc}\frac{\sqrt3}2,&\frac12\end{array}\right)\\(-0.866,\;0.5)\end{array}",
 				// KaTeX
 				xyExact: "$= " + ampStr + "\\left( -\\frac{\\sqrt{3}}{2}, \\frac{1}{2} \\right)$",
 				thetaRad: "$\\frac{5\\mathrm\\pi}{6}$",

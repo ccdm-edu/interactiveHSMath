@@ -181,9 +181,9 @@ size of children since it can no longer compute on its own*/
 	 position: absolute;
 	 top: 0px;   /* match AmpSinCosCircle canvas */
 	 left: 0px;
-	 margin-left: 0 px;
-	 padding-left: 0 px;
-	 margin-right: 0 px;
-	 padding-right: 0 px;
+	 margin-left: 0px;
+	 padding-left: 0px;
+	 margin-right: 0px;
+	 padding-right: 0px;
 	 z-index: -1;
 }

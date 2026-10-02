@@ -21,7 +21,7 @@
 	--DELTA_X: 80px;
 	--OFF_TO_SIDE_X: 30px;
 	--OFF_TO_SIDE_Y: 10px;
-	--HEADER_LOC: 0 px; 
+	--HEADER_LOC: 0px; 
 	--VOLUME_LEFT_MARGIN: 450px;
 }
 #CMajorScale{
@@ -88,14 +88,14 @@
 /* all canvases must be exactly aligned with each other */
 #ClefWithNotes{
 	position: absolute;
-	top: 0 px;  
+	top: 0px;  
 	left: 10px;
 	z-index: 10;  /* this is the one the user interacts with */
 }
 /* this canvas only serves to fill in the notes with color and sits in the background behind notes */
 #NotesFilledIn{
 	position: absolute;
-	top: 0 px;
+	top: 0px;
 	left: 10px;
 	z-index: -1;	
 }

@@ -245,10 +245,6 @@ h2.inline-title {
     vertical-align: middle;
 }
 
-/* Remove your old absolute pseudo-element which was over-extending */
-#selectNewbieOrExpert legend div.line:before {
-    display: none;
-}
 .form-row {
     display: flex;
     justify-content: flex-start; /* Radios now "hug" the text */

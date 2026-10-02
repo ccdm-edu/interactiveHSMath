@@ -184,12 +184,11 @@ document.addEventListener('DOMContentLoaded', () => {
 			$('.Second_Period')?.prop('style').setProperty('left', `${NEW_PERIOD_BOX_LEFT}px`);
 			
 			// Sync dynamic label formula text templates
-			$(`#perText1`)?.html('Period T <br>= 1/Frequency = 1/(233.08 Hz) = 4.29 ms');
+			$perText1?.html('Period T <br>= 1/Frequency = 1/(233.08 Hz) = 4.29 ms');
 			
-			const $p2 = $(`#perText2`);
-			if ($p2) {
-			  $p2.prop('style').setProperty('left', `${NEW_PERIOD_BOX_LEFT + SHORT_T}px`);
-			  $p2.html('T = 4.29 ms');
+			if ($perText2) {
+			  $perText2.prop('style').setProperty('left', `${NEW_PERIOD_BOX_LEFT + SHORT_T}px`);
+			  $perText2.html('T = 4.29 ms');
 			}
 
 			const SECOND_L_233_X = LEFT_X + 120 - 2;

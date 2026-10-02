@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		// Sync input components through vanilla layout element mapping properties
 		let $freqSlider = $("#FreqSlider_DT2");
-		let currFreq = $freqSlider ? $freqSlider.value : "1";
+		currFreq = $freqSlider ? $freqSlider.value : "1";
 
 		//There are several locations that must all be updated
 		document.querySelectorAll(".currFreqVal_DT2").forEach(el => {

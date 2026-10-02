@@ -99,10 +99,10 @@ means we mus set explicitely.  Need absolute posltion to allow overlap*/
 	 position: absolute;
 	 top: 20px;  
 	 left: 0px;  
-	 margin-left: 0 px;
-	 padding-left: 0 px;
-	 margin-right: 0 px;
-	 padding-right: 0 px;
+	 margin-left: 0px;
+	 padding-left: 0px;
+	 margin-right: 0px;
+	 padding-right: 0px;
 }
 /* this is the graph off to the right that needs to be on separate canvas since animations need to 
 clear and redraw at different times than the other canvas  We did position as absolute so if window too small
@@ -111,10 +111,10 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	 position: absolute;
 	 top: 0px;
 	 left: 450px;
-	 margin-left: 0 px;
-	 padding-left: 0 px;
-	 margin-right: 0 px;
-	 padding-right: 0 px;
+	 margin-left: 0px;
+	 padding-left: 0px;
+	 margin-right: 0px;
+	 padding-right: 0px;
 }
 /* add labels for the graphs, will be updated on dynamic trig page 2 */
 #sinEqtnLabelHI_DT1{
@@ -171,9 +171,9 @@ it won't shove this to below the unit circle-- off to side prods user to expand 
 	 position: absolute;
 	 top: 20px; 
 	 left: 0px;
-	 margin-left: 0 px;
-	 padding-left: 0 px;
-	 margin-right: 0 px;
-	 padding-right: 0 px;
+	 margin-left: 0px;
+	 padding-left: 0px;
+	 margin-right: 0px;
+	 padding-right: 0px;
 	 z-index: -1;
 }
