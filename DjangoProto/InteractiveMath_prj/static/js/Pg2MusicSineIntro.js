@@ -497,7 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		ampLong.length = 0; // zero out data and push to graph 
 
 		if (typeof sine_plot_100_1k !== 'undefined' && sine_plot_100_1k.data && sine_plot_100_1k.data.datasets) {
-			sine_plot_100_1k.data.datasets[0].data.push(ampLong);
+			sine_plot_100_1k.data.datasets[0].data = ampLong;
 			sine_plot_100_1k.update();
 		}
 
@@ -606,7 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[0],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 3500
 						}
 					},
@@ -615,7 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[1],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 3500
 						}
 					},
@@ -624,7 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[2],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 3500
 						}
 					},
@@ -633,7 +633,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[3],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 3500
 						}
 					},
@@ -642,7 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[4],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 3500
 						}
 					},
@@ -651,7 +651,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[5],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 3500
 						}
 					},
@@ -660,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[6],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 3500
 						}
 					},
@@ -669,7 +669,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[7],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 3500
 						}
 					},
@@ -678,7 +678,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[7],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 1000
 						}
 					},
@@ -758,7 +758,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[0],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 1000
 						}
 					},
@@ -767,7 +767,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[0],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 1000
 						}
 					},
@@ -776,7 +776,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[4],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 1000
 						}
 					},
@@ -785,7 +785,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[4],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 1000
 						}
 					},
@@ -794,7 +794,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[5],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 1000
 						}
 					},
@@ -803,7 +803,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[5],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 1000
 						}
 					},
@@ -812,7 +812,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[4],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 1000
 						}
 					},
@@ -821,7 +821,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						segmentParams:
 						{
 							xyCoord: CmajorNotes[4],   // has an x y embedded with other stuff
-							canvas: ClefWithNotes,
+							canvas: $("#ClefWithNotes"),
 							waitTimeMillisec: 500
 						}
 					},

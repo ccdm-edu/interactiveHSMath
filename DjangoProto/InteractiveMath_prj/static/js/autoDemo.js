@@ -24,6 +24,37 @@
  * ============================================================================
  */
 'use strict'
+// fix action item where constantly instantiating AudioContext without closing.  Here we reuse and resume
+// Keep this outside the class. It is shared across ALL instances.
+let globalAudioCtx = null; 
+
+function getAudioContext() {
+  // Check if the browser supports either standard or webkit audio
+  //AudioContext is a property of the global window that holds a reference to a contructor
+  //function.  In JS, can use new on a variable and it follows the reference to the constructor
+  //Safari converted window.webkitAudioContext to standard window.AudioContext years ago so no need to 
+  // support old Safari versions
+  const AudioContextClass = window.AudioContext;
+  
+  // If neither exists, throw an error so your catch block can alert the user
+  if (!AudioContextClass) {
+    throw new Error('Web Audio API not supported');
+  }
+
+  // Reuse the single instance on the class
+  if (!globalAudioCtx) {
+    globalAudioCtx = new AudioContextClass();
+  }
+  
+  // Auto-wake if suspended by browser autoplay policies
+  if (globalAudioCtx.state === 'suspended') {
+    globalAudioCtx.resume();
+  }
+  
+  return globalAudioCtx;
+}
+
+
 
 class AutoDemo {
 	constructor(multiSegScript) {
@@ -89,7 +120,15 @@ class AutoDemo {
 	stopThisSegment(killTheAutoDemoCtlBox = true) {
 		this.userStopRequest = true;
 		this.eventLoopPtrs.forEach(timedEvent => clearTimeout(timedEvent));
-		if (this.helpAudio) this.helpAudio.stop(0);
+		this.eventLoopPtrs = [];
+		// Cleanly kill the active buffer source node audio
+	    if (this.helpAudio) {
+	        try {
+	            this.helpAudio.stop(0);
+	        } catch(e) {
+	            // Protects against a crash if the audio naturally finished a millisecond ago
+	        }
+	    }
 
 		let $stopBtn = $('#stopSegment');
 		if ($stopBtn) $stopBtn.disabled = true;
@@ -131,8 +170,15 @@ class AutoDemo {
 	async playAudio(segmentParams) {
 		let context;
 		try {
-			window.AudioContext = window.AudioContext || window.webkitAudioContext;
-			context = new AudioContext();
+			context = getAudioContext();
+			//  Mobile Safari Edge Case Fix: 
+			// Force-await the synchronous resumption to lock the browser state in place.
+			// .resume returns promise and most browsers wait synchronously, not all
+			if (context.state === 'suspended') {
+				await context.resume().catch(err => {
+					console.error("AudioContext resumption failed or timed out:", err);
+				});
+			}
 		} catch (e) {
 			alert('Web Audio API is not supported');
 			return;
@@ -159,13 +205,26 @@ class AutoDemo {
 				const arrayBuffer = await rawBlob.arrayBuffer();
 				// Modern Promise-based syntax for decoding audio data
 				const decodedBuffer = await context.decodeAudioData(arrayBuffer);
-
+				
+				//If an audio segment is already playing, stop it cleanly first
+				if (thisObj.helpAudio) {
+				    try {
+				        thisObj.helpAudio.stop();
+				    } catch(e) {
+				        // Safe catch: throws if the audio had already naturally ended
+				    }
+				}
 				thisObj.helpAudio = context.createBufferSource();
 				thisObj.helpAudio.buffer = decodedBuffer;
+				// Capture a permanent local reference to this specific node
+				const sourceNode = thisObj.helpAudio; 
 				thisObj.helpAudio.connect(context.destination);
 				thisObj.helpAudio.start(0);
 				thisObj.helpAudio.onended = () => {
-					thisObj.segmentOverCleanup();
+					 // Ensure we only clean up if this node is still the active one
+    				if (thisObj.helpAudio === sourceNode) {
+						thisObj.segmentOverCleanup();
+					}
 				};
 			} catch (e) {
 				if (spinnerEl) spinnerEl.classList.remove("show");
@@ -563,7 +622,7 @@ class AutoDemoWithCanvas extends AutoDemo {
 		if ($demoCursor) $demoCursor.style.display = "block";
 
 		// Finds dynamic layout container natively
-		const canvas = document.querySelector('canvas');
+		const canvas = segmentParams.canvas;
 		if (!canvas) return;
 		const rect = canvas.getBoundingClientRect();
 		const CURSOR_DIM = 40;

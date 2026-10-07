@@ -52,7 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	const SINE_OUTLINE_COLOR = "PaleTurquoise";
 	const ANGLE_COLOR = 'green';
 	const ANGLE_PER_PT_RAD = Math.PI / 6;
-	const TOTAL_NUM_DOTS = 12.0;
+	const TOTAL_NUM_DOTS = 12.0
+	let DEFAULT_FREQ = 0.1; // as set in html for element 
+	let currFreq = DEFAULT_FREQ;
 
 	// NOTE: We keep the sample rate around the circle less than 2 Hz because at 
 	// about 3 Hz to 30 Hz, flashing can potentially trigger photosensitive seizures. 
@@ -193,8 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	//************************************************* 
 	// Reset the page to the defaults 
 	//************************************************* 
-	let DEFAULT_FREQ = 0.1; // as set in html for element 
-	let currFreq = DEFAULT_FREQ;
 	let $goBtn = $('#GoFreq_DT2');
 	$('#SubSampleNotice_DT2')?.css("display","none")
 

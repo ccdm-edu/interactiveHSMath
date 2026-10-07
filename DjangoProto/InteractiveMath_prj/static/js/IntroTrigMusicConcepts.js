@@ -151,46 +151,69 @@ document.addEventListener('DOMContentLoaded', () => {
 	let lastTimeMarker = 0;
 	let avPer = 0;
 	let periodAccum = 0;
+	let startTimer = null;
 
-	let startInterval = setInterval(function() {
-		if (timerIsOn) {
-			currTime = currTime + 0.1; // add 100 ms everytime we come here
-			timeIntoPeriod = timeIntoPeriod + 0.1;
-
-			let $freqTime = $('#IntroFreqTime');
-			let $freqTimeReset = $('#IntroFreqTimeReset');
-			if ($freqTime) $freqTime.textContent = currTime.toFixed(1); // update time label
-			if ($freqTimeReset) $freqTimeReset.textContent = timeIntoPeriod.toFixed(1);
-
-			if ((avPer > 0) && (currTime - lastTimeMarker) > (2 * avPer)) {
-				// user has stopped hitting freq count button, this is a legitimate ending of counting
-				updateStatOutput();
-				timerIsOn = false;
-				currTime = 0;
-				timeIntoPeriod = 0;
-				numTimesClicked = 0;
-				lastTimeMarker = 0;
-				avPer = 0;
-				periodAccum = 0;
-				console.log('user hit natural ending');
+	function timeUserEvents() {
+		// If startTimerId is NOT null, a timer is already running. Exit immediately!
+  		if (startTimer !== null) return; 
+  		// Always grab a fresh, exact timestamp right before the interval loops begin
+  		let lastTickTime = performance.now(); 
+  		
+		startTimer = setInterval(function() {
+			if (timerIsOn) {
+				const now = performance.now();
+    
+			    // Calculate exactly how much time passed since the last tick
+			    const deltaMs = now - lastTickTime; 
+			    const deltaSeconds = deltaMs / 1000;
+			
+			    // Accumulate the real time passed, should be close to 100 ms but depends on browser
+			    currTime = currTime + deltaSeconds;
+			    timeIntoPeriod = timeIntoPeriod + deltaSeconds;
+			
+			    // Move the baseline forward
+			    lastTickTime = now;
+	
+				let $freqTime = $('#IntroFreqTime');
+				let $freqTimeReset = $('#IntroFreqTimeReset');
+				if ($freqTime) $freqTime.textContent = currTime.toFixed(1); // update time label
+				if ($freqTimeReset) $freqTimeReset.textContent = timeIntoPeriod.toFixed(1);
+	
+				if ((avPer > 0) && (currTime - lastTimeMarker) > (2 * avPer)) {
+					// user has stopped hitting freq count button, this is a legitimate ending of counting
+					updateStatOutput();
+					timerIsOn = false;
+					clearInterval(startTimer);
+					startTimer = null;  // good practice to ensure no timer multiplicity
+					currTime = 0;
+					timeIntoPeriod = 0;
+					numTimesClicked = 0;
+					lastTimeMarker = 0;
+					avPer = 0;
+					periodAccum = 0;
+					console.log('user hit natural ending');
+				}
+	
+				if ((currTime - lastTimeMarker) > USER_NOT_INTERACTING) {
+					// user hit button once and never again, need to explain how this all works
+					timerIsOn = false;
+					clearInterval(startTimer);
+					startTimer = null;  // good practice to ensure no timer multiplicity
+					currTime = 0;
+					timeIntoPeriod = 0;
+					numTimesClicked = 0;
+					lastTimeMarker = 0;
+					avPer = 0;
+					periodAccum = 0;
+	
+					let $qualityInfo = $("#informUserFreqQuality");
+					if ($qualityInfo) $qualityInfo.innerHTML = "Hit button on event start";
+					console.log('user hit abnormal ending');
+				}
 			}
+		}, 100);		
+	}
 
-			if ((currTime - lastTimeMarker) > USER_NOT_INTERACTING) {
-				// user hit button once and never again, need to explain how this all works
-				timerIsOn = false;
-				currTime = 0;
-				timeIntoPeriod = 0;
-				numTimesClicked = 0;
-				lastTimeMarker = 0;
-				avPer = 0;
-				periodAccum = 0;
-
-				let $qualityInfo = $("#informUserFreqQuality");
-				if ($qualityInfo) $qualityInfo.innerHTML = "Hit button on event start";
-				console.log('user hit abnormal ending');
-			}
-		}
-	}, 100);
 
 	let $measureFreqBtn = $("#UserMeasuresFrequency");
 	if ($measureFreqBtn) {
@@ -199,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (0 == numTimesClicked) {
 				currTime = 0;
 				timerIsOn = true;
+				timeUserEvents();  // turn on timer
 				if ($qualityInfo) $qualityInfo.innerHTML = "";
 				console.log('turn on timer');
 			} else {

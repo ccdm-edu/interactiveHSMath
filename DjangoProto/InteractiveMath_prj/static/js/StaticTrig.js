@@ -998,7 +998,11 @@ document.addEventListener('DOMContentLoaded', () => {
 		$$('#xyExactValue, #xyFilledIn, #xyValueDecimal, #theta').each(el => el.text(" "));
 
 		// Compile the default reset equations using KaTeX immediately 
-		renderMathInElement(document.body, { delimiters: [{ left: '$', right: '$', display: false }], throwOnError: false });
+		const $equationContainer = $('#equationContainer');
+		renderMathInElement($equationContainer || document.body, { 
+					  delimiters: [{ left: '$', right: '$', display: false }], 
+					  throwOnError: false 
+					});
 		redrawNewAmp();
 	}
 

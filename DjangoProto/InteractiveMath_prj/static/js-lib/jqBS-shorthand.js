@@ -199,17 +199,15 @@ function extendElement(el) {
 
 	el.parent = () => el.parentElement ? extendElement(el.parentElement) : null;
 
-	el.children = (selector) => {
+	el.findChildren = (selector) => {
 		const childList = Array.from(el.children);
 		const filtered = selector ? childList.filter(child => child.matches(selector)) : childList;
+		// Run your custom element extension function on each matching child
+		filtered.forEach(child => extendElement(child));
 
-		for (let i = 0; i < filtered.length; i++) extendElement(filtered[i]);
+		// Instead of attaching a custom .each, just return the array.
+		// Anyone using this function can natively use .forEach(child, index) out of the box!
 
-		// original (child, index) order here too
-		filtered.each = function(callback) {
-			for (let i = 0; i < this.length; i++) callback.call(this[i], this[i], i);
-			return this;
-		};
 		return filtered;
 	};
 
