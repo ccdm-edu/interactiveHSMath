@@ -288,40 +288,96 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	
 	//******************************************Handle menu/submenu 'show' on click*********************/
-	// 1. Primary Toggles: Top-level dropdown links ("Trig", "Legal")
-    $$('.nav-item.dropdown > .dropdown-toggle').each(function(btn) {
-        btn.click(function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const currentMenu = btn.parent().find('.dropdown-menu');
-            
-            // Close all other primary menus and nested submenus first
-            $$('.dropdown-menu, .submenu').each(function(menu) {
-                if (menu !== currentMenu) menu.removeClass('show');
+    
+    document.addEventListener('click', (event) => {
+        const clickedToggle = event.target.closest('.dropdown-toggle');
+        const clickedInsideMenu = event.target.closest('.dropdown-menu, .submenu');
+
+        // ==========================================
+        // CASE 1: Clicked a Dropdown / Submenu Toggle
+        // ==========================================
+        if (clickedToggle) {
+            event.preventDefault();
+
+            // Find the menu box associated with this specific toggle
+            const parentContainer = clickedToggle.parentElement;
+            const currentMenu = parentContainer ? parentContainer.querySelector('.dropdown-menu, .submenu') : null;
+
+            if (!currentMenu) return;
+
+            const isOpen = currentMenu.classList.contains('show');
+
+            // Strategy: Close any open menus that are NOT ancestors of the one we just clicked
+            document.querySelectorAll('.dropdown-menu.show, .submenu.show').forEach(openMenu => {
+                if (openMenu !== currentMenu && !openMenu.contains(currentMenu) && !currentMenu.contains(openMenu)) {
+                    openMenu.classList.remove('show');
+                }
             });
-            
-            // Toggle the clicked menu
-            if (currentMenu) currentMenu.toggleClass('show');
-        });
+
+            // Toggle the targeted menu
+            if (isOpen) {
+                // If closing, roll up all nested children inside it too
+                currentMenu.classList.remove('show');
+                currentMenu.querySelectorAll('.dropdown-menu.show, .submenu.show').forEach(m => m.classList.remove('show'));
+            } else {
+                currentMenu.classList.add('show');
+		        // Only apply explicit inline overrides for top-level navigation dropdowns
+		        if (currentMenu.classList.contains('dropdown-menu')) {
+		            if (parentContainer.classList.contains('dropdown')) {
+		                parentContainer.style.position = 'relative';
+		            }
+		            currentMenu.style.position = 'absolute';
+		            currentMenu.style.top = `${clickedToggle.offsetHeight}px`;
+		            currentMenu.style.left = '0';
+		            currentMenu.style.zIndex = '1000';
+		        } else {
+		            // This is a nested .submenu -> clear any leftover top-level inline styles
+		            // and let IntMath.css properties (left: 100%; top: 0;) render the flyout layout!
+		            currentMenu.style.top = '';
+		            currentMenu.style.left = '';
+		            currentMenu.style.position = '';
+		            currentMenu.style.zIndex = '1000';
+		        }
+            }
+            return;
+        }
+
+        // ==========================================
+        // CASE 2: Clicked a standard Item INSIDE a menu
+        // ==========================================
+        const clickedItem = event.target.closest('a:not(.dropdown-toggle), .dropdown-item:not(.dropdown-toggle)');
+        if (clickedItem && clickedInsideMenu) {
+            const itemValue = clickedItem.getAttribute('value') || clickedItem.value || '';
+
+            // Dispatch your custom event for automated suites/page-level listeners
+            const selectEvent = new CustomEvent('dropdownSelect', {
+                bubbles: true,
+                detail: {
+                    clickedItem: clickedItem,
+                    value: itemValue
+                }
+            });
+            clickedItem.dispatchEvent(selectEvent);
+
+            // Roll up the entire menu tree completely
+            closeAllMenus();
+            return;
+        }
+
+        // ==========================================
+        // CASE 3: Clicked completely outside the navigation system
+        // ==========================================
+        if (!clickedInsideMenu) {
+            closeAllMenus();
+        }
     });
 
-    // 2. Nested Toggles: Deep submenus ("Trig Functions")
-    $$('.has-submenu > .dropdown-toggle').each(function(subBtn) {
-        subBtn.click(function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const currentSubmenu = subBtn.parent().find('.submenu');
-            
-            // Close any sibling submenus on this layer
-            $$('.submenu').each(function(sub) {
-                if (sub !== currentSubmenu) sub.removeClass('show');
-            });
-            
-            // Toggle the nested level submenu box
-            if (currentSubmenu) currentSubmenu.toggleClass('show');
+    // Helper function to cleanly wipe out all visible menus
+    function closeAllMenus() {
+        document.querySelectorAll('.dropdown-menu.show, .submenu.show').forEach(openMenu => {
+            openMenu.classList.remove('show');
         });
-    });
+    }
+
 
 });

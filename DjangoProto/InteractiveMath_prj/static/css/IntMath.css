@@ -770,6 +770,23 @@ button.close:focus-visible {
   transform: translateY(4px);
   box-shadow: 0px 0px 0px rgba(0, 79, 122, 1);
 }
+/* Disabled state for primary neon buttons */
+.btn-primary:disabled {
+  background-color: #cbd5e1; /* Flat muted gray */
+  color: #64748b;            /* Darker gray text for basic readability */
+  border-color: #94a3b8;      /* Muted gray border */
+  box-shadow: none;          /* Completely flattens your 3D box shadow layers */
+  cursor: not-allowed;       /* Changes user cursor to a "slashed circle" icon */
+  transform: none;           /* Locks physical movement translation math */
+  pointer-events: none;      /* Safeguard: Blocks human clicks at browser level */
+}
+
+/* Grayscale and transparency treatment for the emoji span */
+.btn-primary:disabled span {
+  filter: grayscale(100%);
+  opacity: 0.5;
+}
+
 /* ***2*** Secondary (Outline) style */
 .btn-secondary {
   padding: 5px 10px;

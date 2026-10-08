@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	let $poohFoodTest = $('#id_pooh_food_test');
 	if ($recapResponse) $recapResponse.style.display = 'none';
 	if ($poohFoodTest) $poohFoodTest.style.display = 'none';
+	
+	// Disable submit button until recaptcha token has come back and is ready to send to server
+	let $submitBtn = $("#doContactUs");
+	if ($submitBtn) $submitBtn.disabled = true;
 
 	let doneRecaptcha = false;
 
@@ -43,10 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (!doneRecaptcha) {
 				const BOGUS = 'bogus_site_key';
 				let G_RECAP_SITE_KEY = BOGUS;
-
-				// Disable submit button until recaptcha token has come back and is ready to send to server
-				let $submitBtn = $("#doContactUs");
-				if ($submitBtn) $submitBtn.disabled = true;
 
 				// If either of the honeypots are filled in, notify user when we post that we have a bot
 				let recapValue = $recapResponse ? $recapResponse.value : "";
