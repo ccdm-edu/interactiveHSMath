@@ -98,9 +98,7 @@ p#headerForSubtopics {
 	border-color: black;
 }
 /***************** top headers *******************************/
-#TrigMusicVideoIntro h1,
-#TrigPageSideBySide #side-content h1,
-#MusicVideoSummaryBlock h1 {
+#TrigPageSideBySide #side-content h1{
   /* Font Choice */
   font-family: 'Montserrat', system-ui, sans-serif;
   
@@ -114,8 +112,7 @@ p#headerForSubtopics {
   color: #1E3A8A; /* Deep slate instead of harsh pure black */
   text-align: left;
 }
-#TrigPageSideBySide #side-content h2,
-#MusicVideoSummaryBlock h2{
+#TrigPageSideBySide #side-content h2{
   /* Keep the exact same font stack for consistency */
   font-family: 'Inter', system-ui, sans-serif;
   
@@ -310,10 +307,6 @@ p.AdvTopic_Expln, p.AdvTopic_ToDo {
 
 /* end of modal pages*/ 
 
-/* want to send back django variable but not have it visible, use different server params if local/test or remote server */ 
-#sendServerLoc{ 
-  display: none; 
-}
 /******************* All pages, framework-free upper navigation bar utilities ***********************/ 
 /* Added native styles to replace missing Bootstrap top menu structural foundation classes */ 
 #topNavBarHeader { 
@@ -801,6 +794,15 @@ button.close:focus-visible {
   box-shadow: 0 0 15px rgba(191, 85, 236, 0.6); /* Vibrant neon glow */
   transform: translateY(-2px); /* Snappy lift effect */
 }
+.btn-secondary:disabled {
+  background-color: transparent; 
+  color: #94a3b8;            /* Slate gray text replaces vibrant purple */
+  border: 1px solid #cbd5e1; /* Muted gray border */
+  box-shadow: none;          /* Strips out the vibrant neon glow */
+  cursor: not-allowed;       /* Changes user cursor to a "slashed circle" icon */
+  transform: none;           /* Prevents the hover translateY lift */
+  pointer-events: none;      /* Safeguard: Blocks human clicks at browser level */
+}
 
 /* 3. utility buttons for math pages */
 .btn-utility {
@@ -834,6 +836,21 @@ button.close:focus-visible {
 /* Base style for the arrow span */
 .btn-arrow {
   transition: transform 0.2s ease; /* Enables smooth movement */
+}
+.btn-utility:disabled {
+  background: #f1f5f9;       /* Muted pastel/light gray tint replaces soft lavender */
+  color: #94a3b8;            /* Dull gray replaces deep indigo text */
+  border: 2px solid #e2e8f0; /* Soft gray border replaces lavender-ice border */
+  box-shadow: none;          /* Completely flattens the 3D inner and outer shadows */
+  cursor: not-allowed;       /* Changes user cursor to a "slashed circle" icon */
+  transform: none;           /* Locks physical movement and scaling math */
+  pointer-events: none;      /* Safeguard: Blocks human clicks at browser level */
+}
+
+/* Grayscale and freeze treatment for the utility arrow span */
+.btn-utility:disabled .btn-arrow {
+  transform: none;           /* Prevents any structural arrow animations */
+  opacity: 0.5;              /* Fades out the graphic intensity */
 }
 
 

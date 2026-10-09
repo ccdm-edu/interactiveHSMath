@@ -70,56 +70,6 @@ const $$ = (selector, context = document) => {
 	return elements;
 };
 
-// Global Object Loops ($.each).  Can operate on NodeList, standard array, native objects (which means key value pairs, unlike elements.each)
-//Example: $.each(myArray, ...) or $.each(myObject, ...)
-//const user = { name: "Alice", age: 30, role: "Admin" };
-//$.each(user, function(key, value) {
-//    console.log(`${key}: ${value}`); // Logs "name: Alice", etc.
-//});
-//Unlike elements.each, this can break early, here is an example:
-//$.each(numbers, function(index, value) {
-//    if (value > 25) return false; // This acts like a 'break' statement!
-//    console.log(value); // Only prints 10 and 20
-//});
-$.each = (collection, callback) => {
-	if (!collection) return collection;
-	if (Array.isArray(collection) || collection.length !== undefined) {
-		for (let i = 0; i < collection.length; i++) {
-			if (callback.call(collection[i], i, collection[i]) === false) break;
-		}
-	} else if (typeof collection === 'object') {
-		const keys = Object.keys(collection);
-		for (let i = 0; i < keys.length; i++) {
-			if (callback.call(collection[keys[i]], keys[i], collection[keys[i]]) === false) break;
-		}
-	}
-	return collection;
-};
-
-// Modern Fetch-based Ajax
-$.ajax = async (options = {}) => {
-	const { url, method = 'GET', data = null, headers = {}, success, error, dataType = 'json' } = options;
-	const fetchOptions = { method: method.toUpperCase(), headers: { ...headers } };
-	if (data) {
-		if (typeof data === 'object' && !(data instanceof FormData)) {
-			fetchOptions.headers['Content-Type'] = 'application/json';
-			fetchOptions.body = JSON.stringify(data);
-		} else {
-			fetchOptions.body = data;
-		}
-	}
-	try {
-		const response = await fetch(url, fetchOptions);
-		if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-		const result = dataType === 'json' ? await response.json() : await response.text();
-		if (success) success(result, response.statusText, response);
-		return result;
-	} catch (err) {
-		if (error) error(err, err.message);
-		throw err;
-	}
-};
-
 // Element Extension Factory to give a DOM element all the JQuery shorthand methods
 function extendElement(el) {
 	if (!el || el._sugarized) return el;
@@ -141,9 +91,6 @@ function extendElement(el) {
 		el.style[propertyName] = value;
 		return el;
 	};
-
-	el.change = (callback) => el.on('change', callback);
-	el.submit = (callback) => el.on('submit', callback);
 
 	el.addClass = (className) => {
 		if (className) className.split(' ').forEach(c => c && el.classList.add(c));
@@ -230,15 +177,6 @@ function extendElement(el) {
 			el.insertAdjacentHTML('beforeend', content);
 		} else if (content instanceof Node) {
 			el.appendChild(content);
-		}
-		return el;
-	};
-
-	el.prepend = (content) => {
-		if (typeof content === 'string') {
-			el.insertAdjacentHTML('afterbegin', content);
-		} else if (content instanceof Node) {
-			el.insertBefore(content, el.firstChild);
 		}
 		return el;
 	};

@@ -137,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Native DOM input event handlers
 	function updateFreq() {
-		$currFreq = $("#in-range-freq");
 		let $freqLabel = $("#currFreqLabel");
 		if ($freqLabel && $currFreq) $freqLabel.textContent = $currFreq.value;
 
@@ -147,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function updatePhase() {
-		$currPhase = $("#in-range-phase");
 		let $phaseLabel = $("#currPhaseLabel");
 		if ($phaseLabel && $currPhase) $phaseLabel.textContent = $currPhase.value;
 
@@ -211,6 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				$currToneFreq.setAttribute("max", $freqMax.value);
 			}
 			updateFreq();
+			drawTone()
 		});
 	}
 
@@ -219,6 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	if ($freqSlider) {
 		$freqSlider.on('change', function() {
 			updateFreq();
+			drawTone();
 		});
 	}
 
@@ -233,7 +233,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (ToneIsOnNow && typeof osc !== 'undefined' && osc && $currAmp) {
 				const tonejs_dB = -40 + 20.0 * Math.log10(ampVal);
 				osc.volume.value = tonejs_dB;
-			}
+			};	
+			drawTone();
 		});
 	}
 
@@ -242,6 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	if ($phaseSlider) {
 		$phaseSlider.on('change', function() {
 			updatePhase();
+			drawTone();
 		});
 	}
 
@@ -290,11 +292,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	}
 
-	// whenever any of the tone params change, redraw both graphs and update 
-	let $toneChanges = $("#toneChanges");
-	if ($toneChanges) {
-		$toneChanges.on('change', drawTone);
-	}
 
 	const CHART_OPTIONS = {
 		responsive: true,

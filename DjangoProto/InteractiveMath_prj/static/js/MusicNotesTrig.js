@@ -810,6 +810,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 				let $activity = $("#musicalActivity");
 				if ($activity) $activity.innerHTML = tuneTitle[currTuneState] || DEFAULT_TITLE;
+				
+				let pickInstr = $("#InstrumentTypeSel");
+				if (pickInstr) pickInstr.disabled = false;
 			}
 		} catch (err) {
 			console.error("Error in JSON configuration file pipeline: ", err);

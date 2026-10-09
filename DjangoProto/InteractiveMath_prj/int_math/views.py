@@ -196,12 +196,12 @@ class ProcessContactPage(View):
                             data = urllib.parse.urlencode(payload).encode()
                             #urllib.request is fine for sync views, ensure timeout=5 remains to prevent slow recaptcha from hanging wsgi worker
                             req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
+                            #sending the second encrypted verify request to recaptcha counts toward max monthly total, even if it fails or times out
+                            num_recapcha_sent = 1
                             # Add a timeout (e.g., 5 seconds) so your app doesn't hang forever
                             with urllib.request.urlopen(req, timeout=5) as response:
                                 result = json.loads(response.read().decode())
         
-                            #sending the second encrypted verify request to recaptcha counts toward max monthly total, log this
-                            num_recapcha_sent = 1
                             #take action on robot test results.  we can get success but if score is low, we get action=verify
                             #asking us to use another way to verify the user.  We don't do that at this time, we just reject low scores
                             if (result['success']):
@@ -367,6 +367,7 @@ class GetDynamicFilename(View):
 
     def get(self, request):
         realDynFilename = request.GET.get('fileKey') or request.GET.get('fileName')
+        if not realDynFilename: return JsonResponse({'error': 'Missing file identifier'}, status=400)
         if not self.hasExtension(realDynFilename):
             # we have a key only, use config file to look up the filename
             configMap = ConfigMapper()
@@ -408,9 +409,6 @@ class IndexView(View):
         # add help to user based on device/browser, unknown is for bots/scrapers
         ua_string = request.headers.get('user-agent',"unknown");
         user_agent = parse(ua_string)
-        usingSafari = False;
-        if 'safari' in user_agent.browser.family.lower(): 
-            usingSafari = True;
         isMobile = user_agent.is_mobile;
         configMap = ConfigMapper()
         realFileLandLogo = configMap.readConfigMapper("LandingPageLogo")
@@ -453,7 +451,6 @@ class IndexView(View):
                         'basePage': getBaseContextEntry(request),
                         'page_tab_header': 'Home',
                         'topic': None,
-                        'using_safari': usingSafari,
                         'is_mobile': isMobile,
                         'upgradeNoticePresent': upgradeNoticePresent,
                         'upgradeDate': upgradeDate,
@@ -629,7 +626,6 @@ class TrigSummaryView(BaseMathView):
     
     public_static_files = {
         'TrigSummaryCss': 'css/MusicSineSummary.css',
-        'TrigSummaryJS': 'js/MusicSineSummary.js',
     }
 
     def get_context_data(self, **kwargs):

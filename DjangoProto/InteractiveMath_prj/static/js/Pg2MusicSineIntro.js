@@ -323,7 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			console.error('ERROR: unexpected event: ' + e);
 		}
 		Object.freeze(pos);
-		let cntr = 0;
 
 		// if user clicks a note, the sound must come on and icons must match
 		$toneVolOn.show();
@@ -388,10 +387,6 @@ document.addEventListener('DOMContentLoaded', () => {
 				drawTone();
 			}
 		});
-
-		// Now that user is getting into page, put up the audio intro "click me" verbiage
-		let $verbalIntro = $("#verbalIntro");
-		if ($verbalIntro) $verbalIntro.style.visibility = 'visible';
 
 	});
 
