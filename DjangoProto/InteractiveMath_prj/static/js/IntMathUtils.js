@@ -19,7 +19,46 @@
  * AUTHOR:     C. DeMeyer (with Gemini AI assist)
  * ============================================================================
  */
-'use strict'
+'use strict';
+//do a safe sessionStorage since iOS and incognito mode will crash if website tries to use sessionStorage.
+//This code lacks persistence across pages, so it won't store the variables but it won't crash.  External code 
+// needs to handle that you may not get stored value.
+// Place this at the very top of IntMathUtils.js as per Gemini AI.  semicolon before acts as a defensive shield
+// in case somehow i loose the one above and i now have an esoteric failure--precaution
+;(function () {
+    try {
+        window.sessionStorage.setItem('__test_storage__', '1');
+        window.sessionStorage.removeItem('__test_storage__');
+    } catch (e) {
+        // sessionStorage is blocked (Private/Incognito mode).
+        // Safely redefine it using Object.defineProperty to bypass read-only locks.
+        const memory = {};
+        const safeStorage = {
+            getItem: (k) => (k in memory ? memory[k] : null),
+            setItem: (k, v) => { memory[k] = String(v); },
+            removeItem: (k) => { delete memory[k]; },
+            clear: () => { Object.keys(memory).forEach(k => delete memory[k]); }
+        };
+
+        try {
+            Object.defineProperty(window, 'sessionStorage', {
+                value: safeStorage,
+                configurable: true,
+                writable: true
+            });
+        } catch (defineError) {
+            // Ultimate fallback if defineProperty fails: patch the prototype methods directly
+            try {
+                Storage.prototype.getItem = function(k) { return memory[k] || null; };
+                Storage.prototype.setItem = function(k, v) { memory[k] = String(v); };
+                Storage.prototype.removeItem = function(k) { delete memory[k]; };
+                Storage.prototype.clear = function() { Object.keys(memory).forEach(k => delete memory[k]); };
+            } catch (protoError) {
+                console.error("Failed to shield sessionStorage:", protoError);
+            }
+        }
+    }
+})();
 
 //** Make a fraction teens may be familiar with looking at with a numerator, a line underneath
 // and a denominator
@@ -193,6 +232,7 @@ function drawSineAxis(twoDCtx, xOrigin, yOrigin, maxTime, pix_per_minor_tick, nu
 }
 //********
 // Check if localStorage/sessionStorage exists and if so, perform action else return nulls
+// currently used for cookie storage--considered good practice over sessionStorage
 function ifLocalStorageAvail(storageItem, action, value = "") {
 	try {
 		if (action == "set") {

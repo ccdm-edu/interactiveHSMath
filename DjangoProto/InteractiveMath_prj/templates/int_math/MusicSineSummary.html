@@ -63,14 +63,19 @@
 		document.addEventListener('DOMContentLoaded', () => {
 		    // Clean up UI elements not needed for this page
 		    $$('a[href="#AdvancedTopics"], #TrigPageTop, #GoToNextPage, #startAutoDemo, #autoDemoCtls').hide();
-		    // Fix up button for this page (no need for js file)
-		    let $prevBtn = document.getElementById("GoToPreviousPage");
-			if ($prevBtn) {
-				let wrapper = document.createElement('a');
-				wrapper.href = "../MusicNotesTrig";
-				$prevBtn.parentNode.insertBefore(wrapper, $prevBtn);
-				wrapper.appendChild($prevBtn);
-			}
+		    // Fix up button for this page (no need for js file)		
+			// Locate the shared button from basePage.html
+			const prevBtn = document.getElementById("GoToPreviousPage");
+			if (prevBtn) {
+			    // 1. Remove any native behavior or form submission ties
+			    prevBtn.type = "button"; 
+			    
+			    // 2. Safely route using an absolute path to bypass trailing slash issues
+			    prevBtn.addEventListener('click', () => {
+			        window.location.assign("/MusicNotesTrig/");
+			    });
+			}	
+			
 		})
 	</script>
 

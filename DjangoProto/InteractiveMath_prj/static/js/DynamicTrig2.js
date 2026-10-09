@@ -34,7 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Handle User Layout Mode Configuration Setup
 	const isNewbie = sessionStorage.getItem('UserIsNew')?.toLowerCase();
-	if (isNewbie === 'true') {
+	if (!isNewbie || isNewbie === 'true') {
+		//null return is "falsy" and will go here
 		$('#startAutoDemo')?.addClass('newbieMode');
 	} else if (isNewbie === 'false') {
 		$('#FirstHelp_DT2')?.hide(); 

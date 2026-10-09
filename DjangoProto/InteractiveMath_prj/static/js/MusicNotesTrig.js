@@ -31,11 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	$("#GoToNextPage")?.on('click', () => window.location.href = "../MusicSineSummary");
 	$("#GoToPreviousPage")?.on('click', () => window.location.href = "../ToneTrig");
 
-	// Handle user layout state level mapping
-
+	// Handle user layout state level mapping, getItem could be null which will set isNewbie to true
 	const isNewbie = sessionStorage.getItem('UserIsNew')?.toLowerCase() !== 'false';
 	if (isNewbie) $('#startAutoDemo')?.addClass('newbieMode');
-	const stopModal = isNewbie;
 	
 	const $noteVolOn = $(".allowNotePlay .VolOn");
 	const $noteVolOff = $(".allowNotePlay .VolOff");
@@ -822,24 +820,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Trigger config load immediately on DOM load
 	loadAudioConfig();
-
-	//*********************************** 
-	// Initial User Modal Assistance 
-	//*********************************** 
-	if ((!sessionStorage.adModal) && (!stopModal)) {
-		setTimeout(function() {
-			let adModalEl = $('#admodal');
-			if (adModalEl) {
-				// Native HTML5 Dialog modal layout launch pattern replaces Bootstrap .modal() calls
-				if (typeof adModalEl.showModal === 'function') {
-					adModalEl.showModal();
-				} else {
-					adModalEl.style.display = 'block';
-				}
-			}
-		}, 1000);
-		sessionStorage.adModal = 1;
-	}
 
 	//****************************************************************************
 	// Autodemo script for tone trig

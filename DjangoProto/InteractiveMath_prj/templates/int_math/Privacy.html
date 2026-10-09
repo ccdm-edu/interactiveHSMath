@@ -42,12 +42,17 @@
     <script nonce="{{ CSP_NONCE }}">			
 		    // Clean up UI elements not needed for this page
 		    $$('a[href="#AdvancedTopics"], #TrigPageTop, #GoToNextPage').hide();
-			const element = document.getElementById("GoToPreviousPage");
-			if (element) {
-			    const wrapper = document.createElement("a");
-			    wrapper.href = "../TermsOfUse";
-			    element.parentNode.insertBefore(wrapper, element);
-			    wrapper.appendChild(element);
+		    // Fix up button for this page (no need for js file)		
+			// Locate the shared button from basePage.html
+			const prevBtn = document.getElementById("GoToPreviousPage");
+			if (prevBtn) {
+			    // 1. Remove any native behavior or form submission ties
+			    prevBtn.type = "button"; 
+			    
+			    // 2. Safely route using an absolute path to bypass trailing slash issues
+			    prevBtn.addEventListener('click', () => {
+			        window.location.assign("/TermsOfUse/");
+			    });
 			}
 
 	</script>				   

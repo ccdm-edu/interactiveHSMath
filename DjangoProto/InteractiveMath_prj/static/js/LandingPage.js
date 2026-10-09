@@ -26,7 +26,7 @@
 // Replacing $(function() { ... }) with native standard DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
 
-	// 1. Resurrect saved user mode from session storage
+	// 1. Resurrect saved user mode from session storage, if avail.  else it will return null
 	const isNewbie = sessionStorage.getItem('UserIsNew')?.toLowerCase() !== 'false';
 	
 	// Sync session state and toggle the corresponding checked properties directly via .prop()

@@ -43,13 +43,18 @@
 	<script nonce="{{ CSP_NONCE }}">			
 		    // Clean up UI elements not needed for this page
 		    $$('a[href="#AdvancedTopics"], #TrigPageTop, #GoToPreviousPage').hide();
-			const element = document.getElementById("GoToNextPage");
-			if (element) {
-			    const wrapper = document.createElement("a");
-			    wrapper.href = "../Privacy";
-			    element.parentNode.insertBefore(wrapper, element);
-			    wrapper.appendChild(element);
+
+		    let nextBtn = document.getElementById("GoToNextPage");
+			if (nextBtn) {
+			    // 1. Remove any native behavior or form submission ties
+			    nextBtn.type = "button"; 
+			    
+			    // 2. Safely route using an absolute path to bypass trailing slash issues
+			    nextBtn.addEventListener('click', () => {
+			        window.location.assign("/Privacy/");
+			    });
 			}
+	
 			
 			
 	</script>

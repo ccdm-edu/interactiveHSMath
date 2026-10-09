@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// When user changes max freq allowed, update all 
 	let $freqMax = $('#freqMax');
 	if ($freqMax) {
-		$freqMax.on('change', function() {
+		$freqMax.on('input', function() {
 			let val = parseFloat($freqMax.value);
 
 			// clamp max/min value for user entry 
@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Change label on freq slider and adjust the tone as appropriate 
 	let $freqSlider = $('#in-range-freq');
 	if ($freqSlider) {
-		$freqSlider.on('change', function() {
+		$freqSlider.on('input', function() {
 			updateFreq();
 			drawTone();
 		});
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Change label on amplitude slider and adjust the tone as appropriate 
 	let $ampSlider = $('#in-range-amp');
 	if ($ampSlider) {
-		$ampSlider.on('change', function() {
+		$ampSlider.on('input', function() {
 			$currAmp = $("#in-range-amp");
 			const ampVal = parseFloat($currAmp?.val() || 0);
 			$('#currAmpLabel')?.text(ampVal);

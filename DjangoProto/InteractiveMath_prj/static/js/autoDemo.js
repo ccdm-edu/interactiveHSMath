@@ -100,8 +100,9 @@ class AutoDemo {
 	}
 	//------------------------------------------------------------------------------------
 	setCurrSeg(newCurrSeg) {
+		// currSeg is like an array, starts at 0 but when presented to user, add 1 so first segment is "1"
 		if (!isNaN(parseFloat(newCurrSeg)) && isFinite(newCurrSeg)) {
-			let temp = newCurrSeg - 1;  /*array indexes from 0, currSeg starts at 1 */
+			let temp = newCurrSeg - 1;  /*array indexes from 0 therefore currSeg starts at 0, user sees 'currSeg' start at 1 */
 			if ((temp >= 0) && (temp <= (this.fullScript.length - 1))) {
 				this.currSeg = temp;
 				let $segNumInput = $('#segNum');
@@ -118,6 +119,7 @@ class AutoDemo {
 	}
 	//------------------------------------------------------------------------------------
 	stopThisSegment(killTheAutoDemoCtlBox = true) {
+		//stays on same segment in case want to replay.  if used via dismiss.  whole control box is destroyed.
 		this.userStopRequest = true;
 		this.eventLoopPtrs.forEach(timedEvent => clearTimeout(timedEvent));
 		this.eventLoopPtrs = [];
@@ -150,7 +152,8 @@ class AutoDemo {
 	//------------------------------------------------------------------------------------
 	segmentOverCleanup() {
 		if (!this.userStopRequest) {
-			this.setCurrSeg(this.currSeg + 1 + 1);
+			//user did not abort autodemo
+			(this.currSeg >= (this.fullScript.length - 1))?this.setCurrSeg(1):this.setCurrSeg(this.currSeg + 1);
 		}
 		let $playBtn = $('#playSegment');
 		if ($playBtn) $playBtn.disabled = false;
@@ -159,7 +162,7 @@ class AutoDemo {
 
 		this.removeActOnElement();
 
-		// Updated to remove ModalWindow dependency for pure JS
+		// Updated to remove ModalWindow dependency for pure JS.  modal window used in some autodemos
 		if (typeof this.ModalWindow !== 'undefined' && this.ModalWindow) {
 			this.ModalWindow.close();
 		}
@@ -660,7 +663,8 @@ class AutoDemoWithCanvas extends AutoDemo {
 		switch (activity.segmentActivity) {
 			case ("CLICK_ON_CANVAS"):
 				temp = setTimeout(function() {
-					if (nextItemStartTime > nextItemBeginTime && ctxDemoCanvas.ctx) {
+					//if (nextItemStartTime > nextItemBeginTime && ctxDemoCanvas.ctx) {
+					if (ctxDemoCanvas.ctx) {
 						ctxDemoCanvas.ctx.putImageData(annotatePlot, 0, 0);
 					}
 					thisObj.moveCursorImgOnCanvas(activity.segmentParams);

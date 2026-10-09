@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const isNewbie = sessionStorage.getItem('UserIsNew')?.toLowerCase();
 
 	if (!isNewbie || isNewbie === 'true') {
+		//null return is "falsy" and will go here
 		$('#startAutoDemo')?.addClass('newbieMode');
 		$('#FirstHelp_DT1')?.addClass('newbieMode');
 	} else if (isNewbie === 'false') {
