@@ -200,7 +200,14 @@ class AutoDemo {
 
 			try {
 				const audioFileResponse = await fetch(audioURL);
-				if (!audioFileResponse.ok) throw new Error('Network error');
+				// Check if the response failed (like a 401)
+			    if (!audioFileResponse.ok) {
+			        // Read the custom text message returned by your Cloudflare Worker
+			        const errorText = await audioFileResponse.text();
+			        
+			        console.error(`AutoDemo audio fetch failed with status ${audioFileResponse.status}: ${errorText}`);
+			        throw new Error(`Network error: ${errorText}`);
+			    }
 
 				const rawBlob = await audioFileResponse.blob();
 				if (spinnerEl) spinnerEl.classList.remove("show");
