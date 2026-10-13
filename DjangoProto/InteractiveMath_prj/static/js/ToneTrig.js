@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Change label on phase slider and adjust the tone as appropriate 
 	let $phaseSlider = $('#in-range-phase');
 	if ($phaseSlider) {
-		$phaseSlider.on('change', function() {
+		$phaseSlider.on('input', function() {
 			updatePhase();
 			drawTone();
 		});

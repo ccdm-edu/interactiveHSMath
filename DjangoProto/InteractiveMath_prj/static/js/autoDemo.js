@@ -441,7 +441,7 @@ class AutoDemo {
 
 		// now fire off an event to be detected onchange 
 		// Native syntax dispatch tracking wrapper replaces jQuery .trigger()
-		let changeEvent = new Event('change', { bubbles: true });
+		let changeEvent = new Event('input', { bubbles: true });
 		targetEl.dispatchEvent(changeEvent);
 	}
 

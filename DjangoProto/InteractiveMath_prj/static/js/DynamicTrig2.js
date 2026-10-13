@@ -504,7 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	//*** Change label on freq slider and adjust the tone as appropriate 
 	let $freqSlider = $('#FreqSlider_DT2');
 	if ($freqSlider) {
-		$freqSlider.on('change', function() {
+		$freqSlider.on('input', function() {
 			let activeVal = $freqSlider.value;
 
 			//There are several locations that must all be updated
