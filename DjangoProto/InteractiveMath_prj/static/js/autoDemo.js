@@ -94,7 +94,7 @@ class AutoDemo {
 				}
 			}
 		}
-		this.setCurrSeg(1);
+		this.setCurrSeg(0);
 		let $stopBtn = $('#stopSegment');
 		if ($stopBtn) $stopBtn.disabled = true;
 	}
@@ -102,7 +102,7 @@ class AutoDemo {
 	setCurrSeg(newCurrSeg) {
 		// currSeg is like an array, starts at 0 but when presented to user, add 1 so first segment is "1"
 		if (!isNaN(parseFloat(newCurrSeg)) && isFinite(newCurrSeg)) {
-			let temp = newCurrSeg - 1;  /*array indexes from 0 therefore currSeg starts at 0, user sees 'currSeg' start at 1 */
+			let temp = newCurrSeg;  /*array indexes from 0 therefore currSeg starts at 0, user sees 'currSeg' start at 1 */
 			if ((temp >= 0) && (temp <= (this.fullScript.length - 1))) {
 				this.currSeg = temp;
 				let $segNumInput = $('#segNum');
@@ -153,7 +153,8 @@ class AutoDemo {
 	segmentOverCleanup() {
 		if (!this.userStopRequest) {
 			//user did not abort autodemo
-			(this.currSeg >= (this.fullScript.length - 1))?this.setCurrSeg(1):this.setCurrSeg(this.currSeg + 1);
+			let currSeg = this.getCurrSeg();
+			(currSeg >= (this.fullScript.length - 1))?this.setCurrSeg(0):this.setCurrSeg(currSeg + 1);
 		}
 		let $playBtn = $('#playSegment');
 		if ($playBtn) $playBtn.disabled = false;
@@ -546,18 +547,15 @@ class AutoDemo {
 	}
 	//------------------------------------------------------------------------------------
 	startDemo() {
-		let currSeg = this.currSeg;
+		let currSeg = this.getCurrSeg();
 		let $playBtn = $('#playSegment');
 		let $stopBtn = $('#stopSegment');
-		let $segNumInput = $('#segNum');
+		let $segNumInput = $('#segNum');  
 		let $clickCursor = $('#clickHereCursor');
 
 		if ($playBtn) $playBtn.disabled = true;
 		if ($stopBtn) $stopBtn.disabled = false;
 
-		if ($segNumInput) {
-			this.setCurrSeg(parseInt($segNumInput.value));
-		}
 		if ($clickCursor) $clickCursor.classList.remove('userHitPlay');
 
 		if ((currSeg >= 0) && (currSeg <= this.fullScript.length)) {
