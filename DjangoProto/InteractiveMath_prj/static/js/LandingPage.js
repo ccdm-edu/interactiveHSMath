@@ -459,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// User has interacted with autoDemo controls 
 	//**************************************************************************** 
 	// User has selected play 
-	$('#playSegment')?.on('click', () => {
+	$('#playSegment')?.on('click', async () => {
 	  const currSeg = parseInt($('#segNum')?.val() || 1, 10);
 	
 	  if (currSeg === 1) {
@@ -470,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	    });
 	  }
 	  
-	  demo.startDemo();
+	  await demo.startDemo();
 	});
 
 	$('#stopSegment')?.on('click', () => {

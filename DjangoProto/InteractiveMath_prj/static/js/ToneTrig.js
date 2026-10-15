@@ -891,7 +891,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// User has selected play 
 	let $playSegmentBtn = $('#playSegment');
 	if ($playSegmentBtn) {
-		$playSegmentBtn.on('click', function() {
+		$playSegmentBtn.on('click', async function() {
 			// So Safari requires that a user touch (cant do CustomEvent) instigates a WebAudio event 
 			// here we "cheat" and let user play button touch do a quick audio action to satisfy Safari before Autodemo 
 			// which will play tones or music 
@@ -912,7 +912,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			// in case plots have other stuff on them from other activities, clean it up 
 			initializePage();
-			demo.startDemo();
+			await demo.startDemo();
 		});
 	}
 

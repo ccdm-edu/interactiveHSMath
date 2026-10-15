@@ -765,11 +765,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	// User has selected play 
 	let $playSegmentBtn = $('#playSegment');
 	if ($playSegmentBtn) {
-		$playSegmentBtn.on('click', function() {
+		$playSegmentBtn.on('click', async function() {
 			// bring everything back to defaults 
 			resetToDefaults();
 			// activate pause and disable play 
-			demo.startDemo();
+			await demo.startDemo();
 		});
 	}
 

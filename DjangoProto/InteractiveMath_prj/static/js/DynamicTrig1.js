@@ -1068,10 +1068,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	// User has selected play 
 	let $playSegmentBtn = $('#playSegment');
 	if ($playSegmentBtn) {
-		$playSegmentBtn.on('click', function() {
+		$playSegmentBtn.on('click', async function() {
 			// user may have chosen a segment out of order 
 			prepHelpForUser(demo.getCurrSeg());
-			demo.startDemo();
+			await demo.startDemo();
 		});
 	}
 

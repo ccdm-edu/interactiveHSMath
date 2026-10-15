@@ -1026,9 +1026,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	// User has selected play 
 	let $playSegmentBtn = $('#playSegment');
 	if ($playSegmentBtn) {
-		$playSegmentBtn.on('click', function() {
+		$playSegmentBtn.on('click', async function() {
 			resetStaticTrig(); // just in case user has leftover stuff, let autodemo start fresh 
-			demo.startDemo();
+			await demo.startDemo();
 		});
 	}
 
