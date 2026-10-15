@@ -452,7 +452,7 @@ class AutoDemo {
 
 	// So audio generally starts first and is longer than the cursor demo.  So we start audio, then wait segment.headStartForAudioMillisec
 	// and start the timed cursor demo	
-	doTheSegmentAction(activity, nextItemBeginTime, annotateInd) {
+	async doTheSegmentAction(activity, nextItemBeginTime, annotateInd) {
 		let temp;
 		let thisObj = this;
 		let anIndex = annotateInd;
@@ -460,7 +460,7 @@ class AutoDemo {
 		switch (activity.segmentActivity) {
 			case ("PLAY_AUDIO"):
 				// PLAY_AUDIO, assume we start this first with no delay
-				this.playAudio(activity.segmentParams);
+				await this.playAudio(activity.segmentParams);
 				break;
 			case ("ACT_ON_ELEMENT"):
 				// ACT_ON_ELEMENT
@@ -546,11 +546,10 @@ class AutoDemo {
 		return [nextItemStartTime, anIndex];
 	}
 	//------------------------------------------------------------------------------------
-	startDemo() {
+	async startDemo() {
 		let currSeg = this.getCurrSeg();
 		let $playBtn = $('#playSegment');
 		let $stopBtn = $('#stopSegment');
-		let $segNumInput = $('#segNum');  
 		let $clickCursor = $('#clickHereCursor');
 
 		if ($playBtn) $playBtn.disabled = true;
@@ -564,11 +563,13 @@ class AutoDemo {
 			let nextItemBeginTime = segment.headStartForAudioMillisec;
 			let annotateInd = 0;
 
-			segment.segmentActivities.forEach(activity => {
+			for (const activity of segment.segmentActivities) {
 				if (!this.userStopRequest) {
-					[nextItemBeginTime, annotateInd] = this.doTheSegmentAction(activity, nextItemBeginTime, annotateInd);
+					[nextItemBeginTime, annotateInd] = await this.doTheSegmentAction(activity, nextItemBeginTime, annotateInd);
+				} else {
+					break; // cleanly exit the loop immediately if stopped
 				}
-			});
+			}
 		} else {
 			console.error('Coding Error, incorrect segment number called out in startDemo of ' + currSeg);
 		}
@@ -651,7 +652,7 @@ class AutoDemoWithCanvas extends AutoDemo {
 		segmentParams.canvas.dispatchEvent(clickCanvasPt);
 	}
 	//------------------------------------------------------------------------------------
-	doTheSegmentAction(activity, nextItemBeginTime, annotateInd) {
+	async doTheSegmentAction(activity, nextItemBeginTime, annotateInd) {
 		let temp;
 		let thisObj = this;
 		let anIndex = annotateInd;
@@ -700,7 +701,7 @@ class AutoDemoWithCanvas extends AutoDemo {
 				break;
 
 			default:
-				[nextItemStartTime, anIndex] = super.doTheSegmentAction(activity, nextItemBeginTime, annotateInd);
+				[nextItemStartTime, anIndex] = await super.doTheSegmentAction(activity, nextItemBeginTime, annotateInd);
 				break;
 		}
 		return [nextItemStartTime, anIndex];
