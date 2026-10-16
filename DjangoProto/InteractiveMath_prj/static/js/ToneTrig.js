@@ -892,6 +892,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	let $playSegmentBtn = $('#playSegment');
 	if ($playSegmentBtn) {
 		$playSegmentBtn.on('click', async function() {
+			//prevent user from double clicking immediately, user hitting stop button will reenable or
+			//when audio ends.
+			$playSegmentBtn.disable();
+			
 			// So Safari requires that a user touch (cant do CustomEvent) instigates a WebAudio event 
 			// here we "cheat" and let user play button touch do a quick audio action to satisfy Safari before Autodemo 
 			// which will play tones or music 
@@ -900,19 +904,25 @@ document.addEventListener('DOMContentLoaded', () => {
 					osc.toDestination().start();
 					osc.frequency.value = 80; // below what most speakers will play 
 					osc.toDestination().stop();
-				} catch (e) { }
+				} catch (e) { console.error("Osc1 failed to play:", e); }
 			} else if (osc && typeof osc.start === 'function') {
 				try {
 					osc.start();
 					osc.frequency.value = 80;
 					osc.stop();
-				} catch (e) { }
+				} catch (e) { console.error("Osc2 failed to play:", e); }
 			}
 			// end Safari hack 
-
-			// in case plots have other stuff on them from other activities, clean it up 
-			initializePage();
-			await demo.startDemo();
+	
+	        try {
+				// in case plots have other stuff on them from other activities, clean it up 
+				initializePage();
+				await demo.startDemo();
+	
+	        } catch (error) {
+	            console.error("Demo failed to play:", error);
+	        }
+	            
 		});
 	}
 

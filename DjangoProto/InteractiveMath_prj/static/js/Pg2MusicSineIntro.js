@@ -868,6 +868,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	let $playSegmentBtn = $('#playSegment');
 	if ($playSegmentBtn) {
 		$playSegmentBtn.on('click', async function() {
+			//prevent user from double clicking immediately, user hitting stop button will reenable or
+			//when audio ends.
+			$playSegmentBtn.disable();
+			
 			// So Safari requires that a user touch (cant do CustomEvent) instigates a WebAudio event 
 			// here we "cheat" and let user play button touch do a quick audio action to satisfy Safari before Autodemo 
 			// which will play tones or music 
@@ -885,9 +889,15 @@ document.addEventListener('DOMContentLoaded', () => {
 				} catch (e) { }
 			}
 
-			// just in case a note is playing, turn it off 
-			resetNotes();
-			await demo.startDemo();
+	        try {
+				// just in case a note is playing, turn it off 
+				resetNotes();
+				await demo.startDemo();
+	
+	        } catch (error) {
+	            console.error("Demo failed to play:", error);
+	        }
+
 		});
 	}
 

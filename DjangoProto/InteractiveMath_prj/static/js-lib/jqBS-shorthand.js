@@ -198,6 +198,20 @@ function extendElement(el) {
 
 	el.find = (selector) => $(selector, el);
 	el.findAll = (selector) => $$(selector, el);
+	
+	//Used primarily for buttons
+	el.disable = () => {
+		el.disabled = true;
+		return el; // Keeps the shim chainable
+	};
+
+	el.enable = () => {
+		el.disabled = false;
+		return el; // Keeps the shim chainable
+	};
+	
+	
+	
 
 	el._sugarized = true;
 	return el;

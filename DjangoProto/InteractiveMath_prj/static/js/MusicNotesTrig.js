@@ -1247,6 +1247,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	let $playSegmentBtn = $('#playSegment');
 	if ($playSegmentBtn) {
 		$playSegmentBtn.on('click', async function() {
+									//prevent user from double clicking immediately, user hitting stop button will reenable or
+			//when audio ends.
+			$playSegmentBtn.disable();
+			
 			// So Safari requires that a user touch (cant do CustomEvent) instigates a WebAudio event
 			// here we "cheat" and let user play button touch do a quick audio action to satisfy Safari before Autodemo
 			// which will play tones or music
@@ -1262,10 +1266,18 @@ document.addEventListener('DOMContentLoaded', () => {
 			// so we will send the AudioContext used for musician notes to the autoDemo so it can be initialized with explainers voice MP3
 			// audioContext_iOS: context} <-- part of script where we pass in WebAudio object for initialization upon user click of "play"
 			// end Safari hack
+	
+	        try {
+	            // in case plots have other stuff on them from other activities, clean it up
+	            resetToDefaults();
+	
+	            // Run demo and wait for async audio fetching code to complete
+	            await demo.startDemo(); 
+	
+	        } catch (error) {
+	            console.error("Demo failed to play:", error);
+	        }
 
-			// in case plots have other stuff on them from other activities, clean it up
-			resetToDefaults();
-			await demo.startDemo();
 		});
 	}
 

@@ -96,7 +96,7 @@ class AutoDemo {
 		}
 		this.setCurrSeg(0);
 		let $stopBtn = $('#stopSegment');
-		if ($stopBtn) $stopBtn.disabled = true;
+		if ($stopBtn) $stopBtn.disable();
 	}
 	//------------------------------------------------------------------------------------
 	setCurrSeg(newCurrSeg) {
@@ -133,9 +133,9 @@ class AutoDemo {
 	    }
 
 		let $stopBtn = $('#stopSegment');
-		if ($stopBtn) $stopBtn.disabled = true;
+		if ($stopBtn) $stopBtn.disable();
 		let $playBtn = $('#playSegment');
-		if ($playBtn) $playBtn.disabled = false;
+		if ($playBtn) $playBtn.enable();
 
 		if (killTheAutoDemoCtlBox) {
 			let $startBtn = $("#startAutoDemo");
@@ -157,9 +157,9 @@ class AutoDemo {
 			(currSeg >= (this.fullScript.length - 1))?this.setCurrSeg(0):this.setCurrSeg(currSeg + 1);
 		}
 		let $playBtn = $('#playSegment');
-		if ($playBtn) $playBtn.disabled = false;
+		if ($playBtn) $playBtn.enable();
 		let $stopBtn = $('#stopSegment');
-		if ($stopBtn) $stopBtn.disabled = true;
+		if ($stopBtn) $stopBtn.disable();
 
 		this.removeActOnElement();
 
@@ -548,12 +548,10 @@ class AutoDemo {
 	//------------------------------------------------------------------------------------
 	async startDemo() {
 		let currSeg = this.getCurrSeg();
-		let $playBtn = $('#playSegment');
 		let $stopBtn = $('#stopSegment');
 		let $clickCursor = $('#clickHereCursor');
-
-		if ($playBtn) $playBtn.disabled = true;
-		if ($stopBtn) $stopBtn.disabled = false;
+		//we disable play button immediately after it is hit to prevent double launching autodemo
+		if ($stopBtn) $stopBtn.enable();
 
 		if ($clickCursor) $clickCursor.classList.remove('userHitPlay');
 

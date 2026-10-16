@@ -766,10 +766,22 @@ document.addEventListener('DOMContentLoaded', () => {
 	let $playSegmentBtn = $('#playSegment');
 	if ($playSegmentBtn) {
 		$playSegmentBtn.on('click', async function() {
-			// bring everything back to defaults 
-			resetToDefaults();
-			// activate pause and disable play 
-			await demo.startDemo();
+			
+			//prevent user from double clicking immediately, user hitting stop button will reenable or
+			//when audio ends.
+			$playSegmentBtn.disable();
+	
+	        try {
+	            // Bring everything back to defaults
+	            resetToDefaults();
+	
+	            // Run demo and wait for async audio fetching code to complete
+	            await demo.startDemo(); 
+	
+	        } catch (error) {
+	            console.error("Demo failed to play:", error);
+	        }
+        
 		});
 	}
 

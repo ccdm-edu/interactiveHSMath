@@ -1069,9 +1069,22 @@ document.addEventListener('DOMContentLoaded', () => {
 	let $playSegmentBtn = $('#playSegment');
 	if ($playSegmentBtn) {
 		$playSegmentBtn.on('click', async function() {
-			// user may have chosen a segment out of order 
-			prepHelpForUser(demo.getCurrSeg());
-			await demo.startDemo();
+
+			//prevent user from double clicking immediately, user hitting stop button will reenable or
+			//when audio ends.
+			$playSegmentBtn.disable();
+	
+	        try {
+				// user may have chosen a segment out of order 
+				prepHelpForUser(demo.getCurrSeg());
+	
+	            // Run demo and wait for async audio fetching code to complete
+	            await demo.startDemo(); 
+	
+	        } catch (error) {
+	            console.error("Demo failed to play:", error);
+	        }
+
 		});
 	}
 

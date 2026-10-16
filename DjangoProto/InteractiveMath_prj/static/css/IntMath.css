@@ -669,6 +669,17 @@ button.close:focus-visible {
   /* Note: Avoid outline: none !important for accessibility */
   outline: 2px solid #0066cc; 
 }
+button:disabled {
+    opacity: 0.5;                /* Dims the button to look inactive */
+    cursor: not-allowed;         /* Changes the mouse cursor to a "block" circle */
+    pointer-events: none;        /* Extra layer of click security in the browser */
+    box-shadow: none;            /* Removes any active hover glow effects */
+    
+    /* Optional: If your button changes color on hover, override it here */
+    background-color: #cccccc !important; 
+    color: #666666 !important;
+}
+
 /* ----------Control Button Groups (Play / Stop Alignment for AutoDemo)----------------- */ 
 .control-btn-group { 
   display: inline-flex; 

@@ -460,17 +460,28 @@ document.addEventListener('DOMContentLoaded', () => {
 	//**************************************************************************** 
 	// User has selected play 
 	$('#playSegment')?.on('click', async () => {
-	  const currSeg = parseInt($('#segNum')?.val() || 1, 10);
-	
-	  if (currSeg === 1) {
-	    // Show links and force their display structure seamlessly
-	    $$('a[href="#AdvancedTopics"]').show().forEach(el => {
-	      el.style.display = 'inline-block';
-	      el.style.visibility = 'visible';
-	    });
-	  }
-	  
-	  await demo.startDemo();
+		//prevent user from double clicking immediately, user hitting stop button will reenable or
+		//when audio ends.
+		$('#playSegment').disable();
+
+		const currSeg = parseInt($('#segNum')?.val() || 1, 10);
+
+		if (currSeg === 1) {
+			//First autodemo segment uses advanced topic block
+			// Show links and force their display structure seamlessly
+			$$('a[href="#AdvancedTopics"]').show().forEach(el => {
+				el.style.display = 'inline-block';
+				el.style.visibility = 'visible';
+			});
+		}
+
+		try {
+			// Run demo and wait for async audio fetching code to complete
+			await demo.startDemo();
+		} catch (error) {
+			console.error("Demo failed to play:", error);
+		}
+
 	});
 
 	$('#stopSegment')?.on('click', () => {
