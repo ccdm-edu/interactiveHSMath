@@ -84,6 +84,7 @@
 	color: DarkOrchid;
 	left: 0px;
 	top: calc(var(--CANVAS_TOP) + 110px);
+	width: 450px;
 }
 
 /***************************/

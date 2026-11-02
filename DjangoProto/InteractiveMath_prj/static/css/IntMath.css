@@ -157,11 +157,16 @@ a:hover:not(.dropdown-item):not(.nav-link) {
   height: var(--ADV_TOPIC_WINDOW_HEIGHT);
   width: var(--ADV_TOPIC_WINDOW_WIDTH);
   z-index: 1050;
+  /* Safari fix: Block text inflation globally on the dialog container */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* Native specification hook overrides default display rules cleanly on open */
 #AdvancedTopics[open] {
     display: block !important; /* Force it visible ONLY when the native [open] attribute arrives */
+    /* Safari fix: Stabilize font crispness and positioning math on top layers */
+    transform: translateZ(0); 
 }
 
 /* Active drag modifier removes browser layout matrix smoothly */
@@ -169,6 +174,8 @@ a:hover:not(.dropdown-item):not(.nav-link) {
   /* remove transform to stop jumping when click to drag */
   top: auto;
   left: auto;
+  /* Safari fix: Keep layout boundary calculations locked tightly during real-time movement */
+  contain: layout; 
 }
 
 /* Pure CSS Tab Typography Handling */
@@ -240,6 +247,9 @@ a:hover:not(.dropdown-item):not(.nav-link) {
   overflow-y: auto; 
   flex-grow: 1; 
   padding: 15px; 
+  /* Safari fix: Protect hidden/showing fieldsets inside scroll container from inflating when toggled */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 } 
 
 #AdvancedTopics .modal-body > fieldset { 
@@ -1124,6 +1134,11 @@ td { /* keep dynamicTrig2 table from collapsing if screen too small, user should
   width: 100%;
   padding: 20px 0;
   margin-top: auto; /* Push to the bottom if content is short */
+  font-size: 14px;  /*keep it small near bottom */
+  
+  /* Prevent iOS Safari from scaling up the text size */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 
