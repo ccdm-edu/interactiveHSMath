@@ -53,13 +53,11 @@ function getAudioContext() {
   
   return globalAudioCtx;
 }
-
-
-
+	
 class AutoDemo {
 	constructor(multiSegScript) {
 		this.fullScript = multiSegScript;
-		this.currSeg = 0;
+		this.currSeg = 0;  // counts up from 0 even though user things first segment is 1
 		this.helpAudio;
 		this.eventLoopPtrs = [];
 		this.userStopRequest = false;
@@ -99,6 +97,7 @@ class AutoDemo {
 		if ($stopBtn) $stopBtn.disable();
 	}
 	//------------------------------------------------------------------------------------
+	// currSeg is an array index starting from 0, even though user sees first segment as starting at 1
 	setCurrSeg(newCurrSeg) {
 		// currSeg is like an array, starts at 0 but when presented to user, add 1 so first segment is "1"
 		if (!isNaN(parseFloat(newCurrSeg)) && isFinite(newCurrSeg)) {

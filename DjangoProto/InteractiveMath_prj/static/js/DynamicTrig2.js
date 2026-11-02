@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	$("#GoToNextPage")?.on('click', () => window.location.href = "../ToneTrig");
 	$("#GoToPreviousPage")?.on('click', () => window.location.href = "../DynamicTrig1");
-
+	
 	// Handle User Layout Mode Configuration Setup
 	const isNewbie = sessionStorage.getItem('UserIsNew')?.toLowerCase();
 	if (!isNewbie || isNewbie === 'true') {
@@ -804,11 +804,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	}
 	
+	// common code for the segment select
 	let $segNumSelect = $("#segNum");
 	if ($segNumSelect) {
 		$segNumSelect.on('change', function() {
-			demo.setCurrSeg(parseInt($segNumSelect.value));
-
+			let currSeg = Number($segNumSelect.value) - 1;
+			demo.setCurrSeg(currSeg);
+	
 			// remove the class so the animation will work on next page, cant do this until animation completes 
 			let $clickHereCursor = $('#clickHereCursor');
 			if ($clickHereCursor) {

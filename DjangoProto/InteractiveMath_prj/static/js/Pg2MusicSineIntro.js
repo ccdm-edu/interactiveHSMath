@@ -915,13 +915,14 @@ document.addEventListener('DOMContentLoaded', () => {
 			demo.stopThisSegment(); // may or may not be needed 
 		});
 	}
-
+	
+	// common code for the segment select
 	let $segNumSelect = $("#segNum");
 	if ($segNumSelect) {
 		$segNumSelect.on('change', function() {
-			let currSeg = parseInt($segNumSelect.value);
+			let currSeg = Number($segNumSelect.value) - 1;
 			demo.setCurrSeg(currSeg);
-
+	
 			// remove the class so the animation will work on next page, cant do this until animation completes 
 			let $clickHereCursor = $('#clickHereCursor');
 			if ($clickHereCursor) {

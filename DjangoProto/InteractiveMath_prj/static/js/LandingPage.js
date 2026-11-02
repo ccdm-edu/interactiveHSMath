@@ -497,11 +497,19 @@ document.addEventListener('DOMContentLoaded', () => {
 	  $('#LegalNotice_Consent')?.prop('style').removeProperty('top');
 	});
 
-	$('#segNum')?.on('change', function() {
-	  const currSeg = parseInt(this.value, 10);
-	  demo.setCurrSeg(currSeg);
+	// common code for the segment select
+	let $segNumSelect = $("#segNum");
+	if ($segNumSelect) {
+		$segNumSelect.on('change', function() {
+			let currSeg = Number($segNumSelect.value) - 1;
+			demo.setCurrSeg(currSeg);
 	
-	  $('#clickHereCursor')?.removeClass('userHitPlay');
-	});
+			// remove the class so the animation will work on next page, cant do this until animation completes 
+			let $clickHereCursor = $('#clickHereCursor');
+			if ($clickHereCursor) {
+				$clickHereCursor.classList.remove('userHitPlay');
+			}
+		});
+	}
 
 }); 

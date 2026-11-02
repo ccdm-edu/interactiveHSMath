@@ -1108,13 +1108,13 @@ document.addEventListener('DOMContentLoaded', () => {
 			stopTimerNow = true;
 		});
 	}
-
+	// common code for the segment select
 	let $segNumSelect = $("#segNum");
 	if ($segNumSelect) {
 		$segNumSelect.on('change', function() {
-			// Native element .value retrieval handles the conversion smoothly
-			demo.setCurrSeg(parseInt($segNumSelect.value));
-
+			let currSeg = Number($segNumSelect.value) - 1;
+			demo.setCurrSeg(currSeg);
+	
 			// remove the class so the animation will work on next page, cant do this until animation completes 
 			let $clickHereCursor = $('#clickHereCursor');
 			if ($clickHereCursor) {
