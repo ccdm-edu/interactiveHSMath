@@ -709,27 +709,27 @@ button:disabled {
   border-bottom-right-radius: 4px; 
 } 
 
-#playSegment:hover { 
+/*Safari can execute hover even if disabled unless told explicitely */
+#playSegment:hover:not(:disabled) { 
   background-color: #39ff14;   /* hot green */
   /* Combines a sharp green glow with a wider soft green blur */
   box-shadow: 0 0 15px #39ff14, 0 0 30px rgba(57, 255, 20, 0.5);  
 } 
-#playSegment:hover svg { 
+#playSegment:hover:not(:disabled) svg { 
   fill: #fff;
   /* Gives the white icon an inner electric green glow */
   filter: drop-shadow(0 0 5px #00ff66); 
 }
-#stopSegment:hover { 
+#stopSegment:hover:not(:disabled) { 
   background-color: #ff003c; /* hot laser red */
   /* Creates an intense, high-energy red aura */
   box-shadow: 0 0 15px #ff003c, 0 0 30px rgba(255, 0, 60, 0.6); 
 } 
-#stopSegment:hover svg { 
+#stopSegment:hover:not(:disabled) svg { 
   fill: #fff;
   /* Gives the icon a heated, molten glow effect */
   filter: drop-shadow(0 0 5px #ff3300); 
 }
-
 
 /****** used for background of volume off/on buttons with sounds ***************************/
 .VolOff, .VolOn{
