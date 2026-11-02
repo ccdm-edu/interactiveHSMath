@@ -66,15 +66,7 @@ p#headerForSubtopics {
   margin-top: 15px; 
   display: flex; 
   gap: 10px; /* Aligns cookie action buttons cleanly without absolute hacks */ 
-} 
-
-/* lets user know what choice they have made (default is no) */ 
-.cookieIndicator { 
-  display: inline-block; 
-  height: 25px; 
-  width: 25px; 
-  margin-top: 10px; 
-} 
+}  
 
 #yesCookies { 
   background-color: green; 
@@ -94,8 +86,12 @@ p#headerForSubtopics {
   cursor: pointer; 
   border-radius: 4px; 
 } 
-#yesCookies:hover, #noCookies:hover{
-	border-color: black;
+#yesCookies.selected, #noCookies.selected{
+	border: solid black;
+}
+#yesCookies:hover, #noCookies:hover
+{
+	border: dashed black;
 }
 /***************** top headers *******************************/
 #TrigPageSideBySide #side-content h1{
@@ -423,6 +419,7 @@ p.AdvTopic_Expln, p.AdvTopic_ToDo {
 .nav-link.active-tab, .dropdown-item.active-tab {
   font-weight: bold !important;
   color: #000080 !important;   /*dark blue*/
+  font-style: italic;
 }
 
 .nav-item.dropdown { 
@@ -526,7 +523,7 @@ td:has(.dropdown) {
   border: none;
   cursor: pointer;
   padding: 4px 8px 4px 4px; /* Top, right, bottom, left */
-  color: #2d3748; 
+  color: #1D4ED8; /*tailwind blue*/ 
   text-decoration: none; 
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 15px;

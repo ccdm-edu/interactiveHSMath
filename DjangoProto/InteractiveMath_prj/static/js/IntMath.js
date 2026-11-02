@@ -105,41 +105,33 @@ document.addEventListener('DOMContentLoaded', () => {
 	// allow user to change cookie selection for all pages and, eventually, save users cookie selection only if they choose yes
 	// Right now, we don't use cookies. Save in localStorage so its avail between pages and not sent back to server.
 	const COOKIE_STAT_MSG = "allowCookie"
+	let $yesCookiesBtn = $("#yesCookies");
+	let $noCookiesBtn = $("#noCookies");
 	let cookieStat = ifLocalStorageAvail(COOKIE_STAT_MSG, "get");
 	if (cookieStat === null || cookieStat == "false") {
-		let $noInd = $("#cookieIndicatorNo");
-		let $yesInd = $("#cookieIndicatorYes");
-		if ($noInd) $noInd.style.display = 'inline-block';
-		if ($yesInd) $yesInd.style.display = 'none';
+		$noCookiesBtn.classList.add('selected');
+		$yesCookiesBtn.classList.remove('selected');
 	} else {
-		let $yesInd = $("#cookieIndicatorYes");
-		let $noInd = $("#cookieIndicatorNo");
-		if ($yesInd) $yesInd.style.display = 'inline-block';
-		if ($noInd) $noInd.style.display = 'none';
+		$yesCookiesBtn.classList.add('selected');
+		$noCookiesBtn.classList.remove('selected');
 	}
 
 	// Allow user to change their mind on cookies and save it for their entire session (locally on their machine)
-	let $yesCookiesBtn = $("#yesCookies");
 	if ($yesCookiesBtn) {
 		$yesCookiesBtn.on('click', function() {
-			// save something to remember cookies are yes (don't use cookies right now)
-			let $yesInd = $("#cookieIndicatorYes");
-			let $noInd = $("#cookieIndicatorNo");
-			if ($yesInd) $yesInd.style.display = 'inline-block';
-			if ($noInd) $noInd.style.display = 'none';
+			$yesCookiesBtn.classList.add('selected');
+			$noCookiesBtn.classList.remove('selected');			
+			
 			ifLocalStorageAvail(COOKIE_STAT_MSG, "set", "true"); // legally can store a cookie telling server "allow cookies"
 			// At this time, the site does not use "extra" cookies so this is just a placeholder if that changes
 		});
 	}
 
-	let $noCookiesBtn = $("#noCookies");
 	if ($noCookiesBtn) {
 		$noCookiesBtn.on('click', function() {
-			// delete the image that says cookies ok
-			let $noInd = $("#cookieIndicatorNo");
-			let $yesInd = $("#cookieIndicatorYes");
-			if ($noInd) $noInd.style.display = 'inline-block';
-			if ($yesInd) $yesInd.style.display = 'none';
+			$noCookiesBtn.classList.add('selected');
+			$yesCookiesBtn.classList.remove('selected');
+			
 			ifLocalStorageAvail(COOKIE_STAT_MSG, "set", "false"); // legally can store a cookie telling server "no cookies" Google already does cookies on this site
 		});
 	}
