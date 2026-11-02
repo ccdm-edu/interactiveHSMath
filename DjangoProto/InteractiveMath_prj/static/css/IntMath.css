@@ -1077,8 +1077,9 @@ td { /* keep dynamicTrig2 table from collapsing if screen too small, user should
   border: 2px solid #444; 
   background-color: #f0f0f0; 
   box-sizing: border-box; /* Ensures padding doesn't break dimensions */ 
-  display: flex; /* Helps the iframe fill the space accurately */ 
-  flex-direction: column; 
+  /* Safari Fix: Use block instead of flex to ensure resize stability */
+  display: block;
+
   /* 3. Add a "Grab Zone" at the bottom-right */ 
   /* This ensures you have a 20px area to grab that the iframe won't cover */ 
   padding-bottom: 20px; 
@@ -1091,6 +1092,16 @@ td { /* keep dynamicTrig2 table from collapsing if screen too small, user should
   min-height: 200px; 
   max-width: 100%; /* Responsive on smaller screens */ 
 } 
+
+/* 🛠️ SAFARI IFRAME RESIZE FIX */
+#video-resizable-container iframe {
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  border: none;
+  display: block;
+}
 
 /* Make the handle area look like a 'grabber' */ 
 #video-resizable-container::after { 
