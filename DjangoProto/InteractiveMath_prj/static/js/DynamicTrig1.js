@@ -1093,7 +1093,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		$stopSegmentBtn.on('click', function() {
 			demo.stopThisSegment(false); // we don't want to destroy controls box 
 			// stop the timer request 
-			stopTimerNow = true;
+			if (timerStarted) stopTimerNow = true; // in case timer is running, stop it \
 			// need to get the help set up for correct segment we think we are on 
 			prepHelpForUser(demo.getCurrSeg());
 		});
@@ -1104,8 +1104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		$dismissAutoDemoBtn.on('click', function() {
 			// user is totally done, pause any demo segment in action and get rid of demo controls and go back to original screen 
 			demo.stopThisSegment(); // may or may not be needed 
-			// stop the timer request 
-			stopTimerNow = true;
+			if (timerStarted) stopTimerNow = true; // in case timer is running, stop it 
 		});
 	}
 	// common code for the segment select

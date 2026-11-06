@@ -61,6 +61,7 @@ class AutoDemo {
 		this.helpAudio;
 		this.eventLoopPtrs = [];
 		this.userStopRequest = false;
+		this.annotateInd = 0;  // keep track of number of annotated items so to undo them if user abort
 	}
 	//------------------------------------------------------------------------------------
 	// Refactored to remove jQuery/Bootstrap, using custom '$' helper
@@ -131,6 +132,10 @@ class AutoDemo {
 	        }
 	    }
 
+		// if there are any annotated elements, remove the annotation
+		if (this.annotateInd > 0) {
+			this.removeAllAnnotateElement(this.annotateInd);
+		}
 		let $stopBtn = $('#stopSegment');
 		if ($stopBtn) $stopBtn.disable();
 		let $playBtn = $('#playSegment');
@@ -451,10 +456,10 @@ class AutoDemo {
 
 	// So audio generally starts first and is longer than the cursor demo.  So we start audio, then wait segment.headStartForAudioMillisec
 	// and start the timed cursor demo	
-	async doTheSegmentAction(activity, nextItemBeginTime, annotateInd) {
+	async doTheSegmentAction(activity, nextItemBeginTime, annotatedInd) {
 		let temp;
 		let thisObj = this;
-		let anIndex = annotateInd;
+		let anIndex = annotatedInd;
 		let nextItemStartTime = nextItemBeginTime;
 		switch (activity.segmentActivity) {
 			case ("PLAY_AUDIO"):
@@ -558,11 +563,11 @@ class AutoDemo {
 			let segment = this.fullScript[currSeg];
 			this.userStopRequest = false;
 			let nextItemBeginTime = segment.headStartForAudioMillisec;
-			let annotateInd = 0;
+			this.annotateInd = 0;
 
 			for (const activity of segment.segmentActivities) {
 				if (!this.userStopRequest) {
-					[nextItemBeginTime, annotateInd] = await this.doTheSegmentAction(activity, nextItemBeginTime, annotateInd);
+					[nextItemBeginTime, this.annotateInd] = await this.doTheSegmentAction(activity, nextItemBeginTime, this.annotateInd);
 				} else {
 					break; // cleanly exit the loop immediately if stopped
 				}
@@ -649,10 +654,10 @@ class AutoDemoWithCanvas extends AutoDemo {
 		segmentParams.canvas.dispatchEvent(clickCanvasPt);
 	}
 	//------------------------------------------------------------------------------------
-	async doTheSegmentAction(activity, nextItemBeginTime, annotateInd) {
+	async doTheSegmentAction(activity, nextItemBeginTime, annotatedInd) {
 		let temp;
 		let thisObj = this;
-		let anIndex = annotateInd;
+		let anIndex = annotatedInd;
 		let nextItemStartTime = nextItemBeginTime;
 		let ctxDemoCanvas = this.getDemoCtx();
 
@@ -698,7 +703,7 @@ class AutoDemoWithCanvas extends AutoDemo {
 				break;
 
 			default:
-				[nextItemStartTime, anIndex] = await super.doTheSegmentAction(activity, nextItemBeginTime, annotateInd);
+				[nextItemStartTime, anIndex] = await super.doTheSegmentAction(activity, nextItemBeginTime, annotatedInd);
 				break;
 		}
 		return [nextItemStartTime, anIndex];
