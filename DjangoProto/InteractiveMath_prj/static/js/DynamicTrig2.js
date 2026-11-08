@@ -239,8 +239,8 @@ document.addEventListener('DOMContentLoaded', () => {
     		el.textContent =  thetaSamp[0].thetaInRad;
 		});
 
-		$('#observeAnswer')?.text(`2${PI}(0 + ${thetaSamp[0].num}/12)`);
-		$('#expectAnswer')?.text(`2${PI}(0 + 0/12)`);
+		$('#observeAnswer')?.text(` + ${thetaSamp[0].num}/12)`);
+		$('#expectAnswer')?.text(`0 + 0/12)`);
 
 		//There are several locations that must all be updated
 		$$(".N_eqtn").forEach(el => { el.textContent =  "0" });
@@ -295,14 +295,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			$$(".ThetaUC_eqtn").each(el => el.text(thetaSamp[ind].thetaInRad));
 
-			$('#observeAnswer')?.text(`2${PI}(${numCycles} + ${thetaSamp[ind].num}/12)`);
+			$('#observeAnswer')?.text(` + ${thetaSamp[ind].num}/12)`);
 
 			// handle the right side of the equation, final line, need to turn the decimal value into fraction with same denom as left side 
 			let calcVal = currFreq * timeInS;
 			let intCalcVal = Math.floor(calcVal);
 			let fracNum = Math.round((calcVal - intCalcVal) * 12);
 
-			$('#expectAnswer')?.text(`2${PI}(${intCalcVal} + ${fracNum}/12)`);
+			$('#expectAnswer')?.text(`${intCalcVal} + ${fracNum}/12)`);
 
 			phaseInRad += ANGLE_PER_PT_RAD;
 
@@ -466,8 +466,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			$$('.timeVal_DT2').each(el => el.text("0 sec"));
 			$$(".ThetaUC_eqtn").each(el => el.text(thetaSamp[0].thetaInRad));
 		
-			$('#observeAnswer')?.text(`2${PI}(0 + ${thetaSamp[0].num}/12)`);
-			$('#expectAnswer')?.text(`2${PI}(0 + 0/12)`);
+			$('#observeAnswer')?.text(` + ${thetaSamp[0].num}/12)`);
+			$('#expectAnswer')?.text(`0 + 0/12)`);
 
 			//There are several locations that must all be updated
 			$$(".N_eqtn").each(el => el.text("0"));
