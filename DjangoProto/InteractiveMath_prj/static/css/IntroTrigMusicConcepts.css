@@ -117,6 +117,7 @@
 /*we have to change button color because teen explanation audio calls out blue button */
 #UserMeasuresFrequency{
   background-color: #00E5FF; /* electric blue*/
+  touch-action: manipulation;  /*disable double tap to zoom on this button */
 }
 /***************************measuring frequency user controls **************************/
 /* set of input/output controls for user interaction with freq measuring */
